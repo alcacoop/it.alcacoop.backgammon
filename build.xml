@@ -1,0 +1,227 @@
+<project name="it.alcacoop.shootingrange" default="all" basedir=".">
+	<description>SHOOTING RANGE MOBILE GAME</description>
+
+    <property file="build.properties" />
+
+	<!-- property for NDK_HOME, you need to set this to
+		  the root directory of your Android NDK installation,
+		  e.g. c:\android-ndk or /opt/android-ndk -->
+	<property environment="env" />
+	<property name="env.NDK_HOME" value=""/>
+	<property name="env.UISKIN" value=""/>
+
+	<!-- libgdx version -->
+	<property name="version" value="0.0.1" />
+
+	
+	<!-- output directory for distribution -->
+	<property name="dist" value="${target}/dist" />
+
+	<target name="ver">
+		<echo>${version}</echo>
+	</target>
+	
+	<!-- clean output directories -->	
+	<target name="clean">		
+		<delete dir="${target}" />
+		<delete dir="${dist}"/>
+	</target>
+
+	<!-- init task, creates all necessary directories -->
+	<target name="init" depends="clean">
+		<mkdir dir="${target}" />
+		<mkdir dir="${target}/classes" />
+                <mkdir dir="${target}/classes/common" />
+                <mkdir dir="${target}/classes/desktop" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<!-- compiles the java code of all modules -->
+	<target name="compile" depends="init">
+		<!-- build gdx api -->
+		<javac debug="on" srcdir="${common.base_dir}/src" destdir="${target}/classes/common">
+			<classpath>
+				<fileset file="${common.base_dir}/libs/*.jar" />
+			</classpath>
+		</javac>
+        <javac debug="on" srcdir="${desktop.base_dir}/src" destdir="${target}/classes/desktop">
+          <classpath>
+            <pathelement location="${target}/classes/common" />
+            <fileset file="${common.base_dir}/libs/*.jar" />
+            <fileset file="${desktop.base_dir}/libs/*.jar" />
+            <fileset file="${desktop.base_dir}/*.jar" />
+          </classpath>
+        </javac>
+	</target>
+
+	<!-- creates jars and places other files in the output dir -->
+	<target name="package" depends="compile">
+		<!-- source jars -->
+        <jar destfile="${android.base_dir}/libs/${common.jar_name}" basedir="${target}/classes/common">
+          <manifest>
+          </manifest>
+        </jar>
+
+		<jar destfile="${dist}/${desktop.jar_name}" basedir="${target}/classes/desktop">
+          <zipfileset includes="**/*.class" src="${android.base_dir}/libs/${common.jar_name}"/>
+          <manifest>
+            <attribute name="Main-Class" value="${desktop.main_class}"/>
+          </manifest>
+        </jar>
+	</target>
+
+	<target name="all" depends="compile,package">
+	</target>
+
+    <target name="desktop-dist" depends="all">
+       <zip destfile="${dist}/ShootingGalleryPark--desktop.zip" level="9">
+         <zipfileset dir="shootingrange-assets/data" 
+                     prefix="ShootingGalleryPark/data"/>
+
+         <zipfileset dir="shootingrange/libs" 
+                     includes="*.jar" 
+                     excludes="*-src.* *-sources.*"
+                     prefix="ShootingGalleryPark/libs"/>
+         <zipfileset dir="shootingrange-desktop/libs" 
+                     includes="*.jar" 
+                     excludes="*-src.* *-sources.*"
+                     prefix="ShootingGalleryPark/libs"/>
+         <zipfileset dir="tmp/target/dist" 
+                     includes="*.jar" 
+                     excludes="*-src.* *-sources.*"
+                     prefix="ShootingGalleryPark/libs"/>
+         <zipfileset dir="shootingrange-android/libs" 
+                     includes="ShootingRangeCommon.jar" 
+                     excludes="*-src.* *-sources.*"
+                     prefix="ShootingGalleryPark/libs"/>
+         <zipfileset dir="shootingrange-desktop" 
+                     includes="run.sh" 
+                     prefix="ShootingGalleryPark/"/>
+       </zip>
+    </target>
+
+    <target name="run">
+        <java classname="${desktop.main_class}" fork="true"
+              dir="${assets.base_dir}/">
+          <classpath>
+            <pathelement location="${dist}/${desktop.jar_name}" />
+            <fileset file="${common.base_dir}/libs/*.jar" />
+            <fileset file="${desktop.base_dir}/libs/*.jar" />
+          </classpath>
+        </java>
+    </target>
+
+    <target name="run-editor">
+        <java classname="${desktop_editor.main_class}" fork="true"
+              dir="common/">
+          <classpath>
+            <pathelement location="${dist}/${desktop.jar_name}" />
+            <fileset file="${desktop.base_dir}/libs/*.jar" />
+          </classpath>
+        </java>
+    </target>
+
+    <target name="tools-skin">
+        <java classname="it.alcacoop.libgdx_template.RunSkinPacker" fork="true"
+              dir="${desktop.base_dir}">
+          <arg value="${basedir}/tmp/uiskins/${env.UISKIN}"/>
+          <arg value="${basedir}/tmp/gfx_packed/${env.UISKIN}.json"/>
+          <arg value="${basedir}/tmp/gfx_packed/${env.UISKIN}.png"/>
+          <classpath>
+            <pathelement location="${dist}/${desktop.jar_name}" />
+            <fileset file="${desktop.base_dir}/libs/*.jar" />
+          </classpath>
+        </java>
+    </target>
+
+
+    <target name="tools-font">
+        <java classname="com.badlogic.gdx.tools.hiero.Hiero" fork="true"
+              dir="${desktop.base_dir}">
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+                <fileset file="${common.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+                <!-- fileset file="${desktop.base_dir}/libs/hiero4/*.jar" /-->
+            </classpath>
+        </java>
+    </target>
+
+    <target name="tools-particle">
+        <java classname="com.badlogic.gdx.tools.particleeditor.ParticleEditor" fork="true"
+              dir="${desktop.base_dir}">
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+                <fileset file="${common.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="regenerate-texture-atlas">
+      <antcall target="call-texturepacker">
+        <param name="texture_packer_src" 
+               value="${basedir}/shootingrange-assets/data-src/gfx_common"/>
+        <param name="texture_packer_dst" 
+               value="${basedir}/shootingrange-assets/data/levelsets/common/gfx"/>
+      </antcall>
+
+      <antcall target="call-texturepacker">
+        <param name="texture_packer_src" 
+               value="${basedir}/shootingrange-assets/data-src/gfx_practice"/>
+        <param name="texture_packer_dst" 
+               value="${basedir}/shootingrange-assets/data/levelsets/practice/gfx"/>
+      </antcall>
+    </target>
+
+    <target name="call-texturepacker">
+      <echo message="param1=${param1}"/>
+        <java classname="com.badlogic.gdx.tools.imagepacker.TexturePacker" fork="true"
+              dir="${desktop.base_dir}">
+          <arg value="${texture_packer_src}"/>
+          <arg value="${texture_packer_dst}"/>
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+		<fileset file="${common.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+            </classpath>
+        </java>
+    </target>
+
+
+    <target name="tools-texturepacker">
+        <java classname="com.badlogic.gdx.tools.imagepacker.TexturePacker" fork="true"
+              dir="${desktop.base_dir}">
+          <arg value="${basedir}/tmp/gfx"/>
+          <arg value="${basedir}/tmp/gfx_packed"/>
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+		<fileset file="${common.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="tools-etc1">
+        <java classname="com.badlogic.gdx.tools.etc1.ETC1Compressor" fork="true"
+              dir="${desktop.base_dir}">
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/hiero4/*.jar" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="tools-headersfixer">
+        <java classname="com.badlogic.gdx.tools.headers.HeaderFixer" fork="true"
+              dir="${desktop.base_dir}/">
+          <classpath>
+            <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+                <fileset file="${desktop.base_dir}/libs/*.jar" />
+                <fileset file="${desktop.base_dir}/libs/hiero4/*.jar" />
+            </classpath>
+        </java>
+    </target>
+
+</project>

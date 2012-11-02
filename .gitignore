@@ -1,0 +1,11 @@
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+
+## Project Specific
+GnuBackgammon-android/libs/GnuBackgammon.jar
+tmp/
