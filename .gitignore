@@ -9,3 +9,8 @@
 ## Project Specific
 GnuBackgammon-android/libs/GnuBackgammon.jar
 tmp/
+*apk
+*class
+GnuBackgammon-android/bin/
+GnuBackgammon/bin/
+*.log
