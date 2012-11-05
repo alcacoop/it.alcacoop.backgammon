@@ -1,14 +1,12 @@
 package it.alcacoop.gnubackgammon.actors;
 
 
+import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Delay;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
 import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
@@ -29,14 +27,11 @@ public class Checker extends Image {
 		
 		color = _color;
 		board = _board;
-		
-		TextureAtlas atlas;
-		atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
-		
+
 		if (color==0) //WHITE
-			region = atlas.findRegion("cw");
+			region = GnuBackgammon.atlas.findRegion("cw");
 		else 
-			region = atlas.findRegion("cb");
+			region = GnuBackgammon.atlas.findRegion("cb");
 		
 		region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		setRegion(region);

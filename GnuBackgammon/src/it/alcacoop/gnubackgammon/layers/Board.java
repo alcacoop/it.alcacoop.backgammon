@@ -29,9 +29,25 @@ public class Board extends Group {
 		
 		wCheckers = new Checker[15];
 		bCheckers = new Checker[15];
+		Random rnd = new Random();
+		
 		for (int i = 0; i<15; i++) {
 			wCheckers[i] = new Checker(this, 0);
 			bCheckers[i] = new Checker(this, 1);
+			
+			//RANDOM POS FOR WHITE CHECKERS
+			int x = rnd.nextInt(260) + 570;
+			int y = rnd.nextInt(70) + 290;
+			wCheckers[i].x = x;
+			wCheckers[i].y = y;
+			addActor(wCheckers[i]);
+
+			//RANDOM POS FOR BLACK CHECKERS
+			x = rnd.nextInt(260) + 160;
+			y = rnd.nextInt(70) + 290;
+			bCheckers[i].x = x;
+			bCheckers[i].y = y;
+			addActor(bCheckers[i]);
 		}
 		
 		pos = new Vector2[24];
@@ -58,8 +74,6 @@ public class Board extends Group {
 				pos[i+12].y = bimg.y+50;
 			}
 		}
-		
-		initBoard();
 	}
 	
 	
@@ -80,26 +94,6 @@ public class Board extends Group {
 	
 	
 	public void initBoard() {
-		Random rnd = new Random();
-		
-		//RANDOM POS FOR WHITE CHECKERS
-		for (int i=0; i<15; i++) {
-			int x = rnd.nextInt(260) + 570;
-			int y = rnd.nextInt(70) + 290;
-			wCheckers[i].x = x;
-			wCheckers[i].y = y;
-			addActor(wCheckers[i]);
-		}
-		
-		//RANDOM POS FOR BLACK CHECKERS
-		for (int i=0; i<15; i++) {
-			int x = rnd.nextInt(260) + 160;
-			int y = rnd.nextInt(70) + 290;
-			bCheckers[i].x = x;
-			bCheckers[i].y = y;
-			addActor(bCheckers[i]);
-		}
-		
 		//POSITIONING WHITE CHECKERS
 		int nchecker = 0;
 		for (int i=23; i>=0; i--) {
