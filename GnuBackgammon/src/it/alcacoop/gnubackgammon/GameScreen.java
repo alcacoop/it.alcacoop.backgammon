@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon;
 
-import it.alcacoop.gnubackgammon.actors.Board;
-import it.alcacoop.gnubackgammon.actors.Checker;
+import it.alcacoop.gnubackgammon.layers.Board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,20 +14,10 @@ public class GameScreen implements Screen {
 	
 	
 	public GameScreen(GnuBackgammon bg){
-		stage = new Stage(1280, 800, true);
+		stage = new Stage(1280, 740, true);
 		
 		board = new Board();
 		stage.addActor(board);
-		
-		Checker c1 = new Checker(0);
-		Checker c2 = new Checker(1);
-		c1.x = 522;
-		c1.y = 280;
-		c2.x = 0f;
-		c2.y = 0f;
-		
-		stage.addActor(c1);
-		stage.addActor(c2);
 	}
 
 	
@@ -36,6 +25,7 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		//stage.act(delta);
 		stage.draw();
 	}
 	
