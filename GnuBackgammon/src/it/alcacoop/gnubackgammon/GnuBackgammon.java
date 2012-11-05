@@ -7,15 +7,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 
 public class GnuBackgammon extends Game implements ApplicationListener {
-	public static TextureAtlas atlas;
-	GameScreen gameScreen;
-	
-	@Override
-	public void create() {		
-		atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
-		gameScreen = new GameScreen(this);
-		setScreen(gameScreen);
-	}
-	
+  public static TextureAtlas atlas;
+  GameScreen gameScreen;
+
+  @Override
+  public void create() {		
+    atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
+    gameScreen = new GameScreen(this);
+    setScreen(gameScreen);
+  }
+
 
 }

@@ -12,17 +12,17 @@ import com.badlogic.gdx.utils.Scaling;
 
 public class BoardImage extends Image {
 
-	private TextureRegion region;
-	
-	public BoardImage(){
-		super();
-		
-		region = GnuBackgammon.atlas.findRegion("board");
-		region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		setRegion(region);
-		setScaling(Scaling.none);
-		setAlign(Align.LEFT+Align.BOTTOM);
-	}
+  private TextureRegion region;
+
+  public BoardImage(){
+    super();
+
+    region = GnuBackgammon.atlas.findRegion("board");
+    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+    setRegion(region);
+    setScaling(Scaling.none);
+    setAlign(Align.LEFT+Align.BOTTOM);
+  }
 
 }
