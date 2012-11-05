@@ -1,10 +1,17 @@
 package it.alcacoop.gnubackgammon.actors;
 
 
+import it.alcacoop.gnubackgammon.layers.Board;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Delay;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
+import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
@@ -14,14 +21,19 @@ import com.badlogic.gdx.utils.Scaling;
 public class Checker extends Image {
 
 	private TextureRegion region;
+	private int color;
+	private Board board;
 	
-	public Checker(int type) {
+	public Checker(Board _board, int _color) {
 		super();
+		
+		color = _color;
+		board = _board;
 		
 		TextureAtlas atlas;
 		atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
 		
-		if (type==0) //WHITE
+		if (color==0) //WHITE
 			region = atlas.findRegion("cw");
 		else 
 			region = atlas.findRegion("cb");
@@ -30,5 +42,15 @@ public class Checker extends Image {
 		setRegion(region);
 		setScaling(Scaling.none);
 		setAlign(Align.LEFT+Align.BOTTOM);
+	}
+	
+	public void setPosition(int x, int y){
+		Vector2 _p = board.getBoardCoord(color, x, y);
+		action(MoveTo.$(_p.x, _p.y, 0.5f));
+	}
+	
+	public void setPositionDelayed(int x, int y, float delay){
+		Vector2 _p = board.getBoardCoord(color, x, y);
+		action(Sequence.$(Delay.$(delay), MoveTo.$(_p.x, _p.y, 0.5f)));
 	}
 }
