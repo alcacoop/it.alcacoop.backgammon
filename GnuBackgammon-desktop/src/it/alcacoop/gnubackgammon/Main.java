@@ -9,7 +9,7 @@ public class Main {
 		cfg.title = "GnuBackgammon";
 		cfg.useGL20 = false;
 		cfg.width = 640;
-		cfg.height = 400;
+		cfg.height = 370;
 		
 		new LwjglApplication(new GnuBackgammon(), cfg);
 	}
