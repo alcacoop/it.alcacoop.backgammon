@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.actors;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Align;
@@ -25,6 +26,7 @@ public class Checker extends Image {
 		else 
 			region = atlas.findRegion("cb");
 		
+		region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		setRegion(region);
 		setScaling(Scaling.none);
 		setAlign(Align.LEFT+Align.BOTTOM);
