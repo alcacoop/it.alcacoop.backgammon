@@ -1,7 +1,8 @@
 package it.alcacoop.gnubackgammon.actors;
 
-import it.alcacoop.gnubackgammon.GnuBackgammon;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,13 +16,17 @@ public class Checker extends Image {
 	
 	public Checker(int type) {
 		super();
+		
+		TextureAtlas atlas;
+		atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
+		
 		if (type==0) //WHITE
-			region = new TextureRegion(GnuBackgammon.texture, 0, 570, 40, 40);
+			region = atlas.findRegion("cw");
 		else 
-			region = new TextureRegion(GnuBackgammon.texture, 40, 570, 42, 40);
+			region = atlas.findRegion("cb");
+		
 		setRegion(region);
 		setScaling(Scaling.none);
 		setAlign(Align.LEFT+Align.BOTTOM);
 	}
-
 }

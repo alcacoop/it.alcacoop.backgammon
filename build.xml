@@ -161,16 +161,9 @@
     <target name="regenerate-texture-atlas">
       <antcall target="call-texturepacker">
         <param name="texture_packer_src" 
-               value="${basedir}/shootingrange-assets/data-src/gfx_common"/>
+               value="${basedir}/GnuBackgammon-assets/data-src"/>
         <param name="texture_packer_dst" 
-               value="${basedir}/shootingrange-assets/data/levelsets/common/gfx"/>
-      </antcall>
-
-      <antcall target="call-texturepacker">
-        <param name="texture_packer_src" 
-               value="${basedir}/shootingrange-assets/data-src/gfx_practice"/>
-        <param name="texture_packer_dst" 
-               value="${basedir}/shootingrange-assets/data/levelsets/practice/gfx"/>
+               value="${basedir}/GnuBackgammon-assets/data"/>
       </antcall>
     </target>
 

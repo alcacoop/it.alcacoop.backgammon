@@ -1,0 +1,26 @@
+
+data-src1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+board
+  rotate: false
+  xy: 2, 2
+  size: 1005, 692
+  orig: 1005, 692
+  offset: 0, 0
+  index: -1
+cw
+  rotate: false
+  xy: 2, 696
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
+cb
+  rotate: false
+  xy: 2, 751
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
