@@ -40,8 +40,7 @@ public class Checker extends Image {
 	}
 	
 	public void setPosition(int x, int y){
-		Vector2 _p = board.getBoardCoord(color, x, y);
-		action(MoveTo.$(_p.x, _p.y, 0.5f));
+		setPositionDelayed(x, y, 0);
 	}
 	
 	public void setPositionDelayed(int x, int y, float delay){
