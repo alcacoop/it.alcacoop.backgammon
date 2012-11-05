@@ -6,17 +6,16 @@ import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap.Filter;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.OnActionCompleted;
+import com.badlogic.gdx.scenes.scene2d.actions.Delay;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
+import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 
 
-public class Board extends Group {
+public class Board extends Group implements OnActionCompleted{
 
   public int[][] _board = {
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (HUMAN) 
@@ -85,6 +84,7 @@ public class Board extends Group {
 
 
   public Vector2 getBoardCoord(int color, int x, int y){
+    if (y>4) y=4;
     Vector2 ret = new Vector2();
     if (color==0) { //WHITE
       ret.x = pos[23-x].x;
@@ -105,7 +105,10 @@ public class Board extends Group {
     int nchecker = 0;
     for (int i=23; i>=0; i--) {
       for (int j=0;j<_board[0][i];j++) {
-        checkers[0][nchecker].moveToDelayed(i, j, 1.5f*nchecker/4);
+        Vector2 _p = getBoardCoord(0, i, j);
+        checkers[0][nchecker].action(Sequence.$(Delay.$(1.5f*(nchecker+3)/4), MoveTo.$(_p.x, _p.y, 0.2f)));
+        checkers[0][nchecker].boardX = i;
+        checkers[0][nchecker].boardY = j;
         nchecker++;
       }
     }
@@ -113,13 +116,17 @@ public class Board extends Group {
     nchecker = 0;
     for (int i=23; i>=0; i--) {
       for (int j=0;j<_board[1][i];j++) {
-        checkers[1][nchecker].moveToDelayed(i, j, 1.5f*(nchecker+15)/4);
+        Vector2 _p = getBoardCoord(1, i, j);
+        checkers[1][nchecker].action(Sequence.$(Delay.$(1.5f*(nchecker+18)/4), MoveTo.$(_p.x, _p.y, 0.2f)));
+        checkers[1][nchecker].boardX = i;
+        checkers[1][nchecker].boardY = j;
         nchecker++;
       }
     }
 
     Checker c = getChecker(0, 23);
-    c.moveToDelayed(13, 10);
+    c.moveToDelayed(17, 15);
+    //c.moveToDelayed(10, 13);
   }
 
   
@@ -132,6 +139,21 @@ public class Board extends Group {
 			  _c = c;
 	  }
 	  return _c;
+  }
+
+  
+  private void performNextMove(){
+    Checker c = getChecker(0, 17);
+    if (c!=null)
+      c.moveToDelayed(12, 0.2f);
+  }
+
+  @Override
+  public void completed(Action action) {
+    Checker c  = (Checker)(action.getTarget());
+    c.setLabel();
+    Gdx.app.log("LOG", "NEW BOARD X: "+c.boardX+" NEW BOARD Y: "+c.boardY);
+    performNextMove();
   }
 
 } //END CLASS

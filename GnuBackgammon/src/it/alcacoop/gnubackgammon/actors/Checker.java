@@ -1,13 +1,8 @@
 package it.alcacoop.gnubackgammon.actors;
-
-
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -17,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Scaling;
 
 
@@ -25,12 +19,14 @@ import com.badlogic.gdx.utils.Scaling;
 public class Checker extends Group {
 
   private TextureRegion region;
-  private int color;
   private Board board;
-  public int boardX; 
-  public int boardY;
   private Label label;
   private Image img;
+  
+  public int color;
+  public int boardX; 
+  public int boardY;
+  
 
   public Checker(Board _board, int _color) {
     super();
@@ -38,26 +34,24 @@ public class Checker extends Group {
     boardX = boardY= 0;
     color = _color;
     board = _board;
-
-    if (color==0) //WHITE
+    
+    if (color==0) {//WHITE
       region = GnuBackgammon.atlas.findRegion("cw");
-    else 
+      label = new Label("1", GnuBackgammon.styleBlack, "10");
+    } else { 
       region = GnuBackgammon.atlas.findRegion("cb");
+      label = new Label("1", GnuBackgammon.styleWhite, "10");
+    }
 
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     img = new Image(region);
-    img.x = 0;
-    img.y = 0;
-    
-    label = new Label("1", GnuBackgammon.style);
-    label.x = 18;
-    label.y = 8;
-    label.setAlignment(Align.CENTER, Align.CENTER);
-    //label.scaleX = 0.01f;
-    //label.scaleY = 0.01f;
-    
+    img.setScaling(Scaling.none);
+    label.setAlignment(Align.CENTER);
+    label.x = 14;
+    label.y = 10;
     addActor(img);
     addActor(label);
+    label.setText("");
   }
 
   public void moveTo(int x){
@@ -65,22 +59,31 @@ public class Checker extends Group {
   }
 
   public void moveToDelayed(int x, float delay){
-	board.removeActor(this);
-	board.addActor(this);
-	int y = board._board[color][x];
+    board.removeActor(this);
+    board.addActor(this);
+    int y = board._board[color][x];
+    
     Vector2 _p = board.getBoardCoord(color, x, y);
+    MoveTo mt = MoveTo.$(_p.x, _p.y, 0.5f);
+    mt.setCompletionListener(this.board);
+    action(Sequence.$(Delay.$(delay),  mt));
     setPosition(x, y);
-    action(Sequence.$(Delay.$(delay), MoveTo.$(_p.x, _p.y, 0.5f)));
   }
   
-  public void moveToDelayed(int x, int y, float delay){
-	Vector2 _p = board.getBoardCoord(color, x, y);
-	setPosition(x, y);
-	action(Sequence.$(Delay.$(delay), MoveTo.$(_p.x, _p.y, 0.5f)));
-  }
   
   public void setPosition(int x, int y) {
+    Gdx.app.log("LOG", "FBOARDX: "+boardX+" FBOARDY: "+boardY);
+    board._board[color][boardX]--;
 	  boardX = x;
-	  boardY = y;
+	  boardY = board._board[color][boardX]++;
+	  Gdx.app.log("LOG", "TBOARDX: "+boardX+" TBOARDY: "+boardY);
+  }
+
+  
+  public void setLabel() {
+    if (boardY>4)
+      label.setText(""+(boardY+1));
+    else
+      label.setText("");
   }
 }
