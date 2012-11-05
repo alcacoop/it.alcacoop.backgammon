@@ -21,10 +21,13 @@ public class Checker extends Image {
   private TextureRegion region;
   private int color;
   private Board board;
+  public int boardX; 
+  public int boardY;
 
   public Checker(Board _board, int _color) {
     super();
 
+    boardX = boardY= 0;
     color = _color;
     board = _board;
 
@@ -39,12 +42,27 @@ public class Checker extends Image {
     setAlign(Align.LEFT+Align.BOTTOM);
   }
 
-  public void setPosition(int x, int y){
-    setPositionDelayed(x, y, 0);
+  public void moveTo(int x){
+    moveToDelayed(x, 0);
   }
 
-  public void setPositionDelayed(int x, int y, float delay){
+  public void moveToDelayed(int x, float delay){
+	board.removeActor(this);
+	board.addActor(this);
+	int y = board._board[color][x];
     Vector2 _p = board.getBoardCoord(color, x, y);
+    setPosition(x, y);
     action(Sequence.$(Delay.$(delay), MoveTo.$(_p.x, _p.y, 0.5f)));
+  }
+  
+  public void moveToDelayed(int x, int y, float delay){
+	Vector2 _p = board.getBoardCoord(color, x, y);
+	setPosition(x, y);
+	action(Sequence.$(Delay.$(delay), MoveTo.$(_p.x, _p.y, 0.5f)));
+  }
+  
+  public void setPosition(int x, int y) {
+	  boardX = x;
+	  boardY = y;
   }
 }

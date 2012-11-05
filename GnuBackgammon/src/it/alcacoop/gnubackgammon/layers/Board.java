@@ -10,15 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class Board extends Group {
 
-  private int[][] _board = {
-    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0}, 
+  public int[][] _board = {
+    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (HUMAN) 
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0}
   };
 
   Vector2 pos[];
   BoardImage bimg;
-  Checker wCheckers[];
-  Checker bCheckers[];
+  Checker checkers[][];
 
 
   public Board() {
@@ -27,27 +26,27 @@ public class Board extends Group {
     bimg.y = 20;
     addActor(bimg);
 
-    wCheckers = new Checker[15];
-    bCheckers = new Checker[15];
+    
+    checkers = new Checker[2][15];
     Random rnd = new Random();
 
     for (int i = 0; i<15; i++) {
-      wCheckers[i] = new Checker(this, 0);
-      bCheckers[i] = new Checker(this, 1);
+      checkers[0][i] = new Checker(this, 0);
+      checkers[1][i] = new Checker(this, 1);
 
       //RANDOM POS FOR WHITE CHECKERS
       int x = rnd.nextInt(260) + 570;
       int y = rnd.nextInt(70) + 290;
-      wCheckers[i].x = x;
-      wCheckers[i].y = y;
-      addActor(wCheckers[i]);
+      checkers[0][i].x = x;
+      checkers[0][i].y = y;
+      addActor(checkers[0][i]);
 
       //RANDOM POS FOR BLACK CHECKERS
       x = rnd.nextInt(260) + 160;
       y = rnd.nextInt(70) + 290;
-      bCheckers[i].x = x;
-      bCheckers[i].y = y;
-      addActor(bCheckers[i]);
+      checkers[1][i].x = x;
+      checkers[1][i].y = y;
+      addActor(checkers[1][i]);
     }
 
     pos = new Vector2[24];
@@ -98,7 +97,7 @@ public class Board extends Group {
     int nchecker = 0;
     for (int i=23; i>=0; i--) {
       for (int j=0;j<_board[0][i];j++) {
-        wCheckers[nchecker].setPositionDelayed(i, j, 1.5f*nchecker/4);
+        checkers[0][nchecker].moveToDelayed(i, j, 1.5f*nchecker/4);
         nchecker++;
       }
     }
@@ -106,13 +105,25 @@ public class Board extends Group {
     nchecker = 0;
     for (int i=23; i>=0; i--) {
       for (int j=0;j<_board[1][i];j++) {
-        bCheckers[nchecker].setPositionDelayed(i, j, 1.5f*(nchecker+15)/4);
+        checkers[1][nchecker].moveToDelayed(i, j, 1.5f*(nchecker+15)/4);
         nchecker++;
       }
     }
 
-    wCheckers[1].setPositionDelayed(13, 0, 15);
+    Checker c = getChecker(0, 23);
+    c.moveToDelayed(13, 10);
   }
 
+  
+  Checker getChecker(int color, int x) {
+	  Checker _c = null;
+	  int y = _board[color][x]-1;
+	  for (int i = 0; i<15; i++) {
+		  Checker c = checkers[color][i];
+		  if ((c.boardX==x)&&(c.boardY==y))
+			  _c = c;
+	  }
+	  return _c;
+  }
 
 } //END CLASS
