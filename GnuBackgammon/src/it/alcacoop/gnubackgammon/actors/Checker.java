@@ -4,25 +4,33 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Delay;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
 import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Scaling;
 
 
 
-public class Checker extends Image {
+public class Checker extends Group {
 
   private TextureRegion region;
   private int color;
   private Board board;
   public int boardX; 
   public int boardY;
+  private Label label;
+  private Image img;
 
   public Checker(Board _board, int _color) {
     super();
@@ -37,9 +45,19 @@ public class Checker extends Image {
       region = GnuBackgammon.atlas.findRegion("cb");
 
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    setRegion(region);
-    setScaling(Scaling.none);
-    setAlign(Align.LEFT+Align.BOTTOM);
+    img = new Image(region);
+    img.x = 0;
+    img.y = 0;
+    
+    label = new Label("1", GnuBackgammon.style);
+    label.x = 18;
+    label.y = 8;
+    label.setAlignment(Align.CENTER, Align.CENTER);
+    //label.scaleX = 0.01f;
+    //label.scaleY = 0.01f;
+    
+    addActor(img);
+    addActor(label);
   }
 
   public void moveTo(int x){
