@@ -5,6 +5,8 @@ import it.alcacoop.gnubackgammon.actors.Checker;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Delay;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
 
 public class Board extends Group {
 	
@@ -58,35 +60,46 @@ public class Board extends Group {
 		}
 		
 		initBoard();
+		//this.action(Delay.$(MoveTo.$(45, 40, 1f), 1f));
 	}
+	
+	
+	public Vector2 getBoardCoord(int color, int x, int y){
+		Vector2 ret = new Vector2();
+		if (color==0) { //WHITE
+			ret.x = pos[23-x].x;
+			if (x>11) ret.y = pos[23-x].y - (49*y);
+			else ret.y = pos[23-x].y + (49*y);
+		} else { //BLACK
+			ret.x = pos[x].x;
+			if (x>11) ret.y = pos[x].y + (49*y);
+			else ret.y = pos[x].y - (49*y);
+		}
+		return ret;
+	}
+	
+	
 	
 	public void initBoard() {
 		int nchecker = 0;
-		
 		//WHITE CHECKERS
 		for (int i=23; i>=0; i--) {
-			Vector2 _p = pos[23-i];
-			
 			for (int j=0;j<_board[0][i];j++) {
+				Vector2 _p = getBoardCoord(0, i, j);
 				wCheckers[nchecker].x = _p.x;
-				
-				if (i>11) wCheckers[nchecker].y = _p.y - (49*j);
-				else wCheckers[nchecker].y = _p.y + (49*j);
+				wCheckers[nchecker].y = _p.y;
 				addActor(wCheckers[nchecker]);
 				nchecker++;
 			}
 		}
 		
-		//BLACK CHECKERS
 		nchecker = 0;
+		//BLACK CHECKERS
 		for (int i=23; i>=0; i--) {
-			Vector2 _p = pos[i];
-
 			for (int j=0;j<_board[0][i];j++) {
+				Vector2 _p = getBoardCoord(1, i, j);
 				bCheckers[nchecker].x = _p.x;
-
-				if (i>11) bCheckers[nchecker].y = _p.y + (49*j);
-				else bCheckers[nchecker].y = _p.y - (49*j);
+				bCheckers[nchecker].y = _p.y;
 				addActor(bCheckers[nchecker]);
 				nchecker++;
 			}
