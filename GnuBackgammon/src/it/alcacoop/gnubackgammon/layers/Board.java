@@ -1,12 +1,12 @@
 package it.alcacoop.gnubackgammon.layers;
 
+import java.util.Random;
+
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.Delay;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
 
 public class Board extends Group {
 	
@@ -30,8 +30,8 @@ public class Board extends Group {
 		wCheckers = new Checker[15];
 		bCheckers = new Checker[15];
 		for (int i = 0; i<15; i++) {
-			wCheckers[i] = new Checker(0);
-			bCheckers[i] = new Checker(1);
+			wCheckers[i] = new Checker(this, 0);
+			bCheckers[i] = new Checker(this, 1);
 		}
 		
 		pos = new Vector2[24];
@@ -60,7 +60,6 @@ public class Board extends Group {
 		}
 		
 		initBoard();
-		//this.action(Delay.$(MoveTo.$(45, 40, 1f), 1f));
 	}
 	
 	
@@ -81,28 +80,45 @@ public class Board extends Group {
 	
 	
 	public void initBoard() {
+		Random rnd = new Random();
+		
+		//RANDOM POS FOR WHITE CHECKERS
+		for (int i=0; i<15; i++) {
+			int x = rnd.nextInt(260) + 570;
+			int y = rnd.nextInt(70) + 290;
+			wCheckers[i].x = x;
+			wCheckers[i].y = y;
+			addActor(wCheckers[i]);
+		}
+		
+		//RANDOM POS FOR BLACK CHECKERS
+		for (int i=0; i<15; i++) {
+			int x = rnd.nextInt(260) + 160;
+			int y = rnd.nextInt(70) + 290;
+			bCheckers[i].x = x;
+			bCheckers[i].y = y;
+			addActor(bCheckers[i]);
+		}
+		
+		//POSITIONING WHITE CHECKERS
 		int nchecker = 0;
-		//WHITE CHECKERS
 		for (int i=23; i>=0; i--) {
 			for (int j=0;j<_board[0][i];j++) {
-				Vector2 _p = getBoardCoord(0, i, j);
-				wCheckers[nchecker].x = _p.x;
-				wCheckers[nchecker].y = _p.y;
-				addActor(wCheckers[nchecker]);
+				wCheckers[nchecker].setPositionDelayed(i, j, 1.5f*nchecker/4);
+				nchecker++;
+			}
+		}
+		//POSITIONING BLACK CHECKERS
+		nchecker = 0;
+		for (int i=23; i>=0; i--) {
+			for (int j=0;j<_board[1][i];j++) {
+				bCheckers[nchecker].setPositionDelayed(i, j, 1.5f*(nchecker+15)/4);
 				nchecker++;
 			}
 		}
 		
-		nchecker = 0;
-		//BLACK CHECKERS
-		for (int i=23; i>=0; i--) {
-			for (int j=0;j<_board[0][i];j++) {
-				Vector2 _p = getBoardCoord(1, i, j);
-				bCheckers[nchecker].x = _p.x;
-				bCheckers[nchecker].y = _p.y;
-				addActor(bCheckers[nchecker]);
-				nchecker++;
-			}
-		}
+		wCheckers[1].setPositionDelayed(13, 0, 15);
 	}
-}
+
+
+} //END CLASS
