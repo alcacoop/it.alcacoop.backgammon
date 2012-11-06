@@ -1,31 +1,37 @@
 package it.alcacoop.gnubackgammon.layers;
 
 import java.util.Random;
-
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.OnActionCompleted;
 import com.badlogic.gdx.scenes.scene2d.actions.Delay;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
 import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 
 
-public class Board extends Group implements OnActionCompleted{
+public class Board extends Group {
 
   public int[][] _board = {
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},//WHITE (HUMAN) 
-    {0, 0, 0, 0, 0, 5, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2}
+    {0, 0, 0, 0, 0, 5, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2}
   };
 
   Vector2 pos[];
   BoardImage bimg;
   Checker checkers[][];
 
+  public void printBoard(){
+    for (int i=0; i<2; i++) {
+      String s = "";
+      for (int j=0; j<25; j++) {
+        s+=" "+_board[i][j];
+      }
+      Gdx.app.log("BOARD"+i, s);
+    }
+  }
 
   public Board() {
     bimg = new BoardImage();
@@ -83,7 +89,7 @@ public class Board extends Group implements OnActionCompleted{
     }
     
     pos[24] = new Vector2();
-    pos[24].x = 505;
+    pos[24].x = 506;
     pos[24].y = 0;
   }
 
@@ -94,7 +100,7 @@ public class Board extends Group implements OnActionCompleted{
     
     if (x==24) {
       ret.x = pos[x].x;
-      if (color==0) ret.y=592 - (49*y);
+      if (color==0) ret.y=590 - (49*y);
       else ret.y=90 + (49*y);
     } else {
       if (color==0) { //WHITE
@@ -137,8 +143,8 @@ public class Board extends Group implements OnActionCompleted{
       }
     }
 
-    Checker c = getChecker(1, 23);
-    c.moveToDelayed(17, 15);
+    Checker c = getChecker(1, 17);
+    c.moveToDelayed(12, 15);
     //c.moveToDelayed(10, 13);
   }
 
@@ -155,18 +161,10 @@ public class Board extends Group implements OnActionCompleted{
   }
 
   
-  private void performNextMove(){
-    Checker c = getChecker(1, 17);
+  public void performNextMove(){
+    Checker c = getChecker(1, 12);
     if (c!=null)
-      c.moveToDelayed(12, 0.2f);
-  }
-
-  @Override
-  public void completed(Action action) {
-    Checker c  = (Checker)(action.getTarget());
-    c.setLabel();
-    Gdx.app.log("LOG", "NEW BOARD X: "+c.boardX+" NEW BOARD Y: "+c.boardY);
-    performNextMove();
+      c.moveToDelayed(10, 0.2f);
   }
 
 } //END CLASS
