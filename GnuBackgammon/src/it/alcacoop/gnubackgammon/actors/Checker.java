@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -38,7 +37,7 @@ public class Checker extends Group implements OnActionCompleted {
     color = _color;
     board = _board;
     
-    if (color==0) {//WHITE
+    if (color==1) {//WHITE
       region = GnuBackgammon.atlas.findRegion("cw");
       label = new Label("1", GnuBackgammon.styleBlack, "10");
     } else { 
@@ -77,14 +76,9 @@ public class Checker extends Group implements OnActionCompleted {
   
   
   public void setPosition(int x, int y) {
-    //Gdx.app.log("LOG", "BOARD[boardX]: "+board._board[boardX]);
-    Gdx.app.log("LOG", "FBOARDX: "+boardX+" FBOARDY: "+boardY);
     board._board[color][boardX]--;
 	  boardX = x;
 	  boardY = board._board[color][boardX]++;
-	  Gdx.app.log("LOG", "TBOARDX: "+boardX+" TBOARDY: "+boardY);
-	  
-	  
   }
 
   

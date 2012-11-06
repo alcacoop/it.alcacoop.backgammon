@@ -35,12 +35,12 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
-    /*
+    
     board.initBoard();
-    int ms[] = {17,12,12,10,12,10,12,7};
+    int ms[] = {23,17,23,17, 12,6,12,6};
     board.setMoves(ms);
-    */
-    board.animate();
+    
+    //board.animate();
   }
 
   @Override

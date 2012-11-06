@@ -3,6 +3,8 @@ package it.alcacoop.gnubackgammon.layers;
 import java.util.Random;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
+import it.alcacoop.gnubackgammon.logic.MatchState;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -15,10 +17,7 @@ import java.util.Stack;
 
 public class Board extends Group implements OnActionCompleted {
 
-  public int[][] _board = {
-    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},//WHITE (HUMAN) 
-    {0, 0, 0, 0, 0, 5, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2}
-  };
+  public int[][] _board;
 
   
   public Stack<int[]> moves;
@@ -28,13 +27,16 @@ public class Board extends Group implements OnActionCompleted {
   Checker checkers[][];
 
   public Board() {
+    
+    _board = new int[2][25]; 
+    
     moves = new Stack<int[]>();
     bimg = new BoardImage();
     bimg.x = 30;
     bimg.y = 20;
     addActor(bimg);
 
-    checkers = new Checker[2][15];
+    checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
     
     for (int i = 0; i<15; i++) {
       checkers[0][i] = new Checker(this, 0);
@@ -104,6 +106,9 @@ public class Board extends Group implements OnActionCompleted {
 
 
   public void initBoard() {
+    _board[0] = MatchState.board[0];
+    _board[1] = MatchState.board[1];
+    
     int nchecker = 0;
     for (int i=24; i>=0; i--) {
       for (int j=0;j<_board[0][i];j++) {
@@ -191,7 +196,7 @@ public class Board extends Group implements OnActionCompleted {
     try {
       int m[] = moves.pop();
       if (m!=null) {
-        Checker c = getChecker(1, m[0]);
+        Checker c = getChecker(MatchState.fMove, m[0]);
         if (c!=null)
           c.moveToDelayed(m[1], 0.2f);
       }
@@ -205,6 +210,9 @@ public class Board extends Group implements OnActionCompleted {
   
   
   public void animate() {
+    _board[0] = MatchState.board[4];
+    _board[1] = MatchState.board[5];
+    
     Random rnd = new Random();
     
     for (int i = 0; i<15; i++) {
@@ -256,7 +264,7 @@ public class Board extends Group implements OnActionCompleted {
     //ANIMATION FINISHED
     //animate();
     initBoard();
-    int ms[] = {17,12,12,10,12,10,12,7};
+    int ms[] = {17,12,17,12,12,10,12,10};
     setMoves(ms);
   }
 
