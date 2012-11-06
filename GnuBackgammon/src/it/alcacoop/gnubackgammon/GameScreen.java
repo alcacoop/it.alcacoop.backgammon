@@ -1,6 +1,7 @@
 package it.alcacoop.gnubackgammon;
 
 import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,9 +15,22 @@ public class GameScreen implements Screen {
 
 
   public GameScreen(GnuBackgammon bg){
+    
     stage = new Stage(1280, 740, true);
     board = new Board();
     stage.addActor(board);
+    
+    board.initBoard();
+
+
+    GnubgAPI.SetAILevel(7);
+    int d[] = {0,0};
+    GnubgAPI.RollDice(d);
+    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
+    int moves[] = new int[8];
+    GnubgAPI.EvaluateBestMove(d, moves);
+    
+    board.setMoves(moves);
   }
 
 
@@ -35,12 +49,6 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
-    
-    board.initBoard();
-    int ms[] = {23,17,23,17, 12,6,12,6};
-    board.setMoves(ms);
-    
-    //board.animate();
   }
 
   @Override

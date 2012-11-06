@@ -1,5 +1,6 @@
 package it.alcacoop.gnubackgammon;
 
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -14,5 +15,14 @@ public class MainActivity extends AndroidApplication {
     cfg.useGL20 = false;
 
     initialize(new GnuBackgammon(), cfg);
+    GnubgAPI.InitializeEnvironment("/sdcard/gnubg/");
   }
+  
+  //Load library
+  static {
+      System.loadLibrary("glib-2.0");
+      System.loadLibrary("gthread-2.0");
+      System.loadLibrary("gnubg");
+  }   
+
 }
