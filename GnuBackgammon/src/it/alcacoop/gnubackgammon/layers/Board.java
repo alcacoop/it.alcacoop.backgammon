@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
 public class Board extends Group implements OnActionCompleted{
 
   public int[][] _board = {
-    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (HUMAN) 
-    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0}
+    {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5},//WHITE (HUMAN) 
+    {0, 0, 0, 0, 0, 5, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2}
   };
 
   Vector2 pos[];
@@ -56,7 +56,8 @@ public class Board extends Group implements OnActionCompleted{
       addActor(checkers[1][i]);
     }
 
-    pos = new Vector2[24];
+    pos = new Vector2[25];
+    
     for (int i=0; i<24;i++) {
       pos[i] = new Vector2();
       if (i<6) {
@@ -80,21 +81,33 @@ public class Board extends Group implements OnActionCompleted{
         pos[i+12].y = bimg.y+50;
       }
     }
+    
+    pos[24] = new Vector2();
+    pos[24].x = 505;
+    pos[24].y = 0;
   }
 
 
   public Vector2 getBoardCoord(int color, int x, int y){
     if (y>4) y=4;
     Vector2 ret = new Vector2();
-    if (color==0) { //WHITE
-      ret.x = pos[23-x].x;
-      if (x>11) ret.y = pos[23-x].y - (49*y);
-      else ret.y = pos[23-x].y + (49*y);
-    } else { //BLACK
+    
+    if (x==24) {
       ret.x = pos[x].x;
-      if (x>11) ret.y = pos[x].y + (49*y);
-      else ret.y = pos[x].y - (49*y);
+      if (color==0) ret.y=592 - (49*y);
+      else ret.y=90 + (49*y);
+    } else {
+      if (color==0) { //WHITE
+        ret.x = pos[23-x].x;
+        if (x>11) ret.y = pos[23-x].y - (49*y);
+        else ret.y = pos[23-x].y + (49*y);
+      } else { //BLACK
+        ret.x = pos[x].x;
+        if (x>11) ret.y = pos[x].y + (49*y);
+        else ret.y = pos[x].y - (49*y);
+      }
     }
+    
     return ret;
   }
 
@@ -103,7 +116,7 @@ public class Board extends Group implements OnActionCompleted{
   public void initBoard() {
     //POSITIONING WHITE CHECKERS
     int nchecker = 0;
-    for (int i=23; i>=0; i--) {
+    for (int i=24; i>=0; i--) {
       for (int j=0;j<_board[0][i];j++) {
         Vector2 _p = getBoardCoord(0, i, j);
         checkers[0][nchecker].action(Sequence.$(Delay.$(1.5f*(nchecker+3)/4), MoveTo.$(_p.x, _p.y, 0.2f)));
@@ -114,7 +127,7 @@ public class Board extends Group implements OnActionCompleted{
     }
     //POSITIONING BLACK CHECKERS
     nchecker = 0;
-    for (int i=23; i>=0; i--) {
+    for (int i=24; i>=0; i--) {
       for (int j=0;j<_board[1][i];j++) {
         Vector2 _p = getBoardCoord(1, i, j);
         checkers[1][nchecker].action(Sequence.$(Delay.$(1.5f*(nchecker+18)/4), MoveTo.$(_p.x, _p.y, 0.2f)));
@@ -124,7 +137,7 @@ public class Board extends Group implements OnActionCompleted{
       }
     }
 
-    Checker c = getChecker(0, 23);
+    Checker c = getChecker(1, 23);
     c.moveToDelayed(17, 15);
     //c.moveToDelayed(10, 13);
   }
@@ -143,7 +156,7 @@ public class Board extends Group implements OnActionCompleted{
 
   
   private void performNextMove(){
-    Checker c = getChecker(0, 17);
+    Checker c = getChecker(1, 17);
     if (c!=null)
       c.moveToDelayed(12, 0.2f);
   }
