@@ -15,7 +15,6 @@ public class GameScreen implements Screen {
 
   public GameScreen(GnuBackgammon bg){
     stage = new Stage(1280, 740, true);
-
     board = new Board();
     stage.addActor(board);
   }
@@ -36,7 +35,12 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
+    /*
     board.initBoard();
+    int ms[] = {17,12,12,10,12,10,12,7};
+    board.setMoves(ms);
+    */
+    board.animate();
   }
 
   @Override
