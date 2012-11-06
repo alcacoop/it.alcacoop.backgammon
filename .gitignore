@@ -12,6 +12,7 @@ tmp/
 *apk
 *class
 GnuBackgammon-android/bin/
+GnuBackgammon-android/gen/
 GnuBackgammon-desktop/bin/
 GnuBackgammon/bin/
 *.log
