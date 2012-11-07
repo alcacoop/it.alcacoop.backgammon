@@ -20,10 +20,10 @@ public class GameScreen implements Screen {
     stage.addActor(board);
     GnubgAPI.SetAILevel(7);
     
-    //board.initBoard();
-    //board.simulate();
+    board.initBoard();
+    board.simulate();
     
-    board.animate();
+    //board.animate();
   }
 
 

@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -60,14 +59,17 @@ public class Checker extends Group {
     moveToDelayed(x, 0);
   }
   public void moveToDelayed(int x, float delay){
-    Gdx.app.log("MTD: ", ""+x+" "+delay);
-    float tt = 0.4f;
-    if (x==24) tt=0.4f;
-    board.removeActor(this);
-    board.addActor(this);
+    
+    if (x==24) //BAR
+      setZIndex(20);
+    else
+      toFront();
+    
+    float tt = 0.8f;
+    if (x==24) tt=0.8f;
+    
     int y = board._board[color][x];
     Vector2 _p = board.getBoardCoord(color, x, y);
-    
     
     this.addAction(Actions.sequence(
         Actions.delay(delay),
@@ -85,8 +87,6 @@ public class Checker extends Group {
               return true;
             }}
         ));
-    
-    
     setPosition(x, y);
   }
   

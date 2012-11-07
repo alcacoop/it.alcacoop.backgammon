@@ -44,8 +44,11 @@ public class Board extends Group {
     for (int i = 0; i<15; i++) {
       checkers[0][i] = new Checker(this, 0);
       checkers[1][i] = new Checker(this, 1);
+      
       addActor(checkers[0][i]);
       addActor(checkers[1][i]);
+      checkers[0][i].setZIndex(1);
+      checkers[1][i].setZIndex(1);
     }
 
     pos = new Vector2[25];
@@ -194,10 +197,10 @@ public class Board extends Group {
 
 
   public void performNextMove() {
-    if (checkHit()==1) {
-      return;
-    }
+    if (checkHit()==1) return;
+    
     try {
+      if (lastMoved!=null) lastMoved.setZIndex(1);
       int m[] = moves.pop();
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
@@ -243,7 +246,6 @@ public class Board extends Group {
       if (_board[c][p]>0) {
         //CHECKER HITTED
         Checker ch = getChecker(c, p);
-        if (ch==null) return 0; 
         ch.moveTo(24);
         return 1;
       }
