@@ -3,23 +3,20 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.OnActionCompleted;
-import com.badlogic.gdx.scenes.scene2d.actions.Delay;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveTo;
-import com.badlogic.gdx.scenes.scene2d.actions.Sequence;
-import com.badlogic.gdx.scenes.scene2d.ui.Align;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Scaling;
 
 
 
-public class Checker extends Group implements OnActionCompleted {
+public class Checker extends Group {
 
   private TextureRegion region;
   private Board board;
@@ -40,18 +37,19 @@ public class Checker extends Group implements OnActionCompleted {
     
     if (color==1) {//WHITE
       region = GnuBackgammon.atlas.findRegion("cw");
-      label = new Label("1", GnuBackgammon.styleBlack, "10");
+      label = new Label("1", GnuBackgammon.styleBlack);
     } else { 
       region = GnuBackgammon.atlas.findRegion("cb");
-      label = new Label("1", GnuBackgammon.styleWhite, "10");
+      label = new Label("1", GnuBackgammon.styleWhite);
     }
 
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     img = new Image(region);
     img.setScaling(Scaling.none);
-    label.setAlignment(Align.CENTER);
-    label.x =15;
-    label.y = 10;
+    label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
+
+    label.setX(15);
+    label.setY(10);
     addActor(img);
     addActor(label);
     label.setText("");
@@ -62,17 +60,33 @@ public class Checker extends Group implements OnActionCompleted {
     moveToDelayed(x, 0);
   }
   public void moveToDelayed(int x, float delay){
+    Gdx.app.log("MTD: ", ""+x+" "+delay);
     float tt = 0.4f;
     if (x==24) tt=0.4f;
     board.removeActor(this);
     board.addActor(this);
     int y = board._board[color][x];
     Vector2 _p = board.getBoardCoord(color, x, y);
-    Delay dl = Delay.$(delay);
-    dl.setCompletionListener(this);
-    MoveTo mt = MoveTo.$(_p.x, _p.y, tt);
-    mt.setCompletionListener(this);
-    action(Sequence.$(dl,  mt));
+    
+    
+    this.addAction(Actions.sequence(
+        Actions.delay(delay),
+        new Action(){
+          @Override
+          public boolean act(float delta) {
+            actionCompleted(0);
+            return true;
+          }},
+        Actions.moveTo(_p.x, _p.y, tt),
+        new Action(){
+            @Override
+            public boolean act(float delta) {
+              actionCompleted(1);
+              return true;
+            }}
+        ));
+    
+    
     setPosition(x, y);
   }
   
@@ -94,11 +108,11 @@ public class Checker extends Group implements OnActionCompleted {
   }
 
   
-  @Override
-  public void completed(Action action) {
-    if (action instanceof Delay) {
+  
+  public void actionCompleted(int mode) {
+    if (mode==0) { //PRE_MOVEMENT
       if (boardY<5) label.setText("");
-    } else {
+    } else { //POST_MOVEMENT
       if (boardY>4)
         label.setText(""+(boardY+1));
       board.performNextMove();

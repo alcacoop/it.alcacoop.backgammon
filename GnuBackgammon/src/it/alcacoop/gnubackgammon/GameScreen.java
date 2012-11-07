@@ -19,6 +19,11 @@ public class GameScreen implements Screen {
     board = new Board();
     stage.addActor(board);
     GnubgAPI.SetAILevel(7);
+    
+    //board.initBoard();
+    //board.simulate();
+    
+    board.animate();
   }
 
 
@@ -37,24 +42,18 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
-    board.initBoard();
-    board.simulate();
   }
 
   @Override
   public void hide() {
-    board.moves.clear();
   }
 
   @Override
   public void pause() {
-    board.moves.clear();
   }
 
   @Override
   public void resume() {
-    board.initBoard();
-    board.simulate();
   }
 
   @Override

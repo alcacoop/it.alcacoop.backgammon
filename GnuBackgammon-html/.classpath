@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" combineaccessrules="false" path="/GnuBackgammon"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/GnuBackgammon/libs/gdx.jar" sourcepath="/GnuBackgammon/libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" path="/GnuBackgammon/libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-	<classpathentry kind="lib" path="/GnuBackgammon/libs/tween-engine-api.jar" sourcepath="/GnuBackgammon/libs/tween-engine-api-sources.jar"/>
-	<classpathentry kind="lib" path="/GnuBackgammon/libs/tween-engine-api-sources.jar"/>
+    <classpathentry kind="src" path="src"/>
+    <classpathentry combineaccessrules="false" kind="src" path="/GnuBackgammon"/>
+    <classpathentry kind="output" path="war/WEB-INF/classes"/>
+    <classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
+    <classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
+    <classpathentry kind="lib" path="/GnuBackgammon/libs/gdx-sources.jar"/>
+    <classpathentry kind="lib" path="/GnuBackgammon/libs/gdx.jar" sourcepath="/GnuBackgammon/libs/gdx-sources.jar"/>
+    <classpathentry kind="lib" path="/GnuBackgammon/libs/tween-engine-api-sources.jar"/>
+    <classpathentry kind="lib" path="/GnuBackgammon/libs/tween-engine-api.jar" sourcepath="/GnuBackgammon/libs/tween-engine-api-sources.jar"/>
 </classpath>

@@ -4,8 +4,8 @@ import it.alcacoop.gnubackgammon.GnuBackgammon;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 
@@ -20,9 +20,11 @@ public class BoardImage extends Image {
     region = GnuBackgammon.atlas.findRegion("board");
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-    setRegion(region);
+    TextureRegionDrawable d = new TextureRegionDrawable(region);
+    this.setDrawable(d);
+    
     setScaling(Scaling.none);
-    setAlign(Align.LEFT+Align.BOTTOM);
+    this.setAlign(com.badlogic.gdx.scenes.scene2d.utils.Align.bottom+com.badlogic.gdx.scenes.scene2d.utils.Align.left);
   }
 
 }
