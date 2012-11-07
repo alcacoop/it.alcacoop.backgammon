@@ -18,8 +18,8 @@ public class MatchState {
   public static int nCube = 1; //VALORE ATTUALE DEL CUBO
   public static int fCrawford = 0; //REGOLA DI CRAWFORD
   public static int nMatchTo = 7; 
-  public static int[] anScore = {0,0};
+  public static int[] anScore = {0,0}; //MATCH SCORES
   public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON
-  public static int fCubeUse = 1;
+  public static int fCubeUse = 1; //USING CUBE
   
 }

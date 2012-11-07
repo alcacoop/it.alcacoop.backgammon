@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
+
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -56,19 +57,20 @@ public class Checker extends Group implements OnActionCompleted {
     label.setText("");
   }
 
+  
   public void moveTo(int x){
     moveToDelayed(x, 0);
   }
-
   public void moveToDelayed(int x, float delay){
+    float tt = 0.4f;
+    if (x==24) tt=0.4f;
     board.removeActor(this);
     board.addActor(this);
     int y = board._board[color][x];
-    
     Vector2 _p = board.getBoardCoord(color, x, y);
     Delay dl = Delay.$(delay);
     dl.setCompletionListener(this);
-    MoveTo mt = MoveTo.$(_p.x, _p.y, 0.5f);
+    MoveTo mt = MoveTo.$(_p.x, _p.y, tt);
     mt.setCompletionListener(this);
     action(Sequence.$(dl,  mt));
     setPosition(x, y);
@@ -82,7 +84,16 @@ public class Checker extends Group implements OnActionCompleted {
   }
 
   
+  public int getSpecularColor() {
+    if (color==0) return 1;
+    else return 0;
+  }
+  
+  public int getSpecularPosition() {
+    return 23-boardX;
+  }
 
+  
   @Override
   public void completed(Action action) {
     if (action instanceof Delay) {
@@ -90,7 +101,6 @@ public class Checker extends Group implements OnActionCompleted {
     } else {
       if (boardY>4)
         label.setText(""+(boardY+1));
-      board.printBoard();
       board.performNextMove();
     }
   }

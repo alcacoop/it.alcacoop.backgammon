@@ -26,6 +26,7 @@ public class Board extends Group implements OnActionCompleted {
   Vector2 pos[];
   BoardImage bimg;
   Checker checkers[][];
+  Checker lastMoved = null;
   
   int nIter = 10;
 
@@ -157,6 +158,9 @@ public class Board extends Group implements OnActionCompleted {
 
   
   public void setMoves(int _moves[]) {
+    Gdx.app.log("MOVE: ",
+      _moves[0]+"/"+_moves[1]+" "+_moves[2]+"/"+_moves[3]+
+      "    "+_moves[4]+"/"+_moves[5]+" "+_moves[6]+"/"+_moves[7]);
     if (_moves.length<8) return;
     int m1[] = new int[2];
     int m2[] = new int[2];
@@ -190,11 +194,15 @@ public class Board extends Group implements OnActionCompleted {
   }
   
   
-  public void performNextMove(){
+  public void performNextMove() {
+    if (checkHit()==1) {
+      return;
+    }
     try {
       int m[] = moves.pop();
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
+        lastMoved = c;
         if (c!=null)
           c.moveToDelayed(m[1], 0.2f);
       }
@@ -274,6 +282,21 @@ public class Board extends Group implements OnActionCompleted {
     }
   }
 
+  public int checkHit() {
+    if (lastMoved!=null) { 
+      int c = lastMoved.getSpecularColor();
+      int p = lastMoved.getSpecularPosition();
+      if (_board[c][p]>0) {
+        //CHECKER HITTED
+        Checker ch = getChecker(c, p);
+        if (ch==null) return 0; 
+        ch.moveTo(24);
+        return 1;
+      }
+    }
+    return 0;
+  }
+  
   @Override
   public void completed(Action action) {
     //ANIMATION FINISHED

@@ -15,16 +15,10 @@ public class GameScreen implements Screen {
 
 
   public GameScreen(GnuBackgammon bg){
-    
     stage = new Stage(1280, 740, true);
     board = new Board();
     stage.addActor(board);
-    
-    board.initBoard();
-
-
     GnubgAPI.SetAILevel(7);
-    board.simulate();
   }
 
 
@@ -43,18 +37,24 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
+    board.initBoard();
+    board.simulate();
   }
 
   @Override
   public void hide() {
+    board.moves.clear();
   }
 
   @Override
   public void pause() {
+    board.moves.clear();
   }
 
   @Override
   public void resume() {
+    board.initBoard();
+    board.simulate();
   }
 
   @Override
