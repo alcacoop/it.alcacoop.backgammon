@@ -82,19 +82,14 @@ public class Checker extends Group implements OnActionCompleted {
   }
 
   
-  public void setLabel() {
-    if (boardY>4)
-      label.setText(""+(boardY+1));
-    else
-      label.setText("");
-  }
 
   @Override
   public void completed(Action action) {
     if (action instanceof Delay) {
       if (boardY<5) label.setText("");
     } else {
-      setLabel();
+      if (boardY>4)
+        label.setText(""+(boardY+1));
       board.printBoard();
       board.performNextMove();
     }
