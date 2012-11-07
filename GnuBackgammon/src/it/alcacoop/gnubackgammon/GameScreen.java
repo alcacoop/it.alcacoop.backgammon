@@ -24,13 +24,7 @@ public class GameScreen implements Screen {
 
 
     GnubgAPI.SetAILevel(7);
-    int d[] = {0,0};
-    GnubgAPI.RollDice(d);
-    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
-    int moves[] = new int[8];
-    GnubgAPI.EvaluateBestMove(d, moves);
-    
-    board.setMoves(moves);
+    board.simulate();
   }
 
 

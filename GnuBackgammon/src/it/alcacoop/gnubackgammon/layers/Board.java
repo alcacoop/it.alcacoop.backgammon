@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.layers;
 import java.util.Random;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.Gdx;
@@ -25,6 +26,8 @@ public class Board extends Group implements OnActionCompleted {
   Vector2 pos[];
   BoardImage bimg;
   Checker checkers[][];
+  
+  int nIter = 10;
 
   public Board() {
     
@@ -44,8 +47,6 @@ public class Board extends Group implements OnActionCompleted {
       addActor(checkers[0][i]);
       addActor(checkers[1][i]);
     }
-
-    
 
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
@@ -77,9 +78,6 @@ public class Board extends Group implements OnActionCompleted {
   }
 
   
-  
-  
-
   public Vector2 getBoardCoord(int color, int x, int y){
     if (y>4) y=4;
     Vector2 ret = new Vector2();
@@ -201,12 +199,29 @@ public class Board extends Group implements OnActionCompleted {
           c.moveToDelayed(m[1], 0.2f);
       }
     } catch (Exception e) {
-      
+      if (nIter>0) simulate();
     }
-    
-    
   }
 
+  public void simulate() {
+    int fMove = nIter%2;
+    Gdx.app.log("nIter: ", ""+nIter+" "+nIter%2);
+    GnubgAPI.SetGameTurn(fMove, fMove);
+    MatchState.fMove = fMove;
+    MatchState.fTurn = fMove;
+    if (fMove==0)
+      GnubgAPI.SetBoard(_board[0], _board[1]);
+    else
+      GnubgAPI.SetBoard(_board[1], _board[0]);
+    
+    int d[] = {0,0};
+    GnubgAPI.RollDice(d);
+    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
+    int moves[] = new int[8];
+    GnubgAPI.EvaluateBestMove(d, moves);
+    setMoves(moves);
+    nIter--;
+  }
   
   
   public void animate() {
