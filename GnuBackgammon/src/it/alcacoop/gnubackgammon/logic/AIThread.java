@@ -13,16 +13,17 @@ public class AIThread extends Thread {
     
     @Override
     public void run() {
-      while(true) {
-        try {
-          Runnable r = queue.pop();
-          r.run();
-        } catch(Exception e) {        
+      try {
+        Thread.sleep(250);
+        synchronized (queue) {
+          queue.pop().run();
         }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     }
     
     public void post(Runnable r) {
-       queue.push(r);
+      queue.push(r);
     }
 }
