@@ -1,8 +1,9 @@
 package it.alcacoop.gnubackgammon;
 
 import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AIThread;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import it.alcacoop.gnubackgammon.logic.FSM;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -12,21 +13,22 @@ public class GameScreen implements Screen {
 
   private Stage stage;
   private Board board;
+  
+  public static FSM fsm;
 
 
   public GameScreen(GnuBackgammon bg){
+    fsm = new FSM();
+    fsm.start();
+    
     stage = new Stage(1280, 740, true);
     board = new Board();
     stage.addActor(board);
     
     AIThread thread = new AIThread();
-    thread.post(new Runnable() {
-      
-      @Override
-      public void run() {
-        GnubgAPI.SetAILevel(7);      
-      }
-    });
+    
+    int d[] = {0,0};
+    thread.post(AICalls.RollDice(d));
     
     board.initBoard();
     board.simulate();

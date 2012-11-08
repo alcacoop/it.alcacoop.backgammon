@@ -13,13 +13,15 @@ public class AIThread extends Thread {
     
     @Override
     public void run() {
-      try {
-        Thread.sleep(250);
-        synchronized (queue) {
-          queue.pop().run();
+      while (true) {
+        try {
+          Thread.sleep(250);
+          synchronized (queue) {
+            if (!queue.empty()) queue.pop().run();
+          }
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
       }
     }
     
