@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon;
 
 import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -22,8 +21,10 @@ public class GameScreen implements Screen {
     
     board.initBoard();
     board.simulate();
-    
     //board.animate();
+    
+    //int[]  moves = {5,-1,5,-1,-1,-1,-1,-1};
+    //board.setMoves(moves);
   }
 
 

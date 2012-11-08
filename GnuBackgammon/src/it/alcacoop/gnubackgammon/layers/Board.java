@@ -18,8 +18,7 @@ import java.util.Stack;
 public class Board extends Group {
 
   public int[][] _board;
-
-
+  public int[] bearedOff = {0,0};
   public Stack<int[]> moves;
 
   Vector2 pos[];
@@ -27,11 +26,11 @@ public class Board extends Group {
   Checker checkers[][];
   Checker lastMoved = null;
 
-  int nIter = 10;
+  int nIter = 240;
 
   public Board() {
 
-    _board = new int[2][25]; 
+    _board = new int[2][25];
 
     moves = new Stack<int[]>();
     bimg = new BoardImage();
@@ -85,22 +84,31 @@ public class Board extends Group {
     if (y>4) y=4;
     Vector2 ret = new Vector2();
 
-    if (x==24) {
-      ret.x = pos[x].x;
-      if (color==0) ret.y=590 - (49*y);
-      else ret.y=90 + (49*y);
-    } else {
-      if (color==0) { //WHITE
-        ret.x = pos[23-x].x;
-        if (x>11) ret.y = pos[23-x].y - (49*y);
-        else ret.y = pos[23-x].y + (49*y);
-      } else { //BLACK
+    switch (x) {
+    
+      case -1: //BEAR OFF
+        ret.x = 948.5f; 
+        if (color==1) ret.y = 625-bearedOff[color]*14;
+        else ret.y = 55+bearedOff[color]*14;
+        break;
+        
+      case 24: //BAR
         ret.x = pos[x].x;
-        if (x>11) ret.y = pos[x].y + (49*y);
-        else ret.y = pos[x].y - (49*y);
-      }
+        if (color==0) ret.y=590 - (49*y);
+        else ret.y=90 + (49*y);
+        break;
+        
+      default: //ON THE TABLE
+        if (color==0) { //WHITE
+          ret.x = pos[23-x].x;
+          if (x>11) ret.y = pos[23-x].y - (49*y);
+          else ret.y = pos[23-x].y + (49*y);
+        } else { //BLACK
+          ret.x = pos[x].x;
+          if (x>11) ret.y = pos[x].y + (49*y);
+          else ret.y = pos[x].y - (49*y);
+        }
     }
-
     return ret;
   }
 
@@ -109,6 +117,8 @@ public class Board extends Group {
   public void initBoard() {
     _board[0] = MatchState.board[0];
     _board[1] = MatchState.board[1];
+    bearedOff[0] = 0;
+    bearedOff[1] = 0;
 
     int nchecker = 0;
     for (int i=24; i>=0; i--) {
@@ -160,10 +170,12 @@ public class Board extends Group {
 
 
   public void setMoves(int _moves[]) {
+    moves.clear();
     Gdx.app.log("MOVE: ",
         _moves[0]+"/"+_moves[1]+" "+_moves[2]+"/"+_moves[3]+
         "    "+_moves[4]+"/"+_moves[5]+" "+_moves[6]+"/"+_moves[7]);
     if (_moves.length<8) return;
+    
     int m1[] = new int[2];
     int m2[] = new int[2];
     int m3[] = new int[2];
@@ -200,41 +212,21 @@ public class Board extends Group {
     if (checkHit()==1) return;
     
     try {
-      if (lastMoved!=null) lastMoved.setZIndex(1);
+      if ((lastMoved!=null)&&(lastMoved.boardX!=-1)) lastMoved.setZIndex(1);
       int m[] = moves.pop();
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
+        c.moveToDelayed(m[1], 0.2f);
         lastMoved = c;
-        if (c!=null)
-          c.moveToDelayed(m[1], 0.2f);
       }
     } catch (Exception e) {
-      if (nIter>0) simulate();
+      nIter--;
+      if (nIter>0)  simulate();
     }
   }
 
 
-  public void simulate() {
-    int fMove = nIter%2;
-    Gdx.app.log("nIter: ", ""+nIter+" "+nIter%2);
-    GnubgAPI.SetGameTurn(fMove, fMove);
-    MatchState.fMove = fMove;
-    MatchState.fTurn = fMove;
-    if (fMove==0)
-      GnubgAPI.SetBoard(_board[0], _board[1]);
-    else
-      GnubgAPI.SetBoard(_board[1], _board[0]);
-
-
-    //PRIMO LANCIO SIMULAZIONE
-    int d[] = {0,0};
-    GnubgAPI.RollDice(d);
-    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
-    int moves[] = new int[8];
-    GnubgAPI.EvaluateBestMove(d, moves);
-    setMoves(moves);
-    nIter--;
-  }
+  
 
 
 
@@ -253,7 +245,36 @@ public class Board extends Group {
     return 0;
   }
 
+  
+  
+  public void simulate() {
+    if ((bearedOff[0]==15)||(bearedOff[1]==15)) {
+      nIter = 0;
+      return; //WINNER!
+    }
+    
+    int fMove = nIter%2;
+    Gdx.app.log("nIter: ", ""+nIter+" "+nIter%2);
+    GnubgAPI.SetGameTurn(fMove, fMove);
+    MatchState.fMove = fMove;
+    MatchState.fTurn = fMove;
+    if (fMove==0)
+      GnubgAPI.SetBoard(_board[0], _board[1]);
+    else
+      GnubgAPI.SetBoard(_board[1], _board[0]);
 
+
+    //PRIMO LANCIO SIMULAZIONE
+    int d[] = {0,0};
+    GnubgAPI.RollDice(d);
+    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
+    int moves[] = new int[8];
+    GnubgAPI.EvaluateBestMove(d, moves);
+    setMoves(moves);
+  }
+
+  
+  
 
   public void animate() {
     _board[0] = MatchState.board[4];

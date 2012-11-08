@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -58,18 +59,26 @@ public class Checker extends Group {
   public void moveTo(int x){
     moveToDelayed(x, 0);
   }
-  public void moveToDelayed(int x, float delay){
+  public void moveToDelayed(final int x, float delay){
+    Gdx.app.log("MOVETOD", "");
     
-    if (x==24) //BAR
+    if (x==24) //MOVE TO BAR
       setZIndex(20);
     else
       toFront();
     
-    float tt = 0.8f;
-    if (x==24) tt=0.8f;
+    float tt = 0.4f;
+    if (x==24) tt=0.3f;
     
-    int y = board._board[color][x];
+    final int y;
+    if (x>=0) {
+      y = board._board[color][x];
+    } else { //BEARED OFF
+      board.bearedOff[color]++; 
+      y = board.bearedOff[color];
+    }
     Vector2 _p = board.getBoardCoord(color, x, y);
+    
     
     this.addAction(Actions.sequence(
         Actions.delay(delay),
@@ -84,6 +93,7 @@ public class Checker extends Group {
             @Override
             public boolean act(float delta) {
               actionCompleted(1);
+              
               return true;
             }}
         ));
@@ -94,7 +104,8 @@ public class Checker extends Group {
   public void setPosition(int x, int y) {
     board._board[color][boardX]--;
 	  boardX = x;
-	  boardY = board._board[color][boardX]++;
+	  if (x>=0) //ON_TABLE!! 
+	    boardY = board._board[color][boardX]++;
   }
 
   
@@ -112,9 +123,8 @@ public class Checker extends Group {
   public void actionCompleted(int mode) {
     if (mode==0) { //PRE_MOVEMENT
       if (boardY<5) label.setText("");
-    } else { //POST_MOVEMENT
-      if (boardY>4)
-        label.setText(""+(boardY+1));
+    } else if (mode==1) { //POST_MOVEMENT
+      if (boardY>4) label.setText(""+(boardY+1));
       board.performNextMove();
     }
   }
