@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.GameScreen;
+import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.FSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -10,8 +11,8 @@ public class SetAILevelAICall implements Runnable {
 
   private int level;
   
-  public SetAILevelAICall(int l) {
-    level = l;
+  public SetAILevelAICall(AILevels l) {
+    level = l.ordinal();
   }
 
   @Override

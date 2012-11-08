@@ -1,7 +1,7 @@
 package it.alcacoop.gnubackgammon.logic;
 
 import it.alcacoop.gnubackgammon.aicalls.*;
-
+import it.alcacoop.gnubackgammon.logic.AILevels;
 
 public class AICalls {
   
@@ -11,7 +11,7 @@ public class AICalls {
     thread = new AIThread();
   }
 
-  public static void SetAILevel(int l) {
+  public static void SetAILevel(AILevels l) {
     thread.post(new SetAILevelAICall(l));
   }
   
