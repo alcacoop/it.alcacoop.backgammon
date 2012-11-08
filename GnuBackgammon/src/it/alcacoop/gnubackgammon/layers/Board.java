@@ -46,8 +46,6 @@ public class Board extends Group {
       
       addActor(checkers[0][i]);
       addActor(checkers[1][i]);
-      checkers[0][i].setZIndex(1);
-      checkers[1][i].setZIndex(1);
     }
 
     pos = new Vector2[25];
@@ -175,7 +173,7 @@ public class Board extends Group {
         _moves[0]+"/"+_moves[1]+" "+_moves[2]+"/"+_moves[3]+
         "    "+_moves[4]+"/"+_moves[5]+" "+_moves[6]+"/"+_moves[7]);
     if (_moves.length<8) return;
-    
+
     int m1[] = new int[2];
     int m2[] = new int[2];
     int m3[] = new int[2];
@@ -212,7 +210,6 @@ public class Board extends Group {
     if (checkHit()==1) return;
     
     try {
-      if ((lastMoved!=null)&&(lastMoved.boardX!=-1)) lastMoved.setZIndex(1);
       int m[] = moves.pop();
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
@@ -224,12 +221,6 @@ public class Board extends Group {
       if (nIter>0)  simulate();
     }
   }
-
-
-  
-
-
-
 
   public int checkHit() {
     if (lastMoved!=null) { 
@@ -254,7 +245,6 @@ public class Board extends Group {
     }
     
     int fMove = nIter%2;
-    Gdx.app.log("nIter: ", ""+nIter+" "+nIter%2);
     GnubgAPI.SetGameTurn(fMove, fMove);
     MatchState.fMove = fMove;
     MatchState.fTurn = fMove;
@@ -267,7 +257,6 @@ public class Board extends Group {
     //PRIMO LANCIO SIMULAZIONE
     int d[] = {0,0};
     GnubgAPI.RollDice(d);
-    Gdx.app.log("DICES: ", ""+d[0]+" - "+d[1]);
     int moves[] = new int[8];
     GnubgAPI.EvaluateBestMove(d, moves);
     setMoves(moves);
