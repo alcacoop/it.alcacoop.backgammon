@@ -1,5 +1,9 @@
 package it.alcacoop.gnubackgammon.aicalls;
 
+import com.badlogic.gdx.Gdx;
+
+import it.alcacoop.gnubackgammon.GameScreen;
+import it.alcacoop.gnubackgammon.logic.FSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 public class SetBoardAICall implements Runnable {
@@ -15,6 +19,11 @@ public class SetBoardAICall implements Runnable {
   @Override
   public void run() {
     GnubgAPI.SetBoard(b1, b2);
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        GameScreen.fsm.processEvent(FSM.Events.SET_BOARD, 1);
+      }
+    });
   }
-
 }
