@@ -118,7 +118,7 @@ public class Checker extends Group {
   
   public void actionCompleted(int mode) {
     if (mode==0) { //PRE_MOVEMENT
-      if (boardY<5) label.setText("");
+      if ((boardY<5)||(boardX==-1)) label.setText("");
     } else if (mode==1) { //POST_MOVEMENT
       if (boardY>4) label.setText(""+(boardY+1));
       board.performNextMove();
