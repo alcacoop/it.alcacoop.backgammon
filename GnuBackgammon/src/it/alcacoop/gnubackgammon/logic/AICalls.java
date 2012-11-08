@@ -43,7 +43,7 @@ public class AICalls {
     thread.post(new AskForDoublingAICall());
   }
 
-  public static void EvaluateBestMove(int dices[], int moves[]) {
+  public static void EvaluateBestMove(int dices[]) {
     thread.post(new EvaluateBestMoveAICall(dices));
   }
   

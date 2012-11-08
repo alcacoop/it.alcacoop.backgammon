@@ -122,7 +122,6 @@ public class Checker extends Group {
     } else if (mode==1) { //POST_MOVEMENT
       if (boardY>4) label.setText(""+(boardY+1));
       board.performNextMove();
-//      if (Checker.this.boardX!=-1) Checker.this.setZIndex(_zindex);
     }
   }
 }

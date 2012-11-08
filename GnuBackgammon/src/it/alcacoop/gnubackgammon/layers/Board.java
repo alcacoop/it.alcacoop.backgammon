@@ -1,11 +1,12 @@
 package it.alcacoop.gnubackgammon.layers;
 
 import java.util.Random;
+
+import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -16,20 +17,18 @@ import java.util.Stack;
 
 
 public class Board extends Group {
-
+  
   public int[][] _board;
   public int[] bearedOff = {0,0};
   public Stack<int[]> moves;
 
-  Vector2 pos[];
-  BoardImage bimg;
-  Checker checkers[][];
-  Checker lastMoved = null;
+  private Vector2 pos[];
+  private BoardImage bimg;
+  private Checker checkers[][];
+  private Checker lastMoved = null;
 
-  int nIter = 240;
-
+  
   public Board() {
-
     _board = new int[2][25];
 
     moves = new Stack<int[]>();
@@ -109,7 +108,6 @@ public class Board extends Group {
     }
     return ret;
   }
-
 
 
   public void initBoard() {
@@ -210,18 +208,21 @@ public class Board extends Group {
     if (checkHit()==1) return;
     
     try {
-      int m[] = moves.pop();
-      if (m!=null) {
-        Checker c = getChecker(MatchState.fMove, m[0]);
-        c.moveToDelayed(m[1], 0.2f);
-        lastMoved = c;
+      synchronized (moves) {
+        int m[] = moves.pop();
+        if (m!=null) {
+          Checker c = getChecker(MatchState.fMove, m[0]);
+          c.moveToDelayed(m[1], 0.2f);
+          lastMoved = c;
+        }  
       }
     } catch (Exception e) {
-      nIter--;
-      if (nIter>0)  simulate();
+      GameScreen.fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
+    
   }
 
+  
   public int checkHit() {
     if (lastMoved!=null) { 
       int c = lastMoved.getSpecularColor();
@@ -237,34 +238,6 @@ public class Board extends Group {
   }
 
   
-  
-  public void simulate() {
-    if ((bearedOff[0]==15)||(bearedOff[1]==15)) {
-      nIter = 0;
-      return; //WINNER!
-    }
-    
-    int fMove = nIter%2;
-    GnubgAPI.SetGameTurn(fMove, fMove);
-    MatchState.fMove = fMove;
-    MatchState.fTurn = fMove;
-    if (fMove==0)
-      GnubgAPI.SetBoard(_board[0], _board[1]);
-    else
-      GnubgAPI.SetBoard(_board[1], _board[0]);
-
-
-    //PRIMO LANCIO SIMULAZIONE
-    int d[] = {0,0};
-    GnubgAPI.RollDice(d);
-    int moves[] = new int[8];
-    GnubgAPI.EvaluateBestMove(d, moves);
-    setMoves(moves);
-  }
-
-  
-  
-
   public void animate() {
     _board[0] = MatchState.board[4];
     _board[1] = MatchState.board[5];
