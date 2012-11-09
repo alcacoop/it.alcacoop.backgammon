@@ -201,17 +201,15 @@ public class Board extends Group {
 
 
   public void performNextMove() {
-    if (checkHit()==1) return;
+    if (checkHit()) return;
     
     try {
-      synchronized (moves) {
-        int m[] = moves.pop();
-        if (m!=null) {
-          Checker c = getChecker(MatchState.fMove, m[0]);
-          c.moveToDelayed(m[1], 0.2f);
-          lastMoved = c;
-        }  
-      }
+      int m[] = moves.pop();
+      if (m!=null) {
+        Checker c = getChecker(MatchState.fMove, m[0]);
+        c.moveToDelayed(m[1], 0.2f);
+        lastMoved = c;
+      }  
     } catch (Exception e) {
       GameScreen.fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
@@ -219,18 +217,20 @@ public class Board extends Group {
   }
 
   
-  public int checkHit() {
-    if (lastMoved!=null) { 
+  public boolean checkHit() {
+    if (lastMoved!=null) {
+      if (lastMoved.boardX==-1) return false; //BEARED OFF
+      
       int c = lastMoved.getSpecularColor();
       int p = lastMoved.getSpecularPosition();
       if (_board[c][p]>0) {
         //CHECKER HITTED
         Checker ch = getChecker(c, p);
         ch.moveTo(24);
-        return 1;
+        return true;
       }
     }
-    return 0;
+    return false;
   }
 
   
