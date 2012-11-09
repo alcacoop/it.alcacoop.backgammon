@@ -4,6 +4,8 @@ import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.FSM.Events;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -25,12 +27,9 @@ public class GameScreen implements Screen {
     
     fsm = new FSM(board);
     fsm.start();
-    
-    AICalls.SetAILevel(AILevels.WORLDCLASS);
+    AICalls.SetAILevel(AILevels.SUPREMO);
+    fsm.processEvent(Events.START, null);
     //board.animate();
-    
-    //int[]  moves = {5,-1,5,-1,-1,-1,-1,-1};
-    //board.setMoves(moves);
   }
 
 
@@ -49,6 +48,9 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
+    board.initBoard();
+    AICalls.SetAILevel(AILevels.SUPREMO);
+    fsm.processEvent(Events.START, null);
   }
 
   @Override

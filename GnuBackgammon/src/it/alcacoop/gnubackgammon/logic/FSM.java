@@ -3,7 +3,7 @@ package it.alcacoop.gnubackgammon.logic;
 import it.alcacoop.gnubackgammon.layers.Board;
 
 
-// GAME STATE MACHINE
+// SIMULATED GAME STATE MACHINE
 // From: http://vanillajava.blogspot.com/2011/06/java-secret-using-enum-as-state-machine.html
 
 interface Context {
@@ -38,14 +38,15 @@ public class FSM implements Context {
     SET_MATCH_SCORE,
     SET_MATCH_TO,
     UPDATE_MS_CUBEINFO,
+    START,
     NO_MORE_MOVES
   }
 
   public enum States implements State {
     STARTING {
       public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
-        if (evt == Events.SET_AI_LEVEL) {
-          ctx.state(SIMULATED_TURN);
+        if (evt == Events.START) {
+          ctx.state(States.SIMULATED_TURN);
           return true;
         }
         return false;
@@ -56,7 +57,10 @@ public class FSM implements Context {
       public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
-            AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            if (MatchState.fMove == 0)
+              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            else 
+              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
             AICalls.RollDice();
@@ -70,7 +74,7 @@ public class FSM implements Context {
             ctx.board().setMoves(moves);
             break;
           case NO_MORE_MOVES:
-            ctx.state(CHECK_WIN);
+            ctx.state(States.CHECK_WIN);
             break;
           default:
             return false;
@@ -78,8 +82,8 @@ public class FSM implements Context {
         return true;
       }
       public void enterState(Context ctx) {
-        int m = 0;
-        if (MatchState.fMove == 0) m = 1;
+        int m = 1;
+        if (MatchState.fMove == 1) m = 0;
         AICalls.SetGameTurn(m, m);
         MatchState.fMove = m;
         MatchState.fTurn = m;
@@ -90,15 +94,18 @@ public class FSM implements Context {
     CHECK_WIN {
       public void enterState(Context ctx) {
         int m = MatchState.fMove;
-        if (ctx.board().bearedOff[m] == 15)
-          ctx.state(SIMULATION_FINISHED);
-        else
+        if (ctx.board().bearedOff[m] == 15) {
+          ctx.state(States.SIMULATION_FINISHED);
+        } else {
           ctx.state(States.SIMULATED_TURN);
+        }
       }
     },
     
     SIMULATION_FINISHED {
-      
+      public void enterState(Context ctx) {
+        ctx.board().initBoard();
+      }
     };
     
     //DEFAULT IMPLEMENTATION
@@ -123,7 +130,6 @@ public class FSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    System.out.println("PROCESS EVENT: "+evt);
     System.out.println("\tSRC STATE: "+state());
     boolean res = state().processEvent(this, evt, params);
     System.out.println("\tDST STATE: "+state());
