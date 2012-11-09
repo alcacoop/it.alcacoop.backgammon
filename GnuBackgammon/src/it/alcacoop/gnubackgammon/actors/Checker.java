@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -29,6 +30,17 @@ public class Checker extends Group {
 
   public Checker(Board _board, int _color) {
     super();
+
+    /*
+    addListener(new InputListener() {
+      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+        return true;
+      }
+      public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+        System.out.println("Click on: "+Checker.this.boardX);
+      }
+    });
+    */
 
     boardX = boardY= 0;
     color = _color;
@@ -126,4 +138,8 @@ public class Checker extends Group {
     return 23-boardX;
   }
 
+  @Override
+  public Actor hit(float x, float y, boolean touchable) {
+    return null;
+  }
 }

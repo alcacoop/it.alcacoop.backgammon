@@ -5,6 +5,7 @@ import java.util.Random;
 import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
+import it.alcacoop.gnubackgammon.actors.Point;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
@@ -24,28 +25,23 @@ public class Board extends Group {
 
   private Vector2 pos[];
   private BoardImage bimg;
-  private Checker checkers[][];
+  public Checker checkers[][];
   private Checker lastMoved = null;
+  public Point points[];
 
   
   public Board() {
     _board = new int[2][25];
-
+    
     moves = new Stack<int[]>();
     bimg = new BoardImage();
     bimg.setX(30);
     bimg.setY(20);
     addActor(bimg);
+    
+    
 
     checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
-
-    for (int i = 0; i<15; i++) {
-      checkers[0][i] = new Checker(this, 0);
-      checkers[1][i] = new Checker(this, 1);
-      
-      addActor(checkers[0][i]);
-      addActor(checkers[1][i]);
-    }
 
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
@@ -74,7 +70,27 @@ public class Board extends Group {
     pos[24] = new Vector2();
     pos[24].x = 506;
     pos[24].y = 0;
+    
+    points = new Point[24];
+    for (int i = 0; i<24; i++) {
+      points[i] = new Point(i);
+      Vector2 p = pos[i];
+      points[i].setX(p.x);
+      if (i<12) points[i].setY(400);
+      else points[i].setY(70);
+      addActor(points[i]);
+    }
+    
+    
+    for (int i = 0; i<15; i++) {
+      checkers[0][i] = new Checker(this, 0);
+      checkers[1][i] = new Checker(this, 1);
+      addActor(checkers[0][i]);
+      addActor(checkers[1][i]);
+    }
+
   }
+
 
 
   public Vector2 getBoardCoord(int color, int x, int y){
@@ -296,6 +312,5 @@ public class Board extends Group {
       }
     }
   }
-
 
 } //END CLASS

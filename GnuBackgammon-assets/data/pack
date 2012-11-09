@@ -10,16 +10,23 @@ board
   orig: 1005, 692
   offset: 0, 0
   index: -1
-cw
+point
   rotate: false
   xy: 2, 696
+  size: 55, 262
+  orig: 55, 262
+  offset: 0, 0
+  index: -1
+cw
+  rotate: false
+  xy: 2, 960
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 2, 751
+  xy: 59, 696
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
