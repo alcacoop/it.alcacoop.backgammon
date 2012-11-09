@@ -53,6 +53,19 @@ public class Checker extends Group {
     addActor(label);
     label.setText("");
   }
+  
+  
+  public void reset(int _boardX, int _boardY) {
+    Vector2 _p = board.getBoardCoord(color, _boardX, _boardY);
+    boardX = _boardX;
+    boardY = _boardY;
+    setX(_p.x);
+    setY(_p.y);
+    if ((boardY>4)&&(boardX!=-1)) 
+      label.setText(""+(boardY+1));
+    else 
+      label.setText("");
+  }
 
   
   public void moveTo(int x){
@@ -75,21 +88,20 @@ public class Checker extends Group {
     }
     Vector2 _p = board.getBoardCoord(color, x, y);
     
-    
     this.addAction(Actions.sequence(
         Actions.delay(delay),
         new Action(){
           @Override
           public boolean act(float delta) {
-            actionCompleted(0);
+            if ((boardY<5)||(boardX==-1)) label.setText("");
             return true;
           }},
         Actions.moveTo(_p.x, _p.y, tt),
         new Action(){
             @Override
             public boolean act(float delta) {
-              actionCompleted(1);
-              
+              if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
+              board.performNextMove();
               return true;
             }}
         ));
@@ -114,14 +126,4 @@ public class Checker extends Group {
     return 23-boardX;
   }
 
-  
-  
-  public void actionCompleted(int mode) {
-    if (mode==0) { //PRE_MOVEMENT
-      if ((boardY<5)||(boardX==-1)) label.setText("");
-    } else if (mode==1) { //POST_MOVEMENT
-      if (boardY>4) label.setText(""+(boardY+1));
-      board.performNextMove();
-    }
-  }
 }

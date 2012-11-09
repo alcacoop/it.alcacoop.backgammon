@@ -111,31 +111,27 @@ public class Board extends Group {
 
 
   public void initBoard() {
-    _board[0] = MatchState.board[0];
-    _board[1] = MatchState.board[1];
+    Gdx.app.log("INITBOARD", "DONE!");
+    for (int i=0; i<24; i++) {
+      _board[0][i] = MatchState.board[0][i];
+      _board[1][i] = MatchState.board[1][i];
+    }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
 
     int nchecker = 0;
-    for (int i=24; i>=0; i--) {
+    //POSITIONING WHITE CHECKERS
+    for (int i=0; i<25; i++) {
       for (int j=0;j<_board[0][i];j++) {
-        Vector2 _p = getBoardCoord(0, i, j);
-        checkers[0][nchecker].boardX = i;
-        checkers[0][nchecker].boardY = j;
-        checkers[0][nchecker].setX(_p.x);
-        checkers[0][nchecker].setY(_p.y);
+        checkers[0][nchecker].reset(i,j);
         nchecker++;
       }
     }
     //POSITIONING BLACK CHECKERS
     nchecker = 0;
-    for (int i=24; i>=0; i--) {
+    for (int i=0; i<25; i++) {
       for (int j=0;j<_board[1][i];j++) {
-        Vector2 _p = getBoardCoord(1, i, j);
-        checkers[1][nchecker].boardX = i;
-        checkers[1][nchecker].boardY = j;
-        checkers[1][nchecker].setX(_p.x);
-        checkers[1][nchecker].setY(_p.y);
+        checkers[1][nchecker].reset(i, j);
         nchecker++;
       }
     }
