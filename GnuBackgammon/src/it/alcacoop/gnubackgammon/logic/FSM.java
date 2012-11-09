@@ -63,6 +63,12 @@ public class FSM implements Context {
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
+            AICalls.AskForResignation();
+            break;
+          case ASK_FOR_RESIGNATION:
+            AICalls.AskForDoubling();
+            break;
+          case ASK_FOR_DOUBLING:
             AICalls.RollDice();
             break;
           case ROLL_DICE:
@@ -82,11 +88,13 @@ public class FSM implements Context {
         return true;
       }
       public void enterState(Context ctx) {
+        /*
         int m = 1;
         if (MatchState.fMove == 1) m = 0;
-        AICalls.SetGameTurn(m, m);
         MatchState.fMove = m;
         MatchState.fTurn = m;
+        AICalls.SetGameTurn(m, m);
+        */
       }
     },
     
@@ -130,9 +138,10 @@ public class FSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    System.out.println("\tSRC STATE: "+state());
+//    System.out.println("PROCESS EVENT: "+evt);
+//    System.out.println("\tSRC STATE: "+state());
     boolean res = state().processEvent(this, evt, params);
-    System.out.println("\tDST STATE: "+state());
+//    System.out.println("\tDST STATE: "+state());
     return res;
   }
 
