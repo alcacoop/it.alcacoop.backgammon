@@ -5,6 +5,7 @@ import java.util.Stack;
 public class AIThread extends Thread {
 
     private Stack<Runnable> queue;
+    
     public AIThread() {
       super();
       queue = new Stack<Runnable>();
@@ -13,19 +14,21 @@ public class AIThread extends Thread {
     
     @Override
     public void run() {
-      while (true) {
-        try {
-          Thread.sleep(250);
-          synchronized (queue) {
-            if (!queue.empty()) queue.pop().run();
-          }
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+        while (true) {
+            pull().run();
         }
-      }
     }
     
-    public void post(Runnable r) {
+    public synchronized void post(Runnable r) {
       queue.push(r);
+      notify();
+    }
+    
+    public synchronized Runnable pull() {
+      if(queue.empty())
+        try {
+          wait();
+        } catch(InterruptedException e) {} 
+      return queue.pop();
     }
 }
