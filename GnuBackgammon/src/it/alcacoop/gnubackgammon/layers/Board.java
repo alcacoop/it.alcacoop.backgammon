@@ -151,6 +151,9 @@ public class Board extends Group {
         nchecker++;
       }
     }
+    int d[] = {2,1};
+    highlightPoints(checkers[1][14],d);
+    
   }
 
 
@@ -313,4 +316,31 @@ public class Board extends Group {
     }
   }
 
+  public void highlightPoints(Checker ck, int d[]) {
+    int c = ck.color;
+    
+    //VALUTO POSIZIONI POSSIBILI DELLA MIA SCACCHIERA
+    if(_board[c][ck.boardX-d[0]] > 1) { //ANCHOR PRIMO DADO
+      points[ck.boardX-d[0]].highlight();
+    } 
+    if(_board[c][ck.boardX-d[1]] > 1) { //ANCHOR SECONDO DADO
+      points[ck.boardX-d[1]].highlight();
+    }
+    if(_board[c][ck.boardX-d[1]-d[0]] > 1) { //ANCHOR SOMMA DADI
+      points[ck.boardX-d[0]-d[1]].highlight();
+    } 
+    if(c==0) c = 1;
+    else c=0;
+    /*
+    if(_board[c][23-ck.boardX-d[0]] < 2) { //MANGIO PRIMO DADO
+      points[ck.boardX-d[0]].highlight();
+    }
+    if(_board[c][23-ck.boardX-d[1]] < 2) { //MANGIO SECONDO DADO
+      points[ck.boardX-d[1]].highlight();
+    }
+    if(_board[c][23-ck.boardX-d[1]-d[2]] < 2) { //MANGIO SOMMA DADI
+      points[ck.boardX-d[0]-d[1]].highlight();
+    }*/
+    
+  }
 } //END CLASS
