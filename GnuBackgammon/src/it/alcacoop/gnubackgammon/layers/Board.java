@@ -37,8 +37,8 @@ public class Board extends Group {
     
     moves = new Stack<int[]>();
     bimg = new BoardImage();
-    bimg.setX(30);
-    bimg.setY(20);
+    bimg.setX(0);
+    bimg.setY(0);
     addActor(bimg);
     
     
@@ -69,17 +69,17 @@ public class Board extends Group {
       }
     }
 
-    pos[24] = new Vector2();
-    pos[24].x = 506;
-    pos[24].y = 0;
+    pos[24] = new Vector2();  //HITTED
+    pos[24].x = bimg.getX()+476;
+    pos[24].y = bimg.getY();
     
     points = new Point[24];
     for (int i = 0; i<24; i++) {
-      points[i] = new Point(i);
+      points[i] = new Point(this, 23-i);
       Vector2 p = pos[i];
       points[i].setX(p.x);
-      if (i<12) points[i].setY(400);
-      else points[i].setY(70);
+      if (i<12) points[i].setY(bimg.getY()+380);
+      else points[i].setY(bimg.getY()+50);
       addActor(points[i]);
     }
     
@@ -104,9 +104,9 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = 948.5f; 
-        if (color==1) ret.y = 625-bearedOff[color]*14;
-        else ret.y = 55+bearedOff[color]*14;
+        ret.x = bimg.getX()+918.5f; 
+        if (color==1) ret.y = bimg.getY()+605-bearedOff[color]*14;
+        else ret.y = bimg.getY()+35+bearedOff[color]*14;
         break;
         
       case 24: //BAR
@@ -156,11 +156,27 @@ public class Board extends Group {
         nchecker++;
       }
     }
-    int d[] = {2,1};
-    highlightPoints(checkers[1][14],d);
-    
   }
 
+  
+  public void highlightPoints(int x, int d) {
+    for (int i=0;i<24;i++)
+      points[i].reset();
+    
+    //TODO: BEAR OFF
+    if (x-d<0) return;
+    
+    if (MatchState.fMove==1) {
+      if (_board[1][(x-d)]>=1) points[x-d].highlight(); //ANCHOR
+      if (_board[0][(23-x+d)]<2) points[x-d].highlight(); //HIT OR FREE
+    } else {
+      if (_board[0][(x-d)]>=1) points[23-x+d].highlight(); //ANCHOR
+      if (_board[1][(23-x+d)]<2) points[23-x+d].highlight(); //HIT OR FREE
+    }
+  }
+  
+  
+  
 
   Checker getChecker(int color, int x) {
     Checker _c = null;
@@ -321,31 +337,7 @@ public class Board extends Group {
     }
   }
 
-  public void highlightPoints(Checker ck, int d[]) {
-    int c = ck.color;
-    
-    //VALUTO POSIZIONI POSSIBILI DELLA MIA SCACCHIERA
-    if(_board[c][ck.boardX-d[0]] > 1) { //ANCHOR PRIMO DADO
-      points[ck.boardX-d[0]].highlight();
-    } 
-    if(_board[c][ck.boardX-d[1]] > 1) { //ANCHOR SECONDO DADO
-      points[ck.boardX-d[1]].highlight();
-    }
-    if(_board[c][ck.boardX-d[1]-d[0]] > 1) { //ANCHOR SOMMA DADI
-      points[ck.boardX-d[0]-d[1]].highlight();
-    } 
-    if(c==0) c = 1;
-    else c=0;
-    /*
-    if(_board[c][23-ck.boardX-d[0]] < 2) { //MANGIO PRIMO DADO
-      points[ck.boardX-d[0]].highlight();
-    }
-    if(_board[c][23-ck.boardX-d[1]] < 2) { //MANGIO SECONDO DADO
-      points[ck.boardX-d[1]].highlight();
-    }
-    if(_board[c][23-ck.boardX-d[1]-d[2]] < 2) { //MANGIO SOMMA DADI
-      points[ck.boardX-d[0]-d[1]].highlight();
-    }*/
-    
-  }
+  
+  
+  
 } //END CLASS

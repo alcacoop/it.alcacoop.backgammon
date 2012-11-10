@@ -1,6 +1,8 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -16,21 +18,23 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 public class Point extends Group {
 
   private TextureRegion region;
-  public int nPoint;
+  private int nPoint;
   private Color color;
   private Image img;
+  private Board board;
     
 
-  public Point(int _nPoint){
+  public Point(Board _board, int _nPoint) {
     super();
     nPoint = _nPoint;
+    board = _board;
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
         return true;
       }
       public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-        System.out.println("Click on: "+Point.this.nPoint);
+        board.highlightPoints(Point.this.nPoint(), 1);
       }
     });
 
@@ -38,7 +42,7 @@ public class Point extends Group {
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
     img = new Image(region);
-    color = img.getColor();
+    color = img.getColor().cpy();
     img.setColor(0, 0, 0, 0);
     
     img.setScaling(Scaling.none);
@@ -47,8 +51,19 @@ public class Point extends Group {
 
   }
   
+  
   public void highlight() {
-    img.setColor(color);
+      img.setColor(color);
+  }
+  
+  
+  public void reset() {
+    img.setColor(0,0,0,0);
   }
 
+  private int nPoint() {
+    if (MatchState.fMove==0) return nPoint;
+    else return 23-nPoint;
+  }
+  
 }
