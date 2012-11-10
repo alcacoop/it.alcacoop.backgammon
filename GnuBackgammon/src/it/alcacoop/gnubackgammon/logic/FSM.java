@@ -39,6 +39,7 @@ public class FSM implements Context {
     SET_MATCH_TO,
     UPDATE_MS_CUBEINFO,
     START,
+    PERFORMED_MOVE,
     NO_MORE_MOVES
   }
 
@@ -73,11 +74,15 @@ public class FSM implements Context {
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
+            ctx.board().dices.show(dices[0], dices[1]);
             AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
             ctx.board().setMoves(moves);
+            break;
+          case PERFORMED_MOVE:
+            ctx.board().performNextMove();
             break;
           case NO_MORE_MOVES:
             ctx.state(States.CHECK_WIN);
@@ -88,13 +93,11 @@ public class FSM implements Context {
         return true;
       }
       public void enterState(Context ctx) {
-        /*
         int m = 1;
         if (MatchState.fMove == 1) m = 0;
         MatchState.fMove = m;
         MatchState.fTurn = m;
         AICalls.SetGameTurn(m, m);
-        */
       }
     },
     
@@ -113,6 +116,7 @@ public class FSM implements Context {
     SIMULATION_FINISHED {
       public void enterState(Context ctx) {
         ctx.board().initBoard();
+        ctx.state(States.SIMULATED_TURN);
       }
     };
     

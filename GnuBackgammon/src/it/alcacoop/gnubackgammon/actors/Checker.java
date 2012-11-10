@@ -1,8 +1,9 @@
 package it.alcacoop.gnubackgammon.actors;
 
+import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.Board;
-
+import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -100,11 +101,15 @@ public class Checker extends Group {
     }
     Vector2 _p = board.getBoardCoord(color, x, y);
     
+    final int d = boardX-x;
+
     this.addAction(Actions.sequence(
         Actions.delay(delay),
         new Action(){
           @Override
           public boolean act(float delta) {
+            if (x<24)
+              board.dices.disable(d);
             if ((boardY<5)||(boardX==-1)) label.setText("");
             return true;
           }},
@@ -113,7 +118,7 @@ public class Checker extends Group {
             @Override
             public boolean act(float delta) {
               if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
-              board.performNextMove();
+              GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
               return true;
             }}
         ));

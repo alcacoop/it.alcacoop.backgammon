@@ -29,7 +29,7 @@ public class Board extends Group {
   public Checker checkers[][];
   private Checker lastMoved = null;
   public Point points[];
-  private Dices dices;
+  public Dices dices;
 
   
   public Board() {
@@ -138,6 +138,7 @@ public class Board extends Group {
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
+    dices.hide();
 
     int nchecker = 0;
     //POSITIONING WHITE CHECKERS

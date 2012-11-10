@@ -68,10 +68,21 @@ public class Dices extends Group {
 
   
   public void disable(int n) {
-    for (int i=0;i<last.length; i++)
-      if (last[i]==n) { 
-        d[i][n-1].setColor(0.7f,0.7f,0.7f,0.4f);
-        return;
+    if (last.length == 2) {
+      for (int i=0;i<last.length; i++) {
+        if (last[i]==n) { 
+          d[i][n-1].setColor(0.7f,0.7f,0.7f,0.4f);
+          return;
+        }
       }
+    } else { //DOUBLE
+      for (int i=0;i<4; i++) {
+        float c = d[i][n-1].getColor().a;
+        if (c!=0.4f) { 
+          d[i][n-1].setColor(0.7f,0.7f,0.7f,0.4f);
+          return;
+        }
+      }
+    }
   }
 }
