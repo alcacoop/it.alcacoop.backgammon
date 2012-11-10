@@ -19,7 +19,17 @@ public class GameScreen implements Screen {
 
   public GameScreen(GnuBackgammon bg){
     
-    stage = new Stage(1280, 740, true);
+    //stage = new Stage(1280, 740, true);
+    stage = new Stage(1005, 692, true);
+    
+    /*
+    TextureRegion region = GnuBackgammon.atlas.findRegion("bg");
+    Image img = new Image(region);
+    img.setWidth(1005);
+    img.setHeight(692);
+    stage.addActor(img);
+    */
+    
     board = new Board();
     stage.addActor(board);
     fsm = new FSM(board);

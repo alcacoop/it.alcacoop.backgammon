@@ -10,24 +10,85 @@ board
   orig: 1005, 692
   offset: 0, 0
   index: -1
-point
+wood
   rotate: false
   xy: 2, 696
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+point
+  rotate: false
+  xy: 132, 696
   size: 55, 262
   orig: 55, 262
   offset: 0, 0
   index: -1
+d3
+  rotate: false
+  xy: 2, 826
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d6
+  rotate: false
+  xy: 60, 826
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d5
+  rotate: false
+  xy: 2, 884
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d4
+  rotate: false
+  xy: 60, 884
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d2
+  rotate: false
+  xy: 2, 942
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d1
+  rotate: false
+  xy: 60, 942
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
 cw
   rotate: false
-  xy: 2, 960
+  xy: 132, 960
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 59, 696
+  xy: 189, 696
   size: 53, 53
   orig: 53, 53
+  offset: 0, 0
+  index: -1
+
+data-src2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 2, 2
+  size: 600, 367
+  orig: 600, 367
   offset: 0, 0
   index: -1

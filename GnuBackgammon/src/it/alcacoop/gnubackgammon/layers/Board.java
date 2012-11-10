@@ -5,6 +5,7 @@ import java.util.Random;
 import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
+import it.alcacoop.gnubackgammon.actors.Dices;
 import it.alcacoop.gnubackgammon.actors.Point;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -28,6 +29,7 @@ public class Board extends Group {
   public Checker checkers[][];
   private Checker lastMoved = null;
   public Point points[];
+  private Dices dices;
 
   
   public Board() {
@@ -88,7 +90,9 @@ public class Board extends Group {
       addActor(checkers[0][i]);
       addActor(checkers[1][i]);
     }
-
+    
+    dices = new Dices(bimg.getX()+1005/2, bimg.getY()+692/2);
+    addActor(dices);
   }
 
 

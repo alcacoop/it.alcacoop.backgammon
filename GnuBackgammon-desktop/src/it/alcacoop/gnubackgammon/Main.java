@@ -12,8 +12,8 @@ public class Main {
     LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
     cfg.title = "GnuBackgammon";
     cfg.useGL20 = false;
-    cfg.width = 640;
-    cfg.height = 370;
+    cfg.width = 502;
+    cfg.height = 346;
 
     new LwjglApplication(new GnuBackgammon(), cfg);
     
