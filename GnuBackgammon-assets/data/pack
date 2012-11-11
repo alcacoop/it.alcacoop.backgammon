@@ -80,6 +80,13 @@ cb
   orig: 53, 53
   offset: 0, 0
   index: -1
+ch
+  rotate: false
+  xy: 189, 751
+  size: 53, 52
+  orig: 53, 52
+  offset: 0, 0
+  index: -1
 
 data-src2.png
 format: RGBA8888

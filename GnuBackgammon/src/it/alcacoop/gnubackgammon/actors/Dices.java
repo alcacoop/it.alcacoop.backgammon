@@ -32,6 +32,7 @@ public class Dices extends Group {
     }
   }
   
+  
   public void hide() {
     for (int i=0; i<4; i++) 
       for (int j=0; j<6; j++) {
@@ -40,6 +41,7 @@ public class Dices extends Group {
       }
   }
 
+  
   public void show(int d1, int d2) {
     if (d1!=d2) {
       last = new int[2];

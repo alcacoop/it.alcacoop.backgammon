@@ -1,5 +1,6 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import com.badlogic.gdx.Gdx;
 import it.alcacoop.gnubackgammon.layers.Board;
 
 
@@ -40,7 +41,8 @@ public class FSM implements Context {
     UPDATE_MS_CUBEINFO,
     START,
     PERFORMED_MOVE,
-    NO_MORE_MOVES
+    NO_MORE_MOVES,
+    POINT_TOUCHED
   }
 
   public enum States implements State {
@@ -64,17 +66,11 @@ public class FSM implements Context {
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
-            AICalls.AskForResignation();
-            break;
-          case ASK_FOR_RESIGNATION:
-            AICalls.AskForDoubling();
-            break;
-          case ASK_FOR_DOUBLING:
             AICalls.RollDice();
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
-            ctx.board().dices.show(dices[0], dices[1]);
+            ctx.board().setDices(dices[0], dices[1]);
             AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
@@ -94,13 +90,60 @@ public class FSM implements Context {
       }
       public void enterState(Context ctx) {
         int m = 1;
-        if (MatchState.fMove == 1) m = 0;
+//        if (MatchState.fMove == 1) m = 0;
         MatchState.fMove = m;
         MatchState.fTurn = m;
         AICalls.SetGameTurn(m, m);
       }
     },
+
     
+    HUMAN_TURN {
+      public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
+        switch (evt) {
+          case SET_GAME_TURN:
+            if (MatchState.fMove == 0)
+              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            else 
+              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            break;
+          case SET_BOARD:
+            AICalls.RollDice();
+            break;
+          case ROLL_DICE:
+            int dices[] = (int[])params;
+            ctx.board().setDices(dices[0], dices[1]);
+            break;
+          case POINT_TOUCHED:
+            Gdx.app.log("TOUCHED", ""+params);
+            if (ctx.board().points[(Integer)params].isTarget) {
+              int origin = ctx.board().selected.boardX;
+              int dest = (Integer)params;
+              if (MatchState.fMove==0) dest = 23-dest;
+              int moves[] = {origin, dest, -1, -1, -1, -1, -1, -1}; 
+              ctx.board().setMoves(moves);
+            } else {
+              ctx.board().selectChecker((Integer)params);
+            }
+            break;
+          case PERFORMED_MOVE:
+            if (!ctx.board().hasMoves())
+              processEvent(ctx, Events.NO_MORE_MOVES, null);
+            break;
+          case NO_MORE_MOVES:
+            ctx.state(SIMULATED_TURN);
+            break;
+          default:
+            return false;
+        }
+        return true;
+      }
+      public void enterState(Context ctx) {
+        MatchState.fMove = 0;
+        MatchState.fTurn = 0;
+        AICalls.SetGameTurn(0, 0);
+      }
+    },
     
     CHECK_WIN {
       public void enterState(Context ctx) {
@@ -108,7 +151,8 @@ public class FSM implements Context {
         if (ctx.board().bearedOff[m] == 15) {
           ctx.state(States.SIMULATION_FINISHED);
         } else {
-          ctx.state(States.SIMULATED_TURN);
+          //ctx.state(States.SIMULATED_TURN);
+          ctx.state(States.HUMAN_TURN);
         }
       }
     },
@@ -142,10 +186,10 @@ public class FSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-//    System.out.println("PROCESS EVENT: "+evt);
-//    System.out.println("\tSRC STATE: "+state());
+    //System.out.println("PROCESS EVENT: "+evt);
+    //System.out.println("\tSRC STATE: "+state());
     boolean res = state().processEvent(this, evt, params);
-//    System.out.println("\tDST STATE: "+state());
+    //System.out.println("\tDST STATE: "+state());
     return res;
   }
 

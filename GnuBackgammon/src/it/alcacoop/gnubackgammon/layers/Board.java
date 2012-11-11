@@ -1,7 +1,8 @@
 package it.alcacoop.gnubackgammon.layers;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
-
 import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
@@ -28,14 +29,21 @@ public class Board extends Group {
   private BoardImage bimg;
   public Checker checkers[][];
   private Checker lastMoved = null;
+  public Checker selected = null;
+  
   public Point points[];
   public Dices dices;
+  
+  public ArrayList<Integer> availableMoves;
 
   
   public Board() {
     _board = new int[2][25];
     
     moves = new Stack<int[]>();
+    availableMoves = new ArrayList<Integer>();
+    
+    
     bimg = new BoardImage();
     bimg.setX(0);
     bimg.setY(0);
@@ -75,7 +83,7 @@ public class Board extends Group {
     
     points = new Point[24];
     for (int i = 0; i<24; i++) {
-      points[i] = new Point(this, 23-i);
+      points[i] = new Point(i);
       Vector2 p = pos[i];
       points[i].setX(p.x);
       if (i<12) points[i].setY(bimg.getY()+380);
@@ -159,25 +167,46 @@ public class Board extends Group {
   }
 
   
-  public void highlightPoints(int x, int d) {
+  public void resetPoints() {
     for (int i=0;i<24;i++)
       points[i].reset();
-    
-    //TODO: BEAR OFF
-    if (x-d<0) return;
-    
-    if (MatchState.fMove==1) {
-      if (_board[1][(x-d)]>=1) points[x-d].highlight(); //ANCHOR
-      if (_board[0][(23-x+d)]<2) points[x-d].highlight(); //HIT OR FREE
-    } else {
-      if (_board[0][(x-d)]>=1) points[23-x+d].highlight(); //ANCHOR
-      if (_board[1][(23-x+d)]<2) points[23-x+d].highlight(); //HIT OR FREE
-    }
   }
   
   
+  public void resetChecker() {
+    if (selected!=null)
+      selected.highlight(false);
+    selected = null;
+  }
   
-
+  
+  private int highlightPoints(int x, int d) {
+    if (x-d<0) return 0; //TODO: BEAR OFF
+    
+    int ps = 0;
+    if (MatchState.fMove==1) {
+      if (_board[1][(x-d)]>=1) {
+        points[x-d].highlight(); //ANCHOR
+        ps++;
+      }
+      if (_board[0][(23-x+d)]<2) {
+        points[x-d].highlight(); //HIT OR FREE
+        ps++;
+      }
+    } else {
+      if (_board[0][(x-d)]>=1) {
+        points[23-x+d].highlight(); //ANCHOR
+        ps++;
+      }
+      if (_board[1][(23-x+d)]<2) {
+        points[23-x+d].highlight(); //HIT OR FREE
+        ps++;
+      }
+    }
+    return ps;
+  }
+  
+  
   Checker getChecker(int color, int x) {
     Checker _c = null;
     int y = _board[color][x]-1;
@@ -187,17 +216,6 @@ public class Board extends Group {
         _c = c;
     }
     return _c;
-  }
-
-
-  public void printBoard(){
-    for (int i=0; i<2; i++) {
-      String s = "";
-      for (int j=0; j<25; j++) {
-        s+=" "+_board[i][j];
-      }
-      Gdx.app.log("BOARD"+i, s);
-    }
   }
 
 
@@ -241,8 +259,6 @@ public class Board extends Group {
 
 
   public void performNextMove() {
-    if (checkHit()) return;
-    
     try {
       int m[] = moves.pop();
       if (m!=null) {
@@ -253,7 +269,6 @@ public class Board extends Group {
     } catch (Exception e) {
       GameScreen.fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
-    
   }
 
   
@@ -273,6 +288,54 @@ public class Board extends Group {
     return false;
   }
 
+  
+  public void selectChecker(int x) {
+    if (MatchState.fMove==0) x = 23-x; 
+    if (_board[MatchState.fMove][x]>0) { //&& (hasPoints) TODO
+      Checker c = getChecker(MatchState.fMove, x);
+      // RESET POINTS AND CHECKERS
+      resetPoints();
+      resetChecker();
+      
+      if ((selected==null)||(c.boardX!=selected.boardX)) {
+        resetChecker();
+        selected = c;
+        c.highlight(true);
+        
+        int ps = 0;
+        Iterator<Integer> itr = availableMoves.iterator();
+        while (itr.hasNext()) {
+          int i = itr.next();
+          ps += highlightPoints(x, i);
+        }
+        if (ps==0) resetChecker();
+      }
+    }
+  }
+  
+  
+  public void hasPoints() {
+    
+  }
+  
+  
+  public void setDices(int d1, int d2) {
+    availableMoves.clear();
+    if (d1!=d2) {
+      availableMoves.add(d1);
+      availableMoves.add(d2);
+    } else {
+      for (int i=0;i<4;i++)
+        availableMoves.add(d1);
+    }
+    dices.show(d1, d2);
+  }
+  
+  
+  public boolean hasMoves() {
+    return !availableMoves.isEmpty();
+  }
+  
   
   public void animate() {
     _board[0] = MatchState.board[4];
@@ -336,8 +399,5 @@ public class Board extends Group {
       }
     }
   }
-
-  
-  
   
 } //END CLASS

@@ -1,9 +1,9 @@
 package it.alcacoop.gnubackgammon.actors;
 
+import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,20 +21,19 @@ public class Point extends Group {
   private int nPoint;
   private Color color;
   private Image img;
-  private Board board;
+  public boolean isTarget = false;
     
 
-  public Point(Board _board, int _nPoint) {
+  public Point(int _nPoint) {
     super();
     nPoint = _nPoint;
-    board = _board;
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
         return true;
       }
       public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-        board.highlightPoints(Point.this.nPoint(), 1);
+        GameScreen.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
       }
     });
 
@@ -54,11 +53,13 @@ public class Point extends Group {
   
   public void highlight() {
       img.setColor(color);
+      isTarget = true;
   }
   
   
   public void reset() {
     img.setColor(0,0,0,0);
+    isTarget = false;
   }
 
   private int nPoint() {

@@ -19,10 +19,9 @@ import com.badlogic.gdx.utils.Scaling;
 
 public class Checker extends Group {
 
-  private TextureRegion region;
   private Board board;
   private Label label;
-  private Image img;
+  private Image img, imgh;
   
   public int color = 0;
   public int boardX = -1; 
@@ -32,20 +31,11 @@ public class Checker extends Group {
   public Checker(Board _board, int _color) {
     super();
 
-    /*
-    addListener(new InputListener() {
-      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        return true;
-      }
-      public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-        System.out.println("Click on: "+Checker.this.boardX);
-      }
-    });
-    */
-
     boardX = boardY= 0;
     color = _color;
     board = _board;
+
+    TextureRegion region;
     
     if (color==1) {//WHITE
       region = GnuBackgammon.atlas.findRegion("cw");
@@ -60,10 +50,16 @@ public class Checker extends Group {
     img.setScaling(Scaling.none);
     label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
 
+    region = GnuBackgammon.atlas.findRegion("ch");
+    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    imgh = new Image(region);
+    imgh.setScaling(Scaling.none);
+    
     label.setX(15);
     label.setY(10);
     addActor(img);
     addActor(label);
+    addActor(imgh);
     label.setText("");
   }
   
@@ -78,6 +74,7 @@ public class Checker extends Group {
       label.setText(""+(boardY+1));
     else 
       label.setText("");
+    imgh.setVisible(false);
   }
 
   
@@ -102,12 +99,17 @@ public class Checker extends Group {
     Vector2 _p = board.getBoardCoord(color, x, y);
     
     final int d = boardX-x;
+    int r = board.availableMoves.indexOf(d);
+    if (r>=0)
+      board.availableMoves.remove(r);
 
     this.addAction(Actions.sequence(
         Actions.delay(delay),
         new Action(){
           @Override
           public boolean act(float delta) {
+            board.resetChecker();
+            board.resetPoints();
             if (x<24)
               board.dices.disable(d);
             if ((boardY<5)||(boardX==-1)) label.setText("");
@@ -118,7 +120,8 @@ public class Checker extends Group {
             @Override
             public boolean act(float delta) {
               if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
-              GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
+              if (!board.checkHit())
+                GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
               return true;
             }}
         ));
@@ -143,6 +146,10 @@ public class Checker extends Group {
     return 23-boardX;
   }
 
+  public void highlight(boolean b) {
+    imgh.setVisible(b);
+  }
+  
   @Override
   public Actor hit(float x, float y, boolean touchable) {
     return null;
