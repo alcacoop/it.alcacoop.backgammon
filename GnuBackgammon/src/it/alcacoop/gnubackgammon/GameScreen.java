@@ -50,12 +50,12 @@ public class GameScreen implements Screen {
   public void resize(int width, int height) {
   }
 
+  
   @Override
   public void show() {
     board.initBoard();
     Gdx.input.setInputProcessor(stage);
-    
-    AICalls.SetAILevel(AILevels.WORLDCLASS);
+    AICalls.SetAILevel(AILevels.SUPREMO);
     fsm.processEvent(Events.START, null);
   }
 

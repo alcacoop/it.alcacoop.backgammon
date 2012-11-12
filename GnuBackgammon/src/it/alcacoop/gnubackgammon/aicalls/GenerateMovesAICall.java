@@ -21,25 +21,20 @@ public class GenerateMovesAICall implements Runnable {
 
   @Override
   public void run() {
-    
-    int mv[] = new int[8];
-    int r = 0;
+    final int mv[][];
     
     if (MatchState.fMove==1)
-      r = GnubgAPI.GenerateMoves(b._board[0], b._board[1], d1, d2, mv);
+      mv = GnubgAPI.GenerateMoves(b._board[0], b._board[1], d1, d2);
     else 
-      r = GnubgAPI.GenerateMoves(b._board[1], b._board[0], d1, d2, mv);
+      mv = GnubgAPI.GenerateMoves(b._board[1], b._board[0], d1, d2);
     
-    final int res[] = new int[9];
-    res[0] = r;
-    for (int i=0;i<8;i++) 
-      res[i+1] = mv[i];
     
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(FSM.Events.GENERATE_MOVES, res);        
+        GameScreen.fsm.processEvent(FSM.Events.GENERATE_MOVES, mv);        
       }
     });
   }
+  
 }

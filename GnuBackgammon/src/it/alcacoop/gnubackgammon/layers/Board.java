@@ -291,7 +291,7 @@ public class Board extends Group {
   
   public void selectChecker(int x) {
     if (MatchState.fMove==0) x = 23-x; 
-    if (_board[MatchState.fMove][x]>0) { //&& (hasPoints) TODO
+    if (_board[MatchState.fMove][x]>0) {
       Checker c = getChecker(MatchState.fMove, x);
       // RESET POINTS AND CHECKERS
       resetPoints();
@@ -311,11 +311,6 @@ public class Board extends Group {
         if (ps==0) resetChecker();
       }
     }
-  }
-  
-  
-  public void hasPoints() {
-    
   }
   
   

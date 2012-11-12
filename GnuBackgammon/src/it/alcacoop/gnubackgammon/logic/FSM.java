@@ -91,7 +91,7 @@ public class FSM implements Context {
       }
       public void enterState(Context ctx) {
         int m = 1;
-//        if (MatchState.fMove == 1) m = 0;
+        if (MatchState.fMove == 1) m = 0;
         MatchState.fMove = m;
         MatchState.fTurn = m;
         AICalls.SetGameTurn(m, m);
@@ -113,6 +113,7 @@ public class FSM implements Context {
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
+            AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
             ctx.board().setDices(dices[0], dices[1]);
             break;
           case POINT_TOUCHED:
@@ -152,8 +153,8 @@ public class FSM implements Context {
         if (ctx.board().bearedOff[m] == 15) {
           ctx.state(States.SIMULATION_FINISHED);
         } else {
-          //ctx.state(States.SIMULATED_TURN);
-          ctx.state(States.HUMAN_TURN);
+          ctx.state(States.SIMULATED_TURN);
+          //ctx.state(States.HUMAN_TURN);
         }
       }
     },
