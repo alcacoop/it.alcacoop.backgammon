@@ -231,25 +231,25 @@ public class Board extends Group {
     int m3[] = new int[2];
     int m4[] = new int[2];
 
-    if (_moves[6]!=-1) {
+    if ((_moves[6]!=-1)||(_moves[6]==_moves[7])) {
       m4[0] = _moves[6];
       m4[1] = _moves[7];
       moves.push(m4);
     }
 
-    if (_moves[4]!=-1) {
+    if ((_moves[4]!=-1)||(_moves[4]==_moves[5])) {
       m3[0] = _moves[4];
       m3[1] = _moves[5];
       moves.push(m3);
     }
 
-    if (_moves[2]!=-1) {
+    if ((_moves[2]!=-1)||(_moves[2]==_moves[3])) {
       m2[0] = _moves[2];
       m2[1] = _moves[3];
       moves.push(m2);
     }
 
-    if (_moves[0]!=-1) {
+    if ((_moves[0]!=-1)||(_moves[0]==_moves[1])) {
       m1[0] = _moves[0];
       m1[1] = _moves[1];
       moves.push(m1);
