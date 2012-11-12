@@ -1,6 +1,7 @@
 package it.alcacoop.gnubackgammon.logic;
 
 import it.alcacoop.gnubackgammon.aicalls.*;
+import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 
 public class AICalls {
@@ -55,4 +56,7 @@ public class AICalls {
     thread.post(new SetGameTurnAICall(fTurn, fMove));
   }
   
+  public static void GenerateMoves(Board b, int d1, int d2) {
+    thread.post(new GenerateMovesAICall(b, d1, d2));
+  }
 }

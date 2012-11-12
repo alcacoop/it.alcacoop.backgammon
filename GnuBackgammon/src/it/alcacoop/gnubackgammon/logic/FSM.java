@@ -42,7 +42,8 @@ public class FSM implements Context {
     START,
     PERFORMED_MOVE,
     NO_MORE_MOVES,
-    POINT_TOUCHED
+    POINT_TOUCHED,
+    GENERATE_MOVES
   }
 
   public enum States implements State {
