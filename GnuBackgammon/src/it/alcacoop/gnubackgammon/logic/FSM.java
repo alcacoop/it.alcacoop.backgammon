@@ -115,8 +115,13 @@ public class FSM implements Context {
             ctx.board().setDices(dices[0], dices[1]);
             break;
           case GENERATE_MOVES:
-            ctx.board().availableMoves.setMoves((int[][])params, ctx.board().dices.get());
-            ctx.state(HUMAN_PERFORM_MOVES);
+            int moves[][] = (int[][])params;
+            if(moves != null) {
+              ctx.board().availableMoves.setMoves((int[][])params, ctx.board().dices.get());
+              ctx.state(HUMAN_PERFORM_MOVES);
+            } else {
+              ctx.state(CHECK_WIN);
+            }
             break;
           default:
             return false;
@@ -158,7 +163,7 @@ public class FSM implements Context {
     CHECK_WIN {
       public void enterState(Context ctx) {
         if (ctx.board().bearedOff[MatchState.fMove] == 15) {
-          ctx.state(States.SIMULATION_FINISHED);
+          ctx.state(States.GAME_FINISHED);
         } else {
           if (MatchState.fMove==1)
             ctx.state(States.HUMAN_TURN);
@@ -171,7 +176,7 @@ public class FSM implements Context {
       }
     },
     
-    SIMULATION_FINISHED {
+    GAME_FINISHED {
       public void enterState(Context ctx) {
         ctx.board().initBoard();
         ctx.state(States.SIMULATED_TURN);

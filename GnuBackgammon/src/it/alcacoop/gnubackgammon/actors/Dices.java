@@ -91,4 +91,17 @@ public class Dices extends Group {
   public int[] get() {
     return last;
   }
+  
+  public void remove(int n) {
+    disable(n);
+    int t[] = new int[last.length-1];
+    int j = 0;
+    for(int i=0;i<last.length;i++) {
+      if(last[i]!=n) {
+        t[j] = last[i];
+        j++;
+      }
+    }
+    last = t;
+  }
 }
