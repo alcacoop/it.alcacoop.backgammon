@@ -121,7 +121,6 @@ public class Board extends Group {
 
 
   public void initBoard() {
-    Gdx.app.log("INITBOARD", "DONE!");
     for (int i=0; i<24; i++) {
       _board[0][i] = MatchState.board[0][i];
       _board[1][i] = MatchState.board[1][i];
@@ -163,9 +162,6 @@ public class Board extends Group {
 
   public void setMoves(int _moves[]) {
     moves.clear();
-    Gdx.app.log("MOVE: ",
-        _moves[0]+"/"+_moves[1]+" "+_moves[2]+"/"+_moves[3]+
-        "    "+_moves[4]+"/"+_moves[5]+" "+_moves[6]+"/"+_moves[7]);
     if (_moves.length<8) return;
 
     int m1[] = new int[2];

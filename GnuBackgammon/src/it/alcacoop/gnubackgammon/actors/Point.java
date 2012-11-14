@@ -4,8 +4,6 @@ import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,7 +33,6 @@ public class Point extends Group {
         return true;
       }
       public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-        Gdx.app.log("nPOINT", ""+nPoint()+" IT: "+isTarget);
         GameScreen.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
       }
     });

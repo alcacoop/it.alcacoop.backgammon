@@ -80,7 +80,7 @@ public class FSM implements Context {
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
             moves = (int[])params;
-            int ps[] = ctx.board().availableMoves.getPoints(moves[0]);
+//            int ps[] = ctx.board().availableMoves.getPoints(moves[0]);
             ctx.board().setMoves(moves);
             break;
           case PERFORMED_MOVE:
@@ -178,6 +178,8 @@ public class FSM implements Context {
     
     GAME_FINISHED {
       public void enterState(Context ctx) {
+        MatchState.fMove = 0;
+        MatchState.fTurn = 0;
         ctx.board().initBoard();
         ctx.state(States.SIMULATED_TURN);
         MatchState.switchTurn();
