@@ -31,8 +31,6 @@ public class Board extends Group {
   public Dices dices;
   public AvailableMoves availableMoves;
   
-  public int nMove = 0;
-
   
   public Board() {
     _board = new int[2][25];
@@ -246,7 +244,7 @@ public class Board extends Group {
         return;
       }
       
-      int ps[] = availableMoves.getPoints(nMove, x);
+      int ps[] = availableMoves.getPoints(x);
       if (ps==null) { //NO MOVES FROM HERE!
         c.highlight(false);
       } else if (ps.length!=0) {

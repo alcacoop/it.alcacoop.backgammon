@@ -12,10 +12,12 @@ public class AvailableMoves {
   public ArrayList<Integer> dices;
   
   int _board[][];
+  Board b;
 
-  public AvailableMoves(Board b) {
+  public AvailableMoves(Board _b) {
     dices = new ArrayList<Integer>();
-    _board = b._board;
+    _board = _b._board;
+    b = _b;
   }
 
 
@@ -28,8 +30,8 @@ public class AvailableMoves {
   }
 
 
-  public int[] getPoints(int nMove, int nPoint) {
-    
+  public int[] getPoints(int nPoint) {
+    int nMove = b.dices.get().length - dices.size();
     ArrayList<Integer> ret = new ArrayList<Integer>();
 
     int values[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};

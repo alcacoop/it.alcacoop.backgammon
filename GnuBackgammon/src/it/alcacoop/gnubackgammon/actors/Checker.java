@@ -118,7 +118,6 @@ public class Checker extends Group {
             @Override
             public boolean act(float delta) {
               if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
-              board.nMove++;
               if (!board.checkHit())
                 GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
               return true;

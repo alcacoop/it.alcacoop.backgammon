@@ -80,7 +80,7 @@ public class FSM implements Context {
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
             moves = (int[])params;
-            int ps[] = ctx.board().availableMoves.getPoints(0, moves[0]);
+            int ps[] = ctx.board().availableMoves.getPoints(moves[0]);
             ctx.board().setMoves(moves);
             break;
           case PERFORMED_MOVE:
@@ -157,8 +157,6 @@ public class FSM implements Context {
     
     CHECK_WIN {
       public void enterState(Context ctx) {
-        ctx.board().nMove = 0;
-        
         if (ctx.board().bearedOff[MatchState.fMove] == 15) {
           ctx.state(States.SIMULATION_FINISHED);
         } else {
