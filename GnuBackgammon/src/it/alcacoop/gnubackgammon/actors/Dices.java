@@ -87,4 +87,8 @@ public class Dices extends Group {
       }
     }
   }
+  
+  public int[] get() {
+    return last;
+  }
 }

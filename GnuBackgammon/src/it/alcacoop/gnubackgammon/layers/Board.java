@@ -1,20 +1,16 @@
 package it.alcacoop.gnubackgammon.layers;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.actors.BoardImage;
 import it.alcacoop.gnubackgammon.actors.Checker;
 import it.alcacoop.gnubackgammon.actors.Dices;
-import it.alcacoop.gnubackgammon.actors.Point;
+import it.alcacoop.gnubackgammon.actors.Points;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
+import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import java.util.Stack;
 
 
@@ -25,33 +21,30 @@ public class Board extends Group {
   public int[] bearedOff = {0,0};
   public Stack<int[]> moves;
 
-  private Vector2 pos[];
-  private BoardImage bimg;
+  public Vector2 pos[];
+  public BoardImage bimg;
   public Checker checkers[][];
   private Checker lastMoved = null;
   public Checker selected = null;
   
-  public Point points[];
+  public Points points;
   public Dices dices;
+  public AvailableMoves availableMoves;
   
-  public ArrayList<Integer> availableMoves;
+  public int nMove = 0;
 
   
   public Board() {
     _board = new int[2][25];
     
     moves = new Stack<int[]>();
-    availableMoves = new ArrayList<Integer>();
-    
+    availableMoves = new AvailableMoves(this);
+    checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
     
     bimg = new BoardImage();
     bimg.setX(0);
     bimg.setY(0);
     addActor(bimg);
-    
-    
-
-    checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
 
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
@@ -81,16 +74,8 @@ public class Board extends Group {
     pos[24].x = bimg.getX()+476;
     pos[24].y = bimg.getY();
     
-    points = new Point[24];
-    for (int i = 0; i<24; i++) {
-      points[i] = new Point(i);
-      Vector2 p = pos[i];
-      points[i].setX(p.x);
-      if (i<12) points[i].setY(bimg.getY()+380);
-      else points[i].setY(bimg.getY()+50);
-      addActor(points[i]);
-    }
-    
+    points = new Points(this);
+    addActor(points);
     
     for (int i = 0; i<15; i++) {
       checkers[0][i] = new Checker(this, 0);
@@ -102,7 +87,6 @@ public class Board extends Group {
     dices = new Dices(bimg.getX()+1005/2, bimg.getY()+692/2);
     addActor(dices);
   }
-
 
 
   public Vector2 getBoardCoord(int color, int x, int y){
@@ -166,46 +150,6 @@ public class Board extends Group {
     }
   }
 
-  
-  public void resetPoints() {
-    for (int i=0;i<24;i++)
-      points[i].reset();
-  }
-  
-  
-  public void resetChecker() {
-    if (selected!=null)
-      selected.highlight(false);
-    selected = null;
-  }
-  
-  
-  private int highlightPoints(int x, int d) {
-    if (x-d<0) return 0; //TODO: BEAR OFF
-    
-    int ps = 0;
-    if (MatchState.fMove==1) {
-      if (_board[1][(x-d)]>=1) {
-        points[x-d].highlight(); //ANCHOR
-        ps++;
-      }
-      if (_board[0][(23-x+d)]<2) {
-        points[x-d].highlight(); //HIT OR FREE
-        ps++;
-      }
-    } else {
-      if (_board[0][(x-d)]>=1) {
-        points[23-x+d].highlight(); //ANCHOR
-        ps++;
-      }
-      if (_board[1][(23-x+d)]<2) {
-        points[23-x+d].highlight(); //HIT OR FREE
-        ps++;
-      }
-    }
-    return ps;
-  }
-  
   
   Checker getChecker(int color, int x) {
     Checker _c = null;
@@ -290,109 +234,36 @@ public class Board extends Group {
 
   
   public void selectChecker(int x) {
-    if (MatchState.fMove==0) x = 23-x; 
     if (_board[MatchState.fMove][x]>0) {
-      Checker c = getChecker(MatchState.fMove, x);
-      // RESET POINTS AND CHECKERS
-      resetPoints();
-      resetChecker();
+
+      points.reset();
+      if (selected!=null) selected.highlight(false);
       
-      if ((selected==null)||(c.boardX!=selected.boardX)) {
-        resetChecker();
-        selected = c;
-        c.highlight(true);
-        
-        int ps = 0;
-        Iterator<Integer> itr = availableMoves.iterator();
-        while (itr.hasNext()) {
-          int i = itr.next();
-          ps += highlightPoints(x, i);
-        }
-        if (ps==0) resetChecker();
+      Checker c = getChecker(MatchState.fMove, x);
+      
+      if ((selected!=null)&&(c.boardX==selected.boardX)) {
+        selected = null;
+        return;
       }
+      
+      int ps[] = availableMoves.getPoints(nMove, x);
+      if (ps==null) { //NO MOVES FROM HERE!
+        c.highlight(false);
+      } else if (ps.length!=0) {
+        c.highlight(true);
+        selected = c;
+        for (int i=0; i<ps.length;i++)
+          points.get(ps[i]).highlight();
+      }
+        
     }
   }
   
   
   public void setDices(int d1, int d2) {
-    availableMoves.clear();
-    if (d1!=d2) {
-      availableMoves.add(d1);
-      availableMoves.add(d2);
-    } else {
-      for (int i=0;i<4;i++)
-        availableMoves.add(d1);
-    }
     dices.show(d1, d2);
   }
   
   
-  public boolean hasMoves() {
-    return !availableMoves.isEmpty();
-  }
-  
-  
-  public void animate() {
-    _board[0] = MatchState.board[4];
-    _board[1] = MatchState.board[5];
 
-    Random rnd = new Random();
-
-    for (int i = 0; i<15; i++) {
-      //RANDOM POS FOR WHITE CHECKERS
-      int x = rnd.nextInt(260) + 570;
-      int y = rnd.nextInt(70) + 290;
-      checkers[0][i].setX(x);
-      checkers[0][i].setY(y);
-
-      //RANDOM POS FOR BLACK CHECKERS
-      x = rnd.nextInt(260) + 160;
-      y = rnd.nextInt(70) + 290;
-      checkers[1][i].setX(x);
-      checkers[1][i].setY(y);
-    }
-
-    //POSITIONING WHITE CHECKERS
-    int nchecker = 0;
-    for (int i=24; i>=0; i--) {
-      for (int j=0;j<_board[0][i];j++) {
-        Vector2 _p = getBoardCoord(0, i, j);
-        checkers[0][nchecker].addAction(
-            Actions.sequence(Actions.delay(1.5f*(nchecker+3)/4), Actions.moveTo(_p.x, _p.y, 0.2f))
-        );
-        checkers[0][nchecker].boardX = i;
-        checkers[0][nchecker].boardY = j;
-        nchecker++;
-      }
-    }
-    //POSITIONING BLACK CHECKERS
-    nchecker = 0;
-    for (int i=24; i>=0; i--) {
-      for (int j=0;j<_board[1][i];j++) {
-        Vector2 _p = getBoardCoord(1, i, j);
-        if (nchecker==14) {
-          checkers[1][nchecker].addAction(
-              Actions.sequence(
-              Actions.delay(1.5f*(nchecker+18)/4),
-              Actions.moveTo(_p.x, _p.y, 0.2f),
-              Actions.delay(1.5f),
-              new Action(){
-                @Override
-                public boolean act(float delta) {
-                  //END ANIMATION
-                  animate();
-                  return true;
-                }}
-          ));
-        } else {
-          checkers[1][nchecker].addAction(
-              Actions.sequence(Actions.delay(1.5f*(nchecker+18)/4), Actions.moveTo(_p.x, _p.y, 0.2f)));
-        }
-        checkers[1][nchecker].boardX = i;
-        checkers[1][nchecker].boardY = j;
-        nchecker++;
-      }
-    }
-  }
-  
 } //END CLASS
