@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.actors;
 
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -14,11 +15,12 @@ public class Dices extends Group {
   private Image d[][];
   private float x, y;
   private int last[];
+  private Board b;
   
-  
-  public Dices(float _x, float _y) {
+  public Dices(Board _b, float _x, float _y) {
     x = _x;
     y = _y-28;
+    b = _b;
     
     d = new Image[4][6];
     for (int i=0; i<4; i++) {
@@ -69,7 +71,22 @@ public class Dices extends Group {
   }
 
   
-  public void disable(int n) {
+  public void disable(int nn) {
+    int n = nn;
+    if(b.bearingOff()>=0) {
+      int max_dice = 0;
+      int is_present = 0;
+      for(int i=0;i<last.length;i++) {
+        if(last[i]>=max_dice)
+          max_dice = last[i];
+        if(last[i]==nn)
+          is_present++;
+      }
+      
+      if(is_present==0)
+        n = max_dice;
+    } 
+    
     if (last.length == 2) {
       for (int i=0;i<last.length; i++) {
         if (last[i]==n) { 

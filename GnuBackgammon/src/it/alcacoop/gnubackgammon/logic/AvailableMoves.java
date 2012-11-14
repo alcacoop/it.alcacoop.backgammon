@@ -60,7 +60,17 @@ public class AvailableMoves {
     int bo=0; //BOFF
 
     if (moves==null) return null;
-
+    
+    int max_point = b.bearingOff();
+    if(max_point>=0) {
+      for(int j=0;j<dices.size();j++) {
+        if (dices.get(j)>max_point+1) {
+          dices.set(j, max_point+1);
+        }
+      }
+    }
+  
+    
     Iterator<Integer> itr = dices.iterator();
     while (itr.hasNext()) {
       int j = itr.next(); //REMAINING DICES

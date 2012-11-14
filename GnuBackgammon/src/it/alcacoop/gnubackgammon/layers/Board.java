@@ -82,7 +82,7 @@ public class Board extends Group {
       addActor(checkers[1][i]);
     }
     
-    dices = new Dices(bimg.getX()+1005/2, bimg.getY()+692/2);
+    dices = new Dices(this, bimg.getX()+1005/2, bimg.getY()+692/2);
     addActor(dices);
   }
 
@@ -262,6 +262,26 @@ public class Board extends Group {
     dices.show(d1, d2);
   }
   
-  
+  public int bearingOff() {
+    int count = 0;
+    for(int i=6;i<25;i++){
+      if(_board[MatchState.fMove][i] > 0){
+        count+=_board[MatchState.fMove][i];
+      }
+    }//if count = 0 here, we're in bearoff
+
+    int max_point = 0;
+    if(count==0) { //bearoff
+      for(int i=0;i<6;i++){
+        if(_board[MatchState.fMove][i] > 0){
+          max_point = i;
+        }
+      }//max_point here is the bigger point with checkers 
+    }
+    if(count!=0)
+      return -1;
+    else 
+      return max_point;
+  }
 
 } //END CLASS
