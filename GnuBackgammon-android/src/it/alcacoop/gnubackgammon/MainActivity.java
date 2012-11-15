@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -13,7 +12,11 @@ import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+
+
 public class MainActivity extends AndroidApplication {
+  
+  private String data_dir;
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -21,11 +24,12 @@ public class MainActivity extends AndroidApplication {
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
     
+    data_dir = getBaseContext().getApplicationInfo().dataDir+"/gnubg/";
+    
     copyAssetsIfNotExists();
     
     initialize(new GnuBackgammon(), cfg);
-    GnubgAPI.InitializeEnvironment(getString(R.string.asset_path));
-    //TODO: spostare gli asset in data-lib
+    GnubgAPI.InitializeEnvironment(data_dir);
   }
   
   
@@ -37,16 +41,16 @@ public class MainActivity extends AndroidApplication {
   }   
 
   private void copyAssetsIfNotExists() {
-    File a1 = new File(getString(R.string.asset_path)+"g11.xml");
-    File a2 = new File(getString(R.string.asset_path)+"gnubg_os0.bd");
-    File a3 = new File(getString(R.string.asset_path)+"gnubg_ts0.bd");
-    File a4 = new File(getString(R.string.asset_path)+"gnubg.weights");
-    File a5 = new File(getString(R.string.asset_path)+"gnubg.wd");
+    File a1 = new File(data_dir+"g11.xml");
+    File a2 = new File(data_dir+"gnubg_os0.bd");
+    File a3 = new File(data_dir+"gnubg_ts0.bd");
+    File a4 = new File(data_dir+"gnubg.weights");
+    File a5 = new File(data_dir+"gnubg.wd");
     
     //Asset already presents
     if (a1.exists()&&a2.exists()&&a3.exists()&&a4.exists()&&a5.exists()) return;
     
-    File assetDir = new File(getString(R.string.asset_path));
+    File assetDir = new File(data_dir);
     assetDir.mkdirs();
     
     AssetManager assetManager = getAssets();
@@ -62,7 +66,7 @@ public class MainActivity extends AndroidApplication {
       try {
         Log.e("MINE", filename);
         in = assetManager.open("gnubg/"+filename);
-        out = new FileOutputStream(getString(R.string.asset_path) + filename);
+        out = new FileOutputStream(data_dir + filename);
         copyFile(in, out);
         in.close();
         in = null;
