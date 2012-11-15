@@ -25,6 +25,7 @@ public class MainActivity extends AndroidApplication {
     
     initialize(new GnuBackgammon(), cfg);
     GnubgAPI.InitializeEnvironment(getString(R.string.asset_path));
+    //TODO: spostare gli asset in data-lib
   }
   
   

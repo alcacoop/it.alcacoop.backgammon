@@ -40,6 +40,7 @@ public class AvailableMoves {
 
 
   public int[] getPoints(int nPoint) {
+    //TODO: doesn't work for doubles
     int nMove = b.dices.get().length - dices.size();
     ArrayList<Integer> ret = new ArrayList<Integer>();
     

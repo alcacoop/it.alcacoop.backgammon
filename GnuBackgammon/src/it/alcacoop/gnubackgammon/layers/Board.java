@@ -8,7 +8,6 @@ import it.alcacoop.gnubackgammon.actors.Points;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import java.util.Stack;
@@ -241,9 +240,12 @@ public class Board extends Group {
       }
       
       int ps[] = availableMoves.getPoints(x);
-      if (ps==null) { //NO MOVES FROM HERE!
+      if ((ps==null)||(ps.length==0)) { //NO MOVES FROM HERE!
         c.highlight(false);
-      } else if (ps.length!=0) {
+        selected = null;        
+        System.out.println("NO PS");
+      } else {//if (ps.length!=0) {
+        System.out.println("PS: "+ps.length);
         c.highlight(true);
         selected = c;
         for (int i=0; i<ps.length;i++)
