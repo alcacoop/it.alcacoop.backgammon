@@ -283,4 +283,12 @@ public class Board extends Group {
       return max_point;
   }
 
+  public int getPIPS() {
+    int pips = 0;
+    for (int i=0;i<_board[MatchState.fMove].length;i++) {
+      pips += _board[MatchState.fMove][i]*(i+1);
+    }
+    return pips;
+  }
+  
 } //END CLASS
