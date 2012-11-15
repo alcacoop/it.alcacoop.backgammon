@@ -3,46 +3,90 @@ package it.alcacoop.gnubackgammon.logic;
 import it.alcacoop.gnubackgammon.layers.Board;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class AvailableMoves {
 
-  private int moves[][];
+  //private int moves[][];
   public ArrayList<Integer> dices;
   
   int _board[][];
   Board b;
+  ArrayList<int[]> moves;
 
   public AvailableMoves(Board _b) {
     dices = new ArrayList<Integer>();
+    moves = new ArrayList<int[]>();
     b = _b;
   }
 
 
   public void setMoves(int _moves[][]) {
     int _dices[] = b.dices.get();
-    moves = _moves;
+    moves.clear();
     dices.clear();
+    
+    for (int i=0;i<_moves.length;i++)
+      moves.add(_moves[i]);
 
     evaluatePlayableDices(_dices);
+    
+    //PRINT PLAYABLE DICES
+    System.out.print("PLAYABLE DICES: ");
+    for (int i=0;i<dices.size();i++)
+      System.out.print(" "+dices.get(i));
+    System.out.print("\n");
+    
+    for (int i=0;i<moves.size();i++) {
+      for (int j=0;j<4;j++)
+        System.out.print(moves.get(i)[2*j]+"/"+ moves.get(i)[2*j+1]+" ");
+      System.out.print("\n");
+    }
+    //END PRINTING
+    
+        
   }
 
   
-  private int[] evaluatePlayableDices(int d[]) {
+  private void evaluatePlayableDices(int d[]) {
     
-    System.out.println("\n MAX ITER: "+moves.length);
+    System.out.println("\n\nPIPS: "+b.getPIPS());
+    
+    //FIX BIGGER OF AVAILABLE MOVES DICES ON BEARING OFF.. 
+    int max_point = b.bearingOff();
+    if(max_point>=0) { //BEARING OFF!
+      for (int i=0;i<d.length;i++)
+        dices.add(d[i]);
+      
+      int rcs = 15-b.bearedOff[MatchState.fMove];
+      System.out.println("REMAINING: "+rcs);
+        
+      for(int j=0;j<dices.size();j++) {
+        if (dices.get(j)>max_point+1) {
+          dices.set(j, max_point+1);
+        }
+      }
+      return;
+    }
+    //END FIXING BEARING OFF DICES
+    
+    
+    //NOW WE ARE DISABLING UNPLAYABLE DICES
+    System.out.println("\n MAX ITER: "+moves.size());
     int occurs[] = {0,0,0,0,0,0,0};
     boolean all_presents = true;
     int max_moves = 0;
     
     if (d.length == 2) { //STANDARD ROLL
-      for (int i=0;i<moves.length;i++) {
+      for (int i=0;i<moves.size();i++) {
         System.out.print(" "+i);
         all_presents = true;
         for (int j=0;j<4;j++) {
           for (int k=0;k<d.length;k++) {
-            if ((moves[i][j*2]!=-1)&& ((moves[i][j*2]-moves[i][j*2+1])==d[k])) 
+            if ((moves.get(i)[j*2]!=-1)&& ((moves.get(i)[j*2]-moves.get(i)[j*2+1])==d[k])) 
               occurs[d[k]]++;
             all_presents = all_presents && (occurs[d[k]]>0);
           }
@@ -52,9 +96,9 @@ public class AvailableMoves {
     } else { //DOUBLE!
       System.out.println("DOUBLING TURN");
       all_presents = false;
-      for (int i=0;i<moves.length;i++) {
+      for (int i=0;i<moves.size();i++) {
         for (int j=0;j<4;j++) {
-          if (moves[i][j*2]!=-1) max_moves=(j+1);
+          if (moves.get(i)[j*2]!=-1) max_moves=(j+1);
         }
         if (max_moves==4) {
           all_presents = true;
@@ -92,58 +136,52 @@ public class AvailableMoves {
       }  
     }
      
-    
-    return new int[2];
   }
 
   
+  
+  
+  
   public int[] getPoints(int nPoint) {
-    //TODO: doesn't work for doubles
-    int nMove = b.dices.get().length - dices.size();
-    ArrayList<Integer> ret = new ArrayList<Integer>();
-    
-    int values[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    int bo=0; //BOFF
 
-    if (moves==null) return null;
+    ArrayList<Integer> ret = new ArrayList<Integer>();
+    if (moves.size()==0) return null;
     
-    int max_point = b.bearingOff();
-    if(max_point>=0) {
-      for(int j=0;j<dices.size();j++) {
-        if (dices.get(j)>max_point+1) {
-          dices.set(j, max_point+1);
+    for (int i=0;i<moves.size();i++) {
+      for (int j=0;j<4;j++) {
+        for (int k=0;k<dices.size();k++) {
+          if (moves.get(i)[2*j]==nPoint) {
+//            System.out.println("EVALUATING COUPLE: "+moves.get(i)[2*j]+"/"+moves.get(i)[2*j+1]);
+            if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
+          }
         }
       }
     }
-  
+
+    System.out.print("OLDLIST:");
+    for (int i=0;i<ret.size();i++)
+      System.out.print(" "+ret.get(i));
     
-    Iterator<Integer> itr = dices.iterator();
-    while (itr.hasNext()) {
-      int j = itr.next(); //REMAINING DICES
-      for (int i=0; i<moves.length; i++) { //ALL GENERATED MOVES
-        if ((moves[i][nMove*2]==nPoint) && (moves[i][nMove*2]-moves[i][nMove*2+1]==j))
-          if (moves[i][nMove*2+1]!=-1)
-            values[moves[i][nMove*2+1]]++;
-          else //BOFF
-            bo++;
-      }
-    }
-
-    for (int i=0;i<25;i++)
-      if (values[i]>0)
-        ret.add(i);
-    if (bo>0) ret.add(-1); //BOFF
-
-    int[] r = new int[ret.size()];
-    for (int i=0;i<ret.size();i++) {
-      r[i] = ret.get(i);
+    List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(ret));
+    System.out.println("\nNEWLIST SIZE: "+unique.size());
+    
+    //RETURN unique AS STANDARD ARRAY
+    int[] r = new int[unique.size()];
+    for (int i=0;i<unique.size();i++) {
+      r[i] = unique.get(i);
     }
     return r;
   }
 
 
   public void dropDice(int d) {
-    dices.remove(dices.indexOf(d));
+    System.out.println("REMOVING DICE: "+d);
+    int i = dices.indexOf(d);
+    System.out.println("INDEX: "+i);
+    if (i>=0)
+      dices.remove(i);
+    else 
+      System.out.println("PROBLEMA!!");
   }
 
 
@@ -184,4 +222,21 @@ public class AvailableMoves {
     return r;    
   }
 
+  
+  public void removeMoves(int orig, int dest) {
+    Iterator<int[]> itr = moves.iterator();
+    while (itr.hasNext()) { 
+      boolean matched = false;
+      int mv[] = itr.next();
+      for (int i=0;i<4;i++) {
+        if ((mv[2*i]==orig)&&(mv[2*i+1]==dest)) {
+          matched=true;
+          break;
+        }
+      }
+      if (!matched) itr.remove();
+    }
+    System.out.println("REMAINIG MOVES: "+moves.size());
+  }
+  
 }

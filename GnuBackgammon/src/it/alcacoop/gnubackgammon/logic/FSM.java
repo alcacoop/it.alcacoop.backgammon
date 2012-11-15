@@ -109,7 +109,6 @@ public class FSM implements Context {
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
-            //int dices[] = {2, 2};
             AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
             ctx.board().setDices(dices[0], dices[1]);
             break;

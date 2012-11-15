@@ -201,6 +201,7 @@ public class Board extends Group {
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
         c.moveToDelayed(m[1], 0.2f);
+        availableMoves.removeMoves(m[0], m[1]);
         lastMoved = c;
       }  
     } catch (Exception e) {
