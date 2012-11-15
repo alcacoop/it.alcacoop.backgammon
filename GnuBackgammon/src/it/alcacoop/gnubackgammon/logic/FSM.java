@@ -74,13 +74,11 @@ public class FSM implements Context {
             AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
             break;
           case GENERATE_MOVES:
-            ctx.board().availableMoves.setMoves((int[][])params, ctx.board().dices.get());
             AICalls.EvaluateBestMove(ctx.board().dices.get());
             break;
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
             moves = (int[])params;
-//            int ps[] = ctx.board().availableMoves.getPoints(moves[0]);
             ctx.board().setMoves(moves);
             break;
           case PERFORMED_MOVE:
@@ -111,13 +109,14 @@ public class FSM implements Context {
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
+            //int dices[] = {2, 2};
             AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
             ctx.board().setDices(dices[0], dices[1]);
             break;
           case GENERATE_MOVES:
             int moves[][] = (int[][])params;
             if(moves != null) {
-              ctx.board().availableMoves.setMoves((int[][])params, ctx.board().dices.get());
+              ctx.board().availableMoves.setMoves((int[][])params);
               ctx.state(HUMAN_PERFORM_MOVES);
             } else {
               ctx.state(CHECK_WIN);

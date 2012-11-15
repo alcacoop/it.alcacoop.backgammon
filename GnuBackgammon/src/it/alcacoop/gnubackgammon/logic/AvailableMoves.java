@@ -16,29 +16,87 @@ public class AvailableMoves {
 
   public AvailableMoves(Board _b) {
     dices = new ArrayList<Integer>();
-    _board = _b._board;
     b = _b;
   }
 
 
-  public void setMoves(int _moves[][], int _dices[]) {
+  public void setMoves(int _moves[][]) {
+    int _dices[] = b.dices.get();
     moves = _moves;
     dices.clear();
 
-    if((moves!=null) && (moves.length==2) && (moves[0][2]==-1)) {  //ONLY ONE MOVE
-      dices.add(moves[0][0] - moves[0][1]);
-      int t = moves[0][0] - moves[0][1];
-      if(b.dices.get()[0]==t)
-        b.dices.remove(b.dices.get()[1]);
-      else 
-        b.dices.remove(b.dices.get()[0]);
-    } else {
-      for (int i=0;i<_dices.length;i++)
-        dices.add(_dices[i]);
-    }
+    evaluatePlayableDices(_dices);
   }
 
+  
+  private int[] evaluatePlayableDices(int d[]) {
+    
+    System.out.println("\n MAX ITER: "+moves.length);
+    int occurs[] = {0,0,0,0,0,0,0};
+    boolean all_presents = true;
+    int max_moves = 0;
+    
+    if (d.length == 2) { //STANDARD ROLL
+      for (int i=0;i<moves.length;i++) {
+        System.out.print(" "+i);
+        all_presents = true;
+        for (int j=0;j<4;j++) {
+          for (int k=0;k<d.length;k++) {
+            if ((moves[i][j*2]!=-1)&& ((moves[i][j*2]-moves[i][j*2+1])==d[k])) 
+              occurs[d[k]]++;
+            all_presents = all_presents && (occurs[d[k]]>0);
+          }
+        }
+        if (all_presents) break;
+      }
+    } else { //DOUBLE!
+      System.out.println("DOUBLING TURN");
+      all_presents = false;
+      for (int i=0;i<moves.length;i++) {
+        for (int j=0;j<4;j++) {
+          if (moves[i][j*2]!=-1) max_moves=(j+1);
+        }
+        if (max_moves==4) {
+          all_presents = true;
+          break;
+        }
+      }
+    }
 
+    System.out.println("MAX MOVES: "+max_moves);
+    
+    /*
+     * HERE WE HAVE:
+     *  all_presents (CAN PLAY ALL DICES)
+     *  max_moves FOR DOUBLE ROLL
+     *  occurs FOR NON BOUBLE ROLL
+     */
+    if (all_presents) { 
+      for (int i=0;i<d.length;i++)
+        dices.add(d[i]);
+    } else { //NON ALL DICES ARE PLAYABLE
+      if (d.length==4) { //DOUBLING
+        for (int i=0;i<max_moves;i++)
+          dices.add(d[0]);
+        for (int i=0;i<4-max_moves;i++)
+          b.dices.remove(d[0]);
+      } else { //NON DOUBLING ROLL
+        int t = 0; //THE ONLY PLAYABLE DICE
+        for (int i=0;i<occurs.length;i++)
+          if (occurs[i]!=0) t=occurs[i];
+        
+        if(b.dices.get()[0]==t)
+          b.dices.remove(b.dices.get()[1]);
+        else 
+          b.dices.remove(b.dices.get()[0]);
+      }  
+    }
+     
+    
+    return new int[2];
+  }
+
+  
   public int[] getPoints(int nPoint) {
     //TODO: doesn't work for doubles
     int nMove = b.dices.get().length - dices.size();
