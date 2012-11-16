@@ -244,9 +244,7 @@ public class Board extends Group {
       if ((ps==null)||(ps.length==0)) { //NO MOVES FROM HERE!
         c.highlight(false);
         selected = null;        
-        System.out.println("NO PS");
       } else {//if (ps.length!=0) {
-        System.out.println("PS: "+ps.length);
         c.highlight(true);
         selected = c;
         for (int i=0; i<ps.length;i++)
