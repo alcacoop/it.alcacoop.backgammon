@@ -160,7 +160,7 @@ public class FSM implements Context {
     
     CHECK_WIN {
       public void enterState(Context ctx) {
-        if (ctx.board().bearedOff[MatchState.fMove] == 15) {
+        if (ctx.board().gameFinished()) {
           ctx.state(States.GAME_FINISHED);
         } else {
           if (MatchState.fMove==1)

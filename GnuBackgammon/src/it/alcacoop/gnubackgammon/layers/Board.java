@@ -163,44 +163,33 @@ public class Board extends Group {
     moves.clear();
     if (_moves.length<8) return;
 
-    int m1[] = new int[2];
-    int m2[] = new int[2];
-    int m3[] = new int[2];
-    int m4[] = new int[2];
-
-    if ((_moves[6]!=-1)||(_moves[6]==_moves[7])) {
-      m4[0] = _moves[6];
-      m4[1] = _moves[7];
-      moves.push(m4);
+    int ms = 0;
+    
+    for (int i=3;i>=0;i--) {
+      if (_moves[2*i]!=-1) {
+        int m[] = new int[2];
+        m[0] = _moves[2*i];
+        m[1] = _moves[2*i+1];
+        moves.push(m);
+        ms++;
+      }
     }
 
-    if ((_moves[4]!=-1)||(_moves[4]==_moves[5])) {
-      m3[0] = _moves[4];
-      m3[1] = _moves[5];
-      moves.push(m3);
-    }
-
-    if ((_moves[2]!=-1)||(_moves[2]==_moves[3])) {
-      m2[0] = _moves[2];
-      m2[1] = _moves[3];
-      moves.push(m2);
-    }
-
-    if ((_moves[0]!=-1)||(_moves[0]==_moves[1])) {
-      m1[0] = _moves[0];
-      m1[1] = _moves[1];
-      moves.push(m1);
-    }
-    performNextMove();
+    if (ms==1) performNextMove(true);
+    else performNextMove();
   }
 
 
-  public void performNextMove() {
+  public void performNextMove() { 
+    performNextMove(false);
+  }
+  public void performNextMove(boolean nodelay) {
     try {
       int m[] = moves.pop();
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m[0]);
-        c.moveToDelayed(m[1], 0.2f);
+        if (nodelay) c.moveTo(m[1]);
+        else c.moveToDelayed(m[1], 0.2f);
         availableMoves.removeMoves(m[0], m[1]);
         lastMoved = c;
       }  
@@ -241,6 +230,7 @@ public class Board extends Group {
       }
       
       int ps[] = availableMoves.getPoints(x);
+      //System.out.println("AVAILABLE POINTS: "+ps.length);
       if ((ps==null)||(ps.length==0)) { //NO MOVES FROM HERE!
         c.highlight(false);
         selected = null;        
@@ -286,7 +276,12 @@ public class Board extends Group {
     for (int i=0;i<_board[MatchState.fMove].length;i++) {
       pips += _board[MatchState.fMove][i]*(i+1);
     }
+    //System.out.println("PIPS: "+pips);
     return pips;
   }
   
+  public boolean gameFinished() {
+    if (getPIPS()>0) return false;
+    else return true;
+  }
 } //END CLASS

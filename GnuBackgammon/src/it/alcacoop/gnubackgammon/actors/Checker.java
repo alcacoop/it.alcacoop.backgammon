@@ -86,8 +86,8 @@ public class Checker extends Group {
     board.removeActor(this);
     board.addActor(this);
     
-    float tt = 0.4f;
-    if (x==24) tt=0.3f;
+    float tt = 0.3f;
+    if (x==24) tt=0.25f;
     
     final int y;
     if (x>=0) {
