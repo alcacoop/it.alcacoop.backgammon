@@ -1,7 +1,7 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.aicalls.*;
-import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 
 public class AICalls {

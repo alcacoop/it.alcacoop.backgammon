@@ -1,15 +1,17 @@
-package it.alcacoop.gnubackgammon.layers;
+package it.alcacoop.gnubackgammon.actors;
 
-import it.alcacoop.gnubackgammon.GameScreen;
-import it.alcacoop.gnubackgammon.actors.BoardImage;
-import it.alcacoop.gnubackgammon.actors.Checker;
-import it.alcacoop.gnubackgammon.actors.Dices;
-import it.alcacoop.gnubackgammon.actors.Points;
+import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
+
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
 import java.util.Stack;
 
 
@@ -21,7 +23,6 @@ public class Board extends Group {
   public Stack<int[]> moves;
 
   public Vector2 pos[];
-  public BoardImage bimg;
   public Checker checkers[][];
   private Checker lastMoved = null;
   public Checker selected = null;
@@ -29,6 +30,9 @@ public class Board extends Group {
   public Points points;
   public Dices dices;
   public AvailableMoves availableMoves;
+  
+  Image boardbg;
+  BoardImage board;
   
   
   public Board() {
@@ -38,41 +42,47 @@ public class Board extends Group {
     availableMoves = new AvailableMoves(this);
     checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
     
-    bimg = new BoardImage();
-    bimg.setX(0);
-    bimg.setY(0);
-    addActor(bimg);
+    board = new BoardImage();
+    
+    TextureRegion r1 = GnuBackgammon.atlas.findRegion("boardbg");
+    r1.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    boardbg = new Image(r1);
+    boardbg.setX(0);
+    boardbg.setY(0);
+    addActor(boardbg);
 
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
       pos[i] = new Vector2();
       if (i<6) {
-        pos[i].x = bimg.getX()+(836-(59*i));
-        pos[i].y = bimg.getY()+590;
+        pos[i].x = board.getX()+(836-(59*i));
+        pos[i].y = board.getY()+590;
       }
       if ((i>=6)&&(i<12)) {
-        pos[i].x = bimg.getX()+(765-(59*i));
-        pos[i].y = bimg.getY()+590;
+        pos[i].x = board.getX()+(765-(59*i));
+        pos[i].y = board.getY()+590;
       }
     }
     for (int i=0; i<12;i++) {
       pos[i+12] = new Vector2();
       if (i<6) {
-        pos[i+12].x = bimg.getX()+(116+(59*i));
-        pos[i+12].y = bimg.getY()+50;
+        pos[i+12].x = board.getX()+(116+(59*i));
+        pos[i+12].y = board.getY()+50;
       }
       if ((i>=6)&&(i<12)) {
-        pos[i+12].x = bimg.getX()+(187+(59*i));
-        pos[i+12].y = bimg.getY()+50;
+        pos[i+12].x = board.getX()+(187+(59*i));
+        pos[i+12].y = board.getY()+50;
       }
     }
 
     pos[24] = new Vector2();  //HITTED
-    pos[24].x = bimg.getX()+476;
-    pos[24].y = bimg.getY();
+    pos[24].x = board.getX()+476;
+    pos[24].y = board.getY();
     
     points = new Points(this);
     addActor(points);
+    
+    addActor(board);
     
     for (int i = 0; i<15; i++) {
       checkers[0][i] = new Checker(this, 0);
@@ -81,7 +91,7 @@ public class Board extends Group {
       addActor(checkers[1][i]);
     }
     
-    dices = new Dices(this, bimg.getX()+1005/2, bimg.getY()+692/2);
+    dices = new Dices(this, board.getX()+1005/2, board.getY()+692/2);
     addActor(dices);
   }
 
@@ -93,15 +103,15 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = bimg.getX()+918.5f; 
-        if (color==1) ret.y = bimg.getY()+605-bearedOff[color]*14;
-        else ret.y = bimg.getY()+35+bearedOff[color]*14;
+        ret.x = board.getX()+918.5f; 
+        if (color==1) ret.y = board.getY()+605-bearedOff[color]*14;
+        else ret.y = board.getY()+35+bearedOff[color]*14;
         break;
         
       case 24: //BAR
-        ret.x = bimg.getX() + pos[x].x;
-        if (color==0) ret.y=bimg.getY() + 570 - (49*y);
-        else ret.y=bimg.getY() + 70 + (49*y);
+        ret.x = board.getX() + pos[x].x;
+        if (color==0) ret.y=board.getY() + 570 - (49*y);
+        else ret.y=board.getY() + 70 + (49*y);
         break;
         
       default: //ON THE TABLE

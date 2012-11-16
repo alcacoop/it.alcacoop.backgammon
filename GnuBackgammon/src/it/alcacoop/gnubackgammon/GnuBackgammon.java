@@ -1,5 +1,7 @@
 package it.alcacoop.gnubackgammon;
 
+import it.alcacoop.gnubackgammon.layers.GameScreen;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

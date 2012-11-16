@@ -1,6 +1,5 @@
 package it.alcacoop.gnubackgammon.actors;
 
-import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.math.Vector2;
@@ -20,29 +19,29 @@ public class Points extends Group {
       points[i] = new Point(i);
       Vector2 p = b.pos[i];
       points[i].setX(p.x);
-      if (i<12) points[i].setY(b.bimg.getY()+380);
-      else points[i].setY(b.bimg.getY()+50);
+      if (i<12) points[i].setY(b.board.getY()+380);
+      else points[i].setY(b.board.getY()+50);
       addActor(points[i]);
     }
     
     bar[0] = new Point(24);
-    bar[0].setX(b.bimg.getX()+475);
-    bar[0].setY(b.bimg.getY()+50);
+    bar[0].setX(b.board.getX()+475);
+    bar[0].setY(b.board.getY()+50);
     addActor(bar[0]);
     
     bar[1] = new Point(24);
-    bar[1].setX(b.bimg.getX()+475);
-    bar[1].setY(b.bimg.getY()+378);
+    bar[1].setX(b.board.getX()+475);
+    bar[1].setY(b.board.getY()+378);
     addActor(bar[1]);
     
     boff[0] = new Point(-1);
-    boff[0].setX(b.bimg.getX()+918);
-    boff[0].setY(b.bimg.getY()+50);
+    boff[0].setX(b.board.getX()+918);
+    boff[0].setY(b.board.getY()+50);
     addActor(boff[0]);
     
     boff[1] = new Point(-1);
-    boff[1].setX(b.bimg.getX()+918);
-    boff[1].setY(b.bimg.getY()+378);
+    boff[1].setX(b.board.getX()+918);
+    boff[1].setY(b.board.getY()+378);
     addActor(boff[1]);
   }
   

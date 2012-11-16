@@ -4,7 +4,6 @@ package it.alcacoop.gnubackgammon.actors;
 import java.util.ArrayList;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.Board;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;

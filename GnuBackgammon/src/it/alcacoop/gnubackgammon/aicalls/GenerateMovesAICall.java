@@ -2,8 +2,8 @@ package it.alcacoop.gnubackgammon.aicalls;
 
 import com.badlogic.gdx.Gdx;
 
-import it.alcacoop.gnubackgammon.GameScreen;
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;

@@ -1,6 +1,6 @@
 package it.alcacoop.gnubackgammon.logic;
 
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.actors.Board;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +50,7 @@ public class AvailableMoves {
     //END FIXING BEARING OFF DICES
 
     //NOW WE ARE DISABLING UNPLAYABLE DICES
+    //TODO: BEAROFF WITH CONTACT
     boolean all_presents = false;
     int max_moves = 0;
     List<Integer> presents = new ArrayList<Integer>();

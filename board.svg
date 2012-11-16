@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="board.svg"
-   inkscape:export-filename="/home/dmt/Scrivania/board.png"
+   inkscape:export-filename="/home/dmt/Scrivania/boardbg.png"
    inkscape:export-xdpi="126"
    inkscape:export-ydpi="126">
   <defs
@@ -300,18 +300,6 @@
          stdDeviation="3.955"
          id="feGaussianBlur4269" />
     </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter6545"
-       x="-0.23720931"
-       width="1.4744186"
-       y="-0.23720931"
-       height="1.4744186">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="4.4476746"
-         id="feGaussianBlur6547" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3930"
@@ -437,11 +425,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.0327661"
-     inkscape:cx="512.17015"
-     inkscape:cy="469.11934"
+     inkscape:zoom="0.97076294"
+     inkscape:cx="379.79989"
+     inkscape:cy="763.55602"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer8"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -463,364 +451,335 @@
     </rdf:RDF>
   </metadata>
   <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Points"
+     style="display:inline">
+    <rect
+       style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4020"
+       width="44.043591"
+       height="193.22911"
+       x="-710.65631"
+       y="298.81326"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4018"
+       width="44.043591"
+       height="188.07852"
+       x="-442.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-652.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect3248"
+       style="fill:#c8aa37;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="34.61272"
+       height="193.22911"
+       width="44.043591"
+       id="rect4046"
+       style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="302.61273"
+       height="188.07852"
+       width="44.043591"
+       id="rect4048"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#c8aa37;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4051"
+       width="44.043591"
+       height="188.07852"
+       x="92.612717"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4053"
+       width="44.043591"
+       height="189.10864"
+       x="606.61273"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="396.61273"
+       height="189.10864"
+       width="44.043591"
+       id="rect4055"
+       style="fill:#c8aa37;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#c8ab37;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect4030"
+       width="146.10736"
+       height="64.071671"
+       x="453.29211"
+       y="246.97525" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="480.61273"
+       height="189.10864"
+       width="44.043591"
+       id="rect4057"
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4059"
+       width="44.043591"
+       height="189.10864"
+       x="438.61273"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="564.61273"
+       height="189.10864"
+       width="44.043591"
+       id="rect4061"
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4063"
+       width="44.043591"
+       height="189.10864"
+       x="522.61273"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       y="246.97525"
+       x="147.29211"
+       height="64.071671"
+       width="146.10736"
+       id="rect4075"
+       style="fill:#c8ab37;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+    <rect
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4065"
+       width="44.043591"
+       height="188.07852"
+       x="176.61272"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="134.61272"
+       height="188.07852"
+       width="44.043591"
+       id="rect4067"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4069"
+       width="44.043591"
+       height="188.07852"
+       x="260.61273"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       y="66.813263"
+       x="218.61272"
+       height="188.07852"
+       width="44.043591"
+       id="rect4071"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4073"
+       width="44.043591"
+       height="193.22911"
+       x="666.61273"
+       y="66.813263"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-138.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect4032"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#c8aa37;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4034"
+       width="44.043591"
+       height="188.07852"
+       x="-348.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4036"
+       width="44.043591"
+       height="188.07852"
+       x="-264.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-306.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect4038"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4040"
+       width="44.043591"
+       height="188.07852"
+       x="-180.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-222.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect4042"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-568.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect4024"
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4022"
+       width="44.043591"
+       height="188.07852"
+       x="-610.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="303.96384"
+       x="-484.65631"
+       height="188.07852"
+       width="44.043591"
+       id="rect4028"
+       style="fill:#c8ab37;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+    <rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect4026"
+       width="44.043591"
+       height="188.07852"
+       x="-526.65631"
+       y="303.96384"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-ydpi="119.93436" />
+    <rect
+       inkscape:export-ydpi="119.93436"
+       inkscape:export-xdpi="119.93436"
+       inkscape:export-filename="/home/dmt/Scrivania/_board.png"
+       transform="scale(-1,1)"
+       y="298.81326"
+       x="-78.656311"
+       height="193.22911"
+       width="44.043591"
+       id="rect4044"
+       style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline" />
+  </g>
+  <g
      inkscape:label="Background"
      inkscape:groupmode="layer"
      id="layer1"
-     style="display:inline">
-    <g
-       id="g3313"
-       inkscape:export-filename="/home/dmt/Scrivania/board.png"
-       inkscape:export-xdpi="126.67"
-       inkscape:export-ydpi="126.67"
-       style="fill:#decd87"
-       transform="translate(-1.0951795,0)">
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         y="68.195496"
-         x="91.647797"
-         height="423.19254"
-         width="260.57611"
-         id="rect2985"
-         style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none" />
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         y="67.643112"
-         x="39.685043"
-         height="184.51465"
-         width="36.068077"
-         id="rect3947"
-         style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-         id="rect3951"
-         width="36.068077"
-         height="184.51465"
-         x="39.685043"
-         y="307.52771" />
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         transform="scale(-1,1)"
-         style="fill:#decd87;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none"
-         id="rect4115"
-         width="260.57611"
-         height="423.19254"
-         x="-655.85217"
-         y="68.195496" />
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         transform="scale(-1,1)"
-         style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-         id="rect4117"
-         width="36.068077"
-         height="184.51465"
-         x="-707.81494"
-         y="67.643112" />
-      <rect
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         transform="scale(-1,1)"
-         y="307.52771"
-         x="-707.81494"
-         height="184.51465"
-         width="36.068077"
-         id="rect4119"
-         style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
-    </g>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer6"
-     inkscape:label="Light points"
      style="display:inline"
      sodipodi:insensitive="true">
-    <g
-       style="display:inline"
-       id="g3177"
-       inkscape:export-filename="/home/dmt/Scrivania/board.png"
-       inkscape:export-xdpi="126"
-       inkscape:export-ydpi="126">
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3997"
-         d="m 285.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#c8ab37;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path4001"
-         d="m 201.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#c8ab37;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path4005"
-         d="m 117.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#c8ab37;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#c8ab37;stroke:none"
-         d="m 589.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path4123"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#c8ab37;stroke:none"
-         d="m 505.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path4125"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#c8ab37;stroke:none"
-         d="m 421.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path4131"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:connector-curvature="0"
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         id="path4041"
-         d="m 221.9375,258.28883 -64.34375,21.5133 64.34375,21.51329 64.34375,-21.51329 -64.34375,-21.5133 z m 0,9.5174 35.78125,11.9959 -35.78125,11.96284 -35.8125,-11.96284 35.8125,-11.9959 z"
-         style="fill:#c8ab37;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:connector-curvature="0"
-         style="fill:#c8ab37;stroke:none"
-         d="m 525.5625,258.28883 64.34375,21.5133 -64.34375,21.51329 -64.34375,-21.51329 64.34375,-21.5133 z m 0,9.5174 -35.78125,11.9959 35.78125,11.96284 35.8125,-11.96284 -35.8125,-11.9959 z"
-         id="path4149" />
-      <path
-         style="fill:#c8ab37;stroke:none"
-         d="m 461.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3233"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         style="fill:#c8ab37;stroke:none"
-         d="m 545.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3235"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         style="fill:#c8ab37;stroke:none"
-         d="m 629.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3241"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3245"
-         d="m 158.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#c8ab37;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3247"
-         d="m 242.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#c8ab37;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3253"
-         d="m 326.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#c8ab37;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-    </g>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer5"
-     inkscape:label="Dark points"
-     style="display:inline"
-     sodipodi:insensitive="true">
-    <g
-       style="display:inline"
-       id="g3193"
-       inkscape:export-filename="/home/dmt/Scrivania/board.png"
-       inkscape:export-xdpi="126"
-       inkscape:export-ydpi="126">
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#aa0000;stroke:none"
-         d="m 327.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path3995"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#aa0000;stroke:none"
-         d="m 243.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path3999"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         style="fill:#aa0000;stroke:none"
-         d="m 159.61756,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         id="path4003"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path4121"
-         d="m 631.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#aa0000;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path4127"
-         d="m 547.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#aa0000;stroke:none" />
-      <path
-         inkscape:export-ydpi="119.93436"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path4129"
-         d="m 463.32062,248.64017 0,0 -18.75313,-180.790974 36.06808,0 z"
-         style="fill:#aa0000;stroke:none" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3231"
-         d="m 419.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#aa0000;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3237"
-         d="m 503.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#aa0000;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path3239"
-         d="m 587.88244,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         style="fill:#aa0000;stroke:none"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         style="fill:#aa0000;stroke:none"
-         d="m 116.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3243"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         style="fill:#aa0000;stroke:none"
-         d="m 200.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3249"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-      <path
-         style="fill:#aa0000;stroke:none"
-         d="m 284.17938,311.8492 0,0 18.75313,180.79097 -36.06808,0 z"
-         id="path3251"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-    </g>
-    <g
-       style="fill:#504416;display:inline"
-       inkscape:export-ydpi="126"
-       inkscape:export-xdpi="126"
-       inkscape:export-filename="/home/dmt/Scrivania/board.png"
-       id="g6491">
-      <path
-         style="fill:#504416;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         d="m 25.9375,44.3125 0,470.97926 345.625,0 0,-470.97926 -345.625,0 z m 13.75,23.330855 36.0625,0 0,184.498825 -36.0625,0 0,-184.498825 z m 51.96875,0.561792 260.5625,0 0,423.193953 -260.5625,0 0,-423.193953 z M 39.6875,307.52818 l 36.0625,0 0,184.49882 -36.0625,0 0,-184.49882 z"
-         id="path6493"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436"
-         inkscape:connector-curvature="0" />
-      <path
-         id="path6495"
-         d="m 721.5625,44.3125 0,470.97926 -345.625,0 0,-470.97926 345.625,0 z m -13.75,23.330855 -36.0625,0 0,184.498825 36.0625,0 0,-184.498825 z m -51.96875,0.561792 -260.5625,0 0,423.193953 260.5625,0 0,-423.193953 z m 51.96875,239.323033 -36.0625,0 0,184.49882 36.0625,0 0,-184.49882 z"
-         style="fill:#504416;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         inkscape:connector-curvature="0"
-         inkscape:export-filename="/home/dmt/Scrivania/_board.png"
-         inkscape:export-xdpi="119.93436"
-         inkscape:export-ydpi="119.93436" />
-    </g>
+    <path
+       style="fill:#decd87;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none"
+       d="m 90.5625,68.1875 0,423.1875 8.4375,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.3125,0 0,-423.1875 -6.21875,0 L 327.625,248.625 308.90625,68.1875 l -6,0 L 285.625,248.625 266.90625,68.1875 l -6,0 L 243.625,248.625 224.90625,68.1875 l -6,0 L 201.625,248.625 182.90625,68.1875 l -6,0 L 159.625,248.625 140.90625,68.1875 l -6,0 L 117.625,248.625 98.90625,68.1875 l -8.34375,0 z m 131.375,190.09375 64.34375,21.53125 -64.34375,21.5 -64.34375,-21.5 64.34375,-21.53125 z m 0,9.53125 -35.8125,12 35.8125,11.9375 35.78125,-11.9375 -35.78125,-12 z"
+       id="rect2985"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#decd87;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none"
+       d="m 394.1875,68.1875 0,423.1875 8.5,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.1875,0 17.1875,-179.53125 18.625,179.53125 6.25,0 0,-423.1875 -6.15625,0 -17.28125,180.4375 -18.71875,-180.4375 -6,0 -17.28125,180.4375 -18.71875,-180.4375 -6,0 -17.28125,180.4375 -18.71875,-180.4375 -6,0 -17.28125,180.4375 -18.71875,-180.4375 -6,0 -17.28125,180.4375 -18.71875,-180.4375 -6,0 -17.28125,180.4375 -18.71875,-180.4375 -8.40625,0 z m 131.375,190.09375 64.34375,21.53125 -64.34375,21.5 -64.34375,-21.5 64.34375,-21.53125 z m 0,9.53125 -35.78125,12 35.78125,11.9375 35.8125,-11.9375 -35.8125,-12 z"
+       id="rect4115"
+       inkscape:connector-curvature="0" />
   </g>
   <g
      inkscape:groupmode="layer"

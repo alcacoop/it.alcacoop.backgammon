@@ -1,7 +1,7 @@
 package it.alcacoop.gnubackgammon.actors;
 
-import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.Color;
@@ -45,7 +45,6 @@ public class Point extends Group {
     img.setScaling(Scaling.none);
     img.setAlign(com.badlogic.gdx.scenes.scene2d.utils.Align.bottom+com.badlogic.gdx.scenes.scene2d.utils.Align.left);
     addActor(img);
-
   }
   
   

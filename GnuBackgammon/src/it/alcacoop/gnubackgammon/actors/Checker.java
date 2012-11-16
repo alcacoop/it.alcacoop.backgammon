@@ -1,8 +1,7 @@
 package it.alcacoop.gnubackgammon.actors;
 
-import it.alcacoop.gnubackgammon.GameScreen;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -57,7 +56,7 @@ public class Checker extends Group {
     imgh.setX(3);
     imgh.setY(3);
     
-    imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.2f), Actions.fadeOut(0.2f))));
+    imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
     
     label.setX(15);
     label.setY(10);

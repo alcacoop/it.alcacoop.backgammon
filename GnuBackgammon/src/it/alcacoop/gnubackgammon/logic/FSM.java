@@ -1,6 +1,6 @@
 package it.alcacoop.gnubackgammon.logic;
 
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.actors.Board;
 
 // SIMULATED GAME STATE MACHINE
 // From: http://vanillajava.blogspot.com/2011/06/java-secret-using-enum-as-state-machine.html

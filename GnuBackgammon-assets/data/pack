@@ -80,3 +80,15 @@ ch
   orig: 48, 47
   offset: 0, 0
   index: -1
+
+data-src2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+boardbg
+  rotate: false
+  xy: 2, 2
+  size: 1005, 692
+  orig: 1005, 692
+  offset: 0, 0
+  index: -1

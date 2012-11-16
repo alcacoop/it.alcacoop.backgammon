@@ -1,6 +1,7 @@
-package it.alcacoop.gnubackgammon;
+package it.alcacoop.gnubackgammon.layers;
 
-import it.alcacoop.gnubackgammon.layers.Board;
+import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.FSM;
