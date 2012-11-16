@@ -99,9 +99,9 @@ public class Board extends Group {
         break;
         
       case 24: //BAR
-        ret.x = pos[x].x;
-        if (color==0) ret.y=590 - (49*y);
-        else ret.y=90 + (49*y);
+        ret.x = bimg.getX() + pos[x].x;
+        if (color==0) ret.y=bimg.getY() + 570 - (49*y);
+        else ret.y=bimg.getY() + 70 + (49*y);
         break;
         
       default: //ON THE TABLE
