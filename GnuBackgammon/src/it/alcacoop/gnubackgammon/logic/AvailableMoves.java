@@ -103,7 +103,7 @@ public class AvailableMoves {
     
     //BEARING OFF
     int max_point = b.bearingOff();
-    if (max_point>0) {
+    if (max_point>=0) {
       ArrayList<Integer> ret = new ArrayList<Integer>();
       for (int i=0;i<dices.size();i++)
         if (nPoint-dices.get(i)>=0) 
@@ -158,7 +158,7 @@ public class AvailableMoves {
 
 
   public boolean hasMoves() {
-    return !dices.isEmpty();
+    return (!dices.isEmpty()&&(!b.gameFinished()));
   }
 
 
