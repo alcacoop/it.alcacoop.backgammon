@@ -54,6 +54,10 @@ public class Checker extends Group {
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
+    imgh.setX(3);
+    imgh.setY(3);
+    
+    imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.2f), Actions.fadeOut(0.2f))));
     
     label.setX(15);
     label.setY(10);
