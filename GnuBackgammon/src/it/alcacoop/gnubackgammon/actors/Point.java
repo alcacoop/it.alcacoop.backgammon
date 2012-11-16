@@ -30,10 +30,8 @@ public class Point extends Group {
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        return true;
-      }
-      public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
         GameScreen.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
+        return true;
       }
     });
 
