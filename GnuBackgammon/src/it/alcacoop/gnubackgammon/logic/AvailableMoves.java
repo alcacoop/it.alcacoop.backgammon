@@ -106,7 +106,7 @@ public class AvailableMoves {
     if (max_point>=0) {
       ArrayList<Integer> ret = new ArrayList<Integer>();
       for (int i=0;i<dices.size();i++)
-        if (nPoint-dices.get(i)>=0) 
+        if ((nPoint-dices.get(i)>=0)&&(b.specularPointFree(nPoint-dices.get(i)))) 
           ret.add(nPoint-dices.get(i));
         else if (nPoint-dices.get(i)==-1)
           ret.add(-1);

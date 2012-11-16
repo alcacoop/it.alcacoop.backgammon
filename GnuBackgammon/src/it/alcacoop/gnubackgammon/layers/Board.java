@@ -284,4 +284,10 @@ public class Board extends Group {
     if (getPIPS()>0) return false;
     else return true;
   }
+  
+  public boolean specularPointFree(int nPoint) {
+    System.out.print("SPEC: "+(23-nPoint)+"\n");
+    if (MatchState.fMove==1) return (_board[0][23-nPoint]<=1);
+    else return (_board[1][23-nPoint]<=1);
+  }
 } //END CLASS
