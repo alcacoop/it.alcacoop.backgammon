@@ -71,9 +71,6 @@ public class FSM implements Context {
           case ROLL_DICE:
             int dices[] = (int[])params;
             ctx.board().setDices(dices[0], dices[1]);
-            AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
-            break;
-          case GENERATE_MOVES:
             AICalls.EvaluateBestMove(ctx.board().dices.get());
             break;
           case EVALUATE_BEST_MOVE:

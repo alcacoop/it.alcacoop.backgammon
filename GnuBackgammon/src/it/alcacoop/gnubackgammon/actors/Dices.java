@@ -114,7 +114,8 @@ public class Dices extends Group {
     return ret;
   }
 
-  //REMOVE A NON PLAYABLE DIXC
+  
+  //REMOVE A NON PLAYABLE DICE
   public void remove(int n) {
     disable(n);
     last.remove(last.indexOf(n));
