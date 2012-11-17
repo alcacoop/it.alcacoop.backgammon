@@ -34,23 +34,54 @@ public class AvailableMoves {
 
 
   private void evaluatePlayableDices(int d[]) {
+    for (int i=0;i<moves.size();i++) {
+      int m[] = moves.get(i);
+      System.out.println("MOVE: "+m[0]+"/"+m[1]+" "+m[2]+"/"+m[3]+" "+m[4]+"/"+m[5]+" "+m[6]+"/"+m[7]);
+    }
 
-    //FIX BIGGER OF AVAILABLE MOVES DICES ON BEARING OFF.. 
+    //AVAILABLE MOVES DICES ON BEARING OFF..
     int max_point = b.bearingOff();
+    int dice = 0;
     if(max_point>=0) { //BEARING OFF!
-      for (int i=0;i<d.length;i++)
-        dices.add(d[i]);
-      for(int j=0;j<dices.size();j++) {
-        if (dices.get(j)>max_point+1) {
-          dices.set(j, max_point+1);
+      System.out.println("DICE FOR BEAR OFF");
+      int max_moves = 0;
+      for (int i=0;i<moves.size();i++) {
+        for (int j=0;j<4;j++) {
+          if (moves.get(i)[j*2]!=-1) {
+            max_moves=(j+1);
+            dice = moves.get(i)[j*2]-moves.get(i)[j*2+1];
+          }
+        }
+        if (max_moves==b.dices.get().length) {
+          break;
         }
       }
+      
+      System.out.println("MAX SHIFTS: "+max_moves);
+      
+      if ((d[0]!=d[1])&&(max_moves==1)) {
+        dices.add(dice);
+        if (dice==d[0])
+          b.dices.remove(d[1]);
+        else
+          b.dices.remove(d[0]);
+        System.out.println("DICE ERROR!!!");
+        return;
+      }
+      
+      for (int i=0;i<max_moves;i++)
+        dices.add(d[i]);
+      
+      if (d[0]==d[1])
+        for (int i=0;i<4-max_moves;i++)
+          b.dices.remove(d[0]);
+      
       return;
     }
-    //END FIXING BEARING OFF DICES
+    //END BEARING OFF DICES
+    
 
-    //NOW WE ARE DISABLING UNPLAYABLE DICES
-    //TODO: BEAROFF WITH CONTACT
+    //DISABLING UNPLAYABLE DICES ON RACE GAME
     boolean all_presents = false;
     int max_moves = 0;
     List<Integer> presents = new ArrayList<Integer>();
@@ -77,6 +108,9 @@ public class AvailableMoves {
     }
 
     List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(presents));
+    for (int i=0;i<unique.size();i++)
+      System.out.println("U: "+unique.get(i));
+    
     if (unique.size()==2) all_presents = true;
 
     if (all_presents) { 
@@ -102,44 +136,31 @@ public class AvailableMoves {
 
   public int[] getPoints(int nPoint) {
     
-    //BEARING OFF
-    int max_point = b.bearingOff();
-    if (max_point>=0) {
-      ArrayList<Integer> ret = new ArrayList<Integer>();
-      for (int i=0;i<dices.size();i++)
-        if ((nPoint-dices.get(i)>=0)&&(b.specularPointFree(nPoint-dices.get(i)))) 
-          ret.add(nPoint-dices.get(i));
-        else if (nPoint-dices.get(i)==-1)
-          ret.add(-1);
-        else if ((nPoint-dices.get(i)<-1)&&(nPoint==max_point))
-          ret.add(-1);
-      
-      int r[] = new int[ret.size()];
-      for (int i=0;i<ret.size();i++)
-        r[i] = ret.get(i);
-      return r;
-    }
-
-    
-    //RACE GAME
     ArrayList<Integer> ret = new ArrayList<Integer>();
-    if (moves.size()==0) return null;
-    if ((b._board[MatchState.fMove][24]>0)&&(nPoint!=24))
+    
+    if (moves.size()==0) return null; //NO MOVES AVAILABLE
+    if ((b._board[MatchState.fMove][24]>0)&&(nPoint!=24)) //CHECKERS ON BAR
       return null;
 
     for (int i=0;i<moves.size();i++) {
       for (int j=0;j<4;j++) {
         for (int k=0;k<dices.size();k++) {
           if (moves.get(i)[2*j]==nPoint) {
-            if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
+            int max_point = b.bearingOff(); 
+            if (max_point==-1) {
+              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
+            } else {
+              //BOFF WITH BIGGER DICE
+              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
+              else if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]<=dices.get(k))&&(nPoint==max_point)&&(moves.get(i)[2*j+1]<0)) 
+                ret.add(moves.get(i)[2*j+1]);
+            }
           }
         }
       }
     }
 
-
     List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(ret));
-
     //RETURN unique AS STANDARD ARRAY
     int[] r = new int[unique.size()];
     for (int i=0;i<unique.size();i++) {
@@ -150,11 +171,17 @@ public class AvailableMoves {
 
 
   public void dropDice(int d) {
-    int i = dices.indexOf(d);
-    if (i==-1) //BEARING OFF WITH GREATER DICE
-      dices.remove(dices.size()-1);
-    else
-      dices.remove(i);
+    int idx = dices.indexOf(d);
+    if (idx==-1) {//BEARING OFF WITH GREATER DICE
+      Iterator<Integer> itr = dices.iterator();
+      while (itr.hasNext()) {
+        if (itr.next()>d) {
+          itr.remove();
+          break;
+        }
+      }
+    } else //REMOVE PLAYED DICE
+      dices.remove(idx);
   }
 
 
