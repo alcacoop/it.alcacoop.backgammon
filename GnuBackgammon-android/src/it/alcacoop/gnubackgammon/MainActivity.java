@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -28,7 +29,13 @@ public class MainActivity extends AndroidApplication {
     
     copyAssetsIfNotExists();
     
-    initialize(new GnuBackgammon(), cfg);
+    final DisplayMetrics displayMetrics = new DisplayMetrics();
+    this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    int w = displayMetrics.widthPixels;
+    int h = displayMetrics.heightPixels;
+
+    
+    initialize(new GnuBackgammon(w, h), cfg);
     GnubgAPI.InitializeEnvironment(data_dir);
   }
   

@@ -15,9 +15,7 @@ public class BoardImage extends Image {
 
   private TextureRegion region;
 
-  public BoardImage(){
-    super();
-
+  public BoardImage(int x0, int y0){
     region = GnuBackgammon.atlas.findRegion("board");
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -26,6 +24,8 @@ public class BoardImage extends Image {
     
     setScaling(Scaling.none);
     this.setAlign(com.badlogic.gdx.scenes.scene2d.utils.Align.bottom+com.badlogic.gdx.scenes.scene2d.utils.Align.left);
+    setX(x0);
+    setY(y0);
   }
   
   @Override

@@ -12,10 +12,10 @@ public class Main {
     LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
     cfg.title = "GnuBackgammon";
     cfg.useGL20 = false;
-    cfg.width = 502;
-    cfg.height = 346;
+    cfg.width = 800;
+    cfg.height = 600;
 
-    new LwjglApplication(new GnuBackgammon(), cfg);
+    new LwjglApplication(new GnuBackgammon(800, 600), cfg);
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");

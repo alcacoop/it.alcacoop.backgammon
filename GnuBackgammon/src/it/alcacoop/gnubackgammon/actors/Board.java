@@ -42,7 +42,7 @@ public class Board extends Group {
     availableMoves = new AvailableMoves(this);
     checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
     
-    board = new BoardImage();
+    board = new BoardImage(0,0);
     
     TextureRegion r1 = GnuBackgammon.atlas.findRegion("boardbg");
     r1.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -109,7 +109,7 @@ public class Board extends Group {
         break;
         
       case 24: //BAR
-        ret.x = board.getX() + pos[x].x;
+        ret.x = pos[x].x;
         if (color==0) ret.y=board.getY() + 570 - (49*y);
         else ret.y=board.getY() + 70 + (49*y);
         break;

@@ -10,72 +10,79 @@ board
   orig: 1005, 692
   offset: 0, 0
   index: -1
-point
+button
   rotate: false
   xy: 2, 696
+  size: 250, 59
+  orig: 250, 59
+  offset: 0, 0
+  index: -1
+point
+  rotate: false
+  xy: 2, 757
   size: 55, 262
   orig: 55, 262
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 59, 696
+  xy: 59, 757
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 59, 754
+  xy: 117, 757
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 59, 812
+  xy: 175, 757
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 59, 870
+  xy: 59, 815
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 59, 928
+  xy: 117, 815
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 117, 696
+  xy: 175, 815
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 2, 960
+  xy: 59, 873
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 117, 754
+  xy: 59, 928
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 117, 809
+  xy: 114, 873
   size: 48, 47
   orig: 48, 47
   offset: 0, 0
@@ -90,5 +97,17 @@ boardbg
   xy: 2, 2
   size: 1005, 692
   orig: 1005, 692
+  offset: 0, 0
+  index: -1
+
+data-src3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 2, 2
+  size: 1000, 625
+  orig: 1000, 625
   offset: 0, 0
   index: -1

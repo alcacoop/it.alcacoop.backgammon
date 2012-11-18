@@ -9,30 +9,30 @@ import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
 
 public class GameScreen implements Screen {
 
   private Stage stage;
   private Board board;
   public static FSM fsm;
-
-
+  private SpriteBatch sb;
+  private TextureRegion bgRegion;
+  
   public GameScreen(GnuBackgammon bg){
     
-    //stage = new Stage(1280, 740, true);
-    stage = new Stage(1005, 692, true);
+    sb = new SpriteBatch();
+    stage = new Stage(1005, 752, true);
     
-    /*
-    TextureRegion region = GnuBackgammon.atlas.findRegion("bg");
-    Image img = new Image(region);
-    img.setWidth(1005);
-    img.setHeight(692);
-    stage.addActor(img);
-    */
+    bgRegion = GnuBackgammon.atlas.findRegion("bg");
     
     board = new Board();
     stage.addActor(board);
+    
     fsm = new FSM(board);
     fsm.start();
   }
@@ -40,10 +40,17 @@ public class GameScreen implements Screen {
 
   @Override
   public void render(float delta) {
+    
     Gdx.gl.glClearColor(1, 1, 1, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+    
+    sb.begin();
+    sb.draw(bgRegion, 0,0 , GnuBackgammon.width, GnuBackgammon.height);
+    sb.end();
+    
     stage.act(delta);
     stage.draw();
+    
   }
 
 

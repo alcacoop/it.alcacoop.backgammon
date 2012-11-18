@@ -16,8 +16,16 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static TextureAtlas atlas;
   private BitmapFont font;
   public static LabelStyle styleBlack, styleWhite;
-  GameScreen gameScreen;
-
+  public static int width;
+  public static int height;
+  private GameScreen gameScreen;
+  
+  
+  public GnuBackgammon(int w, int h) {
+   width = w;
+   height = h;
+  }
+  
   @Override
   public void create() {		
     atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
@@ -27,11 +35,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     styleWhite = new LabelStyle(font, Color.WHITE);
     styleBlack = new LabelStyle(font, Color.BLACK);
-    
-    
+
     gameScreen = new GameScreen(this);
     setScreen(gameScreen);
   }
-
 
 }
