@@ -136,7 +136,7 @@ public class Board extends Group {
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
-    dices.hide();
+    dices.clear();
 
     int nchecker = 0;
     //POSITIONING WHITE CHECKERS
