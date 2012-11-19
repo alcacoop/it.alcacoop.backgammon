@@ -93,15 +93,19 @@ public class Checker extends Group {
     if (x==24) tt=0.25f;
     
     final int y;
-    if (x>=0) {
+    
+    if (x>=0)
       y = board._board[color][x];
-    } else { //BEARED OFF
-      board.bearedOff[color]++; 
+    else //BEARED OFF
       y = board.bearedOff[color];
-    }
+    
     Vector2 _p = board.getBoardCoord(color, x, y);
     
     final int d = boardX-x;
+    final int bX = boardX;
+    final int bY = boardY;
+    
+    setPosition(x);
     
     this.addAction(Actions.sequence(
         Actions.delay(delay),
@@ -113,28 +117,32 @@ public class Checker extends Group {
             board.points.reset();
             if (x<24)
               board.dices.disable(d);
-            if ((boardY<5)||(boardX==-1)) label.setText("");
+            if ((bY<5)||(bX==-1)) label.setText("");
             return true;
           }},
         Actions.moveTo(_p.x, _p.y, tt),
         new Action(){
             @Override
             public boolean act(float delta) {
-              if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
+              if ((bY>4)&&(bX!=-1)) label.setText(""+(bY+1));
               if (!board.checkHit())
                 GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
               return true;
             }}
         ));
-    setPosition(x, y);
+    
   }
   
   
-  public void setPosition(int x, int y) {
+  public void setPosition(int x) {
     board._board[color][boardX]--;
 	  boardX = x;
-	  if (x>=0) //ON_TABLE!! 
+	  
+	  if (x>=0) //ON_TABLE!!
 	    boardY = board._board[color][boardX]++;
+	  else
+	    boardY = board.bearedOff[color]++;
+	     
   }
 
   

@@ -41,7 +41,8 @@ public class FSM implements Context {
     PERFORMED_MOVE,
     NO_MORE_MOVES,
     POINT_TOUCHED,
-    GENERATE_MOVES
+    GENERATE_MOVES,
+    DICE_CLICKED
   }
 
   public enum States implements State {
@@ -145,7 +146,7 @@ public class FSM implements Context {
           if (!ctx.board().availableMoves.hasMoves())
             processEvent(ctx, Events.NO_MORE_MOVES, null);
           break;
-        case NO_MORE_MOVES:
+        case DICE_CLICKED:
           ctx.state(CHECK_WIN);
           break;
         default:
@@ -166,7 +167,7 @@ public class FSM implements Context {
             ctx.state(States.SIMULATED_TURN);
 //          ctx.state(States.SIMULATED_TURN);
 //          ctx.state(States.HUMAN_TURN);
-          MatchState.switchTurn();
+          ctx.board().switchTurn();
         }
       }
     },
@@ -177,7 +178,7 @@ public class FSM implements Context {
         MatchState.fTurn = 0;
         ctx.board().initBoard();
         ctx.state(States.SIMULATED_TURN);
-        MatchState.switchTurn();
+        ctx.board().switchTurn();
       }
     };
     

@@ -39,6 +39,11 @@ public class Dices extends Group {
       disabled=true;
       setColor(0.7f,0.7f,0.7f,0.4f);
     }
+    
+    public void enable() {
+      disabled=false;
+      setColor(1, 1, 1, 1);
+    }
   }
 
 
@@ -104,29 +109,61 @@ public class Dices extends Group {
       for (int i=0;i<2; i++) {
         if ((last.get(i).value==n)&&(!last.get(i).disabled)) { 
           last.get(i).disable();
+          b.playedMoves.lastElement().setDice(last.get(i).value);
           found = true;
         }
       }
       if (!found) { //BEAR OFF WITH BIGGER DICE
-        if (last.get(0).disabled) last.get(1).disable();
-        if (last.get(1).disabled) last.get(0).disable();
+        if (last.get(0).disabled) {
+          b.playedMoves.lastElement().setDice(last.get(1).value);
+          last.get(1).disable();
+        }
+        if (last.get(1).disabled) {
+          b.playedMoves.lastElement().setDice(last.get(0).value);
+          last.get(0).disable();
+        }
         
         if ((!last.get(0).disabled)&&(!last.get(1).disabled)) {
-          if ((!last.get(0).disabled)&&(last.get(0).value>n))
+          if ((!last.get(0).disabled)&&(last.get(0).value>n)) {
+            b.playedMoves.lastElement().setDice(last.get(0).value);
             last.get(0).disable();
-          else if ((!last.get(1).disabled)&&(last.get(1).value>n))
+          }
+          else if ((!last.get(1).disabled)&&(last.get(1).value>n)) {
+            b.playedMoves.lastElement().setDice(last.get(1).value);
             last.get(1).disable();
+          }
+            
         }
       }
     } else { //DOUBLE ROLL: WORK ON FIRST NOT DISABLED DICE
       for (int i=0;i<4; i++) {
         if (!last.get(i).disabled) {
           last.get(i).disable();
+          b.playedMoves.lastElement().setDice(last.get(i).value);
           return;
         }
       }
     }
   }
+ 
+  
+  public void enable(int n) {
+    if (last.size() == 2) { //STANDARD ROLL
+      for (int i=0;i<2; i++) {
+        if ((last.get(i).value==n)&&(last.get(i).disabled)) { 
+          last.get(i).enable();
+        }
+      }
+    } else { //DOUBLE ROLL: WORK ON FIRST NOT DISABLED DICE
+      for (int i=0;i<4; i++) {
+        if (last.get(i).disabled) {
+          last.get(i).enable();
+          return;
+        }
+      }
+    }
+  }
+  
   
   
   public int[] get() {

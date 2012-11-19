@@ -34,7 +34,7 @@ public class MatchState {
   public static int fCubeUse = 1; //USING CUBE
   
   
-  public static void switchTurn() {
+  public static void _switchTurn() {
     if (fMove == 0) {
       fMove=1;
       fTurn=1;

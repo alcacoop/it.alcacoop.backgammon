@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.actors.IconButton;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.FSM;
@@ -11,13 +12,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class GameScreen implements Screen {
 
   private Stage stage;
-  private Board board;
+  private final Board board;
   public static FSM fsm;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
@@ -31,6 +34,18 @@ public class GameScreen implements Screen {
     
     board = new Board();
     stage.addActor(board);
+    
+    
+    
+    IconButton undo = new IconButton("back", new InputListener() {
+      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+        board.undoMove();
+        return true;
+      }
+    });
+    undo.setX(860);
+    undo.setY(680);
+    stage.addActor(undo);
     
     fsm = new FSM(board);
     fsm.start();

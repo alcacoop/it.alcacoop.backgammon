@@ -178,7 +178,8 @@ public class AvailableMoves {
     return (!dices.isEmpty()&&(!b.gameFinished()));
   }
 
-
+  /*
+   * TODO
   public void removeMoves(int orig, int dest) {
     Iterator<int[]> itr = moves.iterator();
     while (itr.hasNext()) { 
@@ -193,4 +194,5 @@ public class AvailableMoves {
       if (!matched) itr.remove();
     }
   }
+  */
 }

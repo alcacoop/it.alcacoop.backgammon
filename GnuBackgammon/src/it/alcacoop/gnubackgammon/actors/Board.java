@@ -5,6 +5,7 @@ import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
+import it.alcacoop.gnubackgammon.logic.Move;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,7 +21,8 @@ public class Board extends Group {
   
   public int[][] _board;
   public int[] bearedOff = {0,0};
-  public Stack<int[]> moves;
+  public Stack<Move> moves;
+  public Stack<Move> playedMoves;
 
   public Vector2 pos[];
   public Checker checkers[][];
@@ -38,7 +40,8 @@ public class Board extends Group {
   public Board() {
     _board = new int[2][25];
     
-    moves = new Stack<int[]>();
+    moves = new Stack<Move>();
+    playedMoves = new Stack<Move>();
     availableMoves = new AvailableMoves(this);
     checkers = new Checker[2][15]; //[0]=WHITE [1]=BLACK
     
@@ -104,8 +107,8 @@ public class Board extends Group {
     
       case -1: //BEAR OFF
         ret.x = board.getX()+918.5f; 
-        if (color==1) ret.y = board.getY()+605-bearedOff[color]*14;
-        else ret.y = board.getY()+35+bearedOff[color]*14;
+        if (color==1) ret.y = board.getY()+590-bearedOff[color]*14;
+        else ret.y = board.getY()+50+bearedOff[color]*14;
         break;
         
       case 24: //BAR
@@ -157,9 +160,14 @@ public class Board extends Group {
   }
 
   
-  Checker getChecker(int color, int x) {
+  public Checker getChecker(int color, int x) {
     Checker _c = null;
-    int y = _board[color][x]-1;
+    int y = 0;
+    if (x>=0)
+      y = _board[color][x]-1;
+    else
+      y = bearedOff[color]-1;
+    
     for (int i = 0; i<15; i++) {
       Checker c = checkers[color][i];
       if ((c.boardX==x)&&(c.boardY==y))
@@ -171,15 +179,14 @@ public class Board extends Group {
 
   public void setMoves(int _moves[]) {
     moves.clear();
+    
     if (_moves.length<8) return;
 
     int ms = 0;
     
     for (int i=3;i>=0;i--) {
       if (_moves[2*i]!=-1) {
-        int m[] = new int[2];
-        m[0] = _moves[2*i];
-        m[1] = _moves[2*i+1];
+        Move m = new Move(this, _moves[2*i], _moves[2*i+1]);
         moves.push(m);
         ms++;
       }
@@ -195,12 +202,13 @@ public class Board extends Group {
   }
   public void performNextMove(boolean nodelay) {
     try {
-      int m[] = moves.pop();
+      Move m = moves.pop();
+      playedMoves.push(m);
       if (m!=null) {
-        Checker c = getChecker(MatchState.fMove, m[0]);
-        if (nodelay) c.moveTo(m[1]);
-        else c.moveToDelayed(m[1], 0.2f);
-        availableMoves.removeMoves(m[0], m[1]);
+        Checker c = getChecker(MatchState.fMove, m.from);
+        if (nodelay) c.moveTo(m.to);
+        else c.moveToDelayed(m.to, 0.2f);
+        //TODO: availableMoves.removeMoves(m[0], m[1]);
         lastMoved = c;
       }  
     } catch (Exception e) {
@@ -215,10 +223,11 @@ public class Board extends Group {
       
       int c = lastMoved.getSpecularColor();
       int p = lastMoved.getSpecularPosition();
-      if (_board[c][p]>0) {
+      if (_board[c][p]==1) {
         //CHECKER HITTED
         Checker ch = getChecker(c, p);
         ch.moveTo(24);
+        playedMoves.lastElement().hitted = true;
         return true;
       }
     }
@@ -296,5 +305,18 @@ public class Board extends Group {
   public boolean specularPointFree(int nPoint) {
     if (MatchState.fMove==1) return (_board[0][23-nPoint]<=1);
     else return (_board[1][23-nPoint]<=1);
+  }
+  
+  public void undoMove() {
+    System.out.println("UNDO NOT POSSIBLE! " + playedMoves.size());
+    if (playedMoves.size()>0) {
+      System.out.println("UNDO POSSIBLE! " + playedMoves.size());
+      playedMoves.pop().undo();
+    }
+  }
+  
+  public void switchTurn() {
+    playedMoves.clear();
+    MatchState._switchTurn();
   }
 } //END CLASS

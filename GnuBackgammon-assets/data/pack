@@ -24,65 +24,72 @@ point
   orig: 55, 262
   offset: 0, 0
   index: -1
-d3
+back
   rotate: false
   xy: 59, 757
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 131, 757
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 117, 757
+  xy: 189, 757
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 175, 757
+  xy: 59, 829
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 59, 815
+  xy: 117, 829
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 117, 815
+  xy: 175, 829
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 175, 815
+  xy: 59, 887
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 59, 873
+  xy: 59, 945
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 59, 928
+  xy: 117, 887
   size: 53, 53
   orig: 53, 53
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 114, 873
+  xy: 172, 887
   size: 48, 47
   orig: 48, 47
   offset: 0, 0
