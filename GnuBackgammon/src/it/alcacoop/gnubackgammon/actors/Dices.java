@@ -109,27 +109,32 @@ public class Dices extends Group {
       for (int i=0;i<2; i++) {
         if ((last.get(i).value==n)&&(!last.get(i).disabled)) { 
           last.get(i).disable();
-          b.playedMoves.lastElement().setDice(last.get(i).value);
+          if (b.playedMoves.size()>0)
+            b.playedMoves.lastElement().setDice(last.get(i).value);
           found = true;
         }
       }
       if (!found) { //BEAR OFF WITH BIGGER DICE
         if (last.get(0).disabled) {
-          b.playedMoves.lastElement().setDice(last.get(1).value);
+          if (b.playedMoves.size()>0)
+            b.playedMoves.lastElement().setDice(last.get(1).value);
           last.get(1).disable();
         }
         if (last.get(1).disabled) {
-          b.playedMoves.lastElement().setDice(last.get(0).value);
+          if (b.playedMoves.size()>0)
+            b.playedMoves.lastElement().setDice(last.get(0).value);
           last.get(0).disable();
         }
         
         if ((!last.get(0).disabled)&&(!last.get(1).disabled)) {
           if ((!last.get(0).disabled)&&(last.get(0).value>n)) {
-            b.playedMoves.lastElement().setDice(last.get(0).value);
+            if (b.playedMoves.size()>0)
+              b.playedMoves.lastElement().setDice(last.get(0).value);
             last.get(0).disable();
           }
           else if ((!last.get(1).disabled)&&(last.get(1).value>n)) {
-            b.playedMoves.lastElement().setDice(last.get(1).value);
+            if (b.playedMoves.size()>0)
+              b.playedMoves.lastElement().setDice(last.get(1).value);
             last.get(1).disable();
           }
             
@@ -139,7 +144,8 @@ public class Dices extends Group {
       for (int i=0;i<4; i++) {
         if (!last.get(i).disabled) {
           last.get(i).disable();
-          b.playedMoves.lastElement().setDice(last.get(i).value);
+          if (b.playedMoves.size()>0)
+            b.playedMoves.lastElement().setDice(last.get(i).value);
           return;
         }
       }

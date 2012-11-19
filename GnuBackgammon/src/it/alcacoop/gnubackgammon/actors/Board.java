@@ -133,29 +133,45 @@ public class Board extends Group {
 
 
   public void initBoard() {
-    for (int i=0; i<24; i++) {
+    dices.clear();
+    int i0 = 0;
+    int i1 = 0;
+    
+    for (int i=0; i<=24; i++) {
       _board[0][i] = MatchState.board[0][i];
+      i0+=MatchState.board[0][i];
       _board[1][i] = MatchState.board[1][i];
+      i1+=MatchState.board[1][i];
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
-    dices.clear();
-
+    
     int nchecker = 0;
-    //POSITIONING WHITE CHECKERS
+    //POSITIONING BLACK CHECKERS
     for (int i=0; i<25; i++) {
       for (int j=0;j<_board[0][i];j++) {
         checkers[0][nchecker].reset(i,j);
         nchecker++;
       }
     }
-    //POSITIONING BLACK CHECKERS
+    for (int i=0;i<15-i0;i++) {
+      checkers[0][nchecker].reset(-1,i);
+      bearedOff[0]++;
+      nchecker++;
+    }
+    
+    //POSITIONING WHITE CHECKERS
     nchecker = 0;
     for (int i=0; i<25; i++) {
       for (int j=0;j<_board[1][i];j++) {
         checkers[1][nchecker].reset(i, j);
         nchecker++;
       }
+    }
+    for (int i=0;i<15-i1;i++) {
+      checkers[1][nchecker].reset(-1,i);
+      bearedOff[1]++;
+      nchecker++;
     }
   }
 
