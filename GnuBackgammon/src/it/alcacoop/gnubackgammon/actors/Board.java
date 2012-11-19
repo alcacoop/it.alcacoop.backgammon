@@ -240,7 +240,6 @@ public class Board extends Group {
       }
       
       int ps[] = availableMoves.getPoints(x);
-      //System.out.println("AVAILABLE POINTS: "+ps.length);
       if ((ps==null)||(ps.length==0)) { //NO MOVES FROM HERE!
         c.highlight(false);
         selected = null;        
@@ -286,7 +285,6 @@ public class Board extends Group {
     for (int i=0;i<_board[MatchState.fMove].length;i++) {
       pips += _board[MatchState.fMove][i]*(i+1);
     }
-    //System.out.println("PIPS: "+pips);
     return pips;
   }
   
@@ -296,7 +294,6 @@ public class Board extends Group {
   }
   
   public boolean specularPointFree(int nPoint) {
-    System.out.print("SPEC: "+(23-nPoint)+"\n");
     if (MatchState.fMove==1) return (_board[0][23-nPoint]<=1);
     else return (_board[1][23-nPoint]<=1);
   }

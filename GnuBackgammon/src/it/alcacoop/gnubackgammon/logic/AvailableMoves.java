@@ -34,16 +34,11 @@ public class AvailableMoves {
 
 
   private void evaluatePlayableDices(int d[]) {
-    for (int i=0;i<moves.size();i++) {
-      int m[] = moves.get(i);
-      System.out.println("MOVE: "+m[0]+"/"+m[1]+" "+m[2]+"/"+m[3]+" "+m[4]+"/"+m[5]+" "+m[6]+"/"+m[7]);
-    }
-
+    
     //AVAILABLE MOVES DICES ON BEARING OFF..
     int max_point = b.bearingOff();
     int dice = 0;
     if(max_point>=0) { //BEARING OFF!
-      System.out.println("DICE FOR BEAR OFF");
       int max_moves = 0;
       for (int i=0;i<moves.size();i++) {
         for (int j=0;j<4;j++) {
@@ -57,15 +52,12 @@ public class AvailableMoves {
         }
       }
       
-      System.out.println("MAX SHIFTS: "+max_moves);
-      
       if ((d[0]!=d[1])&&(max_moves==1)) {
         dices.add(dice);
         if (dice==d[0])
-          b.dices.remove(d[1]);
+          b.dices.disable(d[1]);
         else
-          b.dices.remove(d[0]);
-        System.out.println("DICE ERROR!!!");
+          b.dices.disable(d[0]);
         return;
       }
       
@@ -74,7 +66,7 @@ public class AvailableMoves {
       
       if (d[0]==d[1])
         for (int i=0;i<4-max_moves;i++)
-          b.dices.remove(d[0]);
+          b.dices.disable(d[0]);
       
       return;
     }
@@ -108,9 +100,6 @@ public class AvailableMoves {
     }
 
     List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(presents));
-    for (int i=0;i<unique.size();i++)
-      System.out.println("U: "+unique.get(i));
-    
     if (unique.size()==2) all_presents = true;
 
     if (all_presents) { 
@@ -121,14 +110,14 @@ public class AvailableMoves {
         for (int i=0;i<max_moves;i++)
           dices.add(d[0]);
         for (int i=0;i<4-max_moves;i++)
-          b.dices.remove(d[0]);
+          b.dices.disable(d[0]);
       } else { //NON DOUBLING ROLL
         int t = unique.get(0); //THE ONLY PLAYABLE DICE
         dices.add(t);
         if(b.dices.get()[0]==t)
-          b.dices.remove(b.dices.get()[1]);
+          b.dices.disable(b.dices.get()[1]);
         else 
-          b.dices.remove(b.dices.get()[0]);
+          b.dices.disable(b.dices.get()[0]);
       }  
     }
   }
