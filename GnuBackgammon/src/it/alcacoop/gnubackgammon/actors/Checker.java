@@ -68,11 +68,13 @@ public class Checker extends Group {
   
   
   public void reset(int _boardX, int _boardY) {
+    reset(_boardX, _boardY, 0);
+  }
+  public void reset(int _boardX, int _boardY, float t) {
     Vector2 _p = board.getBoardCoord(color, _boardX, _boardY);
     boardX = _boardX;
     boardY = _boardY;
-    setX(_p.x);
-    setY(_p.y);
+    addAction(Actions.moveTo(_p.x, _p.y, t));
     if ((boardY>4)&&(boardX!=-1)) 
       label.setText(""+(boardY+1));
     else 
@@ -102,8 +104,6 @@ public class Checker extends Group {
     Vector2 _p = board.getBoardCoord(color, x, y);
     
     final int d = boardX-x;
-    final int bX = boardX;
-    final int bY = boardY;
     
     setPosition(x);
     
@@ -115,16 +115,16 @@ public class Checker extends Group {
             highlight(false);
             board.selected = null;
             board.points.reset();
-            if (x<24)
+            if ((x<24)&&(d>0))
               board.dices.disable(d);
-            if ((bY<5)||(bX==-1)) label.setText("");
+            if ((boardY<5)||(boardX==-1)) label.setText("");
             return true;
           }},
         Actions.moveTo(_p.x, _p.y, tt),
         new Action(){
             @Override
             public boolean act(float delta) {
-              if ((bY>4)&&(bX!=-1)) label.setText(""+(bY+1));
+              if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
               if (!board.checkHit())
                 GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
               return true;

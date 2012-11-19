@@ -39,6 +39,7 @@ public class AvailableMoves {
     int max_point = b.bearingOff();
     int dice = 0;
     if(max_point>=0) { //BEARING OFF!
+      
       int max_moves = 0;
       for (int i=0;i<moves.size();i++) {
         for (int j=0;j<4;j++) {
@@ -177,22 +178,4 @@ public class AvailableMoves {
   public boolean hasMoves() {
     return (!dices.isEmpty()&&(!b.gameFinished()));
   }
-
-  /*
-   * TODO
-  public void removeMoves(int orig, int dest) {
-    Iterator<int[]> itr = moves.iterator();
-    while (itr.hasNext()) { 
-      boolean matched = false;
-      int mv[] = itr.next();
-      for (int i=0;i<4;i++) {
-        if ((mv[2*i]==orig)&&(mv[2*i+1]==dest)) {
-          matched=true;
-          break;
-        }
-      }
-      if (!matched) itr.remove();
-    }
-  }
-  */
 }

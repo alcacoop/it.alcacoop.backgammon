@@ -46,8 +46,6 @@ public class Dices extends Group {
     }
   }
 
-
-  
   
   public Dices(Board _b, float _x, float _y) {
     last = new ArrayList<_dice>();
@@ -88,6 +86,7 @@ public class Dices extends Group {
     
     _show();
   }
+  
   
   private void _show() {
     float x = 0;
@@ -161,7 +160,7 @@ public class Dices extends Group {
         }
       }
     } else { //DOUBLE ROLL: WORK ON FIRST NOT DISABLED DICE
-      for (int i=0;i<4; i++) {
+      for (int i=3;i>=0; i--) {
         if (last.get(i).disabled) {
           last.get(i).enable();
           return;
@@ -169,7 +168,6 @@ public class Dices extends Group {
       }
     }
   }
-  
   
   
   public int[] get() {

@@ -224,7 +224,6 @@ public class Board extends Group {
         Checker c = getChecker(MatchState.fMove, m.from);
         if (nodelay) c.moveTo(m.to);
         else c.moveToDelayed(m.to, 0.2f);
-        //TODO: availableMoves.removeMoves(m[0], m[1]);
         lastMoved = c;
       }  
     } catch (Exception e) {
@@ -324,11 +323,8 @@ public class Board extends Group {
   }
   
   public void undoMove() {
-    System.out.println("UNDO NOT POSSIBLE! " + playedMoves.size());
-    if (playedMoves.size()>0) {
-      System.out.println("UNDO POSSIBLE! " + playedMoves.size());
+    if (playedMoves.size()>0)
       playedMoves.pop().undo();
-    }
   }
   
   public void switchTurn() {
