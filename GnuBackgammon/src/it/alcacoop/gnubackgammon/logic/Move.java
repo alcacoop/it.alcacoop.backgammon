@@ -23,6 +23,12 @@ public class Move {
   }
   
   public void undo() {
+    b.points.reset();
+    if (b.selected!=null) {
+      b.selected.highlight(false);
+      b.selected = null;
+    }
+      
     Checker c = b.getChecker(color, to);
     
     if (hitted) {
