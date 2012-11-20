@@ -106,32 +106,33 @@ public class Dices extends Group {
     
     if (last.size() == 2) { //STANDARD ROLL
       for (int i=0;i<2; i++) {
-        if ((last.get(i).value==n)&&(!last.get(i).disabled)) { 
+        if ((last.get(i).value==n)&&(!last.get(i).disabled)) {  //FOUND!
           last.get(i).disable();
           if (b.playedMoves.size()>0)
-            b.playedMoves.lastElement().setDice(last.get(i).value);
+            b.playedMoves.lastElement().setDice(last.get(i).value); 
           found = true;
         }
       }
+      
       if (!found) { //BEAR OFF WITH BIGGER DICE
         if (last.get(0).disabled) {
           if (b.playedMoves.size()>0)
             b.playedMoves.lastElement().setDice(last.get(1).value);
           last.get(1).disable();
         }
-        if (last.get(1).disabled) {
+        else if (last.get(1).disabled) {
           if (b.playedMoves.size()>0)
             b.playedMoves.lastElement().setDice(last.get(0).value);
           last.get(0).disable();
         }
         
-        if ((!last.get(0).disabled)&&(!last.get(1).disabled)) {
-          if ((!last.get(0).disabled)&&(last.get(0).value>n)) {
+        else if ((!last.get(0).disabled)&&(!last.get(1).disabled)) {
+          if (last.get(0).value>n) {
             if (b.playedMoves.size()>0)
               b.playedMoves.lastElement().setDice(last.get(0).value);
             last.get(0).disable();
           }
-          else if ((!last.get(1).disabled)&&(last.get(1).value>n)) {
+          else if (last.get(1).value>n) {
             if (b.playedMoves.size()>0)
               b.playedMoves.lastElement().setDice(last.get(1).value);
             last.get(1).disable();
