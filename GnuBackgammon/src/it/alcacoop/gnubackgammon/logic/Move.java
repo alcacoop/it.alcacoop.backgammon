@@ -1,5 +1,7 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import java.util.ArrayList;
+
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.actors.Checker;
 
@@ -10,8 +12,10 @@ public class Move {
   int dice = 0;
   Board b;
   int color;
+  public ArrayList<int[]> removedMoves;
 
   public Move(Board _b, int _from, int _to) {
+    removedMoves = new ArrayList<int[]>();
     b = _b;
     from = _from;
     to = _to;
@@ -22,7 +26,13 @@ public class Move {
     dice = d;
   }
   
+  public void setRemovedmoves(ArrayList<int[]> rm) {
+    removedMoves = rm;
+  }
+  
   public void undo() {
+    b.availableMoves.restoreMoves(removedMoves);
+    
     b.points.reset();
     if (b.selected!=null) {
       b.selected.highlight(false);

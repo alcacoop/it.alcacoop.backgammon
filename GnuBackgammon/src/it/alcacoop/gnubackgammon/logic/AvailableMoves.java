@@ -178,4 +178,33 @@ public class AvailableMoves {
   public boolean hasMoves() {
     return (!dices.isEmpty()&&(!b.gameFinished()));
   }
+  
+  
+  public ArrayList<int[]> removeMoves(int orig, int dest) {
+    ArrayList<int[]> removed = new ArrayList<int[]>();
+    Iterator<int[]> itr = moves.iterator();
+    while (itr.hasNext()) { 
+      boolean matched = false;
+      int mv[] = itr.next();
+      for (int i=0;i<4;i++) {
+        if ((mv[2*i]==orig)&&(mv[2*i+1]==dest)) {
+          matched=true;
+          break;
+        }
+      }
+      if (!matched) {
+        itr.remove();
+        removed.add(mv);
+      }
+    }
+    System.out.println("REMOVED: "+removed.size()+" MOVES: "+moves.size());
+    return removed;
+  }
+  
+  
+  public void restoreMoves(ArrayList<int[]> rm) {
+    for (int i=0;i<rm.size();i++)
+      moves.add(rm.get(i));
+    System.out.println("RESTORED: "+rm.size()+" MOVES: "+moves.size());
+  }
 }
