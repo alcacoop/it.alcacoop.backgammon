@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
   public void show() {
     board.initBoard();
     Gdx.input.setInputProcessor(stage);
-    AICalls.SetAILevel(AILevels.SUPREMO);
+    AICalls.SetAILevel(AILevels.GRANDMASTER);
     fsm.processEvent(Events.START, null);
   }
 

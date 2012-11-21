@@ -67,6 +67,12 @@ public class FSM implements Context {
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
+            AICalls.AskForResignation();
+            break;
+          case ASK_FOR_RESIGNATION:
+            AICalls.AskForDoubling();
+            break;
+          case ASK_FOR_DOUBLING:
             AICalls.RollDice();
             break;
           case ROLL_DICE:
