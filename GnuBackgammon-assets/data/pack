@@ -3,95 +3,88 @@ data-src1.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-board
+bg
   rotate: false
   xy: 2, 2
-  size: 1005, 692
-  orig: 1005, 692
-  offset: 0, 0
-  index: -1
-button
-  rotate: false
-  xy: 2, 696
-  size: 250, 59
-  orig: 250, 59
+  size: 1000, 625
+  orig: 1000, 625
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 2, 757
-  size: 55, 262
-  orig: 55, 262
+  xy: 2, 629
+  size: 54, 204
+  orig: 54, 204
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 59, 757
+  xy: 58, 629
   size: 70, 70
   orig: 70, 70
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 131, 757
+  xy: 58, 701
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 189, 757
+  xy: 58, 759
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 59, 829
+  xy: 58, 817
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 117, 829
+  xy: 58, 875
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 175, 829
+  xy: 58, 933
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 59, 887
+  xy: 130, 629
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 59, 945
-  size: 53, 53
-  orig: 53, 53
+  xy: 2, 835
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 117, 887
-  size: 53, 53
-  orig: 53, 53
+  xy: 2, 877
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 172, 887
-  size: 48, 47
-  orig: 48, 47
+  xy: 2, 919
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
 
@@ -99,11 +92,11 @@ data-src2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-boardbg
+board
   rotate: false
   xy: 2, 2
-  size: 1005, 692
-  orig: 1005, 692
+  size: 960, 540
+  orig: 960, 540
   offset: 0, 0
   index: -1
 
@@ -111,10 +104,10 @@ data-src3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-bg
+boardbg
   rotate: false
   xy: 2, 2
-  size: 1000, 625
-  orig: 1000, 625
+  size: 960, 540
+  orig: 960, 540
   offset: 0, 0
   index: -1

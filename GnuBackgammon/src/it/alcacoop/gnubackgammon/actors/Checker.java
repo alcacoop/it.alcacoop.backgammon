@@ -29,7 +29,7 @@ public class Checker extends Group {
 
   public Checker(Board _board, int _color) {
     super();
-
+    
     boardX = boardY= 0;
     color = _color;
     board = _board;
@@ -45,25 +45,26 @@ public class Checker extends Group {
     }
 
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    
     img = new Image(region);
-    img.setScaling(Scaling.none);
+    
     label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
 
     region = GnuBackgammon.atlas.findRegion("ch");
     region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
-    imgh.setX(3);
-    imgh.setY(3);
     
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
     
-    label.setX(15);
-    label.setY(10);
+    label.setX(7);
+    label.setY(3);
     addActor(img);
     addActor(label);
     addActor(imgh);
     label.setText("");
+    
+    
   }
   
   
@@ -162,5 +163,14 @@ public class Checker extends Group {
   @Override
   public Actor hit(float x, float y, boolean touchable) {
     return null;
+  }
+  
+  @Override
+  public void setX(float x) {
+    super.setX(x-img.getWidth()/2);
+  }
+  
+  public float getWidth() {
+    return img.getWidth();
   }
 }

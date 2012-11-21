@@ -19,29 +19,31 @@ public class Points extends Group {
       points[i] = new Point(i);
       Vector2 p = b.pos[i];
       points[i].setX(p.x);
-      if (i<12) points[i].setY(b.board.getY()+380);
-      else points[i].setY(b.board.getY()+50);
+      if (i>11) 
+        points[i].setY(p.y-points[i].getHeight()+3);
+      else
+        points[i].setY(p.y-3);
       addActor(points[i]);
     }
     
     bar[0] = new Point(24);
-    bar[0].setX(b.board.getX()+475);
-    bar[0].setY(b.board.getY()+50);
+    bar[0].setX(b.pos[24].x-b.jp.asFloat("pos", 0)/2);
+    bar[0].setY(b.getY()+b.jp.asFloat("up", 0)-bar[0].getHeight()-b.checkers[0][0].getWidth()/2);
     addActor(bar[0]);
-    
+
     bar[1] = new Point(24);
-    bar[1].setX(b.board.getX()+475);
-    bar[1].setY(b.board.getY()+378);
+    bar[1].setX(b.pos[24].x-b.jp.asFloat("pos", 0)/2);
+    bar[1].setY(b.getY()+b.jp.asFloat("down", 0)+b.checkers[0][0].getWidth()/2);
     addActor(bar[1]);
     
     boff[0] = new Point(-1);
-    boff[0].setX(b.board.getX()+918);
-    boff[0].setY(b.board.getY()+50);
+    boff[0].setX(b.getX() + b.jp.asFloat("pos_bo", 0) + b.jp.asFloat("pos", 0)/2);
+    boff[0].setY(b.getY()+b.jp.asFloat("down", 0)-3);
     addActor(boff[0]);
     
     boff[1] = new Point(-1);
-    boff[1].setX(b.board.getX()+918);
-    boff[1].setY(b.board.getY()+378);
+    boff[1].setX(b.getX() + b.jp.asFloat("pos_bo", 0) + b.jp.asFloat("pos", 0)/2);
+    boff[1].setY(b.getY()+b.jp.asFloat("up", 0)-boff[1].getHeight()+4);
     addActor(boff[1]);
   }
   
@@ -64,7 +66,7 @@ public class Points extends Group {
   
   
   private int rotate(int i) {
-    if (MatchState.fMove==1) return i;
+    if (MatchState.fMove==0) return i;
     return 23-i;
   }
 }

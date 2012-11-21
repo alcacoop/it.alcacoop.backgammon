@@ -28,14 +28,12 @@ public class GameScreen implements Screen {
   public GameScreen(GnuBackgammon bg){
     
     sb = new SpriteBatch();
-    stage = new Stage(1005, 752, true);
+    stage = new Stage(960, 640, true);
     
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     
     board = new Board();
     stage.addActor(board);
-    
-    
     
     IconButton undo = new IconButton("back", new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -44,7 +42,7 @@ public class GameScreen implements Screen {
       }
     });
     undo.setX(860);
-    undo.setY(680);
+    undo.setY(550);
     stage.addActor(undo);
     
     fsm = new FSM(board);

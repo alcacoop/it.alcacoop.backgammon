@@ -6,7 +6,9 @@ import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
+import it.alcacoop.gnubackgammon.utils.JSONProperties;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -33,11 +35,13 @@ public class Board extends Group {
   public Dices dices;
   public AvailableMoves availableMoves;
   
-  Image boardbg;
-  BoardImage board;
+  private Image boardbg;
+  public BoardImage board;
+  public JSONProperties jp;
   
   
   public Board() {
+    jp = new JSONProperties(Gdx.files.internal("data/pos.json"));
     _board = new int[2][25];
     
     moves = new Stack<Move>();
@@ -57,75 +61,67 @@ public class Board extends Group {
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
       pos[i] = new Vector2();
-      if (i<6) {
-        pos[i].x = board.getX()+(836-(59*i));
-        pos[i].y = board.getY()+590;
-      }
-      if ((i>=6)&&(i<12)) {
-        pos[i].x = board.getX()+(765-(59*i));
-        pos[i].y = board.getY()+590;
-      }
+      pos[i].x = board.getX() + jp.asFloat("pos"+i, 0) + jp.asFloat("pos", 0)/2;
+      if (i<12)
+        pos[i].y = board.getY() + jp.asFloat("down", 0);
+      else
+        pos[i].y = board.getY() + jp.asFloat("up", 0);
     }
-    for (int i=0; i<12;i++) {
-      pos[i+12] = new Vector2();
-      if (i<6) {
-        pos[i+12].x = board.getX()+(116+(59*i));
-        pos[i+12].y = board.getY()+50;
-      }
-      if ((i>=6)&&(i<12)) {
-        pos[i+12].x = board.getX()+(187+(59*i));
-        pos[i+12].y = board.getY()+50;
-      }
-    }
-
     pos[24] = new Vector2();  //HITTED
-    pos[24].x = board.getX()+476;
+    pos[24].x = board.getX() + jp.asFloat("pos24", 0) + jp.asFloat("pos", 0);
     pos[24].y = board.getY();
+
+    for (int i = 0; i<15; i++) {
+      checkers[0][i] = new Checker(this, 0); //NERE
+      checkers[1][i] = new Checker(this, 1); //BIANCHE
+    }
     
     points = new Points(this);
     addActor(points);
-    
     addActor(board);
     
     for (int i = 0; i<15; i++) {
-      checkers[0][i] = new Checker(this, 0);
-      checkers[1][i] = new Checker(this, 1);
       addActor(checkers[0][i]);
       addActor(checkers[1][i]);
     }
     
-    dices = new Dices(this, board.getX()+1005/2, board.getY()+692/2);
+    dices = new Dices(this, board.getX()+960/2, board.getY()+540/2);
     addActor(dices);
   }
 
 
   public Vector2 getBoardCoord(int color, int x, int y){
-    if (y>4) y=4;
+    if ((y>4)&&(x!=-1)) y=4;
+    float cdim = checkers[0][0].getWidth();
     Vector2 ret = new Vector2();
 
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = board.getX()+918.5f; 
-        if (color==1) ret.y = board.getY()+590-bearedOff[color]*14;
-        else ret.y = board.getY()+50+bearedOff[color]*14;
+        ret.x = board.getX() + jp.asFloat("pos_bo", 0) + jp.asFloat("pos", 0)/2;
+        if (color==0)
+          ret.y = board.getY() + jp.asFloat("down", 0) + jp.asFloat("pos", 0)*y;
+        else
+          ret.y = board.getY() + jp.asFloat("up", 0) - cdim - jp.asFloat("pos", 0)*y;
         break;
         
       case 24: //BAR
-        ret.x = pos[x].x;
-        if (color==0) ret.y=board.getY() + 570 - (49*y);
-        else ret.y=board.getY() + 70 + (49*y);
+        ret.x = pos[x].x - jp.asFloat("pos", 0)/2;
+        if (color==0)
+          ret.y = board.getY() + jp.asFloat("up", 0) - cdim*y - cdim*3/2;
+        else
+          ret.y = board.getY() + jp.asFloat("down", 0) + cdim*y + cdim/2;
         break;
         
       default: //ON THE TABLE
-        if (color==0) { //WHITE
-          ret.x = pos[23-x].x;
-          if (x>11) ret.y = pos[23-x].y - (49*y);
-          else ret.y = pos[23-x].y + (49*y);
-        } else { //BLACK
+        if (color==0) { //BLACK
           ret.x = pos[x].x;
-          if (x>11) ret.y = pos[x].y + (49*y);
-          else ret.y = pos[x].y - (49*y);
+          if (x<12) ret.y = board.getY() + pos[x].y + cdim*y;
+          else ret.y = board.getY() + pos[x].y - cdim*(y+1);
+        } else { //WHITE
+          ret.x = pos[23-x].x;
+          if (x<12) ret.y = board.getY() + pos[23-x].y - cdim*(y+1);
+          else ret.y = board.getY() + pos[23-x].y + cdim*y;
         }
     }
     return ret;
@@ -189,6 +185,8 @@ public class Board extends Group {
       if ((c.boardX==x)&&(c.boardY==y))
         _c = c;
     }
+    
+    if (_c==null) System.out.println("NOT FOUND!");
     return _c;
   }
 
