@@ -147,6 +147,7 @@ public class FSM implements Context {
             processEvent(ctx, Events.NO_MORE_MOVES, null);
           break;
         case DICE_CLICKED:
+          ctx.board().dices.clear();
           ctx.state(CHECK_WIN);
           break;
         default:
