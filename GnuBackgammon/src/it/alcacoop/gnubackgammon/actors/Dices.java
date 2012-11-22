@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Dices extends Group {
   
-  private float x, y;
+  private float x0, x1, y;
   private ArrayList<_dice> last;
   private Board b;
   
@@ -26,6 +26,7 @@ public class Dices extends Group {
     boolean disabled = false;
     int value = 0;
     Image i;
+    float h = 0;
     
     _dice (int v) {
       value = v;
@@ -33,6 +34,7 @@ public class Dices extends Group {
       r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
       i = new Image(r);
       addActor(i);
+      h=i.getHeight();
     }
     
     public void disable() {
@@ -47,11 +49,12 @@ public class Dices extends Group {
   }
 
   
-  public Dices(Board _b, float _x, float _y) {
+  public Dices(Board _b) {
     last = new ArrayList<_dice>();
-    x = _x;
-    y = _y-28;
     b = _b;
+    x0 = b.jp.asFloat("dice0", 0);
+    x1 = b.jp.asFloat("dice1", 0);
+    y = b.getHeight()/2;
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -89,13 +92,16 @@ public class Dices extends Group {
   
   
   private void _show() {
+    float w = last.get(0).i.getWidth()+10;
     float x = 0;
-    if (MatchState.fMove==0) x=this.x-60*(last.size()/2)+216;
-    else x=this.x-60*(last.size()/2)-210;
+    if (MatchState.fMove==0) 
+      x=x0-w*(last.size()/2);
+    else 
+      x=x1-w*(last.size()/2);
     
     for (int i=0; i< last.size(); i++) {
-      last.get(i).setX(x+60*i);
-      last.get(i).setY(y);
+      last.get(i).setX(x+w*i + 11);
+      last.get(i).setY(y-last.get(i).i.getHeight()/2);
       addActor(last.get(i));
     }
   }

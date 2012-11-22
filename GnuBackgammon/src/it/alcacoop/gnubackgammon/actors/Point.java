@@ -30,7 +30,6 @@ public class Point extends Group {
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        System.out.println("NPOINT: "+nPoint());
         GameScreen.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
         return true;
       }
@@ -72,7 +71,6 @@ public class Point extends Group {
   }
   
   public float getHeight() {
-    System.out.println("H: "+img.getHeight());
     return img.getHeight();
   }
 }

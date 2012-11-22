@@ -197,7 +197,6 @@ public class AvailableMoves {
         removed.add(mv);
       }
     }
-    System.out.println("REMOVED: "+removed.size()+" MOVES: "+moves.size());
     return removed;
   }
   
@@ -205,6 +204,5 @@ public class AvailableMoves {
   public void restoreMoves(ArrayList<int[]> rm) {
     for (int i=0;i<rm.size();i++)
       moves.add(rm.get(i));
-    System.out.println("RESTORED: "+rm.size()+" MOVES: "+moves.size());
   }
 }

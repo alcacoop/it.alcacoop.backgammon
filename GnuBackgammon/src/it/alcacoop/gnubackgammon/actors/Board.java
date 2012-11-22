@@ -85,7 +85,7 @@ public class Board extends Group {
       addActor(checkers[1][i]);
     }
     
-    dices = new Dices(this, board.getX()+960/2, board.getY()+540/2);
+    dices = new Dices(this);
     addActor(dices);
   }
 
@@ -185,8 +185,6 @@ public class Board extends Group {
       if ((c.boardX==x)&&(c.boardY==y))
         _c = c;
     }
-    
-    if (_c==null) System.out.println("NOT FOUND!");
     return _c;
   }
 
@@ -330,5 +328,10 @@ public class Board extends Group {
   public void switchTurn() {
     playedMoves.clear();
     MatchState._switchTurn();
+  }
+  
+  @Override
+  public float getHeight() {
+    return boardbg.getHeight();
   }
 } //END CLASS
