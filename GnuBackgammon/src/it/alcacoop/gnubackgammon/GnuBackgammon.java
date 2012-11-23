@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
-import it.alcacoop.gnubackgammon.layers.OptionsScreen;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -42,11 +41,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     gameScreen = new GameScreen(this);
 //    MenuScreen menuScreen = new MenuScreen();
 //    setScreen(menuScreen);
-//    OptionsScreen optionsScreen = new OptionsScreen();
-//    setScreen(optionsScreen);
     MatchOptionsScreen matchOptionsScreen = new MatchOptionsScreen();
     setScreen(matchOptionsScreen);
-    //setScreen(gameScreen);
+    
+    
+//  OptionsScreen optionsScreen = new OptionsScreen();
+//  setScreen(optionsScreen);
   }
 
 }
