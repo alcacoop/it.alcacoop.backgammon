@@ -15,7 +15,7 @@ public class Main {
     cfg.width = 960;
     cfg.height = 640;
 
-    new LwjglApplication(new GnuBackgammon(960, 640), cfg);
+    new LwjglApplication(new GnuBackgammon(), cfg);
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");

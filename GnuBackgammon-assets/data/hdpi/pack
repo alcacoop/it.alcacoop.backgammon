@@ -1,5 +1,5 @@
 
-data-src1.png
+hdpi1.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -88,7 +88,7 @@ ch
   offset: 0, 0
   index: -1
 
-data-src2.png
+hdpi2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -100,7 +100,7 @@ board
   offset: 0, 0
   index: -1
 
-data-src3.png
+hdpi3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none

@@ -31,11 +31,8 @@ public class MainActivity extends AndroidApplication {
     
     final DisplayMetrics displayMetrics = new DisplayMetrics();
     this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    int w = displayMetrics.widthPixels;
-    int h = displayMetrics.heightPixels;
-
     
-    initialize(new GnuBackgammon(w, h), cfg);
+    initialize(new GnuBackgammon(), cfg);
     GnubgAPI.InitializeEnvironment(data_dir);
   }
   

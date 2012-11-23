@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,35 +17,48 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static TextureAtlas atlas;
   private BitmapFont font;
   public static LabelStyle styleBlack, styleWhite;
-  public static int width;
-  public static int height;
   private GameScreen gameScreen;
   
-  
-  public GnuBackgammon(int w, int h) {
-   width = w;
-   height = h;
-  }
+  private int resolutions[][] = {
+    {1280,730},
+    {800,480},
+    {480,320}
+  };
+  private static int ss;
+  private static String[] resname = {"hdpi", "mdpi", "ldpi"};
+  public static int resolution[];
   
   @Override
   public void create() {		
-    atlas = new TextureAtlas(Gdx.files.internal("data/pack"));
+    //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
+    int pWidth = Gdx.graphics.getWidth();
+    if (pWidth<=480) ss = 2;
+    else if (pWidth<=800) ss = 1;
+    else ss = 0;
+    resolution = resolutions[ss];
+    
+    
+    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack"));
     
     //render Font
-    font = new BitmapFont(Gdx.files.internal("data/checker.fnt"), false);
+    font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     styleWhite = new LabelStyle(font, Color.WHITE);
     styleBlack = new LabelStyle(font, Color.BLACK);
 
     gameScreen = new GameScreen(this);
+    setScreen(gameScreen);
 //    MenuScreen menuScreen = new MenuScreen();
 //    setScreen(menuScreen);
-    MatchOptionsScreen matchOptionsScreen = new MatchOptionsScreen();
-    setScreen(matchOptionsScreen);
+//    MatchOptionsScreen matchOptionsScreen = new MatchOptionsScreen();
+//    setScreen(matchOptionsScreen);
     
     
 //  OptionsScreen optionsScreen = new OptionsScreen();
 //  setScreen(optionsScreen);
   }
 
+  public static String getResName() {
+    return resname[ss];
+  }
 }

@@ -28,7 +28,8 @@ public class GameScreen implements Screen {
   public GameScreen(GnuBackgammon bg){
     
     sb = new SpriteBatch();
-    stage = new Stage(960, 640, true);
+    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+    stage.setViewport(960, 640, false); //VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     
@@ -57,7 +58,7 @@ public class GameScreen implements Screen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     
     sb.begin();
-    sb.draw(bgRegion, 0,0 , GnuBackgammon.width, GnuBackgammon.height);
+    sb.draw(bgRegion, 0,0 , Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     sb.end();
     
     stage.act(delta);
@@ -68,6 +69,7 @@ public class GameScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
+    System.out.println("DIMS: "+Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight());
   }
 
   
