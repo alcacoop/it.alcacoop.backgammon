@@ -43,19 +43,19 @@ public class MatchOptionsScreen implements Screen {
     TextButton doublingYes = new TextButton("YES", skin);
     final TextButton doublingNo = new TextButton("NO", skin);
     
-//    supremo.addListener(new ClickListener() {
-//      @Override
-//      public void clicked(InputEvent event, float x, float y) {
-//        super.clicked(event, x, y);
-//      }
-//    });
-//    
-//    grandMaster.addListener(new ClickListener() {
-//      @Override
-//      public void clicked(InputEvent event, float x, float y) {
-//        super.clicked(event, x, y);
-//      }
-//    });
+    supremo.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+      }
+    });
+    
+    grandMaster.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+      }
+    });
     
     ButtonGroup bg = new ButtonGroup();
     bg.add(supremo);
@@ -64,7 +64,7 @@ public class MatchOptionsScreen implements Screen {
     bg.setMaxCheckCount(1);
     
     Table table = new Table();
-    table.setColor(1, 1, 1, 0);
+    table.setColor(1, 1, 1, 0.8f);
     table.debug();
     table.add(titleLabel).colspan(4).expand().fillY();
     table.row();
@@ -105,8 +105,8 @@ public class MatchOptionsScreen implements Screen {
   
   @Override
   public void show() {
-    //Gdx.input.setInputProcessor(stage);
-    //stage.addAction(Actions.fadeIn(0.7f));
+    Gdx.input.setInputProcessor(stage);
+//    stage.addAction(Actions.sequence(Actions.delay(2.0f), Actions.fadeIn(0.7f)));
   }
 
   @Override
