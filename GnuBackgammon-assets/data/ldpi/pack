@@ -1,0 +1,103 @@
+
+ldpi1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 2, 2
+  size: 480, 300
+  orig: 480, 300
+  offset: 0, 0
+  index: -1
+board
+  rotate: false
+  xy: 2, 304
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: -1
+boardbg
+  rotate: false
+  xy: 2, 576
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: -1
+point
+  rotate: false
+  xy: 2, 848
+  size: 28, 107
+  orig: 28, 107
+  offset: 0, 0
+  index: -1
+back
+  rotate: false
+  xy: 32, 848
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 484, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+d6
+  rotate: false
+  xy: 484, 28
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+d5
+  rotate: false
+  xy: 484, 54
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+d4
+  rotate: false
+  xy: 484, 80
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+d2
+  rotate: false
+  xy: 484, 106
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+d1
+  rotate: false
+  xy: 484, 132
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+cw
+  rotate: false
+  xy: 484, 158
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+cb
+  rotate: false
+  xy: 484, 182
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+ch
+  rotate: false
+  xy: 484, 206
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1

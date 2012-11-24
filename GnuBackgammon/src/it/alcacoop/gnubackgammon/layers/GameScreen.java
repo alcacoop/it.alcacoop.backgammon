@@ -28,8 +28,10 @@ public class GameScreen implements Screen {
   public GameScreen(GnuBackgammon bg){
     
     sb = new SpriteBatch();
+    //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    stage.setViewport(960, 640, false); //VIRTUAL RES (ON SELECTED TEXTURE BASIS)
+    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
+    stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     

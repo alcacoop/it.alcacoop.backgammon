@@ -20,7 +20,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private GameScreen gameScreen;
   
   private int resolutions[][] = {
-    {1280,730},
+    //{1280,730},
+    {1080,700},
     {800,480},
     {480,320}
   };
