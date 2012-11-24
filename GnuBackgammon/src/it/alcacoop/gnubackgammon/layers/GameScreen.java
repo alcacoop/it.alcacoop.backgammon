@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
       }
     });
     undo.setX(860);
-    undo.setY(550);
+    undo.setY(570);
     stage.addActor(undo);
     
     fsm = new FSM(board);
