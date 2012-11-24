@@ -57,8 +57,8 @@ public class Checker extends Group {
     
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
     
-    label.setX(7);
-    label.setY(3);
+    label.setX(img.getWidth()/2-label.getWidth()/2);
+    label.setY(img.getHeight()/2-label.getHeight()/2);
     addActor(img);
     addActor(label);
     addActor(imgh);
@@ -80,6 +80,8 @@ public class Checker extends Group {
       label.setText(""+(boardY+1));
     else 
       label.setText("");
+    label.setX(img.getWidth()/2-label.getWidth()/2);
+    label.setY(img.getHeight()/2-label.getHeight()/2);
     imgh.setVisible(false);
   }
 
@@ -128,6 +130,8 @@ public class Checker extends Group {
               if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
               if (!board.checkHit())
                 GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
+              label.setX(img.getWidth()/2-label.getWidth()/2);
+              label.setY(img.getHeight()/2-label.getHeight()/2);
               return true;
             }}
         ));
