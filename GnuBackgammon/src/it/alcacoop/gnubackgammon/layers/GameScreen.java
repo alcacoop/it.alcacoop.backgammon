@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -28,7 +27,7 @@ public class GameScreen implements Screen {
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   
-  public GameScreen(GnuBackgammon bg){
+  public GameScreen(){
     
     sb = new SpriteBatch();
     //STAGE DIM = SCREEN RES
@@ -39,13 +38,11 @@ public class GameScreen implements Screen {
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     board = new Board();
     
-    Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+    Label pl1 = new Label("PL1:", GnuBackgammon.skin);
+    Label pl2 = new Label("CPU:", GnuBackgammon.skin);
+    TextButton resign = new TextButton("RESIGN", GnuBackgammon.skin);
     
-    Label pl1 = new Label("PL1:", skin);
-    Label pl2 = new Label("CPU:", skin);
-    TextButton resign = new TextButton("RESIGN", skin);
-    
-    TextButton undo = new TextButton("UNDO", skin);
+    TextButton undo = new TextButton("UNDO", GnuBackgammon.skin);
     
     undo.addListener(new ClickListener() {
       @Override
@@ -59,8 +56,8 @@ public class GameScreen implements Screen {
     
     table.add(pl1).expand().pad(10).left();
     table.add(pl2).expand().pad(10).left();
-    table.add(resign).fill().expand().pad(10);
-    table.add(undo).fill().expand().pad(10);
+    table.add(resign).fill().pad(10);
+    table.add(undo).fill().pad(10);
     table.row();
     table.add(board).colspan(4).expand().fill();
     

@@ -10,12 +10,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 public class GnuBackgammon extends Game implements ApplicationListener {
   public static TextureAtlas atlas;
   private BitmapFont font;
   public static LabelStyle styleBlack, styleWhite;
+  public static Skin skin;
   private GameScreen gameScreen;
   
   private int resolutions[][] = {
@@ -23,6 +25,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     {800,480},
     {480,320}
   };
+  
   private static int ss;
   private static String[] resname = {"hdpi", "mdpi", "ldpi"};
   public static int resolution[];
@@ -35,11 +38,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (pWidth<=800) ss = 1;
     else ss = 0;
     resolution = resolutions[ss];
-    
+
+    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/uiskin.json"));
     
     atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     
-    //render Font
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -47,7 +50,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     styleWhite = new LabelStyle(font, Color.WHITE);
     styleBlack = new LabelStyle(font, Color.BLACK);
 
-    gameScreen = new GameScreen(this);
+    gameScreen = new GameScreen();
     setScreen(gameScreen);
 //    MenuScreen menuScreen = new MenuScreen();
 //    setScreen(menuScreen);

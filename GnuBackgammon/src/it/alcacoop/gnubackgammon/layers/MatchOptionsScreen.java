@@ -1,5 +1,7 @@
 package it.alcacoop.gnubackgammon.layers;
 
+import it.alcacoop.gnubackgammon.GnuBackgammon;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -7,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,21 +21,18 @@ public class MatchOptionsScreen implements Screen {
   public MatchOptionsScreen(){
     stage = new Stage(1005, 752, true);
     
-    // Initialize skin
-    Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+    Label titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
+    Label difficultyLabel = new Label("Difficulty", GnuBackgammon.skin);
+    Label playToLabel = new Label("Play to", GnuBackgammon.skin);
+    Label doublingLabel = new Label("Doubling Cube", GnuBackgammon.skin);
     
-    Label titleLabel = new Label("MATCH SETTINGS", skin);
-    Label difficultyLabel = new Label("Difficulty", skin);
-    Label playToLabel = new Label("Play to", skin);
-    Label doublingLabel = new Label("Doubling Cube", skin);
-    
-    TextButton supremo = new TextButton("Supremo", skin);
-    TextButton grandMaster = new TextButton("GrandMaster", skin);
-    TextButton play1 = new TextButton("1", skin);
-    TextButton play3 = new TextButton("3", skin);
-    TextButton play5 = new TextButton("5", skin);
-    TextButton doublingYes = new TextButton("YES", skin);
-    final TextButton doublingNo = new TextButton("NO", skin);
+    TextButton supremo = new TextButton("Supremo", GnuBackgammon.skin);
+    TextButton grandMaster = new TextButton("GrandMaster", GnuBackgammon.skin);
+    TextButton play1 = new TextButton("1", GnuBackgammon.skin);
+    TextButton play3 = new TextButton("3", GnuBackgammon.skin);
+    TextButton play5 = new TextButton("5", GnuBackgammon.skin);
+    TextButton doublingYes = new TextButton("YES", GnuBackgammon.skin);
+    final TextButton doublingNo = new TextButton("NO", GnuBackgammon.skin);
     
     supremo.addListener(new ClickListener() {
       @Override

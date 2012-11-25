@@ -1,11 +1,12 @@
 package it.alcacoop.gnubackgammon.layers;
 
+import it.alcacoop.gnubackgammon.GnuBackgammon;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -17,13 +18,10 @@ public class MenuScreen implements Screen {
   public MenuScreen(){
     stage = new Stage(1005, 752, true);
     
-    // Initialize skin
-    Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-    
-    Label titleLabel = new Label("GnuBackgammon", skin);
-    TextButton onePlayer = new TextButton("Single Player", skin);
-    TextButton twoPlayers = new TextButton("Two Player", skin);
-    TextButton options = new TextButton("Options", skin);
+    Label titleLabel = new Label("GnuBackgammon", GnuBackgammon.skin);
+    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
+    TextButton twoPlayers = new TextButton("Two Player", GnuBackgammon.skin);
+    TextButton options = new TextButton("Options", GnuBackgammon.skin);
 
     Table table = new Table();
     table.debug();

@@ -14,7 +14,7 @@ public class Main {
     cfg.useGL20 = false;
     cfg.width = 1280;
     cfg.height = 740;
-
+    
     new LwjglApplication(new GnuBackgammon(), cfg);
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
