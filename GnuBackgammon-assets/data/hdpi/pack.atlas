@@ -1,113 +1,103 @@
 
-hdpi1.png
+pack.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
+boardbg
+  rotate: false
+  xy: 1, 1380
+  size: 1102, 620
+  orig: 1102, 620
+  offset: 0, 0
+  index: -1
+board
+  rotate: false
+  xy: 1, 758
+  size: 1102, 620
+  orig: 1102, 620
+  offset: 0, 0
+  index: -1
 bg
   rotate: false
-  xy: 2, 2
+  xy: 1, 131
   size: 1000, 625
   orig: 1000, 625
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 2, 629
-  size: 60, 227
-  orig: 60, 227
+  xy: 1105, 1716
+  size: 75, 284
+  orig: 75, 284
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 64, 629
+  xy: 1, 59
   size: 70, 70
   orig: 70, 70
   offset: 0, 0
   index: -1
-d3
+d1
   rotate: false
-  xy: 2, 858
-  size: 56, 56
-  orig: 56, 56
-  offset: 0, 0
-  index: -1
-d6
-  rotate: false
-  xy: 2, 916
-  size: 56, 56
-  orig: 56, 56
-  offset: 0, 0
-  index: -1
-d5
-  rotate: false
-  xy: 64, 701
-  size: 56, 56
-  orig: 56, 56
-  offset: 0, 0
-  index: -1
-d4
-  rotate: false
-  xy: 64, 759
+  xy: 1003, 700
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 64, 817
+  xy: 1105, 1658
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
-d1
+d4
   rotate: false
-  xy: 64, 875
+  xy: 1182, 1944
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
-cw
+d5
   rotate: false
-  xy: 2, 974
-  size: 42, 42
-  orig: 42, 42
+  xy: 1, 1
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
-cb
+d6
   rotate: false
-  xy: 64, 933
-  size: 42, 42
-  orig: 42, 42
+  xy: 73, 73
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 1003, 642
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 64, 977
-  size: 42, 42
-  orig: 42, 42
+  xy: 1105, 1612
+  size: 44, 44
+  orig: 44, 44
   offset: 0, 0
   index: -1
-
-hdpi2.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-board
+cb
   rotate: false
-  xy: 2, 2
-  size: 1020, 574
-  orig: 1020, 574
+  xy: 1182, 1898
+  size: 44, 44
+  orig: 44, 44
   offset: 0, 0
   index: -1
-
-hdpi3.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-boardbg
+cw
   rotate: false
-  xy: 2, 2
-  size: 1020, 574
-  orig: 1020, 574
+  xy: 1240, 1956
+  size: 44, 44
+  orig: 44, 44
   offset: 0, 0
   index: -1

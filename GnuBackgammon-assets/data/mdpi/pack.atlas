@@ -1,108 +1,108 @@
 
-mdpi1.png
+pack.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 bg
   rotate: false
-  xy: 2, 2
+  xy: 1, 517
   size: 800, 500
   orig: 800, 500
   offset: 0, 0
   index: -1
-board
+boardbg
   rotate: false
-  xy: 2, 504
-  size: 725, 408
-  orig: 725, 408
+  xy: 1, 115
+  size: 711, 400
+  orig: 711, 400
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 804, 2
+  xy: 803, 856
   size: 43, 161
   orig: 43, 161
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 849, 2
+  xy: 1, 43
   size: 70, 70
   orig: 70, 70
   offset: 0, 0
   index: -1
-d3
+d1
   rotate: false
-  xy: 849, 74
-  size: 40, 40
-  orig: 40, 40
-  offset: 0, 0
-  index: -1
-d6
-  rotate: false
-  xy: 849, 116
-  size: 40, 40
-  orig: 40, 40
-  offset: 0, 0
-  index: -1
-d5
-  rotate: false
-  xy: 921, 2
-  size: 40, 40
-  orig: 40, 40
-  offset: 0, 0
-  index: -1
-d4
-  rotate: false
-  xy: 963, 2
+  xy: 714, 475
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 921, 44
+  xy: 803, 814
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-d1
+d4
   rotate: false
-  xy: 963, 44
+  xy: 848, 977
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-cw
+d5
   rotate: false
-  xy: 921, 86
-  size: 32, 32
-  orig: 32, 32
+  xy: 1, 1
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
-cb
+d6
   rotate: false
-  xy: 921, 120
-  size: 32, 32
-  orig: 32, 32
+  xy: 73, 73
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 714, 433
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 955, 86
-  size: 32, 32
-  orig: 32, 32
+  xy: 756, 487
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: -1
+cb
+  rotate: false
+  xy: 803, 784
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: -1
+cw
+  rotate: false
+  xy: 848, 947
+  size: 28, 28
+  orig: 28, 28
   offset: 0, 0
   index: -1
 
-mdpi2.png
+pack2.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
-boardbg
+board
   rotate: false
-  xy: 2, 2
-  size: 725, 408
-  orig: 725, 408
+  xy: 1, 1
+  size: 711, 400
+  orig: 711, 400
   offset: 0, 0
   index: -1
