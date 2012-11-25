@@ -5,8 +5,10 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 
@@ -39,6 +41,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     //render Font
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
+    TextureRegion r = font.getRegion();
+    r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+      
     styleWhite = new LabelStyle(font, Color.WHITE);
     styleBlack = new LabelStyle(font, Color.BLACK);
 
