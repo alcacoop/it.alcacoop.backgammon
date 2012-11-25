@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
-import it.alcacoop.gnubackgammon.actors.IconButton;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.FSM;
@@ -13,8 +12,12 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
 public class GameScreen implements Screen {
@@ -34,20 +37,34 @@ public class GameScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    
     board = new Board();
-    stage.addActor(board);
     
-    IconButton undo = new IconButton("back", new InputListener() {
-      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+    Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+    
+    Label pl1 = new Label("PL1:", skin);
+    Label pl2 = new Label("CPU:", skin);
+    TextButton resign = new TextButton("RESIGN", skin);
+    
+    TextButton undo = new TextButton("UNDO", skin);
+    
+    undo.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
         board.undoMove();
-        return true;
       }
     });
-    undo.setX(860);
-    undo.setY(570);
-    stage.addActor(undo);
     
+    Table table = new Table();
+    table.pad(5).setFillParent(true);
+    
+    table.add(pl1).expand().pad(10).left();
+    table.add(pl2).expand().pad(10).left();
+    table.add(resign).fill().expand().pad(10);
+    table.add(undo).fill().expand().pad(10);
+    table.row();
+    table.add(board).colspan(4).expand().fill();
+    
+    stage.addActor(table);
     fsm = new FSM(board);
     fsm.start();
   }
@@ -65,7 +82,6 @@ public class GameScreen implements Screen {
     
     stage.act(delta);
     stage.draw();
-    
   }
 
 
