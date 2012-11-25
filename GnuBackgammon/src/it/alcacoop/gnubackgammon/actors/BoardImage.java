@@ -1,8 +1,6 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,8 +15,6 @@ public class BoardImage extends Image {
 
   public BoardImage(int x0, int y0){
     region = GnuBackgammon.atlas.findRegion("board");
-    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
     TextureRegionDrawable d = new TextureRegionDrawable(region);
     this.setDrawable(d);
     

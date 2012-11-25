@@ -7,9 +7,7 @@ import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -52,7 +50,6 @@ public class Board extends Group {
     board = new BoardImage(0,0);
     
     TextureRegion r1 = GnuBackgammon.atlas.findRegion("boardbg");
-    r1.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     boardbg = new Image(r1);
     boardbg.setX(0);
     boardbg.setY(0);
@@ -333,5 +330,20 @@ public class Board extends Group {
   @Override
   public float getHeight() {
     return boardbg.getHeight();
+  }
+  
+  @Override
+  public float getWidth() {
+    return boardbg.getWidth();
+  }
+  
+  @Override
+  public void setWidth(float width) {
+    setScaleX(width/boardbg.getWidth());
+  }
+  
+  @Override
+  public void setHeight(float height) {
+    setScaleY(height/boardbg.getHeight());
   }
 } //END CLASS

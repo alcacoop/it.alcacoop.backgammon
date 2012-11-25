@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -44,17 +43,11 @@ public class Checker extends Group {
       label = new Label("1", GnuBackgammon.styleWhite);
     }
 
-    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    
     img = new Image(region);
-    
     label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
-
     region = GnuBackgammon.atlas.findRegion("ch");
-    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
-    
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
     
     label.setX(img.getWidth()/2-label.getWidth()/2);

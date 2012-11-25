@@ -5,7 +5,6 @@ import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -36,8 +35,6 @@ public class Point extends Group {
     });
 
     region = GnuBackgammon.atlas.findRegion("point");
-    region.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    
     img = new Image(region);
     color = img.getColor().cpy();
     img.setColor(0, 0, 0, 0);

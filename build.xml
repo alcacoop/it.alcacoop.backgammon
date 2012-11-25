@@ -1,5 +1,5 @@
-<project name="it.alcacoop.shootingrange" default="all" basedir=".">
-  <description>SHOOTING RANGE MOBILE GAME</description>
+<project name="it.alcacoop.gnubackgammon" default="all" basedir=".">
+  <description>GNUBG MOBILE GAME</description>
 
   <property file="build.properties" />
 
@@ -175,7 +175,7 @@
 
   <target name="call-texturepacker">
     <echo message="param1=${param1}"/>
-    <java classname="com.badlogic.gdx.tools.imagepacker.TexturePacker" fork="true" dir="${desktop.base_dir}">
+    <java classname="com.badlogic.gdx.tools.imagepacker.TexturePacker2" fork="true" dir="${desktop.base_dir}">
       <arg value="${texture_packer_src}"/>
       <arg value="${texture_packer_dst}"/>
       <classpath>

@@ -2,12 +2,10 @@ package it.alcacoop.gnubackgammon.actors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -31,7 +29,6 @@ public class Dices extends Group {
     _dice (int v) {
       value = v;
       TextureRegion r = GnuBackgammon.atlas.findRegion("d"+v);
-      r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
       i = new Image(r);
       addActor(i);
       h=i.getHeight();

@@ -1,13 +1,10 @@
 package it.alcacoop.gnubackgammon;
 
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
-import it.alcacoop.gnubackgammon.layers.MenuScreen;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -20,8 +17,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private GameScreen gameScreen;
   
   private int resolutions[][] = {
-    //{1280,730},
-    {1080,700},
+    {1280,740},
     {800,480},
     {480,320}
   };
@@ -39,11 +35,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
     
     
-    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack"));
+    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     
     //render Font
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
-    font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     styleWhite = new LabelStyle(font, Color.WHITE);
     styleBlack = new LabelStyle(font, Color.BLACK);
 
