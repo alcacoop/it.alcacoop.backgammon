@@ -32,7 +32,6 @@ public class GameFSM implements Context {
     EVALUATE_BEST_MOVE,
     INITIALIZE_ENVIRONMENT,
     ROLL_DICE,
-    SET_AI_LEVEL,
     SET_BOARD,
     SET_GAME_TURN,
     SET_MATCH_SCORE,

@@ -2,7 +2,13 @@ package it.alcacoop.gnubackgammon.layers;
 
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
+import it.alcacoop.gnubackgammon.logic.AICalls;
+import it.alcacoop.gnubackgammon.logic.AILevels;
+import it.alcacoop.gnubackgammon.logic.MatchState;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -10,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,11 +27,12 @@ public class MatchOptionsScreen implements Screen {
 
   private Stage stage;
   private Group g;
+  private Preferences prefs;
   
-  private final ButtonGroup level;
-  private final ButtonGroup matchTo;
-  private final ButtonGroup doubleCube;
-  private final ButtonGroup crawford;
+  private final FixedButtonGroup level;
+  private final FixedButtonGroup matchTo;
+  private final FixedButtonGroup doubleCube;
+  private final FixedButtonGroup crawford;
   
   private String _levels[] = {"Beginner","Casual","Intermediate","Advanced","Expert","Worldclass","Supremo","Grandmaster"};
   private TextButton levelButtons[];
@@ -40,6 +46,7 @@ public class MatchOptionsScreen implements Screen {
   
   
   public MatchOptionsScreen(){
+    prefs = Gdx.app.getPreferences("MatchOptions");
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
@@ -66,7 +73,7 @@ public class MatchOptionsScreen implements Screen {
     
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     levelButtons = new TextButton[_levels.length];
-    level = new ButtonGroup();
+    level = new FixedButtonGroup();
     for (int i=0; i<_levels.length; i++) {
       levelButtons[i] = new TextButton(_levels[i], ts);
       level.add(levelButtons[i]);
@@ -74,7 +81,7 @@ public class MatchOptionsScreen implements Screen {
     }
     
     matchToButtons = new TextButton[_matchTo.length];
-    matchTo = new ButtonGroup();
+    matchTo = new FixedButtonGroup();
     for (int i=0; i<_matchTo.length; i++) {
       matchToButtons[i] = new TextButton(_matchTo[i], ts);
       matchTo.add(matchToButtons[i]);
@@ -82,7 +89,7 @@ public class MatchOptionsScreen implements Screen {
     }
     
     doublingButtons = new TextButton[_yesNo.length];
-    doubleCube = new ButtonGroup();
+    doubleCube = new FixedButtonGroup();
     for (int i=0; i<_yesNo.length; i++) {
       doublingButtons[i] = new TextButton(_yesNo[i], ts);
       doubleCube.add(doublingButtons[i]);
@@ -90,14 +97,12 @@ public class MatchOptionsScreen implements Screen {
     }
     
     crawfordButtons = new TextButton[_yesNo.length];
-    crawford = new ButtonGroup();
+    crawford = new FixedButtonGroup();
     for (int i=0; i<_yesNo.length; i++) {
       crawfordButtons[i] = new TextButton(_yesNo[i], ts);
       crawford.add(crawfordButtons[i]);
       crawfordButtons[i].addListener(cl);
     }
-    
-    
     
     Table table = new Table();
     table.setFillParent(true);
@@ -163,6 +168,7 @@ public class MatchOptionsScreen implements Screen {
     play.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        savePrefs();
         GnuBackgammon.Instance.goToScreen(2);
       }
     });
@@ -180,13 +186,39 @@ public class MatchOptionsScreen implements Screen {
     g.addActor(table);
     stage.addActor(g);
     
-    level.setChecked("Casual");
-    TextButton b = (TextButton)level.getAllChecked().get(0);
-    System.out.println(b.getText());
-    
+    initFromPrefs();
   }
 
+  
+  public void initFromPrefs() {
+    String sLevel = prefs.getString("LEVEL", "Beginner");
+    level.setChecked(sLevel);
+    String sMatchTo= prefs.getString("MATCHTO", "1");
+    matchTo.setChecked(sMatchTo);
+    String sDoubleCube= prefs.getString("DOUBLE_CUBE", "yes");
+    doubleCube.setChecked(sDoubleCube);
+    String sCrawford= prefs.getString("CRAWFORD", "yes");
+    crawford.setChecked(sCrawford);
+  }
 
+  
+  public void savePrefs() {
+    String sLevel = ((TextButton)level.getChecked()).getText().toString(); 
+    prefs.putString("LEVEL", sLevel);
+    String sMatchTo = ((TextButton)matchTo.getChecked()).getText().toString();
+    prefs.putString("MATCHTO", sMatchTo);
+    String sDoubleCube = ((TextButton)doubleCube.getChecked()).getText().toString();
+    prefs.putString("DOUBLE_CUBE", sDoubleCube);
+    String sCrawford = ((TextButton)crawford.getChecked()).getText().toString();
+    prefs.putString("CRAWFORD", sCrawford);
+    prefs.flush();
+    
+    AICalls.SetAILevel(AILevels.getFromString(sLevel));
+    MatchState.fCubeUse = (sDoubleCube=="Yes")?1:0; //USING CUBE
+    MatchState.nMatchTo = Integer.parseInt(sMatchTo);
+    MatchState.fCrawford = (sCrawford=="Yes")?1:0;; //REGOLA DI CRAWFORD
+  }
+  
   @Override
   public void render(float delta) {
     
