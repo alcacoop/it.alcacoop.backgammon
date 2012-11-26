@@ -2,7 +2,7 @@ package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM.Events;
+import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +25,8 @@ public class Checker extends Group {
   public int color = 0;
   public int boardX = -1; 
   public int boardY = -1;
+  
+  private Action act;
   
 
   public Checker(Board _board, int _color) {
@@ -108,32 +110,33 @@ public class Checker extends Group {
     
     setPosition(x);
     
-    this.addAction(Actions.sequence(
+    final Checker c = this;
+    act = Actions.sequence(
         Actions.delay(delay),
-        new Action(){
+        Actions.run(new Runnable() {
           @Override
-          public boolean act(float delta) {
+          public void run() {
             highlight(false);
             board.selected = null;
             board.points.reset();
             if ((x<24)&&(d>0))
               board.dices.disable(d);
             if ((boardY<5)||(boardX==-1)) label.setText("");
-            return true;
-          }},
+          }
+        }),
         Actions.moveTo(_p.x, _p.y, tt),
-        new Action(){
-            @Override
-            public boolean act(float delta) {
-              if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
-              if (!board.checkHit())
-                GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
-              label.setX(img.getWidth()/2-label.getWidth()/2);
-              label.setY(img.getHeight()/2-label.getHeight()/2);
-              return true;
-            }}
-        ));
-    
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
+            if (!board.checkHit())
+              GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
+            label.setX(img.getWidth()/2-label.getWidth()/2);
+            label.setY(img.getHeight()/2-label.getHeight()/2);
+          }
+        })
+        );
+    c.addAction(act);
   }
   
   
@@ -175,4 +178,10 @@ public class Checker extends Group {
   public float getWidth() {
     return img.getWidth();
   }
+  
+  public void resetActions() {
+    if (act!=null)
+      removeAction(act);
+  }
+  
 }

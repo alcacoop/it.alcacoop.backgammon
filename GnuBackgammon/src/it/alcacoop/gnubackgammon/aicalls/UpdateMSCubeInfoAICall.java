@@ -3,7 +3,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 public class UpdateMSCubeInfoAICall implements Runnable {
@@ -22,7 +22,7 @@ public class UpdateMSCubeInfoAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(FSM.Events.UPDATE_MS_CUBEINFO, 1);        
+        GameScreen.fsm.processEvent(GameFSM.Events.UPDATE_MS_CUBEINFO, 1);        
       }
     });
   }

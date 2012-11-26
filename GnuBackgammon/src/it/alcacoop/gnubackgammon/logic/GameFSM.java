@@ -1,5 +1,6 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import it.alcacoop.gnubackgammon.actors.Board;
 
 // SIMULATED GAME STATE MACHINE
@@ -12,14 +13,14 @@ interface Context {
 }
 
 interface State {
-  boolean processEvent(Context ctx, FSM.Events evt, Object params);
+  boolean processEvent(Context ctx, GameFSM.Events evt, Object params);
   void enterState(Context ctx);
   void exitState(Context ctx);
 }
 
 
 // MAIN FSM
-public class FSM implements Context {
+public class GameFSM implements Context {
   
   Board board;
   
@@ -47,7 +48,7 @@ public class FSM implements Context {
   public enum States implements State {
     
     SIMULATED_TURN {
-      public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
+      public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
 //            if (MatchState.fMove == 0)
@@ -67,7 +68,16 @@ public class FSM implements Context {
           case ROLL_DICE:
             int dices[] = (int[])params;
             ctx.board().setDices(dices[0], dices[1]);
-            AICalls.EvaluateBestMove(ctx.board().dices.get());
+            final Board b = ctx.board();
+            ctx.board().addAction(Actions.sequence(
+                Actions.delay(0.5f),
+                Actions.run(new Runnable() {
+                  @Override
+                  public void run() {
+                    AICalls.EvaluateBestMove(b.dices.get());
+                  }
+                })
+            ));
             break;
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
@@ -89,7 +99,7 @@ public class FSM implements Context {
 
     
     HUMAN_TURN {
-      public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
+      public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
             if (MatchState.fMove == 0)
@@ -123,7 +133,7 @@ public class FSM implements Context {
     
     
     HUMAN_PERFORM_MOVES {
-      public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
+      public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
         case POINT_TOUCHED:
           if (ctx.board().points.get((Integer)params).isTarget) {
@@ -174,22 +184,28 @@ public class FSM implements Context {
         ctx.state(States.SIMULATED_TURN);
         ctx.board().switchTurn();
       }
+    },
+    
+    STOPPED {
+      public void enterState(Context ctx) {
+        System.out.println("GameFSM STOPPED!");
+      }
     };
     
     //DEFAULT IMPLEMENTATION
-    public boolean processEvent(Context ctx, FSM.Events evt, Object params) {return false;}
+    public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {return false;}
     public void enterState(Context ctx) {}
     public void exitState(Context ctx) {}
 
   };
 
-  public boolean processEvent(Context ctx, FSM.Events evt, Object params) { return false;}
+  public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) { return false;}
   public void enterState(Context ctx) {}
   public void exitState(Context ctx) {}
   public State currentState;
 
 
-  public FSM(Board _board) {
+  public GameFSM(Board _board) {
     board = _board;
   }
 
@@ -199,14 +215,17 @@ public class FSM implements Context {
     board().switchTurn();
   }
 
+  public void stop() {
+    state(States.STOPPED);
+  }
+  
   public void restart() {
+    stop();
+    start();
   }
   
   public boolean processEvent(Events evt, Object params) {
-//    System.out.println("PROCESS EVENT: "+evt);
-//    System.out.println("\tSRC STATE: "+state());
     boolean res = state().processEvent(this, evt, params);
-//    System.out.println("\tDST STATE: "+state());
     return res;
   }
 
@@ -224,5 +243,9 @@ public class FSM implements Context {
     currentState = state;
     if(currentState != null)
       currentState.enterState(this);        
+  }
+  
+  public boolean isStopped() {
+    return currentState == States.STOPPED;
   }
 }

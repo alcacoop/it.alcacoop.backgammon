@@ -3,7 +3,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 public class AcceptDoubleAICall implements Runnable {
@@ -14,7 +14,7 @@ public class AcceptDoubleAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(FSM.Events.ACCEPT_DOUBLE, ret);
+        GameScreen.fsm.processEvent(GameFSM.Events.ACCEPT_DOUBLE, ret);
       }
     });
   }

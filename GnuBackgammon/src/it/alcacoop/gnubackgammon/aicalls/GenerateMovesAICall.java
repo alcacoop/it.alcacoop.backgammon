@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
@@ -32,7 +32,7 @@ public class GenerateMovesAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(FSM.Events.GENERATE_MOVES, mv);        
+        GameScreen.fsm.processEvent(GameFSM.Events.GENERATE_MOVES, mv);        
       }
     });
   }

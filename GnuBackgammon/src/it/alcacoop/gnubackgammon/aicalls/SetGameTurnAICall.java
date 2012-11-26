@@ -3,7 +3,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 public class SetGameTurnAICall implements Runnable {
@@ -22,7 +22,7 @@ public class SetGameTurnAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(FSM.Events.SET_GAME_TURN, 1);
+        GameScreen.fsm.processEvent(GameFSM.Events.SET_GAME_TURN, 1);
       }
     });
   }

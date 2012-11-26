@@ -5,7 +5,7 @@ import java.util.Iterator;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-import it.alcacoop.gnubackgammon.logic.FSM.Events;
+import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

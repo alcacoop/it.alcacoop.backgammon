@@ -2,7 +2,7 @@ package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.FSM.Events;
+import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
@@ -126,7 +126,7 @@ public class Board extends Group {
 
 
   public void initBoard() {
-    dices.clear();
+    if (dices!=null) dices.clear();
     int i0 = 0;
     int i1 = 0;
     
@@ -144,11 +144,13 @@ public class Board extends Group {
     for (int i=0; i<25; i++) {
       for (int j=0;j<_board[0][i];j++) {
         checkers[0][nchecker].reset(i,j);
+        addActor(checkers[0][nchecker]);
         nchecker++;
       }
     }
     for (int i=0;i<15-i0;i++) {
       checkers[0][nchecker].reset(-1,i);
+      addActor(checkers[0][nchecker]);
       bearedOff[0]++;
       nchecker++;
     }
@@ -158,11 +160,13 @@ public class Board extends Group {
     for (int i=0; i<25; i++) {
       for (int j=0;j<_board[1][i];j++) {
         checkers[1][nchecker].reset(i, j);
+        addActor(checkers[1][nchecker]);
         nchecker++;
       }
     }
     for (int i=0;i<15-i1;i++) {
       checkers[1][nchecker].reset(-1,i);
+      addActor(checkers[1][nchecker]);
       bearedOff[1]++;
       nchecker++;
     }
@@ -325,6 +329,15 @@ public class Board extends Group {
   public void switchTurn() {
     playedMoves.clear();
     MatchState._switchTurn();
+  }
+  
+  public void abandon() {
+    for (int i=0; i<15; i++) {
+      checkers[0][i].resetActions();
+      removeActor(checkers[0][i]);
+      checkers[1][i].resetActions();
+      removeActor(checkers[1][i]);
+    }
   }
   
   @Override

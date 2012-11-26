@@ -2,9 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
-import it.alcacoop.gnubackgammon.logic.AICalls;
-import it.alcacoop.gnubackgammon.logic.AILevels;
-import it.alcacoop.gnubackgammon.logic.FSM;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -23,7 +21,7 @@ public class GameScreen implements Screen {
 
   private Stage stage;
   public final Board board;
-  public static FSM fsm;
+  public static GameFSM fsm;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   private Table table;
@@ -78,7 +76,7 @@ public class GameScreen implements Screen {
     table.add(board).colspan(5).expand().fill();
     
     stage.addActor(table);
-    fsm = new FSM(board);
+    fsm = new GameFSM(board);
   }
 
 
@@ -108,17 +106,23 @@ public class GameScreen implements Screen {
     board.initBoard();
     Gdx.input.setInputProcessor(stage);
     table.setY(stage.getHeight());
-    table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.moveTo(0, 0, 0.5f), Actions.run(new Runnable(){
-      @Override
-      public void run() {
-//        AICalls.SetAILevel(AILevels.GRANDMASTER);
-//        fsm.start();        
-      }
-    })));
+    table.addAction(Actions.sequence(
+      Actions.delay(0.1f),
+      Actions.moveTo(0, 0, 0.3f), 
+      Actions.run(new Runnable(){
+        @Override
+        public void run() {
+          //AICalls.SetAILevel(AILevels.GRANDMASTER);
+          fsm.start();        
+        }
+      }))
+    );
   }
 
   @Override
   public void hide() {
+    fsm.stop();
+    board.abandon();
   }
 
   @Override
