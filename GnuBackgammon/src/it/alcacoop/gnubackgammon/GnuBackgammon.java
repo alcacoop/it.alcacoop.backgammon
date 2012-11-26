@@ -1,37 +1,41 @@
 package it.alcacoop.gnubackgammon;
 
 import it.alcacoop.gnubackgammon.layers.GameScreen;
+import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
+import it.alcacoop.gnubackgammon.layers.MenuScreen;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 public class GnuBackgammon extends Game implements ApplicationListener {
-  public static TextureAtlas atlas;
-  private BitmapFont font;
-  public static LabelStyle styleBlack, styleWhite;
-  public static Skin skin;
-  private GameScreen gameScreen;
   
+  private static GameScreen gameScreen;
+  private static MatchOptionsScreen matchOptionsScreen;
+  private static MenuScreen menuScreen; 
   private int resolutions[][] = {
     {1280,740},
     {800,480},
     {480,320}
   };
-  
   private static int ss;
   private static String[] resname = {"hdpi", "mdpi", "ldpi"};
+  
+  public static BitmapFont font;
+  public static TextureAtlas atlas;
+  public static Skin skin;
   public static int resolution[];
+  public static GnuBackgammon Instance;
+  
   
   @Override
   public void create() {		
+    Instance = this;
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
     if (pWidth<=480) ss = 2;
@@ -47,22 +51,34 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
       
-    styleWhite = new LabelStyle(font, Color.WHITE);
-    styleBlack = new LabelStyle(font, Color.BLACK);
-
     gameScreen = new GameScreen();
-    setScreen(gameScreen);
-//    MenuScreen menuScreen = new MenuScreen();
-//    setScreen(menuScreen);
-//    MatchOptionsScreen matchOptionsScreen = new MatchOptionsScreen();
-//    setScreen(matchOptionsScreen);
+    matchOptionsScreen = new MatchOptionsScreen();
+    menuScreen = new MenuScreen();
     
-    
-//  OptionsScreen optionsScreen = new OptionsScreen();
-//  setScreen(optionsScreen);
+    setScreen(matchOptionsScreen);
   }
 
-  public static String getResName() {
+  
+  public String getResName() {
     return resname[ss];
   }
+  
+  
+  public void goToScreen(int s) {
+    switch (s) {
+      case 0:
+        setScreen(menuScreen);
+        break;
+      
+      case 1:
+        setScreen(matchOptionsScreen);
+        break;
+        
+      case 2:
+        setScreen(gameScreen);
+        break;
+    }
+  }
+  
+  
 }

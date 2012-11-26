@@ -37,7 +37,6 @@ public class FSM implements Context {
     SET_MATCH_SCORE,
     SET_MATCH_TO,
     UPDATE_MS_CUBEINFO,
-    START,
     PERFORMED_MOVE,
     NO_MORE_MOVES,
     POINT_TOUCHED,
@@ -46,25 +45,15 @@ public class FSM implements Context {
   }
 
   public enum States implements State {
-    STARTING {
-      public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
-        if (evt == Events.START) {
-          ctx.state(States.SIMULATED_TURN);
-          AICalls.SetGameTurn(0, 0);
-          return true;
-        }
-        return false;
-      }
-    },
     
     SIMULATED_TURN {
       public boolean processEvent(Context ctx, FSM.Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
-            if (MatchState.fMove == 0)
-              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-            else 
-              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+//            if (MatchState.fMove == 0)
+//              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+//            else 
+            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
             AICalls.AskForResignation();
@@ -172,8 +161,6 @@ public class FSM implements Context {
             ctx.state(States.HUMAN_TURN);
           else
             ctx.state(States.SIMULATED_TURN);
-//          ctx.state(States.SIMULATED_TURN);
-//          ctx.state(States.HUMAN_TURN);
           ctx.board().switchTurn();
         }
       }
@@ -207,9 +194,14 @@ public class FSM implements Context {
   }
 
   public void start() {
-    state(States.STARTING);
+    state(States.SIMULATED_TURN);
+    MatchState.fMove=0;
+    board().switchTurn();
   }
 
+  public void restart() {
+  }
+  
   public boolean processEvent(Events evt, Object params) {
 //    System.out.println("PROCESS EVENT: "+evt);
 //    System.out.println("\tSRC STATE: "+state());

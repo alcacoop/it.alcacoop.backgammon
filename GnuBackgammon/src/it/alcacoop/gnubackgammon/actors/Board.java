@@ -39,7 +39,7 @@ public class Board extends Group {
   
   
   public Board() {
-    jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.getResName()+"/pos.json"));
+    jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
     
     moves = new Stack<Move>();

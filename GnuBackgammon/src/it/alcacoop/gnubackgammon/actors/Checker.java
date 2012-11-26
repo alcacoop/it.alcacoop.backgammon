@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.FSM.Events;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -11,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Scaling;
-
 
 
 public class Checker extends Group {
@@ -37,10 +38,14 @@ public class Checker extends Group {
     
     if (color==1) {//WHITE
       region = GnuBackgammon.atlas.findRegion("cw");
-      label = new Label("1", GnuBackgammon.styleBlack);
+      LabelStyle styleBlack = new LabelStyle(GnuBackgammon.font, Color.BLACK);
+      label = new Label("1", styleBlack);
+      label.setColor(0,0,0,1);
     } else { 
       region = GnuBackgammon.atlas.findRegion("cb");
-      label = new Label("1", GnuBackgammon.styleWhite);
+      LabelStyle styleWhite = new LabelStyle(GnuBackgammon.font, Color.WHITE);
+      label = new Label("1", styleWhite);
+      label.setColor(1,1,1,1);
     }
 
     img = new Image(region);
