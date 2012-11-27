@@ -2,7 +2,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 
 import com.badlogic.gdx.Gdx;
 
-import it.alcacoop.gnubackgammon.layers.GameScreen;
+import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -21,7 +21,7 @@ public class EvaluateBestMoveAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GameScreen.fsm.processEvent(GameFSM.Events.EVALUATE_BEST_MOVE, moves);
+        GnuBackgammon.fsm.processEvent(GameFSM.Events.EVALUATE_BEST_MOVE, moves);
       }
     });
   }

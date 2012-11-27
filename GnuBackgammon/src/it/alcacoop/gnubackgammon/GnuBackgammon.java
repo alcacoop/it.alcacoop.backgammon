@@ -5,6 +5,8 @@ import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
 import it.alcacoop.gnubackgammon.layers.OptionsScreen;
 import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
+import it.alcacoop.gnubackgammon.logic.GameFSM;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +29,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     {800,480},
     {480,320}
   };
+  
   private static int ss;
   private static String[] resname = {"hdpi", "mdpi", "ldpi"};
   
@@ -35,6 +38,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static Skin skin;
   public static int resolution[];
   public static GnuBackgammon Instance;
+  public static GameFSM fsm;
   
   
   @Override

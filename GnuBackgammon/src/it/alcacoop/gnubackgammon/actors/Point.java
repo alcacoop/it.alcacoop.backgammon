@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.Color;
@@ -29,7 +28,7 @@ public class Point extends Group {
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        GameScreen.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
+        GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
         return true;
       }
     });

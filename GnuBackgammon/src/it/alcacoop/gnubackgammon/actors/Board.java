@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -228,7 +227,7 @@ public class Board extends Group {
         lastMoved = c;
       }  
     } catch (Exception e) {
-      GameScreen.fsm.processEvent(Events.NO_MORE_MOVES, null);
+      GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
   }
 

@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -130,7 +129,7 @@ public class Checker extends Group {
           public void run() {
             if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
             if (!board.checkHit())
-              GameScreen.fsm.processEvent(Events.PERFORMED_MOVE, null);
+              GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
             label.setX(img.getWidth()/2-label.getWidth()/2);
             label.setY(img.getHeight()/2-label.getHeight()/2);
           }

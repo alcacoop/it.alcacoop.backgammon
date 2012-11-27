@@ -23,7 +23,6 @@ public class GameScreen implements Screen {
 
   private Stage stage;
   public final Board board;
-  public static GameFSM fsm;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   private Table table;
@@ -79,7 +78,7 @@ public class GameScreen implements Screen {
     table.add(board).colspan(5).expand().fill();
     
     stage.addActor(table);
-    fsm = new GameFSM(board);
+    GnuBackgammon.fsm = new GameFSM(board);
   }
 
 
@@ -106,7 +105,7 @@ public class GameScreen implements Screen {
   @Override
   public void show() {
     pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
-    board.initBoard();
+    board.initBoard(0);
     
     Gdx.input.setInputProcessor(stage);
     
@@ -117,7 +116,7 @@ public class GameScreen implements Screen {
       Actions.run(new Runnable(){
         @Override
         public void run() {
-          fsm.start();        
+          GnuBackgammon.fsm.start();        
         }
       }))
     );
@@ -125,7 +124,7 @@ public class GameScreen implements Screen {
 
   @Override
   public void hide() {
-    fsm.stop();
+    GnuBackgammon.fsm.stop();
     board.abandon();
   }
 

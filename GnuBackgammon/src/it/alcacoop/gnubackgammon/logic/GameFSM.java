@@ -181,7 +181,7 @@ public class GameFSM implements Context {
       public void enterState(Context ctx) {
         MatchState.fMove = 0;
         MatchState.fTurn = 0;
-        ctx.board().initBoard();
+        ctx.board().initBoard(0);
         ctx.state(States.SIMULATED_TURN);
         ctx.board().switchTurn();
       }

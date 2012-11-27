@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import java.util.ArrayList;
 import java.util.Iterator;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,7 +55,7 @@ public class Dices extends Group {
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
         if (!b.availableMoves.hasMoves())
-          GameScreen.fsm.processEvent(Events.DICE_CLICKED, null);
+          GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
         return true;
       }
     });

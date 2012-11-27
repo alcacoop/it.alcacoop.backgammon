@@ -44,7 +44,7 @@ public class WelcomeScreen implements Screen {
     });
     
     b = new Board();
-    b.initBoard();
+    b.initBoard(2);
     
     table = new Table();
     //table.debug();
