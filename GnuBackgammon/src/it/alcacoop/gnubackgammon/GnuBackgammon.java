@@ -3,6 +3,8 @@ package it.alcacoop.gnubackgammon;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
+import it.alcacoop.gnubackgammon.layers.OptionsScreen;
+import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -17,7 +19,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   private static GameScreen gameScreen;
   private static MatchOptionsScreen matchOptionsScreen;
-  private static MenuScreen menuScreen; 
+  private static MenuScreen menuScreen;
+  private static OptionsScreen optionsScreen;
+  private static WelcomeScreen welcomeScreen;
   private int resolutions[][] = {
     {1280,740},
     {800,480},
@@ -44,9 +48,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
 
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/uiskin.json"));
-    
     atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
-    
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -54,8 +56,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
     menuScreen = new MenuScreen();
+    optionsScreen = new OptionsScreen();
+    welcomeScreen = new WelcomeScreen();
     
-    setScreen(matchOptionsScreen);
+    setScreen(menuScreen);
   }
 
   
@@ -67,14 +71,22 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void goToScreen(int s) {
     switch (s) {
       case 0:
+        setScreen(welcomeScreen);
+        break;
+        
+      case 1:
+        setScreen(optionsScreen);
+        break;
+      
+      case 2:
         setScreen(menuScreen);
         break;
       
-      case 1:
+      case 3:
         setScreen(matchOptionsScreen);
         break;
         
-      case 2:
+      case 4:
         setScreen(gameScreen);
         break;
     }

@@ -6,11 +6,12 @@ import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MatchOptionsScreen implements Screen {
 
+  private SpriteBatch sb;
+  private TextureRegion bgRegion;
   private Stage stage;
   private Group g;
   private Preferences prefs;
@@ -46,6 +49,9 @@ public class MatchOptionsScreen implements Screen {
   
   
   public MatchOptionsScreen(){
+    sb = new SpriteBatch();
+    bgRegion = GnuBackgammon.atlas.findRegion("bg");
+    
     prefs = Gdx.app.getPreferences("MatchOptions");
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -171,11 +177,25 @@ public class MatchOptionsScreen implements Screen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         savePrefs();
+        GnuBackgammon.Instance.goToScreen(4);
+      }
+    });
+    
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
+    back.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        savePrefs();
         GnuBackgammon.Instance.goToScreen(2);
       }
     });
+    
     table.row().pad(2);
-    table.add(play).fillY().expand().colspan(9).width(240);
+    table.add().colspan(2);
+    table.add(back).fill().expand().colspan(2);
+    table.add();
+    table.add(play).fill().expand().colspan(2);
+    table.add().colspan(2);
     
     table.row().pad(2);
     table.add().colspan(9).fill().expand();
@@ -223,9 +243,12 @@ public class MatchOptionsScreen implements Screen {
   
   @Override
   public void render(float delta) {
-    
     Gdx.gl.glClearColor(0, 0, 0, 0);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+    sb.begin();
+    sb.draw(bgRegion, 0,0 , Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    sb.end();
     
     stage.act(delta);
     stage.draw();
