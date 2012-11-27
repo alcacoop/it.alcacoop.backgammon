@@ -59,9 +59,11 @@ public class GameFSM implements Context {
             AICalls.AskForResignation();
             break;
           case ASK_FOR_RESIGNATION:
+            System.out.println("I'M RESIGNING... "+params);
             AICalls.AskForDoubling();
             break;
           case ASK_FOR_DOUBLING:
+            System.out.println("I'D LIKE TO DOUBLING... "+params);
             AICalls.RollDice();
             break;
           case ROLL_DICE:
@@ -69,7 +71,7 @@ public class GameFSM implements Context {
             ctx.board().setDices(dices[0], dices[1]);
             final Board b = ctx.board();
             ctx.board().addAction(Actions.sequence(
-                Actions.delay(0.5f),
+                Actions.delay(0.1f),
                 Actions.run(new Runnable() {
                   @Override
                   public void run() {

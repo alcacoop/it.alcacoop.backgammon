@@ -11,18 +11,16 @@ public enum AILevels {
   SUPREMO,
   GRANDMASTER;
   
-  public static AILevels getFromString(String s) {
+  public static AILevels getAILevelFromString(String s) {
     String us = s.toUpperCase();
     if (us.equals("BEGINNER")) return AILevels.BEGINNER;
-    if (us.equals("CASUAL")) return AILevels.CASUAL;
-    if (us.equals("INTERMEDIATE")) return AILevels.INTERMEDIATE;
-    if (us.equals("ADVANCED")) return AILevels.ADVANCED;
-    if (us.equals("EXPERT")) return AILevels.EXPERT;
-    if (us.equals("WORLDCLASS")) return AILevels.WORLDCLASS;
-    if (us.equals("SUPREMO")) return AILevels.SUPREMO;
-    if (us.equals("GRANDMASTER")) return AILevels.GRANDMASTER;
-    
-    return null;
-    
+    else if (us.equals("CASUAL")) return AILevels.CASUAL;
+    else if (us.equals("INTERMEDIATE")) return AILevels.INTERMEDIATE;
+    else if (us.equals("ADVANCED")) return AILevels.ADVANCED;
+    else if (us.equals("EXPERT")) return AILevels.EXPERT;
+    else if (us.equals("WORLDCLASS")) return AILevels.WORLDCLASS;
+    else if (us.equals("SUPREMO")) return AILevels.SUPREMO;
+    else if (us.equals("GRANDMASTER")) return AILevels.GRANDMASTER;
+    else return AILevels.EXPERT; //DEFAULT VALUE
   }
 }
