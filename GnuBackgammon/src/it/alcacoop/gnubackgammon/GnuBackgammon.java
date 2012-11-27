@@ -1,11 +1,11 @@
 package it.alcacoop.gnubackgammon;
 
+import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
 import it.alcacoop.gnubackgammon.layers.OptionsScreen;
 import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
-import it.alcacoop.gnubackgammon.logic.GameFSM;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -38,7 +38,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static Skin skin;
   public static int resolution[];
   public static GnuBackgammon Instance;
-  public static GameFSM fsm;
+  public static BaseFSM fsm;
   
   
   @Override

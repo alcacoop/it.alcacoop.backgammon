@@ -1,53 +1,21 @@
-package it.alcacoop.gnubackgammon.logic;
+package it.alcacoop.gnubackgammon.fsm;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import it.alcacoop.gnubackgammon.actors.Board;
-
-// SIMULATED GAME STATE MACHINE
-// From: http://vanillajava.blogspot.com/2011/06/java-secret-using-enum-as-state-machine.html
-
-interface Context {
-  Board board();
-  State state();
-  void state(State state);
-}
-
-interface State {
-  boolean processEvent(Context ctx, GameFSM.Events evt, Object params);
-  void enterState(Context ctx);
-  void exitState(Context ctx);
-}
+import it.alcacoop.gnubackgammon.logic.AICalls;
+import it.alcacoop.gnubackgammon.logic.MatchState;
 
 
 // MAIN FSM
-public class GameFSM implements Context {
+public class GameFSM extends BaseFSM implements Context {
   
-  Board board;
-  
-  public enum Events {
-    ACCEPT_DOUBLE,
-    ACCEPT_RESIGN,
-    ASK_FOR_DOUBLING,
-    ASK_FOR_RESIGNATION,
-    EVALUATE_BEST_MOVE,
-    INITIALIZE_ENVIRONMENT,
-    ROLL_DICE,
-    SET_BOARD,
-    SET_GAME_TURN,
-    SET_MATCH_SCORE,
-    SET_MATCH_TO,
-    UPDATE_MS_CUBEINFO,
-    PERFORMED_MOVE,
-    NO_MORE_MOVES,
-    POINT_TOUCHED,
-    GENERATE_MOVES,
-    DICE_CLICKED
-  }
+  private Board board;
+  public State currentState;
 
   public enum States implements State {
     
-    SIMULATED_TURN {
-      public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
+    CPU_TURN {
+      public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
 //            if (MatchState.fMove == 0)
@@ -171,7 +139,7 @@ public class GameFSM implements Context {
           if (MatchState.fMove==1)
             ctx.state(States.HUMAN_TURN);
           else
-            ctx.state(States.SIMULATED_TURN);
+            ctx.state(States.CPU_TURN);
           ctx.board().switchTurn();
         }
       }
@@ -182,7 +150,7 @@ public class GameFSM implements Context {
         MatchState.fMove = 0;
         MatchState.fTurn = 0;
         ctx.board().initBoard(0);
-        ctx.state(States.SIMULATED_TURN);
+        ctx.state(States.CPU_TURN);
         ctx.board().switchTurn();
       }
     },
@@ -194,16 +162,11 @@ public class GameFSM implements Context {
     };
     
     //DEFAULT IMPLEMENTATION
-    public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {return false;}
+    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
     public void enterState(Context ctx) {}
     public void exitState(Context ctx) {}
-
+    
   };
-
-  public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) { return false;}
-  public void enterState(Context ctx) {}
-  public void exitState(Context ctx) {}
-  public State currentState;
 
 
   public GameFSM(Board _board) {
@@ -211,42 +174,14 @@ public class GameFSM implements Context {
   }
 
   public void start() {
-    state(States.SIMULATED_TURN);
+    state(States.CPU_TURN);
     MatchState.fMove=0;
     board().switchTurn();
   }
 
-  public void stop() {
-    state(States.STOPPED);
-  }
   
-  public void restart() {
-    stop();
-    start();
-  }
-  
-  public boolean processEvent(Events evt, Object params) {
-    boolean res = state().processEvent(this, evt, params);
-    return res;
-  }
-
   public Board board() {
     return board;
   }
-
-  public State state() {
-    return currentState;
-  }
-
-  public void state(State state) {
-    if(currentState != null)
-      currentState.exitState(this);
-    currentState = state;
-    if(currentState != null)
-      currentState.enterState(this);        
-  }
   
-  public boolean isStopped() {
-    return currentState == States.STOPPED;
-  }
 }

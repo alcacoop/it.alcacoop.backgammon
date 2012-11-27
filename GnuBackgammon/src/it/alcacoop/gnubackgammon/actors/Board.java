@@ -1,7 +1,7 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;

@@ -1,7 +1,7 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.logic.GameFSM.Events;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
