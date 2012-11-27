@@ -36,6 +36,7 @@ public class MatchOptionsScreen implements Screen {
   private final FixedButtonGroup matchTo;
   private final FixedButtonGroup doubleCube;
   private final FixedButtonGroup crawford;
+  private final FixedButtonGroup gametype;
   
   private String _levels[] = {"Beginner","Casual","Intermediate","Advanced","Expert","Worldclass","Supremo","Grandmaster"};
   private TextButton levelButtons[];
@@ -46,6 +47,9 @@ public class MatchOptionsScreen implements Screen {
   private String _yesNo[] = {"Yes","No"};
   private TextButton doublingButtons[];
   private TextButton crawfordButtons[];
+  
+  private String _gametype[] = {"Backgammon","Nackgammon"};
+  private TextButton gameTypeButtons[];
   
   
   public MatchOptionsScreen(){
@@ -63,19 +67,7 @@ public class MatchOptionsScreen implements Screen {
     Label playToLabel = new Label("Match to:", GnuBackgammon.skin);
     Label doublingLabel = new Label("Doubling Cube:", GnuBackgammon.skin);
     Label crawfordLabel = new Label("Crawford rule:", GnuBackgammon.skin);
-    
-    ClickListener cl = new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        Button b = (Button) event.getListenerActor();
-        String group = "";
-        if (b == matchTo.getChecked()) group="MATCHTO";
-        else if (b == level.getChecked()) group="LEVEL";
-        else if (b == crawford.getChecked()) group="CRAWFORD";
-        else if (b == doubleCube.getChecked()) group="DOUBLE_CUBE";
-        System.out.println("CLICKED: "+group+" "+((TextButton) b).getText());
-      }
-    };
+    Label gameTypeLabel = new Label("Game variant:", GnuBackgammon.skin);
     
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     levelButtons = new TextButton[_levels.length];
@@ -83,7 +75,6 @@ public class MatchOptionsScreen implements Screen {
     for (int i=0; i<_levels.length; i++) {
       levelButtons[i] = new TextButton(_levels[i], ts);
       level.add(levelButtons[i]);
-      levelButtons[i].addListener(cl);
     }
     
     matchToButtons = new TextButton[_matchTo.length];
@@ -91,7 +82,6 @@ public class MatchOptionsScreen implements Screen {
     for (int i=0; i<_matchTo.length; i++) {
       matchToButtons[i] = new TextButton(_matchTo[i], ts);
       matchTo.add(matchToButtons[i]);
-      matchToButtons[i].addListener(cl);
     }
     
     doublingButtons = new TextButton[_yesNo.length];
@@ -99,7 +89,6 @@ public class MatchOptionsScreen implements Screen {
     for (int i=0; i<_yesNo.length; i++) {
       doublingButtons[i] = new TextButton(_yesNo[i], ts);
       doubleCube.add(doublingButtons[i]);
-      doublingButtons[i].addListener(cl);
     }
     
     crawfordButtons = new TextButton[_yesNo.length];
@@ -107,11 +96,16 @@ public class MatchOptionsScreen implements Screen {
     for (int i=0; i<_yesNo.length; i++) {
       crawfordButtons[i] = new TextButton(_yesNo[i], ts);
       crawford.add(crawfordButtons[i]);
-      crawfordButtons[i].addListener(cl);
+    }
+    
+    gameTypeButtons = new TextButton[_gametype.length];
+    gametype = new FixedButtonGroup();
+    for (int i=0; i<_yesNo.length; i++) {
+      gameTypeButtons[i] = new TextButton(_gametype[i], ts);
+      gametype.add(gameTypeButtons[i]);
     }
     
     Table table = new Table();
-//    table.debug();
     table.setFillParent(true);
     
     table.row().pad(2);
@@ -159,7 +153,6 @@ public class MatchOptionsScreen implements Screen {
     table.add(doublingButtons[1]).expand().fill();
     table.add().colspan(6);
     
-    
     table.row().pad(2);
     table.add().colspan(9).fill().expand();
     
@@ -168,7 +161,18 @@ public class MatchOptionsScreen implements Screen {
     table.add(crawfordButtons[0]).expand().fill();
     table.add(crawfordButtons[1]).expand().fill();
     table.add().colspan(6);
+
+    table.row().pad(2);
+    table.add().colspan(9).fill().expand();
+
+    table.row().pad(2);
+    table.add(gameTypeLabel).right();
+    table.add(gameTypeButtons[0]).expand().fill().colspan(2);
+    table.add(gameTypeButtons[1]).expand().fill().colspan(2);
+    table.add().colspan(4);
     
+    table.row().pad(2);
+    table.add().colspan(9).fill().expand();
     table.row().pad(2);
     table.add().colspan(9).fill().expand();
     
@@ -221,6 +225,8 @@ public class MatchOptionsScreen implements Screen {
     doubleCube.setChecked(sDoubleCube);
     String sCrawford= prefs.getString("CRAWFORD", "yes");
     crawford.setChecked(sCrawford);
+    String sVariant= prefs.getString("VARIANT", "Backgammon");
+    gametype.setChecked(sVariant);
   }
 
   
@@ -233,12 +239,17 @@ public class MatchOptionsScreen implements Screen {
     prefs.putString("DOUBLE_CUBE", sDoubleCube);
     String sCrawford = ((TextButton)crawford.getChecked()).getText().toString();
     prefs.putString("CRAWFORD", sCrawford);
+    String sGameType = ((TextButton)gametype.getChecked()).getText().toString();
+    prefs.putString("VARIANT", sGameType);
+    
     prefs.flush();
     
     AICalls.SetAILevel(AILevels.getAILevelFromString(sLevel));
-    MatchState.fCubeUse = (sDoubleCube=="Yes")?1:0; //USING CUBE
+    MatchState.fCubeUse = sDoubleCube.equals("Yes")?1:0; //USING CUBE
     MatchState.nMatchTo = Integer.parseInt(sMatchTo);
-    MatchState.fCrawford = (sCrawford=="Yes")?1:0;; //REGOLA DI CRAWFORD
+    MatchState.fCrawford = sCrawford.equals("Yes")?1:0; //REGOLA DI CRAWFORD
+    MatchState.bgv = sGameType.equals("Backgammon")?0:1; //GAME TYPE
+    
   }
   
   @Override

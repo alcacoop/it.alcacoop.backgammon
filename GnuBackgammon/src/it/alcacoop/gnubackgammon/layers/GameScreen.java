@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -112,9 +113,8 @@ public class GameScreen implements Screen {
     initTable();
     GnuBackgammon.Instance.setFSM("GAME_FSM");
     pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
-    board.initBoard(0);
-    
     Gdx.input.setInputProcessor(stage);
+    board.initBoard();
     
     table.setY(stage.getHeight());
     table.addAction(Actions.sequence(

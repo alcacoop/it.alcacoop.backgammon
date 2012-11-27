@@ -67,8 +67,8 @@ public class Board extends Group {
     pos[24].y = board.getY();
 
     for (int i = 0; i<15; i++) {
-      checkers[0][i] = new Checker(this, 0); //NERE
-      checkers[1][i] = new Checker(this, 1); //BIANCHE
+      checkers[0][i] = new Checker(this, 0); //BLACK
+      checkers[1][i] = new Checker(this, 1); //WHITE
     }
     
     points = new Points(this);
@@ -122,19 +122,22 @@ public class Board extends Group {
     return ret;
   }
 
-
   public void initBoard(int type) {
+    MatchState.bgv = type;
+    initBoard();
+  }
+  public void initBoard() {
     if (dices!=null) dices.clear();
+    if (moves!=null) moves.clear();
+    if (playedMoves!=null) playedMoves.clear();
     int i0 = 0;
     int i1 = 0;
 
-    MatchState.bgv = type;
-    
     for (int i=0; i<=24; i++) {
-      _board[0][i] = MatchState.board[type*2][i];
-      i0+=MatchState.board[type*2][i]; //TOT CHECKERS ON BOARD
-      _board[1][i] = MatchState.board[type*2+1][i];
-      i1+=MatchState.board[type*2+1][i]; //TOT CHECKERS ON BOARD
+      _board[0][i] = MatchState.board[MatchState.bgv*2][i];
+      i0+=MatchState.board[MatchState.bgv*2][i]; //TOT CHECKERS ON BOARD
+      _board[1][i] = MatchState.board[MatchState.bgv*2+1][i];
+      i1+=MatchState.board[MatchState.bgv*2+1][i]; //TOT CHECKERS ON BOARD
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
@@ -266,7 +269,7 @@ public class Board extends Group {
       if ((ps==null)||(ps.length==0)) { //NO MOVES FROM HERE!
         c.highlight(false);
         selected = null;        
-      } else {//if (ps.length!=0) {
+      } else {
         c.highlight(true);
         selected = c;
         for (int i=0; i<ps.length;i++)
@@ -287,10 +290,10 @@ public class Board extends Group {
       if(_board[MatchState.fMove][i] > 0){
         count+=_board[MatchState.fMove][i];
       }
-    }//if count = 0 here, we're in bearoff
+    }//if count = 0 here, we're in bear off
 
     int max_point = 0;
-    if(count==0) { //bearoff
+    if(count==0) { //bear off
       for(int i=0;i<6;i++){
         if(_board[MatchState.fMove][i] > 0){
           max_point = i;
