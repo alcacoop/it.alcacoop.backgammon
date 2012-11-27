@@ -37,7 +37,7 @@ public class MatchOptionsScreen implements Screen {
   private String _levels[] = {"Beginner","Casual","Intermediate","Advanced","Expert","Worldclass","Supremo","Grandmaster"};
   private TextButton levelButtons[];
   
-  private String _matchTo[] = {"1","3","5","7","9","11","15"};
+  private String _matchTo[] = {"1","3","5","7","9","11","13","15"};
   private TextButton matchToButtons[];
   
   private String _yesNo[] = {"Yes","No"};
@@ -54,7 +54,7 @@ public class MatchOptionsScreen implements Screen {
     
     Label titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
     Label difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
-    Label playToLabel = new Label("Play to:", GnuBackgammon.skin);
+    Label playToLabel = new Label("Match to:", GnuBackgammon.skin);
     Label doublingLabel = new Label("Doubling Cube:", GnuBackgammon.skin);
     Label crawfordLabel = new Label("Crawford rule:", GnuBackgammon.skin);
     
@@ -105,32 +105,33 @@ public class MatchOptionsScreen implements Screen {
     }
     
     Table table = new Table();
+//    table.debug();
     table.setFillParent(true);
     
     table.row().pad(2);
-    table.add().colspan(5).fillY().expand();
+    table.add().colspan(9).fillY().expand();
     
     table.row().pad(2);
     table.add(titleLabel).colspan(9);
     
     table.row().pad(2);
-    table.add().colspan(5).fillY().expand();
+    table.add().colspan(9).fillY().expand();
     
     table.row().pad(2);
     table.add(difficultyLabel).right();
-    table.add(levelButtons[0]).expand().fill();
-    table.add(levelButtons[1]).expand().fill();
-    table.add(levelButtons[2]).expand().fill();
-    table.add(levelButtons[3]).expand().fill();
+    table.add(levelButtons[0]).expand().fill().colspan(2);
+    table.add(levelButtons[1]).expand().fill().colspan(2);
+    table.add(levelButtons[2]).expand().fill().colspan(2);
+    table.add(levelButtons[3]).expand().fill().colspan(2);
     table.row().pad(2);
     table.add();
-    table.add(levelButtons[4]).expand().fill();
-    table.add(levelButtons[5]).expand().fill();
-    table.add(levelButtons[6]).expand().fill();
-    table.add(levelButtons[7]).expand().fill();
+    table.add(levelButtons[4]).expand().fill().colspan(2);
+    table.add(levelButtons[5]).expand().fill().colspan(2);
+    table.add(levelButtons[6]).expand().fill().colspan(2);
+    table.add(levelButtons[7]).expand().fill().colspan(2);
     
     table.row().pad(2);
-    table.add().colspan(5).fill().expand();
+    table.add().colspan(9).fill().expand();
     
     table.row().pad(2);
     table.add(playToLabel).right();
@@ -138,31 +139,32 @@ public class MatchOptionsScreen implements Screen {
     table.add(matchToButtons[1]).expand().fill();
     table.add(matchToButtons[2]).expand().fill();
     table.add(matchToButtons[3]).expand().fill();
-    table.row().pad(2);
-    table.add();
     table.add(matchToButtons[4]).expand().fill();
     table.add(matchToButtons[5]).expand().fill();
     table.add(matchToButtons[6]).expand().fill();
+    table.add(matchToButtons[7]).expand().fill();
     
     table.row().pad(2);
-    table.add().colspan(5).fill().expand();
+    table.add().colspan(9).fill().expand();
     
     table.row().pad(2);
     table.add(doublingLabel).right();
     table.add(doublingButtons[0]).expand().fill();
     table.add(doublingButtons[1]).expand().fill();
+    table.add().colspan(6);
     
     
     table.row().pad(2);
-    table.add().colspan(5).fill().expand();
+    table.add().colspan(9).fill().expand();
     
     table.row().pad(2);
     table.add(crawfordLabel).right();
     table.add(crawfordButtons[0]).expand().fill();
     table.add(crawfordButtons[1]).expand().fill();
+    table.add().colspan(6);
     
     table.row().pad(2);
-    table.add().colspan(5).fill().expand();
+    table.add().colspan(9).fill().expand();
     
     TextButton play = new TextButton("PLAY!", GnuBackgammon.skin);
     play.addListener(new ClickListener(){
@@ -173,10 +175,10 @@ public class MatchOptionsScreen implements Screen {
       }
     });
     table.row().pad(2);
-    table.add(play).fillY().expand().colspan(5).width(240);
+    table.add(play).fillY().expand().colspan(9).width(240);
     
     table.row().pad(2);
-    table.add().colspan(5).fill().expand();
+    table.add().colspan(9).fill().expand();
     
     g = new Group();
     g.setWidth(stage.getWidth()*0.9f);
@@ -213,7 +215,7 @@ public class MatchOptionsScreen implements Screen {
     prefs.putString("CRAWFORD", sCrawford);
     prefs.flush();
     
-    AICalls.SetAILevel(AILevels.getFromString(sLevel));
+    AICalls.SetAILevel(AILevels.getAILevelFromString(sLevel));
     MatchState.fCubeUse = (sDoubleCube=="Yes")?1:0; //USING CUBE
     MatchState.nMatchTo = Integer.parseInt(sMatchTo);
     MatchState.fCrawford = (sCrawford=="Yes")?1:0;; //REGOLA DI CRAWFORD
