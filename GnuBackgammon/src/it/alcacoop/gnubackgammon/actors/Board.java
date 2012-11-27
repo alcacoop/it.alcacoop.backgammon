@@ -125,16 +125,18 @@ public class Board extends Group {
   }
 
 
-  public void initBoard() {
+  public void initBoard(int type) {
     if (dices!=null) dices.clear();
     int i0 = 0;
     int i1 = 0;
+
+    MatchState.bgv = type;
     
     for (int i=0; i<=24; i++) {
-      _board[0][i] = MatchState.board[0][i];
-      i0+=MatchState.board[0][i];
-      _board[1][i] = MatchState.board[1][i];
-      i1+=MatchState.board[1][i];
+      _board[0][i] = MatchState.board[type*2][i];
+      i0+=MatchState.board[type*2][i]; //TOT CHECKERS ON BOARD
+      _board[1][i] = MatchState.board[type*2+1][i];
+      i1+=MatchState.board[type*2+1][i]; //TOT CHECKERS ON BOARD
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
