@@ -70,7 +70,6 @@ public class MenuScreen implements Screen {
     g.setY((stage.getHeight()-g.getHeight())/2);
     g.addActor(table);
     stage.addActor(g);
-    stage.addActor(g);
   }
 
 

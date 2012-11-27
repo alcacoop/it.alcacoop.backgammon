@@ -31,7 +31,6 @@ public class GameScreen implements Screen {
   private Label pl1, pl2;
   
   public GameScreen(){
-    
     sb = new SpriteBatch();
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -108,7 +107,9 @@ public class GameScreen implements Screen {
   public void show() {
     pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
     board.initBoard();
+    
     Gdx.input.setInputProcessor(stage);
+    
     table.setY(stage.getHeight());
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),

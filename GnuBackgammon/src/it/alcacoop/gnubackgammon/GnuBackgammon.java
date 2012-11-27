@@ -59,7 +59,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     
-    setScreen(menuScreen);
+    setScreen(welcomeScreen);
   }
 
   
