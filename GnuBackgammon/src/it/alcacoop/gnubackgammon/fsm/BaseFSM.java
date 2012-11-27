@@ -8,6 +8,8 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 
 interface Context {
   Board board();
+  int getMoves();
+  void setMoves(int n);
   State state();
   void state(State state);
 }
@@ -21,6 +23,8 @@ interface State {
 
 // MAIN FSM
 public class BaseFSM implements Context {
+
+  private int nMoves; 
   
   public enum Events {
     ACCEPT_DOUBLE,
@@ -105,4 +109,14 @@ public class BaseFSM implements Context {
   public Board board() {
     return null;
   }
+  
+  @Override
+  public int getMoves() {
+    return nMoves;
+  }
+  @Override
+  public void setMoves(int n) {
+    nMoves = n;
+  }
+  
 }

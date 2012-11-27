@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
 import java.util.Stack;
 
 
@@ -340,6 +339,49 @@ public class Board extends Group {
       removeActor(checkers[1][i]);
     }
   }
+  
+  public void animate(float t) {
+    int i0 = 0;
+    int i1 = 0;
+
+    for (int i=0; i<=24; i++) {
+      _board[0][i] = MatchState.board[0][i];
+      i0+=MatchState.board[0][i];
+      _board[1][i] = MatchState.board[1][i];
+      i1+=MatchState.board[1][i];
+    }
+    bearedOff[0] = 0;
+    bearedOff[1] = 0;
+    
+    int nchecker = 0;
+    //POSITIONING BLACK CHECKERS
+    for (int i=0; i<25; i++) {
+      for (int j=0;j<_board[0][i];j++) {
+        checkers[0][nchecker].reset(i,j, t);
+        nchecker++;
+      }
+    }
+    for (int i=0;i<15-i0;i++) {
+      checkers[0][nchecker].reset(-1,i, t);
+      bearedOff[0]++;
+      nchecker++;
+    }
+    
+    //POSITIONING WHITE CHECKERS
+    nchecker = 0;
+    for (int i=0; i<25; i++) {
+      for (int j=0;j<_board[1][i];j++) {
+        checkers[1][nchecker].reset(i, j, t);
+        nchecker++;
+      }
+    }
+    for (int i=0;i<15-i1;i++) {
+      checkers[1][nchecker].reset(-1,i, t);
+      bearedOff[1]++;
+      nchecker++;
+    }
+  }
+  
   
   @Override
   public float getHeight() {
