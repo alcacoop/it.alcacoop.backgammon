@@ -144,9 +144,26 @@ public class GameFSM extends BaseFSM implements Context {
       public void enterState(Context ctx) {
         MatchState.fMove = 0;
         MatchState.fTurn = 0;
-        ctx.board().initBoard(0);
+        ctx.board().initBoard();
         ctx.state(States.CPU_TURN);
         ctx.board().switchTurn();
+      }
+    },
+    
+    STARTING_GAME {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case START_GAME:
+            if (MatchState.fMove == 1)
+              ctx.state(HUMAN_TURN);
+            else
+              ctx.state(CPU_TURN);
+            break;
+          default:
+            return false;
+        }
+        return true;
       }
     };
     
@@ -164,9 +181,7 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    state(States.CPU_TURN);
-    MatchState.fMove=0;
-    board().switchTurn();
+    state(States.STARTING_GAME);
   }
 
   

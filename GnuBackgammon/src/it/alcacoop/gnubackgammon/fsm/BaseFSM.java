@@ -45,6 +45,7 @@ public class BaseFSM implements Context {
     GENERATE_MOVES,
     DICE_CLICKED,
     STARTING_SIMULATION,
+    START_GAME,
     SIMULATED_TURN,
     STOPPED
   }

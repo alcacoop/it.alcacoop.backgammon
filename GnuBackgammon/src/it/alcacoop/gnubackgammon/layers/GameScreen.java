@@ -123,7 +123,10 @@ public class GameScreen implements Screen {
       Actions.run(new Runnable(){
         @Override
         public void run() {
-          GnuBackgammon.fsm.start();        
+          MatchState.fTurn = 0;
+          MatchState.fMove = 0;
+          GnuBackgammon.fsm.processEvent(GameFSM.Events.START_GAME, null);
+          board.switchTurn();
         }
       }))
     );
