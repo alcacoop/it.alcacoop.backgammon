@@ -1,6 +1,9 @@
 package it.alcacoop.gnubackgammon;
 
+import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
+import it.alcacoop.gnubackgammon.fsm.GameFSM;
+import it.alcacoop.gnubackgammon.fsm.SimulationFSM;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MenuScreen;
@@ -29,9 +32,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     {800,480},
     {480,320}
   };
-  
   private static int ss;
   private static String[] resname = {"hdpi", "mdpi", "ldpi"};
+  
+  private GameFSM gameFSM;
+  private SimulationFSM simulationFSM;
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
@@ -39,11 +44,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static int resolution[];
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
-  
+  public Board board;
   
   @Override
-  public void create() {		
+  public void create() {
     Instance = this;
+    
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
     if (pWidth<=480) ss = 2;
@@ -56,14 +62,23 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-      
+    
+    board = new Board();
+    gameFSM = new GameFSM(board);
+    simulationFSM = new SimulationFSM(board);
+    
+    fsm = simulationFSM;
+    
+    
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
     menuScreen = new MenuScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     
+
     setScreen(welcomeScreen);
+    System.out.println(board);
   }
 
   
@@ -94,6 +109,17 @@ public class GnuBackgammon extends Game implements ApplicationListener {
         setScreen(gameScreen);
         break;
     }
+  }
+
+
+  public void setFSM(String type) {
+    if (type == "SIMULATED_FSM")
+      fsm = simulationFSM;
+    else if (type == "GAME_FSM") {
+      fsm = gameFSM;
+    }
+    
+    fsm.start();
   }
   
   

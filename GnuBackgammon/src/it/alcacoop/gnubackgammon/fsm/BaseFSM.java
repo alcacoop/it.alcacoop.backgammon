@@ -40,6 +40,7 @@ public class BaseFSM implements Context {
     POINT_TOUCHED,
     GENERATE_MOVES,
     DICE_CLICKED,
+    STARTING_SIMULATION,
     SIMULATED_TURN,
     STOPPED
   }
@@ -78,10 +79,10 @@ public class BaseFSM implements Context {
   }
   
   public boolean processEvent(Events evt, Object params) {
-    //System.out.println("PROCESS EVENT: "+evt);
-    //System.out.println("\tSRC STATE: "+state());
+//    System.out.println("PROCESS EVENT: "+evt);
+//    System.out.println("\tSRC STATE: "+state());
     boolean res = state().processEvent(this, evt, params);
-    //System.out.println("\tDST STATE: "+state());
+//    System.out.println("\tDST STATE: "+state());
     return res;
   }
 

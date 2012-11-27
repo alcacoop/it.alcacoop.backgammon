@@ -1,8 +1,6 @@
 package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.actors.Board;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -22,9 +20,8 @@ public class WelcomeScreen implements Screen {
   private Stage stage;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
-  private Board b;
   private Table table;
-  
+
   
   public WelcomeScreen(){
     sb = new SpriteBatch();
@@ -43,19 +40,16 @@ public class WelcomeScreen implements Screen {
       }
     });
     
-    b = new Board();
-    b.initBoard(2);
+    GnuBackgammon.Instance.setFSM("SIMULATED_FSM");
     
     table = new Table();
-    //table.debug();
     table.setFillParent(true);
     
     table.add(titleLabel).colspan(5).height(stage.getHeight()*0.1f);
     
-    b.setScale(0.5f);
     table.row().height(stage.getHeight()*0.75f);
     table.add().width(stage.getWidth()*0.1f);
-    table.add(b).width(stage.getWidth()*0.8f).colspan(3);
+    table.add(GnuBackgammon.Instance.board).width(stage.getWidth()*0.8f).colspan(3);
     table.add().width(stage.getWidth()*0.1f);
     
     table.row().height(stage.getHeight()*0.1f);
@@ -66,7 +60,6 @@ public class WelcomeScreen implements Screen {
     table.add().fill().expand();
     
     stage.addActor(table);
-    
   }
 
 
@@ -81,8 +74,6 @@ public class WelcomeScreen implements Screen {
     
     stage.act(delta);
     stage.draw();
-    
-    //table.drawDebug(stage);
   }
 
 

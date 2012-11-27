@@ -5,8 +5,6 @@ import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
-
-// MAIN FSM
 public class GameFSM extends BaseFSM implements Context {
   
   private Board board;
@@ -18,9 +16,6 @@ public class GameFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
-//            if (MatchState.fMove == 0)
-//              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-//            else 
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
@@ -153,13 +148,8 @@ public class GameFSM extends BaseFSM implements Context {
         ctx.state(States.CPU_TURN);
         ctx.board().switchTurn();
       }
-    },
-    
-    STOPPED {
-      public void enterState(Context ctx) {
-        System.out.println("GameFSM STOPPED!");
-      }
     };
+    
     
     //DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}

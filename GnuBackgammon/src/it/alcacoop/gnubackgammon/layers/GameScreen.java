@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
-import it.alcacoop.gnubackgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -21,12 +20,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class GameScreen implements Screen {
 
   private Stage stage;
-  public final Board board;
+  public Board board;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   private Table table;
   
   private Label pl1, pl2;
+  private TextButton abandon;
+  private TextButton resign;
+  private TextButton undo;
   
   public GameScreen(){
     sb = new SpriteBatch();
@@ -36,12 +38,13 @@ public class GameScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    board = new Board();
+    board = GnuBackgammon.Instance.board;
+    
     
     pl1 = new Label("PLAYER 1:", GnuBackgammon.skin);
     pl2 = new Label("CPU ("+MatchState.currentLevel.toString()+"):", GnuBackgammon.skin);
     
-    TextButton abandon = new TextButton("ABANDON", GnuBackgammon.skin);
+    abandon = new TextButton("ABANDON", GnuBackgammon.skin);
     abandon.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -49,14 +52,14 @@ public class GameScreen implements Screen {
       }
     });
     
-    TextButton resign = new TextButton("RESIGN", GnuBackgammon.skin);
+    resign = new TextButton("RESIGN", GnuBackgammon.skin);
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
       }
     });
     
-    TextButton undo = new TextButton("UNDO", GnuBackgammon.skin);
+    undo = new TextButton("UNDO", GnuBackgammon.skin);
     undo.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -65,6 +68,12 @@ public class GameScreen implements Screen {
     });
     
     table = new Table();
+    stage.addActor(table);
+  }
+
+  
+  private void initTable() {
+    table.clear();
     table.pad(5).setFillParent(true);
     
     table.add(pl2).expand().pad(2).left();
@@ -75,12 +84,9 @@ public class GameScreen implements Screen {
     
     table.row();
     table.add(board).colspan(5).expand().fill();
-    
-    stage.addActor(table);
-    GnuBackgammon.fsm = new GameFSM(board);
   }
 
-
+  
   @Override
   public void render(float delta) {
     
@@ -103,6 +109,8 @@ public class GameScreen implements Screen {
   
   @Override
   public void show() {
+    initTable();
+    GnuBackgammon.Instance.setFSM("GAME_FSM");
     pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
     board.initBoard(0);
     
@@ -121,6 +129,7 @@ public class GameScreen implements Screen {
     );
   }
 
+  
   @Override
   public void hide() {
     GnuBackgammon.fsm.stop();
