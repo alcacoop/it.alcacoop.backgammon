@@ -3,6 +3,8 @@ package it.alcacoop.gnubackgammon.layers;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.GameFSM;
+import it.alcacoop.gnubackgammon.logic.MatchState;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -26,6 +28,8 @@ public class GameScreen implements Screen {
   private TextureRegion bgRegion;
   private Table table;
   
+  private Label pl1, pl2;
+  
   public GameScreen(){
     
     sb = new SpriteBatch();
@@ -37,14 +41,14 @@ public class GameScreen implements Screen {
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     board = new Board();
     
-    Label pl1 = new Label("PL1:", GnuBackgammon.skin);
-    Label pl2 = new Label("CPU:", GnuBackgammon.skin);
+    pl1 = new Label("PLAYER 1:", GnuBackgammon.skin);
+    pl2 = new Label("CPU ("+MatchState.currentLevel.toString()+"):", GnuBackgammon.skin);
     
     TextButton abandon = new TextButton("ABANDON", GnuBackgammon.skin);
     abandon.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.goToScreen(1);
+        GnuBackgammon.Instance.goToScreen(3);
       }
     });
     
@@ -66,8 +70,8 @@ public class GameScreen implements Screen {
     table = new Table();
     table.pad(5).setFillParent(true);
     
-    table.add(pl1).expand().pad(2).left();
     table.add(pl2).expand().pad(2).left();
+    table.add(pl1).expand().pad(2).left();
     table.add(undo).fill().pad(2);
     table.add(resign).fill().pad(2);
     table.add(abandon).fill().pad(2);
@@ -97,12 +101,12 @@ public class GameScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    System.out.println("DIMS: "+Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight());
   }
 
   
   @Override
   public void show() {
+    pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
     board.initBoard();
     Gdx.input.setInputProcessor(stage);
     table.setY(stage.getHeight());
@@ -112,7 +116,6 @@ public class GameScreen implements Screen {
       Actions.run(new Runnable(){
         @Override
         public void run() {
-          //AICalls.SetAILevel(AILevels.GRANDMASTER);
           fsm.start();        
         }
       }))

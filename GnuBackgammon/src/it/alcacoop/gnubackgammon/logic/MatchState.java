@@ -13,6 +13,7 @@ public class MatchState {
   };
   
   /* NOTE: ON NATIVE API HUMAN=1 AND PC=0 */
+  public static AILevels currentLevel = AILevels.EXPERT;
   public static int fMove = 1; //CHI HA I DADI IN MANO (1=PC 0=HUMAN)
   public static int fTurn = 1; //CHI DEVE DECIDERE (1=PC 0=HUMAN)
   public static int fCubeOwner = -1; //(-1=BAR O=PC 1=HUMAN)
