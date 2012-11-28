@@ -104,6 +104,7 @@ public class Dices extends Group {
 
   
   public void disable(int n) {
+    if (last.size()==0) return;
     boolean found = false;
     
     if (last.size() == 2) { //STANDARD ROLL
