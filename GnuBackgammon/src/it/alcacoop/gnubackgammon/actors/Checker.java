@@ -1,14 +1,15 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -20,12 +21,12 @@ public class Checker extends Group {
   private Board board;
   private Label label;
   private Image img, imgh;
+  private ParallelAction act;
+  private BaseFSM fsm;
   
   public int color = 0;
   public int boardX = -1; 
   public int boardY = -1;
-  
-  private Action act;
   
 
   public Checker(Board _board, int _color) {
@@ -62,8 +63,6 @@ public class Checker extends Group {
     addActor(label);
     addActor(imgh);
     label.setText("");
-    
-    
   }
   
   
@@ -74,7 +73,16 @@ public class Checker extends Group {
     Vector2 _p = board.getBoardCoord(color, _boardX, _boardY);
     boardX = _boardX;
     boardY = _boardY;
-    addAction(Actions.moveTo(_p.x, _p.y, t));
+    
+    if (t==0) {
+      setX(_p.x);
+      setY(_p.y);
+    }
+    else {
+      act = Actions.sequence(Actions.moveTo(_p.x, _p.y, t));
+      addAction(act);
+    }
+    
     if ((boardY>4)&&(boardX!=-1)) 
       label.setText(""+(boardY+1));
     else 
@@ -85,11 +93,12 @@ public class Checker extends Group {
   }
 
   
+  
   public void moveTo(int x){
     moveToDelayed(x, 0);
   }
-  
   public void moveToDelayed(final int x, float delay){
+    fsm = GnuBackgammon.fsm;
     board.removeActor(this);
     board.addActor(this);
     
@@ -104,9 +113,7 @@ public class Checker extends Group {
       y = board.bearedOff[color];
     
     Vector2 _p = board.getBoardCoord(color, x, y);
-    
     final int d = boardX-x;
-    
     setPosition(x);
     
     final Checker c = this;
@@ -127,7 +134,7 @@ public class Checker extends Group {
           public void run() {
             if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
             if (!board.checkHit())
-              GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
+              if (fsm==GnuBackgammon.fsm) fsm.processEvent(Events.PERFORMED_MOVE, null);
             label.setX(img.getWidth()/2-label.getWidth()/2);
             label.setY(img.getHeight()/2-label.getHeight()/2);
             if ((x<24)&&(d>0))
@@ -179,8 +186,8 @@ public class Checker extends Group {
   }
   
   public void resetActions() {
-    if (act!=null)
-      removeAction(act);
+    if (act!=null) //act.setActor(null);
+      act.reset();
   }
   
 }

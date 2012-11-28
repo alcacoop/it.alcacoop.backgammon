@@ -65,9 +65,6 @@ public class BaseFSM implements Context {
 
   };
 
-  public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) { return false;}
-  public void enterState(Context ctx) {}
-  public void exitState(Context ctx) {}
   public State currentState;
 
 
@@ -86,6 +83,7 @@ public class BaseFSM implements Context {
   public boolean processEvent(Events evt, Object params) {
 //    System.out.println("PROCESS EVENT: "+evt);
 //    System.out.println("\tSRC STATE: "+state());
+    System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
 //    System.out.println("\tDST STATE: "+state());
     return res;

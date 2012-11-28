@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.aicalls;
 import com.badlogic.gdx.Gdx;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -10,9 +11,11 @@ public class EvaluateBestMoveAICall implements Runnable {
 
   int dices[];
   int moves[] = {0,0,0,0,0,0,0,0};
+  BaseFSM fsm;
   
   public EvaluateBestMoveAICall(int _dices[]) {
     dices = _dices;
+    fsm = GnuBackgammon.fsm;
   }
   
   @Override
@@ -21,7 +24,8 @@ public class EvaluateBestMoveAICall implements Runnable {
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        GnuBackgammon.fsm.processEvent(GameFSM.Events.EVALUATE_BEST_MOVE, moves);
+        if (fsm == GnuBackgammon.fsm)
+          GnuBackgammon.fsm.processEvent(GameFSM.Events.EVALUATE_BEST_MOVE, moves);
       }
     });
   }

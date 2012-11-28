@@ -12,6 +12,10 @@ public class AICalls {
     thread = new AIThread();
   }
 
+  public static void reset() {
+    AIThread.reset();
+  }
+  
   public static void SetAILevel(AILevels l) {
     MatchState.currentLevel = l;
     thread.post(new SetAILevelAICall(l));

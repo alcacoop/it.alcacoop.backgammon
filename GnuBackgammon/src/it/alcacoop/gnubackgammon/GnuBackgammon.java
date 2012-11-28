@@ -113,6 +113,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
 
   public void setFSM(String type) {
+    if (fsm!=null) fsm.stop();
+    
     if (type == "SIMULATED_FSM")
       fsm = simulationFSM;
     else if (type == "GAME_FSM") {

@@ -135,6 +135,7 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.state(States.HUMAN_TURN);
           else
             ctx.state(States.CPU_TURN);
+          
           ctx.board().switchTurn();
         }
       }
@@ -142,34 +143,65 @@ public class GameFSM extends BaseFSM implements Context {
     
     GAME_FINISHED {
       public void enterState(Context ctx) {
-        MatchState.fMove = 0;
-        MatchState.fTurn = 0;
-        ctx.board().initBoard();
-        ctx.state(States.CPU_TURN);
-        ctx.board().switchTurn();
+        //TODO
+//        MatchState.fMove = 0;
+//        MatchState.fTurn = 0;
+//        ctx.board().initBoard(0);
+//        ctx.state(States.CPU_TURN);
+//        ctx.board().switchTurn();
       }
     },
     
-    STARTING_GAME {
+    OPENING_ROLL {
+      @Override
+      public void enterState(Context ctx) {
+        AICalls.RollDice();
+      }
+      
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-          case START_GAME:
-            if (MatchState.fMove == 1)
+          case ROLL_DICE:
+            int dices[] =(int[])params;
+            if (dices[0]==dices[1]) AICalls.RollDice();
+            else if (dices[0]>dices[1]) {//START HUMAN
+              MatchState.fMove = 0;
+              MatchState.fTurn = 0;
+              AICalls.SetGameTurn(0, 0);
+              ctx.board().setDices(dices[0], dices[1]);
+            } else if (dices[0]<dices[1]) {//START CPU
+              MatchState.fMove = 1;
+              MatchState.fTurn = 1;
+              AICalls.SetGameTurn(1, 1);
+              ctx.board().setDices(dices[0], dices[1]);
+            }
+            break;
+          case SET_GAME_TURN:
+            if (MatchState.fMove == 0)
+              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            else 
+              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            break;
+          case SET_BOARD:
+            if (MatchState.fMove == 0) {
               ctx.state(HUMAN_TURN);
-            else
+              int d[] = ctx.board().dices.get();
+              AICalls.GenerateMoves(ctx.board(), d[0], d[1]);
+            } else {
               ctx.state(CPU_TURN);
+              AICalls.EvaluateBestMove(ctx.board().dices.get());
+            }
             break;
           default:
             return false;
         }
-        return true;
+        return false;
       }
     };
     
     
     //DEFAULT IMPLEMENTATION
-    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
+    public boolean processEvent(Context ctx, Events evt, Object params) {return false;}
     public void enterState(Context ctx) {}
     public void exitState(Context ctx) {}
     
@@ -181,7 +213,7 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    state(States.STARTING_GAME);
+    state(States.OPENING_ROLL);
   }
 
   

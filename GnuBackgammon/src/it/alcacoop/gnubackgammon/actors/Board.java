@@ -1,7 +1,9 @@
 package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
@@ -34,9 +36,12 @@ public class Board extends Group {
   private Image boardbg;
   public BoardImage board;
   public JSONProperties jp;
-  
+
+  private BaseFSM fsm;
   
   public Board() {
+    
+    
     jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
     
@@ -127,9 +132,8 @@ public class Board extends Group {
     initBoard();
   }
   public void initBoard() {
-    if (dices!=null) dices.clear();
-    if (moves!=null) moves.clear();
-    if (playedMoves!=null) playedMoves.clear();
+    abandon();
+    
     int i0 = 0;
     int i1 = 0;
 
@@ -194,12 +198,11 @@ public class Board extends Group {
 
 
   public void setMoves(int _moves[]) {
+    fsm = GnuBackgammon.fsm;
     moves.clear();
     
     if (_moves.length<8) return;
-
     int ms = 0;
-    
     for (int i=3;i>=0;i--) {
       if (_moves[2*i]!=-1) {
         Move m = new Move(this, _moves[2*i], _moves[2*i+1]);
@@ -229,7 +232,8 @@ public class Board extends Group {
         lastMoved = c;
       }  
     } catch (Exception e) {
-      GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
+      if (fsm == GnuBackgammon.fsm) //SAME FSM FROM MOVING START...
+        fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
   }
 
@@ -334,13 +338,16 @@ public class Board extends Group {
     MatchState._switchTurn();
   }
   
-  public void abandon() {
+  private void abandon() {
     for (int i=0; i<15; i++) {
       checkers[0][i].resetActions();
-      removeActor(checkers[0][i]);
       checkers[1][i].resetActions();
-      removeActor(checkers[1][i]);
     }
+    if (dices!=null) dices.clear();
+    if (moves!=null) moves.clear();
+    if (playedMoves!=null) playedMoves.clear();
+    points.reset();
+    AICalls.reset();
   }
   
   public void animate(float t) {
@@ -405,4 +412,5 @@ public class Board extends Group {
   public void setHeight(float height) {
     setScaleY(height/boardbg.getHeight());
   }
+  
 } //END CLASS

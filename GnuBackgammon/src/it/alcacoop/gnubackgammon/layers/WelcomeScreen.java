@@ -92,6 +92,7 @@ public class WelcomeScreen implements Screen {
 
   @Override
   public void hide() {
+    GnuBackgammon.Instance.board.initBoard();
   }
 
   @Override

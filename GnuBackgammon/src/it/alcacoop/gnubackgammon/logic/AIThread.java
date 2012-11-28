@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class AIThread extends Thread {
 
-    private Stack<Runnable> queue;
+    private static Stack<Runnable> queue;
     
     public AIThread() {
       super();
@@ -30,5 +30,9 @@ public class AIThread extends Thread {
           wait();
         } catch(InterruptedException e) {} 
       return queue.pop();
+    }
+    
+    public synchronized static void reset() {
+      queue.clear();
     }
 }
