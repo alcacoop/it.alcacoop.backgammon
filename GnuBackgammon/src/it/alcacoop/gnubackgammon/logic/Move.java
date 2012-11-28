@@ -26,7 +26,7 @@ public class Move {
     dice = d;
   }
   
-  public void setRemovedmoves(ArrayList<int[]> rm) {
+  public void setRemovedMoves(ArrayList<int[]> rm) {
     removedMoves = rm;
   }
   

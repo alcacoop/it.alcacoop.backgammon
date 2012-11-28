@@ -220,7 +220,7 @@ public class Board extends Group {
     try {
       Move m = moves.pop();
       playedMoves.push(m);
-      m.setRemovedmoves(availableMoves.removeMoves(m.from, m.to));
+      m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
       
       if (m!=null) {
         Checker c = getChecker(MatchState.fMove, m.from);
