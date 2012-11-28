@@ -118,8 +118,6 @@ public class Checker extends Group {
             highlight(false);
             board.selected = null;
             board.points.reset();
-            if ((x<24)&&(d>0))
-              board.dices.disable(d);
             if ((boardY<5)||(boardX==-1)) label.setText("");
           }
         }),
@@ -132,6 +130,8 @@ public class Checker extends Group {
               GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
             label.setX(img.getWidth()/2-label.getWidth()/2);
             label.setY(img.getHeight()/2-label.getHeight()/2);
+            if ((x<24)&&(d>0))
+              board.dices.disable(d);
           }
         })
         );
