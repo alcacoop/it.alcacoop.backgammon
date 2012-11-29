@@ -1,6 +1,7 @@
 package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -17,14 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
-public class MenuScreen implements Screen {
+public class MainMenuScreen implements Screen {
 
   private Stage stage;
   private Group g;
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   
-  public MenuScreen(){
+  public MainMenuScreen(){
     sb = new SpriteBatch();
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     
@@ -32,17 +33,23 @@ public class MenuScreen implements Screen {
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
-    Label titleLabel = new Label("Gnu Backgammon", GnuBackgammon.skin);
-    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
-    onePlayer.addListener(new ClickListener(){
-      @Override
+    ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.goToScreen(3);
-      }
-    });
-    TextButton twoPlayers = new TextButton("Two Player", GnuBackgammon.skin);
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+      };
+    };
+    
+    
+    Label titleLabel = new Label("Gnu Backgammon", GnuBackgammon.skin);
+    
+    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
+    onePlayer.addListener(cl);
+    TextButton twoPlayers = new TextButton("Two Players", GnuBackgammon.skin);
+    twoPlayers.addListener(cl);
     TextButton stats = new TextButton("Statistics", GnuBackgammon.skin);
+    stats.addListener(cl);
     TextButton options = new TextButton("Options", GnuBackgammon.skin);
+    options.addListener(cl);
 
     Table table = new Table();
     table.debug();

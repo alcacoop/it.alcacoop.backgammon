@@ -1,6 +1,6 @@
 package it.alcacoop.gnubackgammon.fsm;
 
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -32,16 +32,7 @@ public class GameFSM extends BaseFSM implements Context {
           case ROLL_DICE:
             int dices[] = (int[])params;
             ctx.board().setDices(dices[0], dices[1]);
-            final Board b = ctx.board();
-            ctx.board().addAction(Actions.sequence(
-                Actions.delay(0.1f),
-                Actions.run(new Runnable() {
-                  @Override
-                  public void run() {
-                    AICalls.EvaluateBestMove(b.dices.get());
-                  }
-                })
-            ));
+            AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
@@ -143,18 +134,15 @@ public class GameFSM extends BaseFSM implements Context {
     
     GAME_FINISHED {
       public void enterState(Context ctx) {
-        //TODO
-//        MatchState.fMove = 0;
-//        MatchState.fTurn = 0;
-//        ctx.board().initBoard(0);
-//        ctx.state(States.CPU_TURN);
-//        ctx.board().switchTurn();
+        //TODO: CHECK IF MATCH IS FINISHED
+        ctx.state(OPENING_ROLL);
       }
     },
     
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        ctx.board().initBoard();
         AICalls.RollDice();
       }
       
@@ -197,6 +185,14 @@ public class GameFSM extends BaseFSM implements Context {
         }
         return false;
       }
+    },
+    
+    STOPPED {
+      @Override
+      public void enterState(Context ctx) {
+        System.out.println("GAME FSM STOPPED");
+        ctx.board().initBoard();
+      }
     };
     
     
@@ -213,9 +209,12 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    state(States.OPENING_ROLL);
+    GnuBackgammon.Instance.goToScreen(4);
   }
 
+  public void stop() {
+    state(States.STOPPED);
+  }
   
   public Board board() {
     return board;

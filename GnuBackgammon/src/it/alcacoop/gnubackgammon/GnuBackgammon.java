@@ -3,13 +3,13 @@ package it.alcacoop.gnubackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.GameFSM;
+import it.alcacoop.gnubackgammon.fsm.MenuFSM;
 import it.alcacoop.gnubackgammon.fsm.SimulationFSM;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
-import it.alcacoop.gnubackgammon.layers.MenuScreen;
+import it.alcacoop.gnubackgammon.layers.MainMenuScreen;
 import it.alcacoop.gnubackgammon.layers.OptionsScreen;
 import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -24,7 +24,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   private static GameScreen gameScreen;
   private static MatchOptionsScreen matchOptionsScreen;
-  private static MenuScreen menuScreen;
+  private static MainMenuScreen menuScreen;
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
   private int resolutions[][] = {
@@ -37,6 +37,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   private GameFSM gameFSM;
   private SimulationFSM simulationFSM;
+  private MenuFSM menuFSM;
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
@@ -64,21 +65,21 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
     board = new Board();
+    
     gameFSM = new GameFSM(board);
     simulationFSM = new SimulationFSM(board);
+    menuFSM = new MenuFSM(board);
     
     fsm = simulationFSM;
     
     
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
-    menuScreen = new MenuScreen();
+    menuScreen = new MainMenuScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     
-
     setScreen(welcomeScreen);
-    System.out.println(board);
   }
 
   
@@ -117,9 +118,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     if (type == "SIMULATED_FSM")
       fsm = simulationFSM;
-    else if (type == "GAME_FSM") {
+    else if (type == "MENU_FSM")
+      fsm = menuFSM;
+    else if (type == "GAME_FSM")
       fsm = gameFSM;
-    }
     
     fsm.start();
   }

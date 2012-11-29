@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
-import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
@@ -347,7 +346,6 @@ public class Board extends Group {
     if (moves!=null) moves.clear();
     if (playedMoves!=null) playedMoves.clear();
     points.reset();
-    AICalls.reset();
   }
   
   public void animate(float t) {

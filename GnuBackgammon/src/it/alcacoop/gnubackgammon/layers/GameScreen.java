@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -48,7 +49,7 @@ public class GameScreen implements Screen {
     abandon.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.goToScreen(3);
+        GnuBackgammon.Instance.setFSM("MENU_FSM");
       }
     });
     
@@ -111,9 +112,6 @@ public class GameScreen implements Screen {
   public void show() {
     initTable();
     board.initBoard();
-    MatchState.fTurn = 0;
-    MatchState.fMove = 0;
-    
     
     pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
     Gdx.input.setInputProcessor(stage);
@@ -121,15 +119,14 @@ public class GameScreen implements Screen {
     table.setY(stage.getHeight());
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),
-      Actions.moveTo(0, 0, 0.3f), 
-      Actions.run(new Runnable(){
+      Actions.moveTo(0, 0, 0.3f),
+      Actions.run(new Runnable() {
         @Override
         public void run() {
-          //START GAME!
-          GnuBackgammon.Instance.setFSM("GAME_FSM");
+          GnuBackgammon.fsm.state(States.OPENING_ROLL);
         }
-      }))
-    );
+      })
+    ));
   }
 
   

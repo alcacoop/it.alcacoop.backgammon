@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AILevels;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -16,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -176,23 +176,17 @@ public class MatchOptionsScreen implements Screen {
     table.row().pad(2);
     table.add().colspan(9).fill().expand();
     
-    TextButton play = new TextButton("PLAY!", GnuBackgammon.skin);
-    play.addListener(new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        savePrefs();
-        GnuBackgammon.Instance.goToScreen(4);
-      }
-    });
     
-    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
-    back.addListener(new ClickListener(){
-      @Override
+    ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         savePrefs();
-        GnuBackgammon.Instance.goToScreen(2);
-      }
-    });
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+      };
+    };
+    TextButton play = new TextButton("PLAY", GnuBackgammon.skin);
+    play.addListener(cl);
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
+    back.addListener(cl);
     
     table.row().pad(2);
     table.add().colspan(2);

@@ -36,7 +36,7 @@ public class WelcomeScreen implements Screen {
     play.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.goToScreen(2);
+        GnuBackgammon.Instance.setFSM("MENU_FSM");
       }
     });
     
