@@ -1,6 +1,8 @@
 package it.alcacoop.gnubackgammon.fsm;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -72,9 +74,11 @@ public class GameFSM extends BaseFSM implements Context {
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
-            AICalls.RollDice();
+            ctx.board().dices.clear();
+            ctx.board().addActor(ctx.board().rollBtn);
             break;
           case ROLL_DICE:
+            ctx.board().removeActor(ctx.board().rollBtn);
             int dices[] = (int[])params;
             AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
             ctx.board().setDices(dices[0], dices[1]);
@@ -143,7 +147,7 @@ public class GameFSM extends BaseFSM implements Context {
     
     GAME_FINISHED {
       public void enterState(Context ctx) {
-        //TODO
+        //TODO: OPEN DIALOG
 //        MatchState.fMove = 0;
 //        MatchState.fTurn = 0;
 //        ctx.board().initBoard(0);

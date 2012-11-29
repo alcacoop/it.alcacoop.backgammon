@@ -12,7 +12,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import java.util.Stack;
 
 
@@ -36,6 +40,9 @@ public class Board extends Group {
   private Image boardbg;
   public BoardImage board;
   public JSONProperties jp;
+
+  public TextButton rollBtn;
+  public TextButton resignBtn;
 
   private BaseFSM fsm;
   
@@ -87,6 +94,16 @@ public class Board extends Group {
     
     dices = new Dices(this);
     addActor(dices);
+    
+    rollBtn = new TextButton("Roll", GnuBackgammon.skin);
+    rollBtn.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        AICalls.RollDice();
+      }
+    });
+    rollBtn.setX(board.getX() + jp.asFloat("dice0", 0));
+    rollBtn.setY(board.getY() + boardbg.getHeight()/2);
   }
 
 
