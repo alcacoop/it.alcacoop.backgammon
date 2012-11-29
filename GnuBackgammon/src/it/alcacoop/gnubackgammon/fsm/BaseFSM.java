@@ -47,7 +47,8 @@ public class BaseFSM implements Context {
     STARTING_SIMULATION,
     START_GAME,
     SIMULATED_TURN,
-    STOPPED
+    STOPPED,
+    DOUBLING_RESPONSE
   }
 
   public enum States implements State {

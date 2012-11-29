@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon.fsm;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
@@ -28,8 +27,16 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.AskForDoubling();
             break;
           case ASK_FOR_DOUBLING:
-            System.out.println("I'D LIKE TO DOUBLING... "+params);
-            AICalls.RollDice();
+            System.out.println("I'D LIKE TO DOUBLE... "+params);
+            if(params=="1") {
+              //ask human for double
+              processEvent(ctx, Events.DOUBLING_RESPONSE, null);
+            } else
+              AICalls.RollDice();
+            break;
+          case DOUBLING_RESPONSE:
+            //open dialog and wait for human accepting or not
+            ctx.board().addActor(ctx.board().doubleDialog);
             break;
           case ROLL_DICE:
             int dices[] = (int[])params;
@@ -147,7 +154,12 @@ public class GameFSM extends BaseFSM implements Context {
     
     GAME_FINISHED {
       public void enterState(Context ctx) {
-        //TODO: OPEN DIALOG
+        //OPEN DIALOG
+        if(MatchState.fMove==1)
+          ctx.board().winDialog.text("CPU WON!");
+        else
+          ctx.board().winDialog.text("HUMAN WON!");
+        ctx.board().addActor(ctx.board().winDialog);
 //        MatchState.fMove = 0;
 //        MatchState.fTurn = 0;
 //        ctx.board().initBoard(0);

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -43,6 +44,9 @@ public class Board extends Group {
 
   public TextButton rollBtn;
   public TextButton resignBtn;
+  
+  public Dialog winDialog;
+  public Dialog doubleDialog;
 
   private BaseFSM fsm;
   
@@ -104,6 +108,33 @@ public class Board extends Group {
     });
     rollBtn.setX(board.getX() + jp.asFloat("dice0", 0));
     rollBtn.setY(board.getY() + boardbg.getHeight()/2);
+    
+    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin);
+    winDialog.button("Continue");
+    winDialog.setX(board.getX() + (boardbg.getWidth()/2));
+    winDialog.setY(board.getY() + (boardbg.getHeight()/2));
+    
+    doubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        System.out.println("RESULT: "+object);
+        if(object.equals(1)) { //double has been accepted
+          System.out.println("DOUBLE ACCEPTED");
+          fsm.processEvent(Events.ROLL_DICE, null);
+          //TODO: update cube info
+        } else if(object.equals(0)) { //double not accepted
+          System.out.println("DOUBLE NOT ACCEPTED");
+          GnuBackgammon.Instance.goToScreen(3);
+        }
+      }
+    };
+    doubleDialog.text("CPU is asking for double. Accept?");
+    doubleDialog.button("No", 0);
+    doubleDialog.button("Yes", 1);
+    doubleDialog.setWidth(boardbg.getWidth()/2);
+    doubleDialog.setHeight(boardbg.getHeight()/2);
+    doubleDialog.setX(board.getX() + (boardbg.getWidth()/2));
+    doubleDialog.setY(board.getY() + (boardbg.getHeight()/2));
   }
 
 
