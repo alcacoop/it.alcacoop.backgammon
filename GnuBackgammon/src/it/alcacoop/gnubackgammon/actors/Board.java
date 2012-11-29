@@ -5,6 +5,7 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
@@ -120,8 +121,11 @@ public class Board extends Group {
         System.out.println("RESULT: "+object);
         if(object.equals(1)) { //double has been accepted
           System.out.println("DOUBLE ACCEPTED");
-          fsm.processEvent(Events.ROLL_DICE, null);
           //TODO: update cube info
+          MatchState.fCubeOwner = 0; //TODO: 0 should be PC, check
+          MatchState.nCube = MatchState.nCube*2;
+          GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+          fsm.processEvent(Events.ROLL_DICE, null);
         } else if(object.equals(0)) { //double not accepted
           System.out.println("DOUBLE NOT ACCEPTED");
           GnuBackgammon.Instance.goToScreen(3);
