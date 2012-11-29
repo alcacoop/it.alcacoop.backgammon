@@ -21,6 +21,7 @@ public class UpdateMSCubeInfoAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.UpdateMSCubeInfo(nCube, fCubeOwner);
     Gdx.app.postRunnable(new Runnable() {
       @Override

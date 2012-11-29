@@ -19,6 +19,7 @@ public class SetMatchToAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.SetMatchTo(nMatchTo);
     Gdx.app.postRunnable(new Runnable() {
       @Override

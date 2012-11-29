@@ -19,6 +19,7 @@ public class AcceptResignAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     final int ret = GnubgAPI.AcceptResign(r);
     Gdx.app.postRunnable(new Runnable() {
       @Override

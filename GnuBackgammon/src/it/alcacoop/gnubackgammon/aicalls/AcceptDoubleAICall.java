@@ -17,6 +17,7 @@ public class AcceptDoubleAICall implements Runnable {
   
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     final int ret = GnubgAPI.AcceptDouble();
     Gdx.app.postRunnable(new Runnable() {
       @Override

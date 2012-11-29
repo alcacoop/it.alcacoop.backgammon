@@ -47,6 +47,8 @@ public class BaseFSM implements Context {
     STARTING_SIMULATION,
     START_GAME,
     SIMULATED_TURN,
+    BUTTON_CLICKED,
+    CHECKER_RESETTED,
     STOPPED
   }
 
@@ -54,7 +56,7 @@ public class BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("FSM STOPPED");
+        System.out.println("BASE FSM STOPPED");
       }
     };
     

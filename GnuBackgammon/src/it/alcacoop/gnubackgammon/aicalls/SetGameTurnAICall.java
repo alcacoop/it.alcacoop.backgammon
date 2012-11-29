@@ -21,6 +21,7 @@ public class SetGameTurnAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.SetGameTurn(fTurn, fMove);
     Gdx.app.postRunnable(new Runnable() {
       @Override

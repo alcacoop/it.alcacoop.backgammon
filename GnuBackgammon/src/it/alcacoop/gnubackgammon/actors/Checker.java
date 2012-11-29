@@ -79,7 +79,12 @@ public class Checker extends Group {
       setY(_p.y);
     }
     else {
-      act = Actions.sequence(Actions.moveTo(_p.x, _p.y, t));
+      act = Actions.sequence(Actions.moveTo(_p.x, _p.y, t),Actions.run(new Runnable() {
+        @Override
+        public void run() {
+          GnuBackgammon.fsm.processEvent(Events.CHECKER_RESETTED, null);
+        }
+      }));
       addAction(act);
     }
     

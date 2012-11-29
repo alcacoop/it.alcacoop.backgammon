@@ -20,6 +20,7 @@ public class EvaluateBestMoveAICall implements Runnable {
   
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.EvaluateBestMove(dices, moves);
     Gdx.app.postRunnable(new Runnable() {
       @Override

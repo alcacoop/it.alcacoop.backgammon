@@ -18,6 +18,7 @@ public class RollDiceAICall implements Runnable {
   
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.RollDice(dices);
     Gdx.app.postRunnable(new Runnable() {
       @Override

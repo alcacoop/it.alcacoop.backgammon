@@ -21,6 +21,7 @@ public class SetMatchScoreAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.SetMatchScore(AIScore, HumanScore);
     Gdx.app.postRunnable(new Runnable() {
       @Override

@@ -15,7 +15,7 @@ public class AIThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            pull().run();
+          pull().run();
         }
     }
     
@@ -32,7 +32,4 @@ public class AIThread extends Thread {
       return queue.pop();
     }
     
-    public synchronized static void reset() {
-      queue.clear();
-    }
 }

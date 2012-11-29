@@ -21,6 +21,7 @@ public class SetBoardAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     GnubgAPI.SetBoard(b1, b2);
     Gdx.app.postRunnable(new Runnable() {
       @Override

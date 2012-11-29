@@ -24,6 +24,7 @@ public class GenerateMovesAICall implements Runnable {
 
   @Override
   public void run() {
+    if (fsm != GnuBackgammon.fsm) return;
     final int mv[][];
     
     if (MatchState.fMove==1)

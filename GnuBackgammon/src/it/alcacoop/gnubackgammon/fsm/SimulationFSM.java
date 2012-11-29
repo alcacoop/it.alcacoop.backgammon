@@ -16,14 +16,15 @@ public class SimulationFSM extends BaseFSM implements Context {
 
   public enum States implements State {
     STARTING_SIMULATION {
+      int resetted;
+      
       public void enterState(Context ctx) {
+        resetted = 0;
         ctx.setMoves(0);
         ctx.board().initBoard(2);
         MatchState.fMove = 0;
         MatchState.fTurn = 0;
 
-        final Context c = ctx;
-        
         ctx.board().addAction(Actions.sequence(
             Actions.delay(0.8f),
             Actions.run(new Runnable() {
@@ -31,20 +32,26 @@ public class SimulationFSM extends BaseFSM implements Context {
               public void run() {
                 GnuBackgammon.Instance.board.animate(0.6f);
               }
-            }), 
-            Actions.delay(0.8f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                c.state(States.SIMULATED_TURN);
-                c.board().switchTurn();  
-              }
-            })
+            }) 
         ));
       };
+     
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt==Events.CHECKER_RESETTED) {
+          resetted++;
+          if (resetted==30) ctx.state(SIMULATED_TURN);
+          return true;
+        }
+        return false;
+      }
     },
     
     SIMULATED_TURN {
+      @Override
+      public void enterState(Context ctx) {
+        ctx.board().switchTurn();
+      }
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
@@ -87,8 +94,15 @@ public class SimulationFSM extends BaseFSM implements Context {
           ctx.state(States.STARTING_SIMULATION);
         } else {
           ctx.state(States.SIMULATED_TURN);
-          ctx.board().switchTurn();
         }
+      }
+    },
+    
+    STOPPED {
+      @Override
+      public void enterState(Context ctx) {
+        System.out.println("SIMULATION FSM STOPPED");
+        ctx.board().initBoard();
       }
     };
     
@@ -109,6 +123,9 @@ public class SimulationFSM extends BaseFSM implements Context {
     state(States.STARTING_SIMULATION);
   }
 
+  public void stop() {
+    state(States.STOPPED);
+  }
   
   public Board board() {
     return board;
