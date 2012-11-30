@@ -138,12 +138,12 @@ public class Checker extends Group {
           @Override
           public void run() {
             if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
-            if (!board.checkHit())
-              if (fsm==GnuBackgammon.fsm) fsm.processEvent(Events.PERFORMED_MOVE, null);
-            label.setX(img.getWidth()/2-label.getWidth()/2);
-            label.setY(img.getHeight()/2-label.getHeight()/2);
-            if ((x<24)&&(d>0))
-              board.dices.disable(d);
+            if (fsm==GnuBackgammon.fsm) {
+              if (!board.checkHit()) fsm.processEvent(Events.PERFORMED_MOVE, null);
+              label.setX(img.getWidth()/2-label.getWidth()/2);
+              label.setY(img.getHeight()/2-label.getHeight()/2);
+              if ((x<24)&&(d>0)) board.dices.disable(d);
+            }
           }
         })
         );
