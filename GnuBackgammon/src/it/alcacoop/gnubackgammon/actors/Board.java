@@ -5,7 +5,6 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
@@ -118,39 +117,36 @@ public class Board extends Group {
         AICalls.RollDice();
       }
     });
-    rollBtn.setX(board.getX() + jp.asFloat("dice0", 0));
-    rollBtn.setY(board.getY() + boardbg.getHeight()/2);
+    rollBtn.setWidth(boardbg.getWidth()/5);
+    rollBtn.setHeight(boardbg.getHeight()/9);
+    rollBtn.setX(board.getX() + jp.asFloat("dice0", 0)-rollBtn.getWidth()/2);
+    rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
     
-    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin);
+    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        GnuBackgammon.fsm.processEvent(Events.CONTINUE, null);
+      }
+    };
     winDialog.button("Continue");
-    winDialog.setX(board.getX() + (boardbg.getWidth()/2));
-    winDialog.setY(board.getY() + (boardbg.getHeight()/2));
+    winDialog.setWidth(boardbg.getWidth()/2);
+    winDialog.setHeight(boardbg.getHeight()/4*3);
+    winDialog.setX(board.getX() + (boardbg.getWidth()-winDialog.getWidth())/2);
+    winDialog.setY(board.getY() + (boardbg.getHeight()-winDialog.getHeight())/2);
     
     doubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
-        System.out.println("RESULT: "+object);
-        if(object.equals(1)) { //double has been accepted
-          System.out.println("DOUBLE ACCEPTED");
-          //TODO: update cube info
-          MatchState.fCubeOwner = 0; //TODO: 0 should be PC, check
-          MatchState.nCube = MatchState.nCube*2;
-          GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
-          fsm.processEvent(Events.ROLL_DICE, null);
-        } else if(object.equals(0)) { //double not accepted
-          System.out.println("DOUBLE NOT ACCEPTED");
-          GnuBackgammon.Instance.goToScreen(3);
-        }
+        GnuBackgammon.fsm.processEvent(Events.DOUBLING_RESPONSE, object);
       }
     };
     doubleDialog.text("CPU is asking for double. Accept?");
     doubleDialog.button("No", 0);
     doubleDialog.button("Yes", 1);
-    doubleDialog.setWidth(boardbg.getWidth()/2);
-    doubleDialog.setHeight(boardbg.getHeight()/2);
-    doubleDialog.setX(board.getX() + (boardbg.getWidth()/2));
-    doubleDialog.setY(board.getY() + (boardbg.getHeight()/2));
-
+    doubleDialog.setWidth(boardbg.getWidth()/3);
+    doubleDialog.setHeight(boardbg.getHeight()/3);
+    doubleDialog.setX(board.getX() + (boardbg.getWidth()-doubleDialog.getWidth())/2);
+    doubleDialog.setY(board.getY() + (boardbg.getHeight()-doubleDialog.getHeight())/2);
   }
 
 
@@ -479,6 +475,10 @@ public class Board extends Group {
   
   public void thinking(boolean v) {
     thinking.setVisible(v);
+  }
+  
+  public int gameScore() {
+    return 1;
   }
   
 } //END CLASS
