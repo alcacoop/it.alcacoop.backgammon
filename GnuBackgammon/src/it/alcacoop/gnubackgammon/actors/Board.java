@@ -3,7 +3,9 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
@@ -11,9 +13,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.Stack;
 
@@ -41,9 +47,16 @@ public class Board extends Group {
   public BoardImage board;
   public JSONProperties jp;
 
+  public TextButton rollBtn;
+  public TextButton resignBtn;
+  
+  public Dialog winDialog;
+  public Dialog doubleDialog;
+
   private BaseFSM fsm;
   
   public Board() {
+    
     
     jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
@@ -97,6 +110,47 @@ public class Board extends Group {
     thinking.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
     thinking.setVisible(false);
     addActor(thinking);
+
+    rollBtn = new TextButton("Roll", GnuBackgammon.skin);
+    rollBtn.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        AICalls.RollDice();
+      }
+    });
+    rollBtn.setX(board.getX() + jp.asFloat("dice0", 0));
+    rollBtn.setY(board.getY() + boardbg.getHeight()/2);
+    
+    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin);
+    winDialog.button("Continue");
+    winDialog.setX(board.getX() + (boardbg.getWidth()/2));
+    winDialog.setY(board.getY() + (boardbg.getHeight()/2));
+    
+    doubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        System.out.println("RESULT: "+object);
+        if(object.equals(1)) { //double has been accepted
+          System.out.println("DOUBLE ACCEPTED");
+          //TODO: update cube info
+          MatchState.fCubeOwner = 0; //TODO: 0 should be PC, check
+          MatchState.nCube = MatchState.nCube*2;
+          GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+          fsm.processEvent(Events.ROLL_DICE, null);
+        } else if(object.equals(0)) { //double not accepted
+          System.out.println("DOUBLE NOT ACCEPTED");
+          GnuBackgammon.Instance.goToScreen(3);
+        }
+      }
+    };
+    doubleDialog.text("CPU is asking for double. Accept?");
+    doubleDialog.button("No", 0);
+    doubleDialog.button("Yes", 1);
+    doubleDialog.setWidth(boardbg.getWidth()/2);
+    doubleDialog.setHeight(boardbg.getHeight()/2);
+    doubleDialog.setX(board.getX() + (boardbg.getWidth()/2));
+    doubleDialog.setY(board.getY() + (boardbg.getHeight()/2));
+
   }
 
 
@@ -357,6 +411,7 @@ public class Board extends Group {
     if (moves!=null) moves.clear();
     if (playedMoves!=null) playedMoves.clear();
     points.reset();
+
   }
   
   public void animate(float t) {

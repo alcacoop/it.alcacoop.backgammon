@@ -25,7 +25,7 @@ interface State {
 public class BaseFSM implements Context {
 
   private int nMoves; 
-  
+
   public enum Events {
     ACCEPT_DOUBLE,
     ACCEPT_RESIGN,
@@ -49,6 +49,7 @@ public class BaseFSM implements Context {
     SIMULATED_TURN,
     BUTTON_CLICKED,
     CHECKER_RESETTED,
+    DOUBLING_RESPONSE,
     STOPPED
   }
 
@@ -59,7 +60,7 @@ public class BaseFSM implements Context {
         System.out.println("BASE FSM STOPPED");
       }
     };
-    
+
     //DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
     public void enterState(Context ctx) {}
@@ -76,18 +77,18 @@ public class BaseFSM implements Context {
   public void stop() {
     state(States.STOPPED);
   }
-  
+
   public void restart() {
     stop();
     start();
   }
-  
+
   public boolean processEvent(Events evt, Object params) {
-//    System.out.println("PROCESS EVENT: "+evt);
-//    System.out.println("\tSRC STATE: "+state());
+    //    System.out.println("PROCESS EVENT: "+evt);
+    //    System.out.println("\tSRC STATE: "+state());
     System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
-//    System.out.println("\tDST STATE: "+state());
+    //    System.out.println("\tDST STATE: "+state());
     return res;
   }
 
@@ -102,15 +103,15 @@ public class BaseFSM implements Context {
     if(currentState != null)
       currentState.enterState(this);        
   }
-  
+
   public boolean isStopped() {
     return currentState == States.STOPPED;
   }
-  
+
   public Board board() {
     return null;
   }
-  
+
   @Override
   public int getMoves() {
     return nMoves;
@@ -119,5 +120,5 @@ public class BaseFSM implements Context {
   public void setMoves(int n) {
     nMoves = n;
   }
-  
+
 }
