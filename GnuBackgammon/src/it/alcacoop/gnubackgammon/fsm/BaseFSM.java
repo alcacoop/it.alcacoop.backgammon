@@ -50,6 +50,7 @@ public class BaseFSM implements Context {
     BUTTON_CLICKED,
     CHECKER_RESETTED,
     DOUBLING_RESPONSE,
+    CONTINUE,
     STOPPED
   }
 
