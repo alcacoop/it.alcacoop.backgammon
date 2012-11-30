@@ -49,6 +49,7 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton resignBtn;
   
+  public Label winLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
 
@@ -128,6 +129,9 @@ public class Board extends Group {
         GnuBackgammon.fsm.processEvent(Events.CONTINUE, null);
       }
     };
+    
+    winLabel = new Label("CPU WIN!", GnuBackgammon.skin);
+    winDialog.text(winLabel);
     winDialog.button("Continue");
     winDialog.setWidth(boardbg.getWidth()/2);
     winDialog.setHeight(boardbg.getHeight()/4*3);
@@ -193,6 +197,8 @@ public class Board extends Group {
   }
   public void initBoard() {
     abandon();
+    removeActor(winDialog);
+    //doubleDialog.hide();
     
     int i0 = 0;
     int i1 = 0;

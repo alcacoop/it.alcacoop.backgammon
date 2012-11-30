@@ -29,7 +29,7 @@ public class GameFSM extends BaseFSM implements Context {
         case ASK_FOR_DOUBLING:
           System.out.println("I'D LIKE TO DOUBLE... "+params);
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
-            ctx.board().addActor(ctx.board().doubleDialog);
+            ctx.board().doubleDialog.show(ctx.board().getStage());
           } else
             AICalls.RollDice();
           break;
@@ -157,21 +157,24 @@ public class GameFSM extends BaseFSM implements Context {
     CHECK_END_MATCH {
       @Override
       public void enterState(Context ctx) {
+        int game_score = MatchState.nCube*ctx.board().gameScore();
+        MatchState.anScore[MatchState.fMove]+=game_score;
+        System.out.println("DENTRO: "+MatchState.anScore[MatchState.fMove]);
         if(MatchState.fMove==1)
-          ctx.board().winDialog.text("CPU WON!");
+          ctx.board().winLabel.setText("CPU WON!");
         else
-          ctx.board().winDialog.text("HUMAN WON!");
-        ctx.board().addActor(ctx.board().winDialog);
+          ctx.board().winLabel.setText("HUMAN WON!");
+        
+        ctx.board().winDialog.show(ctx.board().getStage());
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.CONTINUE) {
-          int game_score = MatchState.nCube*ctx.board().gameScore();
-          if (game_score>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
+          
+          if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
-            MatchState.anScore[MatchState.fMove]+=game_score;
             ctx.state(OPENING_ROLL);
           }
         }
@@ -184,6 +187,8 @@ public class GameFSM extends BaseFSM implements Context {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        MatchState.fCubeOwner = -1;
+        MatchState.nCube = 1;
         ctx.board().initBoard();
         AICalls.RollDice();
       }

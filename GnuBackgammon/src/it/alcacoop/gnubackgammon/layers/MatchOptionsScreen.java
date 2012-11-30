@@ -243,7 +243,8 @@ public class MatchOptionsScreen implements Screen {
     MatchState.nMatchTo = Integer.parseInt(sMatchTo);
     MatchState.fCrawford = sCrawford.equals("Yes")?1:0; //REGOLA DI CRAWFORD
     MatchState.bgv = sGameType.equals("Backgammon")?0:1; //GAME TYPE
-    
+    MatchState.anScore[0] = 0;
+    MatchState.anScore[1] = 0;
   }
   
   @Override
