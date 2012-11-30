@@ -11,12 +11,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+
 import java.util.Stack;
 
 
 
 public class Board extends Group {
+  
+  private Label thinking;
   
   public int[][] _board;
   public int[] bearedOff = {0,0};
@@ -39,7 +44,6 @@ public class Board extends Group {
   private BaseFSM fsm;
   
   public Board() {
-    
     
     jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
@@ -86,6 +90,13 @@ public class Board extends Group {
     
     dices = new Dices(this);
     addActor(dices);
+    
+    thinking = new Label("... Thinking ...", GnuBackgammon.skin);
+    thinking.setX(getX()+(boardbg.getWidth()-thinking.getWidth())/2);
+    thinking.setY(getY()+(boardbg.getHeight()-thinking.getHeight())/2);
+    thinking.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
+    thinking.setVisible(false);
+    addActor(thinking);
   }
 
 
@@ -409,6 +420,10 @@ public class Board extends Group {
   @Override
   public void setHeight(float height) {
     setScaleY(height/boardbg.getHeight());
+  }
+  
+  public void thinking(boolean v) {
+    thinking.setVisible(v);
   }
   
 } //END CLASS

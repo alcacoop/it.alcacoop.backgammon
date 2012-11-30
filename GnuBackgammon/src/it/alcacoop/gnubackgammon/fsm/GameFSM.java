@@ -32,9 +32,11 @@ public class GameFSM extends BaseFSM implements Context {
           case ROLL_DICE:
             int dices[] = (int[])params;
             ctx.board().setDices(dices[0], dices[1]);
+            ctx.board().thinking(true);
             AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
+            ctx.board().thinking(false);
             int moves[] = (int[])params;
             moves = (int[])params;
             ctx.board().setMoves(moves);
@@ -177,6 +179,7 @@ public class GameFSM extends BaseFSM implements Context {
               AICalls.GenerateMoves(ctx.board(), d[0], d[1]);
             } else {
               ctx.state(CPU_TURN);
+              ctx.board().thinking(true);
               AICalls.EvaluateBestMove(ctx.board().dices.get());
             }
             break;
