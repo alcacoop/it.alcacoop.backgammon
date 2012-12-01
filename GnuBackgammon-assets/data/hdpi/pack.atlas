@@ -5,35 +5,35 @@ filter: Linear,Linear
 repeat: none
 boardbg
   rotate: false
-  xy: 1, 1380
+  xy: 1, 1390
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 1, 758
+  xy: 1, 768
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 bg
   rotate: false
-  xy: 1, 131
+  xy: 1, 141
   size: 1000, 625
   orig: 1000, 625
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 1105, 1716
+  xy: 1105, 1726
   size: 75, 284
   orig: 75, 284
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 1, 59
+  xy: 1, 69
   size: 70, 70
   orig: 70, 70
   offset: 0, 0
@@ -41,43 +41,43 @@ back
 d1
   rotate: false
   xy: 1003, 700
-  size: 56, 56
-  orig: 56, 56
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 d2
   rotate: false
   xy: 1105, 1658
-  size: 56, 56
-  orig: 56, 56
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 d4
   rotate: false
   xy: 1182, 1944
-  size: 56, 56
-  orig: 56, 56
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 d5
   rotate: false
   xy: 1, 1
-  size: 56, 56
-  orig: 56, 56
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 d6
   rotate: false
   xy: 73, 73
-  size: 56, 56
-  orig: 56, 56
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 1003, 642
-  size: 56, 56
-  orig: 56, 56
+  xy: 1003, 632
+  size: 66, 66
+  orig: 66, 66
   offset: 0, 0
   index: -1
 ch
@@ -96,7 +96,7 @@ cb
   index: -1
 cw
   rotate: false
-  xy: 1240, 1956
+  xy: 1250, 1966
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
