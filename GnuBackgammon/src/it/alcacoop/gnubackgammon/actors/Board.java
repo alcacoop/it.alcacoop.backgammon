@@ -398,8 +398,10 @@ public class Board extends Group {
   }
   
   public void undoMove() {
-    if (playedMoves.size()>0)
+    if (playedMoves.size()>0) {
       playedMoves.pop().undo();
+      updatePInfo();
+    }
   }
   
   public void switchTurn() {
