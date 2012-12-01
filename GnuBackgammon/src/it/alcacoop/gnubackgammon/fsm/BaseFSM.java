@@ -51,7 +51,8 @@ public class BaseFSM implements Context {
     CHECKER_RESETTED,
     DOUBLING_RESPONSE,
     CONTINUE,
-    STOPPED
+    STOPPED,
+    CPU_DOUBLING_RESPONSE
   }
 
   public enum States implements State {

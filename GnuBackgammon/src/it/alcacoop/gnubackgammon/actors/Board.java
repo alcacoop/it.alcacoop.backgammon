@@ -48,6 +48,7 @@ public class Board extends Group {
   public JSONProperties jp;
 
   public TextButton rollBtn;
+  public TextButton doubleBtn;
   public TextButton resignBtn;
   
   public Label winLabel;
@@ -122,6 +123,18 @@ public class Board extends Group {
     rollBtn.setHeight(boardbg.getHeight()/9);
     rollBtn.setX(board.getX() + jp.asFloat("dice0", 0)-rollBtn.getWidth()/2);
     rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
+
+    doubleBtn = new TextButton("Double", GnuBackgammon.skin);
+    doubleBtn.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
+      }
+    });
+    doubleBtn.setWidth(boardbg.getWidth()/5);
+    doubleBtn.setHeight(boardbg.getHeight()/9);
+    doubleBtn.setX(board.getX() + jp.asFloat("dice1", 0)-doubleBtn.getWidth()/2);
+    doubleBtn.setY(board.getY() + boardbg.getHeight()/2-doubleBtn.getHeight()/2);
     
     winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
       @Override

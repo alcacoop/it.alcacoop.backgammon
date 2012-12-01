@@ -84,9 +84,25 @@ public class GameFSM extends BaseFSM implements Context {
         case SET_BOARD:
           ctx.board().dices.clear();
           ctx.board().addActor(ctx.board().rollBtn);
+          if(MatchState.fCubeOwner != 1) {
+            ctx.board().addActor(ctx.board().doubleBtn);
+          }
+          break;
+        case CPU_DOUBLING_RESPONSE:
+          if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE
+            System.out.println("CPU ACCEPTED MY DOUBLE");
+            MatchState.fCubeOwner = 1;
+            MatchState.nCube = MatchState.nCube*2;
+            GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+            ctx.board().removeActor(ctx.board().doubleBtn);
+          } else { //CPU HAS NOT ACCEPTED MY DOUBLE
+            System.out.println("CPU HAS NOT ACCEPTED MY DOUBLE");
+            ctx.state(CHECK_END_MATCH);
+          }
           break;
         case ROLL_DICE:
           ctx.board().removeActor(ctx.board().rollBtn);
+          ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           ctx.board().setDices(dices[0], dices[1]);
