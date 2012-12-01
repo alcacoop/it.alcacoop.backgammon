@@ -48,8 +48,8 @@ public class Dices extends Group {
   public Dices(Board _b) {
     last = new ArrayList<_dice>();
     b = _b;
-    x0 = b.jp.asFloat("dice0", 0);
-    x1 = b.jp.asFloat("dice1", 0);
+    x0 = GnuBackgammon.Instance.jp.asFloat("dice0", 0);
+    x1 = GnuBackgammon.Instance.jp.asFloat("dice1", 0);
     y = b.getHeight()/2;
     
     addListener(new InputListener() {

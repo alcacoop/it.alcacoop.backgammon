@@ -5,98 +5,140 @@ filter: Linear,Linear
 repeat: none
 boardbg
   rotate: false
-  xy: 1, 1390
+  xy: 1, 1402
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 1, 768
+  xy: 1, 780
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 bg
   rotate: false
-  xy: 1, 141
+  xy: 1, 153
   size: 1000, 625
   orig: 1000, 625
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 1105, 1726
+  xy: 1105, 1738
   size: 75, 284
   orig: 75, 284
   offset: 0, 0
   index: -1
+c8
+  rotate: false
+  xy: 1, 77
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+c32
+  rotate: false
+  xy: 1003, 704
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+c16
+  rotate: false
+  xy: 1105, 1662
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+c4
+  rotate: false
+  xy: 1182, 1948
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+c2
+  rotate: false
+  xy: 1, 1
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+c64
+  rotate: false
+  xy: 77, 77
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
 back
   rotate: false
-  xy: 1, 69
+  xy: 1003, 632
   size: 70, 70
   orig: 70, 70
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 1003, 700
-  size: 66, 66
-  orig: 66, 66
+  xy: 1105, 1596
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 1105, 1658
-  size: 66, 66
-  orig: 66, 66
+  xy: 1182, 1882
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 1182, 1944
-  size: 66, 66
-  orig: 66, 66
+  xy: 1258, 1958
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 1, 1
-  size: 66, 66
-  orig: 66, 66
+  xy: 77, 11
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 73, 73
-  size: 66, 66
-  orig: 66, 66
+  xy: 153, 87
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 1003, 632
-  size: 66, 66
-  orig: 66, 66
+  xy: 1003, 566
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 1105, 1612
+  xy: 1105, 1550
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 1182, 1898
+  xy: 1182, 1836
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 1250, 1966
+  xy: 1324, 1978
   size: 44, 44
   orig: 44, 44
   offset: 0, 0

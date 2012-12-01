@@ -8,8 +8,6 @@ import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
-import it.alcacoop.gnubackgammon.utils.JSONProperties;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -28,6 +26,8 @@ import java.util.Stack;
 public class Board extends Group {
   
   private Label thinking;
+  private DoublingCube doublingCube;
+  private BaseFSM fsm;
   
   public int[][] _board;
   public int[] bearedOff = {0,0};
@@ -45,22 +45,17 @@ public class Board extends Group {
   
   private Image boardbg;
   public BoardImage board;
-  public JSONProperties jp;
-
   public TextButton rollBtn;
   public TextButton resignBtn;
   
   public Label winLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
-
-  private BaseFSM fsm;
+  
+  
   
   public Board() {
-    
-    jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
-    
     moves = new Stack<Move>();
     playedMoves = new Stack<Move>();
     availableMoves = new AvailableMoves(this);
@@ -77,14 +72,14 @@ public class Board extends Group {
     pos = new Vector2[25];
     for (int i=0; i<24;i++) {
       pos[i] = new Vector2();
-      pos[i].x = board.getX() + jp.asFloat("pos"+i, 0) + jp.asFloat("pos", 0)/2;
+      pos[i].x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos"+i, 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
       if (i<12)
-        pos[i].y = board.getY() + jp.asFloat("down", 0);
+        pos[i].y = board.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0);
       else
-        pos[i].y = board.getY() + jp.asFloat("up", 0);
+        pos[i].y = board.getY() + GnuBackgammon.Instance.jp.asFloat("up", 0);
     }
     pos[24] = new Vector2();  //HITTED
-    pos[24].x = board.getX() + jp.asFloat("pos24", 0) + jp.asFloat("pos", 0);
+    pos[24].x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos24", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0);
     pos[24].y = board.getY();
 
     for (int i = 0; i<15; i++) {
@@ -120,7 +115,7 @@ public class Board extends Group {
     });
     rollBtn.setWidth(boardbg.getWidth()/5);
     rollBtn.setHeight(boardbg.getHeight()/9);
-    rollBtn.setX(board.getX() + jp.asFloat("dice0", 0)-rollBtn.getWidth()/2);
+    rollBtn.setX(board.getX() + GnuBackgammon.Instance.jp.asFloat("dice0", 0)-rollBtn.getWidth()/2);
     rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
     
     winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
@@ -151,6 +146,9 @@ public class Board extends Group {
     doubleDialog.setHeight(boardbg.getHeight()/3);
     doubleDialog.setX(board.getX() + (boardbg.getWidth()-doubleDialog.getWidth())/2);
     doubleDialog.setY(board.getY() + (boardbg.getHeight()-doubleDialog.getHeight())/2);
+    
+    doublingCube = new DoublingCube(this);
+    addActor(doublingCube);
   }
 
 
@@ -162,19 +160,19 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = board.getX() + jp.asFloat("pos_bo", 0) + jp.asFloat("pos", 0)/2;
+        ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
         if (color==0)
-          ret.y = board.getY() + jp.asFloat("down", 0) + jp.asFloat("pos", 0)*y;
+          ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)*y;
         else
-          ret.y = board.getY() + jp.asFloat("up", 0) - cdim - jp.asFloat("pos", 0)*y;
+          ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("up", 0) - cdim - GnuBackgammon.Instance.jp.asFloat("pos", 0)*y;
         break;
         
       case 24: //BAR
-        ret.x = pos[x].x - jp.asFloat("pos", 0)/2;
+        ret.x = pos[x].x - GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
         if (color==0)
-          ret.y = board.getY() + jp.asFloat("up", 0) - cdim*y - cdim*3/2;
+          ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("up", 0) - cdim*y - cdim*3/2;
         else
-          ret.y = board.getY() + jp.asFloat("down", 0) + cdim*y + cdim/2;
+          ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0) + cdim*y + cdim/2;
         break;
         
       default: //ON THE TABLE
@@ -494,6 +492,10 @@ public class Board extends Group {
   
   public int gameScore() {
     return 1;
+  }
+  
+  public void doubleCube() {
+    doublingCube.setValue(MatchState.nCube);
   }
   
 } //END CLASS

@@ -1,5 +1,6 @@
 package it.alcacoop.gnubackgammon.actors;
 
+import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
 import com.badlogic.gdx.math.Vector2;
@@ -27,23 +28,23 @@ public class Points extends Group {
     }
     
     bar[0] = new Point(24);
-    bar[0].setX(b.pos[24].x-b.jp.asFloat("pos", 0)/2);
-    bar[0].setY(b.getY()+b.jp.asFloat("up", 0)-bar[0].getHeight()-b.checkers[0][0].getWidth()/2);
+    bar[0].setX(b.pos[24].x - GnuBackgammon.Instance.jp.asFloat("pos", 0)/2);
+    bar[0].setY(b.getY() + GnuBackgammon.Instance.jp.asFloat("up", 0)-bar[0].getHeight()-b.checkers[0][0].getWidth()/2);
     addActor(bar[0]);
 
     bar[1] = new Point(24);
-    bar[1].setX(b.pos[24].x-b.jp.asFloat("pos", 0)/2);
-    bar[1].setY(b.getY()+b.jp.asFloat("down", 0)+b.checkers[0][0].getWidth()/2);
+    bar[1].setX(b.pos[24].x - GnuBackgammon.Instance.jp.asFloat("pos", 0)/2);
+    bar[1].setY(b.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0)+b.checkers[0][0].getWidth()/2);
     addActor(bar[1]);
     
     boff[0] = new Point(-1);
-    boff[0].setX(b.getX() + b.jp.asFloat("pos_bo", 0) + b.jp.asFloat("pos", 0)/2);
-    boff[0].setY(b.getY()+b.jp.asFloat("down", 0)-3);
+    boff[0].setX(b.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2);
+    boff[0].setY(b.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0)-3);
     addActor(boff[0]);
     
     boff[1] = new Point(-1);
-    boff[1].setX(b.getX() + b.jp.asFloat("pos_bo", 0) + b.jp.asFloat("pos", 0)/2);
-    boff[1].setY(b.getY()+b.jp.asFloat("up", 0)-boff[1].getHeight()+4);
+    boff[1].setX(b.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2);
+    boff[1].setY(b.getY() + GnuBackgammon.Instance.jp.asFloat("up", 0)-boff[1].getHeight()+4);
     addActor(boff[1]);
   }
   

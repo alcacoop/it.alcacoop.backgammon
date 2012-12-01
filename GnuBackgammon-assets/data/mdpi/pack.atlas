@@ -31,44 +31,86 @@ back
   orig: 70, 70
   offset: 0, 0
   index: -1
+c8
+  rotate: false
+  xy: 714, 469
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+c32
+  rotate: false
+  xy: 848, 971
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+c16
+  rotate: false
+  xy: 73, 67
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+c4
+  rotate: false
+  xy: 714, 417
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+c2
+  rotate: false
+  xy: 848, 919
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+c64
+  rotate: false
+  xy: 900, 971
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 d1
-  rotate: false
-  xy: 714, 475
-  size: 44, 44
-  orig: 44, 44
-  offset: 0, 0
-  index: -1
-d2
-  rotate: false
-  xy: 848, 977
-  size: 44, 44
-  orig: 44, 44
-  offset: 0, 0
-  index: -1
-d4
   rotate: false
   xy: 1, 1
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
+d2
+  rotate: false
+  xy: 125, 73
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
+d4
+  rotate: false
+  xy: 714, 371
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
 d5
   rotate: false
-  xy: 73, 73
+  xy: 848, 873
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 714, 429
+  xy: 900, 925
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 848, 931
+  xy: 952, 977
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
@@ -82,14 +124,14 @@ ch
   index: -1
 cb
   rotate: false
-  xy: 760, 491
+  xy: 766, 491
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 894, 993
+  xy: 171, 89
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

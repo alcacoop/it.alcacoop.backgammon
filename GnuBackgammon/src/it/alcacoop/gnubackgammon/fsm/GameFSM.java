@@ -39,6 +39,7 @@ public class GameFSM extends BaseFSM implements Context {
             MatchState.fCubeOwner = 0;
             MatchState.nCube = MatchState.nCube*2;
             GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+            ctx.board().doubleCube();
             AICalls.RollDice();
           } else { //double not accepted
             System.out.println("DOUBLE NOT ACCEPTED");
