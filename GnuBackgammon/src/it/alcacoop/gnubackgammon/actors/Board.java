@@ -52,8 +52,10 @@ public class Board extends Group {
   public TextButton resignBtn;
   
   public Label winLabel;
+  public Label resultLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
+  public Dialog cpuDoubleDialog;
 
   private BaseFSM fsm;
   
@@ -164,6 +166,15 @@ public class Board extends Group {
     doubleDialog.setHeight(boardbg.getHeight()/3);
     doubleDialog.setX(board.getX() + (boardbg.getWidth()-doubleDialog.getWidth())/2);
     doubleDialog.setY(board.getY() + (boardbg.getHeight()-doubleDialog.getHeight())/2);
+    
+    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
+    resultLabel = new Label("Double accepted", GnuBackgammon.skin);
+    cpuDoubleDialog.text(resultLabel);
+    cpuDoubleDialog.button("Continue");
+    cpuDoubleDialog.setWidth(boardbg.getWidth()/3);
+    cpuDoubleDialog.setHeight(boardbg.getHeight()/3);
+    cpuDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
+    cpuDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
   }
 
 

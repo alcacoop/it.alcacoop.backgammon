@@ -90,15 +90,16 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case CPU_DOUBLING_RESPONSE:
           if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE
-            System.out.println("CPU ACCEPTED MY DOUBLE");
+            ctx.board().resultLabel.setText("CPU accepted double");
             MatchState.fCubeOwner = 1;
             MatchState.nCube = MatchState.nCube*2;
             GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
             ctx.board().removeActor(ctx.board().doubleBtn);
           } else { //CPU HAS NOT ACCEPTED MY DOUBLE
-            System.out.println("CPU HAS NOT ACCEPTED MY DOUBLE");
+            ctx.board().resultLabel.setText("CPU has not accepted double");
             ctx.state(CHECK_END_MATCH);
           }
+          ctx.board().cpuDoubleDialog.show(ctx.board().getStage());
           break;
         case ROLL_DICE:
           ctx.board().removeActor(ctx.board().rollBtn);
