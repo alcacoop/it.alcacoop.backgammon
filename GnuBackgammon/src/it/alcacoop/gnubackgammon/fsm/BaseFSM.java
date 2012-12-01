@@ -85,11 +85,9 @@ public class BaseFSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    //    System.out.println("PROCESS EVENT: "+evt);
-    //    System.out.println("\tSRC STATE: "+state());
-    System.out.println("PROCESS EVENT: "+evt+" ON "+state());
+    //System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
-    //    System.out.println("\tDST STATE: "+state());
+    //System.out.println("\tDST STATE: "+state());
     return res;
   }
 

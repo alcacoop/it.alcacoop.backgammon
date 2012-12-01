@@ -27,7 +27,7 @@ public class DoublingCube extends Group {
         GnuBackgammon.Instance.jp.asFloat("pos", 0)/3.7f;
     center = b.getHeight()/2 -
         i.getHeight()/2 -
-        GnuBackgammon.Instance.jp.asFloat("pos", 0)/6;
+        GnuBackgammon.Instance.jp.asFloat("pos", 0)/5.5f;
     
     down = GnuBackgammon.Instance.jp.asFloat("down", 0) -
         i.getHeight()/2 +
@@ -43,11 +43,16 @@ public class DoublingCube extends Group {
 
   public void setValue(int v) {
     value = v;
+    if (v>64) value = 64;
     region = GnuBackgammon.atlas.findRegion("c"+value);
     TextureRegionDrawable d = new TextureRegionDrawable(region);
     i.setDrawable(d);
-    if (MatchState.fMove==0) setY(up);
+    if (MatchState.fCubeOwner == -1) setY(center);
+    else if (MatchState.fMove==0) setY(up);
     else setY(down);
   }
   
+  public void reset() {
+    setValue(64);
+  }
 }

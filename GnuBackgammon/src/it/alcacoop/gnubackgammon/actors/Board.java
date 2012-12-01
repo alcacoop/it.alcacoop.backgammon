@@ -196,7 +196,7 @@ public class Board extends Group {
   public void initBoard() {
     abandon();
     removeActor(winDialog);
-    //doubleDialog.hide();
+    doublingCube.reset();
     
     int i0 = 0;
     int i1 = 0;
