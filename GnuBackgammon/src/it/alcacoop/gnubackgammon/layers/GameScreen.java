@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.actors.PlayerInfo;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
   private TextureRegion bgRegion;
   private Table table;
   
-  private Label pl1, pl2;
+  private PlayerInfo pInfo[];
   private TextButton abandon;
   private TextButton resign;
   private TextButton undo;
@@ -41,9 +41,9 @@ public class GameScreen implements Screen {
     bgRegion = GnuBackgammon.atlas.findRegion("bg");
     board = GnuBackgammon.Instance.board;
     
-    
-    pl1 = new Label("PLAYER 1:", GnuBackgammon.skin);
-    pl2 = new Label("CPU ("+MatchState.currentLevel.toString()+"):", GnuBackgammon.skin);
+    pInfo = new PlayerInfo[2];
+    pInfo[0] = new PlayerInfo("CPU:", 1);
+    pInfo[1] = new PlayerInfo("PLAYER 1:", 0);
     
     abandon = new TextButton("ABANDON", GnuBackgammon.skin);
     abandon.addListener(new ClickListener(){
@@ -77,8 +77,9 @@ public class GameScreen implements Screen {
     table.clear();
     table.pad(5).setFillParent(true);
     
-    table.add(pl2).expand().pad(2).left();
-    table.add(pl1).expand().pad(2).left();
+    table.add(pInfo[0]);
+    table.add(pInfo[1]);
+    
     table.add(undo).fill().pad(2);
     table.add(resign).fill().pad(2);
     table.add(abandon).fill().pad(2);
@@ -87,6 +88,11 @@ public class GameScreen implements Screen {
     table.add(board).colspan(5).expand().fill();
   }
 
+  
+  public void updatePInfo() {
+    pInfo[0].update();
+    pInfo[1].update();
+  }
   
   @Override
   public void render(float delta) {
@@ -113,7 +119,9 @@ public class GameScreen implements Screen {
     initTable();
     board.initBoard();
     
-    pl2.setText("CPU ("+MatchState.currentLevel.toString()+"):");
+    pInfo[0].setName("CPU ("+MatchState.currentLevel.toString().substring(0, 3)+"):");
+    pInfo[0].update();
+    pInfo[1].update();
     Gdx.input.setInputProcessor(stage);
     
     table.setY(stage.getHeight());

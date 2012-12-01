@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
@@ -56,7 +57,6 @@ public class Board extends Group {
   private BaseFSM fsm;
   
   public Board() {
-    
     
     jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
@@ -377,9 +377,12 @@ public class Board extends Group {
   }
 
   public int getPIPS() {
+    return getPIPS(MatchState.fMove);
+  }
+  public int getPIPS(int color) {
     int pips = 0;
-    for (int i=0;i<_board[MatchState.fMove].length;i++) {
-      pips += _board[MatchState.fMove][i]*(i+1);
+    for (int i=0;i<_board[color].length;i++) {
+      pips += _board[color][i]*(i+1);
     }
     return pips;
   }
@@ -458,6 +461,10 @@ public class Board extends Group {
     }
   }
   
+  public void updatePInfo() {
+    GameScreen s = (GameScreen) GnuBackgammon.Instance.currentScreen;
+    s.updatePInfo();
+  }
   
   @Override
   public float getHeight() {

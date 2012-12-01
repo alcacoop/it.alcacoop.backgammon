@@ -58,6 +58,7 @@ public class GameFSM extends BaseFSM implements Context {
           ctx.board().setMoves(moves);
           break;
         case PERFORMED_MOVE:
+          ctx.board().updatePInfo();
           ctx.board().performNextMove();
           break;
         case NO_MORE_MOVES:
@@ -123,6 +124,7 @@ public class GameFSM extends BaseFSM implements Context {
           }
           break;
         case PERFORMED_MOVE:
+          ctx.board().updatePInfo();
           if (!ctx.board().availableMoves.hasMoves())
             processEvent(ctx, Events.NO_MORE_MOVES, null);
           break;
@@ -190,6 +192,7 @@ public class GameFSM extends BaseFSM implements Context {
         MatchState.fCubeOwner = -1;
         MatchState.nCube = 1;
         ctx.board().initBoard();
+        ctx.board().updatePInfo();
         AICalls.RollDice();
       }
 

@@ -13,6 +13,7 @@ import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -46,6 +47,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
   public Board board;
+  public Screen currentScreen;
   
   @Override
   public void create() {
@@ -91,22 +93,27 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void goToScreen(int s) {
     switch (s) {
       case 0:
+        currentScreen = welcomeScreen;
         setScreen(welcomeScreen);
         break;
         
       case 1:
+        currentScreen = optionsScreen;
         setScreen(optionsScreen);
         break;
       
       case 2:
+        currentScreen = menuScreen;
         setScreen(menuScreen);
         break;
       
       case 3:
+        currentScreen = matchOptionsScreen;
         setScreen(matchOptionsScreen);
         break;
         
       case 4:
+        currentScreen = gameScreen;
         setScreen(gameScreen);
         break;
     }
