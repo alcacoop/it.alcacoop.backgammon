@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -15,13 +17,19 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 
 
-public class MainActivity extends AndroidApplication {
+public class MainActivity extends AndroidApplication implements OnInitListener, NativeFunctions {
   
   private String data_dir;
+  TextToSpeech tts;
+  private boolean ready = false; 
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    
+    //tts = new TextToSpeech(getBaseContext(), this);
+    
+    
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
     
@@ -89,6 +97,16 @@ public class MainActivity extends AndroidApplication {
     while((read = in.read(buffer)) != -1){
       out.write(buffer, 0, read);
     }
+  }
+
+  @Override
+  public void onInit(int status) {
+    ready = true;
+  }
+  
+  public void speak(String s) {
+    if (ready)
+      tts.speak(s, TextToSpeech.QUEUE_ADD, null);
   }
   
 }
