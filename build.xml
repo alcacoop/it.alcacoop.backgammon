@@ -171,6 +171,10 @@
       <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/hdpi"/>
       <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/hdpi"/>
     </antcall>
+    <antcall target="call-texturepacker">
+      <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/skin"/>
+      <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/skin"/>
+    </antcall>
   </target>
 
   <target name="call-texturepacker">

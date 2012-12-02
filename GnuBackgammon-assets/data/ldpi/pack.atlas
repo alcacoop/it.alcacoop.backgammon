@@ -117,22 +117,22 @@ d3
   index: -1
 ch
   rotate: false
-  xy: 483, 896
-  size: 18, 18
-  orig: 18, 18
+  xy: 483, 894
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 179, 159
-  size: 18, 18
-  orig: 18, 18
+  xy: 179, 157
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 483, 876
-  size: 18, 18
-  orig: 18, 18
+  xy: 483, 872
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1

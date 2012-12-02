@@ -110,23 +110,23 @@ d3
   index: -1
 ch
   rotate: false
-  xy: 803, 816
-  size: 28, 28
-  orig: 28, 28
+  xy: 803, 814
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 766, 477
-  size: 28, 28
-  orig: 28, 28
+  xy: 766, 475
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 946, 979
-  size: 28, 28
-  orig: 28, 28
+  xy: 946, 977
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1
 
