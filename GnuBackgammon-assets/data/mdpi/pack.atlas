@@ -5,133 +5,126 @@ filter: Linear,Linear
 repeat: none
 bg
   rotate: false
-  xy: 1, 521
+  xy: 1, 507
   size: 800, 500
   orig: 800, 500
   offset: 0, 0
   index: -1
 boardbg
   rotate: false
-  xy: 1, 119
+  xy: 1, 105
   size: 711, 400
   orig: 711, 400
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 803, 860
+  xy: 803, 846
   size: 43, 161
   orig: 43, 161
   offset: 0, 0
   index: -1
-back
-  rotate: false
-  xy: 1, 47
-  size: 70, 70
-  orig: 70, 70
-  offset: 0, 0
-  index: -1
 c8
   rotate: false
-  xy: 714, 469
+  xy: 1, 53
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 848, 971
+  xy: 714, 455
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 73, 67
+  xy: 848, 957
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 714, 417
+  xy: 1, 1
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 848, 919
+  xy: 53, 53
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c64
   rotate: false
-  xy: 900, 971
+  xy: 714, 403
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 1, 1
+  xy: 848, 911
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 125, 73
+  xy: 900, 963
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 714, 371
+  xy: 53, 7
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 848, 873
+  xy: 105, 59
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 900, 925
+  xy: 714, 357
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 952, 977
+  xy: 848, 865
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 803, 830
+  xy: 803, 816
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 766, 491
+  xy: 766, 477
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 171, 89
+  xy: 946, 979
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

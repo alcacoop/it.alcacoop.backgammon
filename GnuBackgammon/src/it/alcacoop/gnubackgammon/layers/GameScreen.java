@@ -85,6 +85,7 @@ public class GameScreen implements Screen {
     table.add(abandon).fill().pad(2);
     
     table.row();
+    //TODO: PROPORTIONAL FILL COULD BE BETTER
     table.add(board).colspan(5).expand().fill();
   }
 

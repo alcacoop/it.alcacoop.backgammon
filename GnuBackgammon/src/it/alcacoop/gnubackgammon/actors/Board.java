@@ -154,7 +154,7 @@ public class Board extends Group {
 
   public Vector2 getBoardCoord(int color, int x, int y){
     if ((y>4)&&(x!=-1)) y=4;
-    float cdim = checkers[0][0].getWidth();
+    float cdim = checkers[0][0].getHeight();
     Vector2 ret = new Vector2();
 
     switch (x) {
@@ -286,10 +286,9 @@ public class Board extends Group {
   public void performNextMove(boolean nodelay) {
     try {
       Move m = moves.pop();
-      playedMoves.push(m);
-      m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
-      
       if (m!=null) {
+        playedMoves.push(m);
+        m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
         Checker c = getChecker(MatchState.fMove, m.from);
         if (nodelay) c.moveTo(m.to);
         else c.moveToDelayed(m.to, 0.2f);

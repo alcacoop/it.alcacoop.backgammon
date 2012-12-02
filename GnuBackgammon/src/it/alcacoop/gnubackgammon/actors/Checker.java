@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 
@@ -23,6 +24,8 @@ public class Checker extends Group {
   private Image img, imgh;
   private ParallelAction act;
   private BaseFSM fsm;
+  private final TextureRegionDrawable dr;
+  
   
   public int color = 0;
   public int boardX = -1; 
@@ -39,20 +42,23 @@ public class Checker extends Group {
     TextureRegion region;
     
     if (color==1) {//WHITE
-      region = GnuBackgammon.atlas.findRegion("cw");
+      region = new TextureRegion(GnuBackgammon.atlas.findRegion("cw"));
       LabelStyle styleBlack = new LabelStyle(GnuBackgammon.font, Color.BLACK);
       label = new Label("1", styleBlack);
       label.setColor(0,0,0,1);
     } else { 
-      region = GnuBackgammon.atlas.findRegion("cb");
+      region = new TextureRegion(GnuBackgammon.atlas.findRegion("cb"));
       LabelStyle styleWhite = new LabelStyle(GnuBackgammon.font, Color.WHITE);
       label = new Label("1", styleWhite);
       label.setColor(1,1,1,1);
     }
 
-    img = new Image(region);
+    dr = new TextureRegionDrawable(region);
+    img = new Image(dr);
+    
     label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
-    region = GnuBackgammon.atlas.findRegion("ch");
+    
+    region = new TextureRegion(GnuBackgammon.atlas.findRegion("ch"));
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
@@ -117,7 +123,7 @@ public class Checker extends Group {
     else //BEARED OFF
       y = board.bearedOff[color];
     
-    Vector2 _p = board.getBoardCoord(color, x, y);
+    final Vector2 _p = board.getBoardCoord(color, x, y);
     final int d = boardX-x;
     setPosition(x);
     
@@ -190,9 +196,23 @@ public class Checker extends Group {
     return img.getWidth();
   }
   
+  public float getHeight() {
+    return img.getHeight();
+  }
+  
   public void resetActions() {
     if (act!=null) //act.setActor(null);
       act.reset();
   }
-  
+
+  @Override
+  public void setY(float y) {
+    if ((y<board.getHeight()/2)&&(!dr.getRegion().isFlipY())) {
+      dr.getRegion().flip(false, true);
+    } 
+    if ((y>board.getHeight()/2)&&(dr.getRegion().isFlipY())) {
+      dr.getRegion().flip(false, true);
+    }
+    super.setY(y);
+  }
 }

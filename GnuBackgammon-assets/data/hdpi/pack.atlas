@@ -73,72 +73,65 @@ c64
   orig: 74, 74
   offset: 0, 0
   index: -1
-back
-  rotate: false
-  xy: 1003, 632
-  size: 70, 70
-  orig: 70, 70
-  offset: 0, 0
-  index: -1
 d1
   rotate: false
-  xy: 1105, 1596
+  xy: 1003, 638
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 1182, 1882
+  xy: 1105, 1596
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 1258, 1958
+  xy: 1182, 1882
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 77, 11
+  xy: 1258, 1958
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 153, 87
+  xy: 77, 11
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 1003, 566
+  xy: 153, 87
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 1105, 1550
+  xy: 1003, 592
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 1182, 1836
+  xy: 1105, 1550
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 1324, 1978
+  xy: 1182, 1836
   size: 44, 44
   orig: 44, 44
   offset: 0, 0

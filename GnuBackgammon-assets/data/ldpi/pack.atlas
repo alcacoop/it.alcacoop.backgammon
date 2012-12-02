@@ -5,140 +5,133 @@ filter: Linear,Linear
 repeat: none
 bg
   rotate: false
-  xy: 1, 713
+  xy: 1, 723
   size: 480, 300
   orig: 480, 300
   offset: 0, 0
   index: -1
 boardbg
   rotate: false
-  xy: 1, 441
+  xy: 1, 451
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 1, 169
+  xy: 1, 179
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 483, 906
+  xy: 483, 916
   size: 28, 107
   orig: 28, 107
   offset: 0, 0
   index: -1
-back
-  rotate: false
-  xy: 1, 97
-  size: 70, 70
-  orig: 70, 70
-  offset: 0, 0
-  index: -1
 c8
   rotate: false
-  xy: 1, 59
+  xy: 1, 141
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 73, 131
+  xy: 1, 103
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 1, 21
+  xy: 39, 141
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 111, 131
+  xy: 1, 65
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 149, 131
+  xy: 39, 103
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c64
   rotate: false
-  xy: 187, 131
+  xy: 77, 141
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 39, 65
+  xy: 1, 33
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 73, 99
+  xy: 1, 1
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 225, 137
+  xy: 39, 71
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 39, 33
+  xy: 77, 109
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 105, 99
+  xy: 115, 147
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 257, 137
+  xy: 147, 147
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 483, 886
+  xy: 483, 896
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 1, 1
+  xy: 179, 159
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 137, 111
+  xy: 483, 876
   size: 18, 18
   orig: 18, 18
   offset: 0, 0

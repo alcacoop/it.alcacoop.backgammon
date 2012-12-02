@@ -52,6 +52,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Screen currentScreen;
   public JSONProperties jp;
   
+  
   @Override
   public void create() {
     Instance = this;
@@ -136,6 +137,5 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     fsm.start();
   }
-  
   
 }

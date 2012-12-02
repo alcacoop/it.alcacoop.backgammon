@@ -261,7 +261,6 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    //state(States.OPENING_ROLL);
     GnuBackgammon.Instance.goToScreen(4);
   }
 
