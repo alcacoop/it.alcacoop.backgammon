@@ -44,7 +44,7 @@ public class MatchState {
   
   public static void setGameVariant(int type) {
     MatchState.bgv = type;
-    //TODO: DO THE SAME ON NATIVE SIDE
+    GnubgAPI.SetGameVariant(type);
   }
   
   public static void UpdateMSCubeInfo(int owner, int cubeValue) {
@@ -73,5 +73,15 @@ public class MatchState {
     MatchState.fMove = fMove;
     MatchState.fTurn = fTurn;
     AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
+  }
+  
+  public static void SetCubeUse(int fCubeUse) {
+    MatchState.fCubeUse = fCubeUse;
+    GnubgAPI.SetCubeUse(fCubeUse);
+  }
+  
+  public static void SetCrawford(int fCrawford) {
+    MatchState.fCrawford = fCrawford;
+    GnubgAPI.SetCrawford(fCrawford);
   }
 }
