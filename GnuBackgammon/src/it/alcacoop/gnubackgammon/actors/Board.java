@@ -172,7 +172,7 @@ public class Board extends Group {
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
 
- cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
+    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
     resultLabel = new Label("Double accepted", GnuBackgammon.skin);
     cpuDoubleDialog.text(resultLabel);
     cpuDoubleDialog.button("Continue");

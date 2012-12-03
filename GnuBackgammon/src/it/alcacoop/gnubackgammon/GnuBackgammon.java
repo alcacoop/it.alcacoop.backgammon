@@ -66,7 +66,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/uiskin.json"));
-    //skin2 = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
+    skin2 = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
     atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();

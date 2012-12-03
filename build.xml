@@ -171,10 +171,39 @@
       <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/hdpi"/>
       <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/hdpi"/>
     </antcall>
-    <antcall target="call-texturepacker">
+  </target>
+
+  <target name="regenerate-skin">
+    <antcall target="call-mkskin">
       <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/skin"/>
-      <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/skin"/>
+      <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data-src/skin/assembled"/>
     </antcall>
+    <copy file="${basedir}/GnuBackgammon-assets/data-src/skin/myskin.json" tofile="${basedir}/GnuBackgammon-assets/data/hdpi/myskin.json"/>
+    <copy todir="${basedir}/GnuBackgammon-assets/data/hdpi/">
+      <fileset dir="${basedir}/GnuBackgammon-assets/data-src/skin/assembled"></fileset>
+    </copy>
+    <copy file="${basedir}/GnuBackgammon-assets/data-src/skin/myskin.json" tofile="${basedir}/GnuBackgammon-assets/data/mdpi/myskin.json"/>
+    <copy todir="${basedir}/GnuBackgammon-assets/data/mdpi/">
+      <fileset dir="${basedir}/GnuBackgammon-assets/data-src/skin/assembled"></fileset>
+    </copy>
+    <copy file="${basedir}/GnuBackgammon-assets/data-src/skin/myskin.json" tofile="${basedir}/GnuBackgammon-assets/data/ldpi/myskin.json"/>
+    <copy todir="${basedir}/GnuBackgammon-assets/data/ldpi/">
+      <fileset dir="${basedir}/GnuBackgammon-assets/data-src/skin/assembled"></fileset>
+    </copy>
+  </target>
+
+  <target name="call-mkskin">
+    <echo message="param1=${param1}"/>
+    <java classname="com.badlogic.gdx.tools.imagepacker.TexturePacker2" fork="true" dir="${desktop.base_dir}">
+      <arg value="${texture_packer_src}"/>
+      <arg value="${texture_packer_dst}"/>
+      <arg value="myskin"/>
+      <classpath>
+        <pathelement location="${desktop.base_dir}/lib/gdx-tools.jar" />
+        <fileset file="${common.base_dir}/libs/*.jar" />
+        <fileset file="${desktop.base_dir}/libs/*.jar" />
+      </classpath>
+    </java>
   </target>
 
   <target name="call-texturepacker">

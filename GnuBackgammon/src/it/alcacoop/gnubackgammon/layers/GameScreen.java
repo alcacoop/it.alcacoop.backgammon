@@ -42,10 +42,10 @@ public class GameScreen implements Screen {
     board = GnuBackgammon.Instance.board;
     
     pInfo = new PlayerInfo[2];
-    pInfo[0] = new PlayerInfo("CPU:", 1);
-    pInfo[1] = new PlayerInfo("PLAYER 1:", 0);
+    pInfo[0] = new PlayerInfo("AI():", 1);
+    pInfo[1] = new PlayerInfo("PL1:", 0);
     
-    abandon = new TextButton("ABANDON", GnuBackgammon.skin);
+    abandon = new TextButton("ABANDON", GnuBackgammon.skin2);
     abandon.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -53,14 +53,14 @@ public class GameScreen implements Screen {
       }
     });
     
-    resign = new TextButton("RESIGN", GnuBackgammon.skin);
+    resign = new TextButton("RESIGN", GnuBackgammon.skin2);
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
       }
     });
     
-    undo = new TextButton("UNDO", GnuBackgammon.skin);
+    undo = new TextButton("UNDO", GnuBackgammon.skin2);
     undo.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -75,14 +75,13 @@ public class GameScreen implements Screen {
   
   private void initTable() {
     table.clear();
-    table.pad(5).setFillParent(true);
+    table.setFillParent(true);
     
-    table.add(pInfo[0]);
-    table.add(pInfo[1]);
-    
-    table.add(undo).fill().pad(2);
-    table.add(resign).fill().pad(2);
-    table.add(abandon).fill().pad(2);
+    table.add(pInfo[0]).minHeight(50).padTop(5);
+    table.add(pInfo[1]).height(50);
+    table.add(undo).fill().pad(2).height(50);
+    table.add(resign).fill().pad(2).height(50);
+    table.add(abandon).fill().pad(2).height(50);
     
     table.row();
     //TODO: PROPORTIONAL FILL COULD BE BETTER
@@ -120,7 +119,7 @@ public class GameScreen implements Screen {
     initTable();
     board.initBoard();
     
-    pInfo[0].setName("CPU ("+MatchState.currentLevel.toString().substring(0, 3)+"):");
+    pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
     pInfo[0].update();
     pInfo[1].update();
     Gdx.input.setInputProcessor(stage);

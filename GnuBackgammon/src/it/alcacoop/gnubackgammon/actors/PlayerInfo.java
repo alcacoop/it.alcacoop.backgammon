@@ -27,10 +27,10 @@ public class PlayerInfo extends Table {
     else 
       region = GnuBackgammon.atlas.findRegion("cb");
     Image i =new Image(region);
-    add(i).width(i.getWidth());
+    add(i).width(i.getWidth()).spaceRight(6);
+    
     
     Table t = new Table();
-    t.pad(6);
     t.add(name).left().width((width-i.getWidth())/4*3);
     t.add(score).left().width((width-i.getWidth())/4);
     t.row();

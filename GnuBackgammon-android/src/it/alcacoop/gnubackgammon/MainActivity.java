@@ -37,9 +37,6 @@ public class MainActivity extends AndroidApplication implements OnInitListener, 
     
     copyAssetsIfNotExists();
     
-    final DisplayMetrics displayMetrics = new DisplayMetrics();
-    this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    
     initialize(new GnuBackgammon(), cfg);
     GnubgAPI.InitializeEnvironment(data_dir);
   }
