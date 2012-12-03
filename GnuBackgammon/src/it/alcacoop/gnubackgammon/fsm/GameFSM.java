@@ -93,6 +93,7 @@ public class GameFSM extends BaseFSM implements Context {
           MatchState.fMove = 0;
           MatchState.fTurn = 1;
           GnubgAPI.SetGameTurn(MatchState.fTurn, MatchState.fMove);
+          GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
           if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE
             ctx.board().resultLabel.setText("CPU accepted double");
             MatchState.fCubeOwner = 1;
