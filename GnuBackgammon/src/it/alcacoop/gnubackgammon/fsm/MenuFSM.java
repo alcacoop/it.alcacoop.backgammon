@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.logic.MatchState;
 
 
 // MENU FSM
@@ -25,9 +26,12 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           System.out.println(params);
           if (params.toString().equals("SINGLE PLAYER")) {
+            MatchState.matchType = 0;
             ctx.state(States.MATCH_OPTIONS);
           }
           if (params.toString().equals("TWO PLAYERS")) {
+            MatchState.matchType = 1;
+            ctx.state(States.MATCH_OPTIONS);
           }
           if (params.toString().equals("STATISTICS")) {
           }

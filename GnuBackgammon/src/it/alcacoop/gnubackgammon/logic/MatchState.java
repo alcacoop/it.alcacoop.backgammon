@@ -26,6 +26,7 @@ public class MatchState {
   public static int[] anScore = {0,0}; //MATCH SCORES
   public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON
   public static int fCubeUse = 0; //USING CUBE
+  public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
   
   
   public static void _switchTurn() {

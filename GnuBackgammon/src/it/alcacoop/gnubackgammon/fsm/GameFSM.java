@@ -147,9 +147,13 @@ public class GameFSM extends BaseFSM implements Context {
         } else {
           if (MatchState.fMove==1)
             ctx.state(States.HUMAN_TURN);
-          else
-            ctx.state(States.CPU_TURN);
-
+          else {
+            if (MatchState.matchType == 0)
+              ctx.state(States.CPU_TURN);
+            else
+              ctx.state(States.HUMAN_TURN);
+          }
+            
           ctx.board().switchTurn();
         }
       }
@@ -222,7 +226,7 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
         case SET_BOARD:
-          if (MatchState.fMove == 0) {
+          if ((MatchState.fMove == 0)||(MatchState.matchType==1)) {
             ctx.state(HUMAN_TURN);
             int d[] = ctx.board().dices.get();
             AICalls.GenerateMoves(ctx.board(), d[0], d[1]);

@@ -13,7 +13,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -29,7 +28,6 @@ public class MatchOptionsScreen implements Screen {
   private SpriteBatch sb;
   private TextureRegion bgRegion;
   private Stage stage;
-  private Group g;
   private Preferences prefs;
   
   private final FixedButtonGroup level;
@@ -51,6 +49,8 @@ public class MatchOptionsScreen implements Screen {
   private String _gametype[] = {"Backgammon","Nackgammon"};
   private TextButton gameTypeButtons[];
   
+  private Label difficultyLabel;
+  private Table t1, t2, t3, t4, container; 
   
   public MatchOptionsScreen(){
     sb = new SpriteBatch();
@@ -63,7 +63,7 @@ public class MatchOptionsScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
     Label titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
-    Label difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
+    difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
     Label playToLabel = new Label("Match to:", GnuBackgammon.skin);
     Label doublingLabel = new Label("Doubling Cube:", GnuBackgammon.skin);
     Label crawfordLabel = new Label("Crawford rule:", GnuBackgammon.skin);
@@ -105,77 +105,63 @@ public class MatchOptionsScreen implements Screen {
       gametype.add(gameTypeButtons[i]);
     }
     
-    Table table = new Table();
-    table.setFillParent(true);
+    t1 = new Table();
+    t1.add(titleLabel).colspan(9);
     
-    table.row().pad(2);
-    table.add().colspan(9).fillY().expand();
+    float width = stage.getWidth()/11;
+    float height = stage.getWidth()/16;
     
-    table.row().pad(2);
-    table.add(titleLabel).colspan(9);
+    t2 = new Table();
+    t2.add(difficultyLabel).width(2*width).height(height);
+    t2.add(levelButtons[0]).expand().fill().width(2*width).height(height).pad(1);
+    t2.add(levelButtons[1]).expand().fill().width(2*width).height(height).pad(1);
+    t2.add(levelButtons[2]).expand().fill().width(2*width).height(height).pad(1);
+    t2.add(levelButtons[3]).expand().fill().width(2*width).height(height).pad(1);
+    t2.row().pad(1);
+    t2.add();
+    t2.add(levelButtons[4]).expand().fill().width(2*width).height(height);
+    t2.add(levelButtons[5]).expand().fill().width(2*width).height(height);
+    t2.add(levelButtons[6]).expand().fill().width(2*width).height(height);
+    t2.add(levelButtons[7]).expand().fill().width(2*width).height(height);
     
-    table.row().pad(2);
-    table.add().colspan(9).fillY().expand();
     
-    table.row().pad(2);
-    table.add(difficultyLabel).right();
-    table.add(levelButtons[0]).expand().fill().colspan(2);
-    table.add(levelButtons[1]).expand().fill().colspan(2);
-    table.add(levelButtons[2]).expand().fill().colspan(2);
-    table.add(levelButtons[3]).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add();
-    table.add(levelButtons[4]).expand().fill().colspan(2);
-    table.add(levelButtons[5]).expand().fill().colspan(2);
-    table.add(levelButtons[6]).expand().fill().colspan(2);
-    table.add(levelButtons[7]).expand().fill().colspan(2);
+    t3 = new Table();
     
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
+    t3.row();
+    t3.add(playToLabel).width(2*width);
+    t3.add(matchToButtons[0]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[1]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[2]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[3]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[4]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[5]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[6]).expand().fill().width(width).height(height).pad(1);
+    t3.add(matchToButtons[7]).expand().fill().width(width).height(height).pad(1);
     
-    table.row().pad(2);
-    table.add(playToLabel).right();
-    table.add(matchToButtons[0]).expand().fill();
-    table.add(matchToButtons[1]).expand().fill();
-    table.add(matchToButtons[2]).expand().fill();
-    table.add(matchToButtons[3]).expand().fill();
-    table.add(matchToButtons[4]).expand().fill();
-    table.add(matchToButtons[5]).expand().fill();
-    table.add(matchToButtons[6]).expand().fill();
-    table.add(matchToButtons[7]).expand().fill();
+    t3.row();
+    t3.add().colspan(9).fill().expand().height(10);
+    t3.row();
+    t3.add(doublingLabel).width(2*width);
+    t3.add(doublingButtons[0]).expand().fill().width(width).height(height);
+    t3.add(doublingButtons[1]).expand().fill().width(width).height(height);
+    t3.add().colspan(6).fill();
     
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
-    
-    table.row().pad(2);
-    table.add(doublingLabel).right();
-    table.add(doublingButtons[0]).expand().fill();
-    table.add(doublingButtons[1]).expand().fill();
-    table.add().colspan(6);
-    
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
-    
-    table.row().pad(2);
-    table.add(crawfordLabel).right();
-    table.add(crawfordButtons[0]).expand().fill();
-    table.add(crawfordButtons[1]).expand().fill();
-    table.add().colspan(6);
+    t3.row();
+    t3.add().colspan(9).fill().expand().height(10);
+    t3.row();
+    t3.add(crawfordLabel).width(2*width);
+    t3.add(crawfordButtons[0]).expand().fill().width(width).height(height);
+    t3.add(crawfordButtons[1]).expand().fill().width(width).height(height);
+    t3.add().colspan(6);
 
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
+    t3.row();
+    t3.add().colspan(9).fill().expand().height(10);
+    t3.row();
+    t3.add(gameTypeLabel).width(2*width);
+    t3.add(gameTypeButtons[0]).expand().fill().colspan(2).width(2*width).height(height);
+    t3.add(gameTypeButtons[1]).expand().fill().colspan(2).width(2*width).height(height);
+    t3.add().colspan(4);
 
-    table.row().pad(2);
-    table.add(gameTypeLabel).right();
-    table.add(gameTypeButtons[0]).expand().fill().colspan(2);
-    table.add(gameTypeButtons[1]).expand().fill().colspan(2);
-    table.add().colspan(4);
-    
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
-    
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
@@ -188,23 +174,16 @@ public class MatchOptionsScreen implements Screen {
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     
-    table.row().pad(2);
-    table.add().colspan(2);
-    table.add(back).fill().expand().colspan(2);
-    table.add();
-    table.add(play).fill().expand().colspan(2);
-    table.add().colspan(2);
-    
-    table.row().pad(2);
-    table.add().colspan(9).fill().expand();
-    
-    g = new Group();
-    g.setWidth(stage.getWidth()*0.9f);
-    g.setHeight(stage.getHeight()*0.95f);
-    g.setX((stage.getWidth()-g.getWidth())/2);
-    g.setY((stage.getHeight()-g.getHeight())/2);
-    g.addActor(table);
-    stage.addActor(g);
+    t4 = new Table();
+    t4.add();
+    t4.add(back).fill().expand().width(3*width).height(height);
+    t4.add().width(2*width);
+    t4.add(play).fill().expand().width(3*width).height(height);
+    t4.add();
+
+    container = new Table();
+    stage.addActor(container);
+    container.setFillParent(true);
     
     initFromPrefs();
   }
@@ -268,9 +247,33 @@ public class MatchOptionsScreen implements Screen {
   
   @Override
   public void show() {
+    t1.remove();
+    t2.remove();
+    t3.remove();
+    t4.remove();
+    container = new Table();
+    container.setFillParent(true);
+    stage.addActor(container);
+    
+    if (MatchState.matchType==1) {
+      container.add(t1).expand();
+      container.row().pad(5);
+      container.add(t3).expand();
+      container.row().pad(5);
+      container.add(t4).expand();
+    } else {
+      container.add(t1);
+      container.row().pad(5);
+      container.add(t2);
+      container.row().pad(5);
+      container.add(t3);
+      container.row().pad(5);
+      container.add(t4);
+    }
+    
     Gdx.input.setInputProcessor(stage);
-    g.setColor(1,1,1,0);
-    g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    container.setColor(1,1,1,0);
+    container.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override
