@@ -13,7 +13,7 @@ public class AICalls {
   }
 
   public static void SetAILevel(AILevels l) {
-    MatchState.currentLevel = l;
+    MatchState.SetAILevel(l);
     thread.post(new SetAILevelAICall(l));
   }
   

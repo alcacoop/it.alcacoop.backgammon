@@ -4,6 +4,8 @@ package it.alcacoop.gnubackgammon.logic;
 public class MatchState {
   
   public static int[][] board = {
+    {4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF 
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF
     
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//BLACK (HUMAN) BGV 
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (PC)
@@ -40,4 +42,36 @@ public class MatchState {
     AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
   }
   
+  public static void setGameVariant(int type) {
+    MatchState.bgv = type;
+    //TODO: DO THE SAME ON NATIVE SIDE
+  }
+  
+  public static void UpdateMSCubeInfo(int owner, int cubeValue) {
+    MatchState.fCubeOwner = owner;
+    MatchState.nCube = cubeValue;
+    GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+  }
+  
+  public static void SetMatchTo(String sMatchTo) {
+    MatchState.nMatchTo = Integer.parseInt(sMatchTo);
+    GnubgAPI.SetMatchTo(MatchState.nMatchTo);
+  }
+  
+  public static void SetMatchScore(int AIScore, int HumanScore) {
+    MatchState.anScore[0] = HumanScore;
+    MatchState.anScore[1] = AIScore;
+    AICalls.SetMatchScore(MatchState.anScore[1], MatchState.anScore[0]);
+  }
+  
+  public static void SetAILevel(AILevels level) {
+    MatchState.currentLevel = level;
+    GnubgAPI.SetAILevel(level.ordinal());
+  }
+  
+  public static void SetGameTurn(int fTurn, int fMove) {
+    MatchState.fMove = fMove;
+    MatchState.fTurn = fTurn;
+    AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
+  }
 }

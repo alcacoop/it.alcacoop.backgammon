@@ -218,12 +218,12 @@ public class MatchOptionsScreen implements Screen {
     prefs.flush();
     
     AICalls.SetAILevel(AILevels.getAILevelFromString(sLevel));
+    //TODO: Implement functions
     MatchState.fCubeUse = sDoubleCube.equals("Yes")?1:0; //USING CUBE
-    MatchState.nMatchTo = Integer.parseInt(sMatchTo);
+    MatchState.SetMatchTo(sMatchTo);
     MatchState.fCrawford = sCrawford.equals("Yes")?1:0; //REGOLA DI CRAWFORD
     MatchState.bgv = sGameType.equals("Backgammon")?0:1; //GAME TYPE
-    MatchState.anScore[0] = 0;
-    MatchState.anScore[1] = 0;
+    MatchState.SetMatchScore(0, 0);
   }
   
   @Override

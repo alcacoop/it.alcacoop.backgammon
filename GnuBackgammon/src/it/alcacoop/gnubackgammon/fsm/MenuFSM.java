@@ -26,6 +26,7 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           System.out.println(params);
           if (params.toString().equals("SINGLE PLAYER")) {
+            //TODO: implement functions
             MatchState.matchType = 0;
             ctx.state(States.MATCH_OPTIONS);
           }

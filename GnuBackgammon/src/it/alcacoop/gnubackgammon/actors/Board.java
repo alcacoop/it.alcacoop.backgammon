@@ -221,7 +221,7 @@ public class Board extends Group {
   }
 
   public void initBoard(int type) {
-    MatchState.bgv = type;
+    MatchState.setGameVariant(type);
     initBoard();
   }
   public void initBoard() {
@@ -272,9 +272,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
-    MatchState.fCubeOwner = -1;
-    MatchState.nCube = 1;
-    GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+    MatchState.UpdateMSCubeInfo(-1, 1);
   }
 
   
