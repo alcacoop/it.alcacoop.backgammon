@@ -8,6 +8,8 @@ import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
+import it.alcacoop.gnubackgammon.utils.JSONProperties;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -45,17 +47,23 @@ public class Board extends Group {
   
   private Image boardbg;
   public BoardImage board;
+  public JSONProperties jp;
+
   public TextButton rollBtn;
+  public TextButton doubleBtn;
   public TextButton resignBtn;
   
   public Label winLabel;
+  public Label resultLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
-  
-  
+  public Dialog cpuDoubleDialog;
   
   public Board() {
+    
+    jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     _board = new int[2][25];
+    
     moves = new Stack<Move>();
     playedMoves = new Stack<Move>();
     availableMoves = new AvailableMoves(this);
@@ -117,6 +125,19 @@ public class Board extends Group {
     rollBtn.setHeight(boardbg.getHeight()/9);
     rollBtn.setX(board.getX() + GnuBackgammon.Instance.jp.asFloat("dice0", 0)-rollBtn.getWidth()/2);
     rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
+
+
+    doubleBtn = new TextButton("Double", GnuBackgammon.skin);
+    doubleBtn.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
+      }
+    });
+    doubleBtn.setWidth(boardbg.getWidth()/5);
+    doubleBtn.setHeight(boardbg.getHeight()/9);
+    doubleBtn.setX(board.getX() + jp.asFloat("dice1", 0)-doubleBtn.getWidth()/2);
+    doubleBtn.setY(board.getY() + boardbg.getHeight()/2-doubleBtn.getHeight()/2);
     
     winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
       @Override
@@ -149,6 +170,15 @@ public class Board extends Group {
     
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
+
+ cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
+    resultLabel = new Label("Double accepted", GnuBackgammon.skin);
+    cpuDoubleDialog.text(resultLabel);
+    cpuDoubleDialog.button("Continue");
+    cpuDoubleDialog.setWidth(boardbg.getWidth()/3);
+    cpuDoubleDialog.setHeight(boardbg.getHeight()/3);
+    cpuDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
+    cpuDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
   }
 
 
@@ -286,6 +316,8 @@ public class Board extends Group {
   public void performNextMove(boolean nodelay) {
     try {
       Move m = moves.pop();
+     
+      
       if (m!=null) {
         playedMoves.push(m);
         m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
