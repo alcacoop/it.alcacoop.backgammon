@@ -31,7 +31,7 @@ public class WelcomeScreen implements Screen {
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
-    Label titleLabel = new Label("Gnu Backgammon", GnuBackgammon.skin);
+    Label titleLabel = new Label("GNU BACKGAMMON", GnuBackgammon.skin);
     
     TextButton play = new TextButton("PLAY!", GnuBackgammon.skin);
     play.addListener(new ClickListener(){

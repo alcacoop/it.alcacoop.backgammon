@@ -40,7 +40,7 @@ public class MainMenuScreen implements Screen {
     };
     
     
-    Label titleLabel = new Label("Gnu Backgammon", GnuBackgammon.skin);
+    Label titleLabel = new Label("GNU BACKGAMMON", GnuBackgammon.skin);
     
     TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
     onePlayer.addListener(cl);
@@ -52,15 +52,17 @@ public class MainMenuScreen implements Screen {
     options.addListener(cl);
 
     Table table = new Table();
-    table.debug();
     table.setFillParent(true);
     
-    table.add(titleLabel).colspan(2).pad(20);
+    table.add(titleLabel).colspan(2);
     
     table.row().pad(2);
+    table.add().colspan(2).fill().expand();
+    table.row().pad(2);
+    table.add().colspan(2).fill().expand();
+    
     table.row().pad(2);
     table.add(onePlayer).expand().fill().colspan(2);
-    
     table.row().pad(2);
     table.add(twoPlayers).expand().fill().colspan(2);
     
@@ -69,13 +71,19 @@ public class MainMenuScreen implements Screen {
     table.row().pad(2);
     table.add(stats).expand().fill();
     table.add(options).expand().fill();
+    table.row().pad(2);
+    table.add().colspan(2).fill().expand();
+    table.row().pad(2);
+    table.add().colspan(2).fill().expand();
     
     g = new Group();
-    g.setWidth(stage.getWidth()*0.7f);
-    g.setHeight(stage.getHeight()*0.65f);
+    g.setWidth(stage.getWidth()*0.6f);
+    g.setHeight(stage.getHeight()*0.6f);
+    g.addActor(table);
+    
     g.setX((stage.getWidth()-g.getWidth())/2);
     g.setY((stage.getHeight()-g.getHeight())/2);
-    g.addActor(table);
+    
     stage.addActor(g);
   }
 
