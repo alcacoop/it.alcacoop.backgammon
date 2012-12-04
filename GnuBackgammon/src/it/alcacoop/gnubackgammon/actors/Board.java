@@ -52,7 +52,6 @@ public class Board extends Group {
 
   public TextButton rollBtn;
   public TextButton doubleBtn;
-  public TextButton resignBtn;
   
   public Label winLabel;
   public Label resultLabel;
@@ -451,7 +450,8 @@ public class Board extends Group {
     if (moves!=null) moves.clear();
     if (playedMoves!=null) playedMoves.clear();
     points.reset();
-
+    rollBtn.remove();
+    doubleBtn.remove();
   }
   
   public void animate(float t) {
