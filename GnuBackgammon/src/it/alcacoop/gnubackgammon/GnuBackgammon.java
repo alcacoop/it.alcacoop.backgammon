@@ -72,6 +72,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
+    BitmapFont f  = skin.getFont("default-font");
+    f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    f  = skin2.getFont("default-font");
+    f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    
     board = new Board();
     
     gameFSM = new GameFSM(board);
