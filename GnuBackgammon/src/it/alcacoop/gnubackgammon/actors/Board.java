@@ -6,7 +6,6 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
@@ -220,7 +219,7 @@ public class Board extends Group {
   }
 
   public void initBoard(int type) {
-    MatchState.bgv = type;
+    MatchState.setGameVariant(type);
     initBoard();
   }
   public void initBoard() {
@@ -271,9 +270,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
-    MatchState.fCubeOwner = -1;
-    MatchState.nCube = 1;
-    GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+    MatchState.UpdateMSCubeInfo(-1, 1);
   }
 
   

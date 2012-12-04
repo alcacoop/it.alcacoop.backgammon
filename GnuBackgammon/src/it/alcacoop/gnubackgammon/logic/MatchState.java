@@ -40,4 +40,46 @@ public class MatchState {
     AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
   }
   
+  public static void setGameVariant(int type) {
+    MatchState.bgv = type;
+    GnubgAPI.SetGameVariant(type);
+  }
+  
+  public static void UpdateMSCubeInfo(int owner, int cubeValue) {
+    MatchState.fCubeOwner = owner;
+    MatchState.nCube = cubeValue;
+    GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+  }
+  
+  public static void SetMatchTo(String sMatchTo) {
+    MatchState.nMatchTo = Integer.parseInt(sMatchTo);
+    GnubgAPI.SetMatchTo(MatchState.nMatchTo);
+  }
+  
+  public static void SetMatchScore(int AIScore, int HumanScore) {
+    MatchState.anScore[0] = HumanScore;
+    MatchState.anScore[1] = AIScore;
+    GnubgAPI.SetMatchScore(MatchState.anScore[1], MatchState.anScore[0]);
+  }
+  
+  public static void SetAILevel(AILevels level) {
+    MatchState.currentLevel = level;
+    GnubgAPI.SetAILevel(level.ordinal());
+  }
+  
+  public static void SetGameTurn(int fTurn, int fMove) {
+    MatchState.fMove = fMove;
+    MatchState.fTurn = fTurn;
+    AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
+  }
+  
+  public static void SetCubeUse(int fCubeUse) {
+    MatchState.fCubeUse = fCubeUse;
+    GnubgAPI.SetCubeUse(fCubeUse);
+  }
+  
+  public static void SetCrawford(int fCrawford) {
+    MatchState.fCrawford = fCrawford;
+    GnubgAPI.SetCrawford(fCrawford);
+  }
 }

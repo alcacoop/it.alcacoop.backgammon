@@ -22,9 +22,8 @@ public class SimulationFSM extends BaseFSM implements Context {
         resetted = 0;
         ctx.setMoves(0);
         ctx.board().initBoard(2);
-        MatchState.fMove = 0;
-        MatchState.fTurn = 0;
-
+        MatchState.setGameVariant(0);
+        MatchState.SetGameTurn(0, 0);
         ctx.board().addAction(Actions.sequence(
             Actions.delay(0.8f),
             Actions.run(new Runnable() {
@@ -67,11 +66,10 @@ public class SimulationFSM extends BaseFSM implements Context {
           case ROLL_DICE:
             int dices[] = (int[])params;
             ctx.board().setDices(dices[0], dices[1]);
-            AICalls.EvaluateBestMove(ctx.board().dices.get());
+            AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
             int moves[] = (int[])params;
-            moves = (int[])params;
             ctx.board().setMoves(moves);
             break;
           case PERFORMED_MOVE:
@@ -119,7 +117,7 @@ public class SimulationFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    AICalls.SetAILevel(AILevels.BEGINNER);
+    MatchState.SetAILevel(AILevels.BEGINNER);
     state(States.STARTING_SIMULATION);
   }
 

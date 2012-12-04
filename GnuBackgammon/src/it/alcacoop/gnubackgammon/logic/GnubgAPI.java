@@ -16,5 +16,8 @@ public class GnubgAPI {
   public static native void SetGameTurn(int fTurn, int fMove);
   public static native void SetMatchTo(int nMatchTo);
   public static native int[][] GenerateMoves(int b1[], int b2[], int d1, int d2);
-  
+  public static native void SetGameVariant(int type);
+  public static native void SetCubeUse(int fCubeUse);
+  public static native void SetCrawford(int fCrawford);
+  public static native void SetPostCrawford(int fPostCrawford);
 }

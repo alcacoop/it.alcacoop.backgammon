@@ -36,8 +36,7 @@ public class GameFSM extends BaseFSM implements Context {
         case DOUBLING_RESPONSE:
           if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
             System.out.println("DOUBLE ACCEPTED");
-            MatchState.fCubeOwner = 0;
-            MatchState.nCube = MatchState.nCube*2;
+            MatchState.UpdateMSCubeInfo(0, MatchState.nCube*2);
             GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
             ctx.board().doubleCube();
             AICalls.RollDice();
@@ -90,15 +89,11 @@ public class GameFSM extends BaseFSM implements Context {
           }
           break;
         case CPU_DOUBLING_RESPONSE:
-          MatchState.fMove = 0;
-          MatchState.fTurn = 1;
-          GnubgAPI.SetGameTurn(MatchState.fTurn, MatchState.fMove);
-          GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
+          MatchState.SetGameTurn(1, 0);
+GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
           if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE
             ctx.board().resultLabel.setText("CPU accepted double");
-            MatchState.fCubeOwner = 1;
-            MatchState.nCube = MatchState.nCube*2;
-            GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+            MatchState.UpdateMSCubeInfo(1, MatchState.nCube*2);
             ctx.board().doubleCube();
             ctx.board().removeActor(ctx.board().doubleBtn);
           } else { //CPU HAS NOT ACCEPTED MY DOUBLE
@@ -187,12 +182,16 @@ public class GameFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         int game_score = MatchState.nCube*ctx.board().gameScore(MatchState.fMove==1?0:1);
-        MatchState.anScore[MatchState.fMove]+=game_score;
-        System.out.println("DENTRO: "+MatchState.anScore[MatchState.fMove]);
+        if(MatchState.fMove == 0) 
+          MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
+        else 
+          MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
+        
+
         if(MatchState.fMove==1)
           ctx.board().winLabel.setText("CPU WON "+game_score+" POINTS!");
         else
-          ctx.board().winLabel.setText("HUMAN WON"+game_score+" POINTS!");
+          ctx.board().winLabel.setText("HUMAN WON "+game_score+" POINTS!");
         
         ctx.board().winDialog.show(ctx.board().getStage());
       }
@@ -216,8 +215,7 @@ public class GameFSM extends BaseFSM implements Context {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
-        MatchState.fCubeOwner = -1;
-        MatchState.nCube = 1;
+        MatchState.UpdateMSCubeInfo(-1, 1);
         ctx.board().initBoard();
         ctx.board().updatePInfo();
         AICalls.RollDice();
@@ -230,14 +228,10 @@ public class GameFSM extends BaseFSM implements Context {
           int dices[] =(int[])params;
           if (dices[0]==dices[1]) AICalls.RollDice();
           else if (dices[0]>dices[1]) {//START HUMAN
-            MatchState.fMove = 0;
-            MatchState.fTurn = 0;
-            AICalls.SetGameTurn(0, 0);
+            MatchState.SetGameTurn(0, 0);
             ctx.board().setDices(dices[0], dices[1]);
           } else if (dices[0]<dices[1]) {//START CPU
-            MatchState.fMove = 1;
-            MatchState.fTurn = 1;
-            AICalls.SetGameTurn(1, 1);
+            MatchState.SetGameTurn(1, 1);
             ctx.board().setDices(dices[0], dices[1]);
           }
           break;
