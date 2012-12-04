@@ -225,6 +225,15 @@ public class Board extends Group {
   public void initBoard() {
     abandon();
     removeActor(winDialog);
+    doublingCube.setVisible(true);
+    if(MatchState.fCubeUse == 1) {
+      if(MatchState.fCrawford == 0)
+        doublingCube.setVisible(true);
+      else if (((MatchState.nMatchTo - MatchState.anScore[0]) == 1) || ((MatchState.nMatchTo - MatchState.anScore[1]) == 1))
+        doublingCube.setVisible(false);
+    } else { 
+      doublingCube.setVisible(false);
+    }
     doublingCube.reset();
     
     int i0 = 0;
@@ -449,7 +458,8 @@ public class Board extends Group {
     if (playedMoves!=null) playedMoves.clear();
     points.reset();
     rollBtn.remove();
-    doubleBtn.remove();
+    if(MatchState.fCubeUse == 1)
+      doubleBtn.remove();    
   }
   
   public void animate(float t) {
