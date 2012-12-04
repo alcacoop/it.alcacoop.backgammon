@@ -219,7 +219,7 @@ public class Board extends Group {
   }
 
   public void initBoard(int type) {
-    MatchState.setGameVariant(type);
+    MatchState.SetGameVariant(type);
     initBoard();
   }
   public void initBoard() {
@@ -270,7 +270,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
-    MatchState.UpdateMSCubeInfo(-1, 1);
+    MatchState.UpdateMSCubeInfo(1, -1);
   }
 
   
@@ -436,7 +436,7 @@ public class Board extends Group {
   
   public void switchTurn() {
     playedMoves.clear();
-    MatchState._switchTurn();
+    MatchState.SwitchTurn();
   }
   
   private void abandon() {

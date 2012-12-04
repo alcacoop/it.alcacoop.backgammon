@@ -22,7 +22,7 @@ public class SimulationFSM extends BaseFSM implements Context {
         resetted = 0;
         ctx.setMoves(0);
         ctx.board().initBoard(2);
-        MatchState.setGameVariant(0);
+        MatchState.SetGameVariant(0);
         MatchState.SetGameTurn(0, 0);
         ctx.board().addAction(Actions.sequence(
             Actions.delay(0.8f),

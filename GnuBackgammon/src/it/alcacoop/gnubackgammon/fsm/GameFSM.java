@@ -36,8 +36,7 @@ public class GameFSM extends BaseFSM implements Context {
         case DOUBLING_RESPONSE:
           if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
             System.out.println("DOUBLE ACCEPTED");
-            MatchState.UpdateMSCubeInfo(0, MatchState.nCube*2);
-            GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
+            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
             ctx.board().doubleCube();
             AICalls.RollDice();
           } else { //double not accepted
@@ -90,10 +89,10 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
-GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
-          if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE
+          GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
+          if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE //TODO
             ctx.board().resultLabel.setText("CPU accepted double");
-            MatchState.UpdateMSCubeInfo(1, MatchState.nCube*2);
+            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 1);
             ctx.board().doubleCube();
             ctx.board().removeActor(ctx.board().doubleBtn);
           } else { //CPU HAS NOT ACCEPTED MY DOUBLE
@@ -215,7 +214,7 @@ GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
-        MatchState.UpdateMSCubeInfo(-1, 1);
+        MatchState.UpdateMSCubeInfo(1, -1);
         ctx.board().initBoard();
         ctx.board().updatePInfo();
         AICalls.RollDice();

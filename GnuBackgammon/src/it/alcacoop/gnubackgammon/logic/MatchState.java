@@ -29,23 +29,21 @@ public class MatchState {
   public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
   
   
-  public static void _switchTurn() {
+  
+  public static void SwitchTurn() {
     if (fMove == 0) {
-      fMove=1;
-      fTurn=1;
+      SetGameTurn(1, 1);
     } else {
-      fMove=0;
-      fTurn=0;
+      SetGameTurn(0, 0);
     }
-    AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
   }
   
-  public static void setGameVariant(int type) {
+  public static void SetGameVariant(int type) {
     MatchState.bgv = type;
     GnubgAPI.SetGameVariant(type);
   }
   
-  public static void UpdateMSCubeInfo(int owner, int cubeValue) {
+  public static void UpdateMSCubeInfo(int cubeValue, int owner) {
     MatchState.fCubeOwner = owner;
     MatchState.nCube = cubeValue;
     GnubgAPI.UpdateMSCubeInfo(MatchState.nCube, MatchState.fCubeOwner);
