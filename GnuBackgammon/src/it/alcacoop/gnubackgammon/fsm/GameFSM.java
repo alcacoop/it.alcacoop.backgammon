@@ -90,11 +90,16 @@ public class GameFSM extends BaseFSM implements Context {
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
           GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
-          if(GnubgAPI.AcceptDouble() == 1) { //CPU ACCEPTED MY DOUBLE //TODO
+          AICalls.AcceptDouble();
+          ctx.board().removeActor(ctx.board().doubleBtn);
+          ctx.board().thinking(true);
+          break;
+        case ACCEPT_DOUBLE:
+          ctx.board().thinking(false);
+          if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
             ctx.board().resultLabel.setText("CPU accepted double");
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 1);
             ctx.board().doubleCube();
-            ctx.board().removeActor(ctx.board().doubleBtn);
           } else { //CPU HAS NOT ACCEPTED MY DOUBLE
             ctx.board().resultLabel.setText("CPU has not accepted double");
             ctx.state(CHECK_END_MATCH);
