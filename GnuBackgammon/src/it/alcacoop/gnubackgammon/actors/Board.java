@@ -527,6 +527,7 @@ public class Board extends Group {
   }
   
   public int gameScore(int loser) {
+    if ((bearedOff[0]!=15)&&(bearedOff[1]!=15)) return 1;//CUBE NOT ACCEPTED
     if (bearedOff[loser]>0) return 1;
     else {
       boolean backgammon = false;
