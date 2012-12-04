@@ -86,11 +86,14 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case SET_BOARD:
           ctx.board().dices.clear();
-          ctx.board().addActor(ctx.board().rollBtn);
+          
           if((MatchState.fCubeOwner != 1) && (MatchState.fCubeUse == 1)) {
-            if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
+            if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
+              ctx.board().addActor(ctx.board().rollBtn);
               ctx.board().addActor(ctx.board().doubleBtn);
-          }
+            }
+          } else 
+            AICalls.RollDice();
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
