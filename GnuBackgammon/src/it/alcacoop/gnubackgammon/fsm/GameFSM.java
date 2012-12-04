@@ -24,7 +24,11 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case ASK_FOR_RESIGNATION:
           System.out.println("I'M RESIGNING... "+params);
-          AICalls.AskForDoubling();
+          if(MatchState.fCubeUse == 1) {
+            if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
+              AICalls.AskForDoubling();
+          } else
+              AICalls.RollDice();
           break;
         case ASK_FOR_DOUBLING:
           System.out.println("I'D LIKE TO DOUBLE... "+params);
@@ -82,10 +86,14 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case SET_BOARD:
           ctx.board().dices.clear();
-          ctx.board().addActor(ctx.board().rollBtn);
-          if(MatchState.fCubeOwner != 1) {
-            ctx.board().addActor(ctx.board().doubleBtn);
-          }
+          
+          if((MatchState.fCubeOwner != 1) && (MatchState.fCubeUse == 1)) {
+            if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
+              ctx.board().addActor(ctx.board().rollBtn);
+              ctx.board().addActor(ctx.board().doubleBtn);
+            }
+          } else 
+            AICalls.RollDice();
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
@@ -108,7 +116,8 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case ROLL_DICE:
           ctx.board().removeActor(ctx.board().rollBtn);
-          ctx.board().removeActor(ctx.board().doubleBtn);
+          if(MatchState.fCubeUse == 1)
+            ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           ctx.board().setDices(dices[0], dices[1]);

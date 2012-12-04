@@ -19,7 +19,7 @@ public class MatchState {
   public static AILevels currentLevel = AILevels.EXPERT;
   public static int fMove = 1; //CHI HA I DADI IN MANO (1=PC 0=HUMAN)
   public static int fTurn = 1; //CHI DEVE DECIDERE (1=PC 0=HUMAN)
-  public static int fCubeOwner = -1; //(-1=BAR O=PC 1=HUMAN)
+  public static int fCubeOwner = -1; //(-1=BAR 1=PC 0=HUMAN)
   public static int nCube = 1; //VALORE ATTUALE DEL CUBO
   public static int fCrawford = 0; //REGOLA DI CRAWFORD
   public static int nMatchTo = 0; 
