@@ -8,11 +8,11 @@ import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -21,9 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class GameScreen implements Screen {
 
   private Stage stage;
+  private Image bgImg;
   public Board board;
-  private SpriteBatch sb;
-  private TextureRegion bgRegion;
   private Table table;
   
   private PlayerInfo pInfo[];
@@ -32,13 +31,15 @@ public class GameScreen implements Screen {
   private TextButton undo;
   
   public GameScreen(){
-    sb = new SpriteBatch();
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
-    bgRegion = GnuBackgammon.atlas.findRegion("bg");
+    TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
+    bgImg = new Image(bgRegion);
+    stage.addActor(bgImg);
+    
     board = GnuBackgammon.Instance.board;
     
     pInfo = new PlayerInfo[2];
@@ -99,11 +100,6 @@ public class GameScreen implements Screen {
     
     Gdx.gl.glClearColor(1, 1, 1, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-    
-    sb.begin();
-    sb.draw(bgRegion, 0,0 , Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    sb.end();
-    
     stage.act(delta);
     stage.draw();
   }
@@ -111,6 +107,8 @@ public class GameScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
+    bgImg.setWidth(width);
+    bgImg.setHeight(height);
   }
 
   

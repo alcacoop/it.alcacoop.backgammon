@@ -1,57 +1,46 @@
 package it.alcacoop.gnubackgammon.layers;
 
+
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 
 public class OptionsScreen implements Screen {
 
   private Stage stage;
+  private Image bgImg;
   
   public OptionsScreen(){
-    stage = new Stage(1005, 752, true);
+  //STAGE DIM = SCREEN RES
+    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
+    stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
-    Label titleLabel = new Label("GnuBackgammon", GnuBackgammon.skin);
-    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
-    TextButton twoPlayers = new TextButton("Two Player", GnuBackgammon.skin);
-    TextButton options = new TextButton("Options", GnuBackgammon.skin);
-
-    Table table = new Table();
-    table.debug();
-    table.add(titleLabel).expand().fillY();
-    table.row();
-    table.add(onePlayer).expand().width(180).height(80);
-    table.row();
-    table.add(twoPlayers).expand().width(180).height(80);
-    table.row();
-    table.add(options).expand().width(180).height(80);
-    table.setFillParent(true);
-
-    stage.addActor(table);
+    TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
+    bgImg = new Image(bgRegion);
+    stage.addActor(bgImg);
   }
 
 
   @Override
   public void render(float delta) {
-    
     Gdx.gl.glClearColor(0, 0, 1, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-    
     stage.act(delta);
     stage.draw();
-    Table.drawDebug(stage);
   }
 
 
   @Override
   public void resize(int width, int height) {
+    bgImg.setWidth(width);
+    bgImg.setHeight(height);
   }
 
   
