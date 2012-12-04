@@ -77,8 +77,8 @@ public class MatchOptionsScreen implements Screen {
     titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
     difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
     playToLabel = new Label("Match to:", GnuBackgammon.skin);
-    doublingLabel = new Label("Doubling\nCube:", GnuBackgammon.skin);
-    crawfordLabel = new Label("Crawford\nRule:", GnuBackgammon.skin);
+    doublingLabel = new Label("Dbl. Cube:", GnuBackgammon.skin);
+    crawfordLabel = new Label("Crawford R.:", GnuBackgammon.skin);
     gameTypeLabel = new Label("Variant:", GnuBackgammon.skin);
     
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
