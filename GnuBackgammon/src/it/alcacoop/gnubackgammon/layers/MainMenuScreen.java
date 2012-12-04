@@ -100,13 +100,15 @@ public class MainMenuScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(width);
-    bgImg.setHeight(height);
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
   }
 
   
   @Override
   public void show() {
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
     Gdx.input.setInputProcessor(stage);
     g.setColor(1,1,1,0);
     g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));

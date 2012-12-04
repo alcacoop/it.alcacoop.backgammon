@@ -11,7 +11,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -58,7 +57,7 @@ public class MatchOptionsScreen implements Screen {
   private Label playToLabel;
   private Label titleLabel; 
   
-  private Group g;
+  //private Group g;
   
   public MatchOptionsScreen(){
     
@@ -128,11 +127,8 @@ public class MatchOptionsScreen implements Screen {
     back.addListener(cl);
     initFromPrefs();
     table = new Table();
-    g = new Group();
-    g.setWidth(Gdx.graphics.getWidth()*0.9f);
-    g.setHeight(Gdx.graphics.getHeight());
-    g.setX((Gdx.graphics.getWidth()-g.getWidth())/2);
-    stage.addActor(g);
+    //table.setFillParent(true);
+    stage.addActor(table);
   }
 
   
@@ -186,19 +182,20 @@ public class MatchOptionsScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(width);
-    bgImg.setHeight(height);
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
   }
 
   
   @Override
   public void show() {
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
     initTable();
-    g.addActor(table);
     
     Gdx.input.setInputProcessor(stage);
-    g.setColor(1,1,1,0);
-    g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    table.setColor(1,1,1,0);
+    table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override
@@ -218,13 +215,17 @@ public class MatchOptionsScreen implements Screen {
   }
   
   public void initTable() {
-    float width = Gdx.graphics.getWidth()/10; 
-    table.remove();
-    float height = stage.getWidth()/15;
-    table = new Table();
-    table.setFillParent(true);
-    table.add(titleLabel).colspan(9);
+    //float height = stage.getWidth()/15;
+    table.clear();
     
+    table.setWidth(stage.getWidth()*0.9f);
+    table.setHeight(stage.getHeight()*0.9f);
+    table.setX((stage.getWidth()-table.getWidth())/2);
+    table.setY((stage.getHeight()-table.getHeight())/2);
+    
+    float width = table.getWidth()/9f;
+
+    table.add(titleLabel).colspan(9);
     
     if (MatchState.matchType==0) {
       table.row();
@@ -233,16 +234,16 @@ public class MatchOptionsScreen implements Screen {
       table.add().expand().fill();
       table.row();
       table.add(difficultyLabel).right().spaceRight(6);
-      table.add(levelButtons[0]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[1]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[2]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[3]).expand().fill().height(height).colspan(2);
+      table.add(levelButtons[0]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[1]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[2]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[3]).expand().fill().colspan(2).width(2*width);
       table.row();
       table.add();
-      table.add(levelButtons[4]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[5]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[6]).expand().fill().height(height).colspan(2);
-      table.add(levelButtons[7]).expand().fill().height(height).colspan(2);
+      table.add(levelButtons[4]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[5]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[6]).expand().fill().colspan(2).width(2*width);
+      table.add(levelButtons[7]).expand().fill().colspan(2).width(2*width);
     }
     
     table.row();
@@ -252,29 +253,35 @@ public class MatchOptionsScreen implements Screen {
     
     table.row();
     table.add(playToLabel).right().spaceRight(6);
-    table.add(matchToButtons[0]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[1]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[2]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[3]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[4]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[5]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[6]).expand().fill().height(height).pad(1).width(width);
-    table.add(matchToButtons[7]).expand().fill().height(height).pad(1).width(width);
+    table.add(matchToButtons[0]).expand().fill().width(width);
+    table.add(matchToButtons[1]).expand().fill().width(width);
+    table.add(matchToButtons[2]).expand().fill().width(width);
+    table.add(matchToButtons[3]).expand().fill().width(width);
+    table.add(matchToButtons[4]).expand().fill().width(width);
+    table.add(matchToButtons[5]).expand().fill().width(width);
+    table.add(matchToButtons[6]).expand().fill().width(width);
+    table.add(matchToButtons[7]).expand().fill().width(width);
+    
+    table.row();
+    table.add().expand().fill();
     
     table.row();
     table.add(doublingLabel).right().spaceRight(6);
-    table.add(doublingButtons[0]).expand().fill().height(height);
-    table.add(doublingButtons[1]).expand().fill().height(height);
+    table.add(doublingButtons[0]).expand().fill().width(width);
+    table.add(doublingButtons[1]).expand().fill().width(width);
     table.add();
     table.add(crawfordLabel).right().colspan(2).spaceRight(6);
-    table.add(crawfordButtons[0]).expand().fill().height(height);
-    table.add(crawfordButtons[1]).expand().fill().height(height);
+    table.add(crawfordButtons[0]).expand().fill().width(width);
+    table.add(crawfordButtons[1]).expand().fill().width(width);
     table.add();
     
     table.row();
+    table.add().expand().fill();
+    
+    table.row();
     table.add(gameTypeLabel).right().spaceRight(6);
-    table.add(gameTypeButtons[0]).expand().fill().colspan(2).height(height);
-    table.add(gameTypeButtons[1]).expand().fill().colspan(2).height(height);
+    table.add(gameTypeButtons[0]).expand().fill().colspan(2).width(2*width);
+    table.add(gameTypeButtons[1]).expand().fill().colspan(2).width(2*width);
     table.add().colspan(6);
     table.add();
     
@@ -285,9 +292,9 @@ public class MatchOptionsScreen implements Screen {
     
     table.row();
     table.add().colspan(2);
-    table.add(back).fill().expand().height(height).colspan(2);
+    table.add(back).fill().expand().colspan(2);
     table.add();
-    table.add(play).fill().expand().height(height).colspan(2);
+    table.add(play).fill().expand().colspan(2);
     table.add().colspan(2);
     
     table.row();

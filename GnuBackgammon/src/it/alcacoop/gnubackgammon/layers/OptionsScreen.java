@@ -30,6 +30,8 @@ public class OptionsScreen implements Screen {
 
   @Override
   public void render(float delta) {
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
     Gdx.gl.glClearColor(0, 0, 1, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
@@ -39,8 +41,8 @@ public class OptionsScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(width);
-    bgImg.setHeight(height);
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
   }
 
   

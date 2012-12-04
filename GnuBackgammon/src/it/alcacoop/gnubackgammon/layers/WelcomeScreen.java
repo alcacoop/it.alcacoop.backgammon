@@ -75,13 +75,15 @@ public class WelcomeScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(width);
-    bgImg.setHeight(height);
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
   }
 
   
   @Override
   public void show() {
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
     Gdx.input.setInputProcessor(stage);
     table.setColor(1,1,1,0);
     table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
