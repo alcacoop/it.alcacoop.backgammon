@@ -186,13 +186,13 @@ public class GameFSM extends BaseFSM implements Context {
     CHECK_END_MATCH {
       @Override
       public void enterState(Context ctx) {
-        int game_score = MatchState.nCube*ctx.board().gameScore();
+        int game_score = MatchState.nCube*ctx.board().gameScore(MatchState.fMove==1?0:1);
         MatchState.anScore[MatchState.fMove]+=game_score;
         System.out.println("DENTRO: "+MatchState.anScore[MatchState.fMove]);
         if(MatchState.fMove==1)
-          ctx.board().winLabel.setText("CPU WON!");
+          ctx.board().winLabel.setText("CPU WON "+game_score+" POINTS!");
         else
-          ctx.board().winLabel.setText("HUMAN WON!");
+          ctx.board().winLabel.setText("HUMAN WON"+game_score+" POINTS!");
         
         ctx.board().winDialog.show(ctx.board().getStage());
       }

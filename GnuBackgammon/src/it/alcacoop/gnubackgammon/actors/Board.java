@@ -386,6 +386,7 @@ public class Board extends Group {
     dices.show(d1, d2);
   }
   
+  
   public int bearingOff() {
     int count = 0;
     for(int i=6;i<25;i++){
@@ -525,8 +526,16 @@ public class Board extends Group {
     thinking.setVisible(v);
   }
   
-  public int gameScore() {
-    return 1;
+  public int gameScore(int loser) {
+    if (bearedOff[loser]>0) return 1;
+    else {
+      boolean backgammon = false;
+      for(int i=18;i<25;i++){
+        backgammon |= (_board[loser][i] > 0);
+      }//if count = 0 here, we're in bear off
+      if (backgammon) return 3;
+      else return 2;
+    }
   }
   
   public void doubleCube() {
