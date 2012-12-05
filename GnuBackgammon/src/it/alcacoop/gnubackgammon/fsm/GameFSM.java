@@ -27,6 +27,8 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1) {
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
               AICalls.AskForDoubling();
+            else //CRAWFORD GAME
+              ctx.board().rollDices();
           } else {
             ctx.board().rollDices();
           }
