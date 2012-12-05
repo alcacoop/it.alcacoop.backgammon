@@ -112,17 +112,11 @@ public class GameFSM extends BaseFSM implements Context {
         case ACCEPT_DOUBLE:
           ctx.board().thinking(false);
           if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
-            if(MatchState.matchType == 0)
-              ctx.board().resultLabel.setText("CPU accepted double");
-            else
-              ctx.board().resultLabel.setText("Player accepted double");
-            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 1);
+            ctx.board().resultLabel.setText("Your opponent accepted double");
+            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
             ctx.board().doubleCube();
-          } else { //CPU HAS NOT ACCEPTED MY DOUBLE
-            if(MatchState.matchType == 0)
-              ctx.board().resultLabel.setText("CPU has not accepted double");
-            else
-              ctx.board().resultLabel.setText("Player has not accepted double");
+          } else { //OPPONENT HAS NOT ACCEPTED MY DOUBLE
+            ctx.board().resultLabel.setText("Your opponent didn't accept double");
             //ctx.state(CHECK_END_MATCH);
           }
           ctx.board().cpuDoubleDialog.show(ctx.board().getStage());
