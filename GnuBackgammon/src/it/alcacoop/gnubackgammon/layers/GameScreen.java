@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
     
     pInfo = new PlayerInfo[2];
     pInfo[0] = new PlayerInfo("AI():", 1);
-    pInfo[1] = new PlayerInfo("PL1:", 0);
+    pInfo[1] = new PlayerInfo("PL1:", 0);      
     
     abandon = new TextButton("ABANDON", GnuBackgammon.skin2);
     abandon.addListener(new ClickListener(){
@@ -117,8 +117,15 @@ public class GameScreen implements Screen {
   public void show() {
     initTable();
     board.initBoard();
+       
+    if(MatchState.matchType == 0){ //single player
+      pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
+      pInfo[1].setName("PL1:");
+    } else {
+      pInfo[0].setName("PL1:");
+      pInfo[1].setName("PL2:");
+    }
     
-    pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
     pInfo[0].update();
     pInfo[1].update();
     Gdx.input.setInputProcessor(stage);

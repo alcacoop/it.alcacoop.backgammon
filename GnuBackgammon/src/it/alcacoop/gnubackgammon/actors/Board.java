@@ -130,7 +130,10 @@ public class Board extends Group {
     doubleBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
+        if(MatchState.matchType == 0)
+          GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
+        else
+          GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, 1);
       }
     });
     doubleBtn.setWidth(boardbg.getWidth()/5);

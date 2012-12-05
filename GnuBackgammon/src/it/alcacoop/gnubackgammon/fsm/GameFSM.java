@@ -27,6 +27,8 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1) {
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
               AICalls.AskForDoubling();
+            else 
+              AICalls.RollDice();
           } else
               AICalls.RollDice();
           break;
@@ -85,15 +87,19 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
         case SET_BOARD:
-          ctx.board().dices.clear();
-          
-          if((MatchState.fCubeOwner != 1) && (MatchState.fCubeUse == 1)) {
+          ctx.board().dices.clear();          
+          if(((MatchState.fCubeOwner == MatchState.fMove) || (MatchState.fCubeOwner == -1)) && (MatchState.fCubeUse == 1)) {
+            System.out.println("IF GIUSTO PER IL CUBO");
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
+              System.out.println("SECONDO IF GIUSTO PER IL CUBO\n");
               ctx.board().addActor(ctx.board().rollBtn);
               ctx.board().addActor(ctx.board().doubleBtn);
+            } else {
+              AICalls.RollDice();
             }
-          } else 
-            AICalls.RollDice();
+          } else {
+            ctx.board().addActor(ctx.board().rollBtn);
+          }
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
