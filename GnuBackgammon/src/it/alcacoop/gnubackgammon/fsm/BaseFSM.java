@@ -53,7 +53,8 @@ public class BaseFSM implements Context {
     DOUBLING_RESPONSE,
     CONTINUE,
     STOPPED,
-    CPU_DOUBLING_RESPONSE
+    CPU_DOUBLING_RESPONSE,
+    SHOW_DOUBLE_DIALOG
   }
 
   public enum States implements State {

@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -54,9 +55,11 @@ public class Board extends Group {
   
   public Label winLabel;
   public Label resultLabel;
+  public Label humanDoubleDialogLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
   public Dialog cpuDoubleDialog;
+  public Dialog humanDoubleDialog;
   
   public Board() {
     
@@ -135,8 +138,9 @@ public class Board extends Group {
         Board.this.doubleBtn.remove();
         if(MatchState.matchType == 0)
           GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
-        else
-          GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, 1);
+        else { //vado in uno stato in cui mostra la window
+          GnuBackgammon.fsm.processEvent(Events.SHOW_DOUBLE_DIALOG, null);
+        }
       }
     });
     doubleBtn.setWidth(boardbg.getWidth()/5);
@@ -176,7 +180,12 @@ public class Board extends Group {
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
 
-    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
+    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin)   {
+      @Override
+      protected void result(Object object) {
+        GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+        }
+    };
     resultLabel = new Label("Double accepted", GnuBackgammon.skin);
     cpuDoubleDialog.text(resultLabel);
     cpuDoubleDialog.button("Continue");
@@ -184,6 +193,21 @@ public class Board extends Group {
     cpuDoubleDialog.setHeight(boardbg.getHeight()/3);
     cpuDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
     cpuDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
+    
+    humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin)  {
+      @Override
+      protected void result(Object object) {
+        GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, object);
+        }
+    };  
+    humanDoubleDialogLabel = new Label("Accept double?", GnuBackgammon.skin);
+    humanDoubleDialog.text(humanDoubleDialogLabel);
+    humanDoubleDialog.button("No", 0);
+    humanDoubleDialog.button("Yes", 1);
+    humanDoubleDialog.setWidth(boardbg.getWidth()/3);
+    humanDoubleDialog.setHeight(boardbg.getHeight()/3);
+    humanDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
+    humanDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
   }
 
 
