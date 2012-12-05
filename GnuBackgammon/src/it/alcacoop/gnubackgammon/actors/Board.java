@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
-import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -183,7 +182,8 @@ public class Board extends Group {
     cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin)   {
       @Override
       protected void result(Object object) {
-        GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+        //TODO: CHIEDERE A SAURINO IL MOTIVO DI QUESTO..
+        //GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
         }
     };
     resultLabel = new Label("Double accepted", GnuBackgammon.skin);
