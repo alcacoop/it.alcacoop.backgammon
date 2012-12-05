@@ -148,21 +148,17 @@ public class GameFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
         case POINT_TOUCHED:
-          if (ctx.board().points.get((Integer)params).isTarget) {
+          if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
             int origin = ctx.board().selected.boardX;
             int dest = (Integer)params;
-            int moves[] = {origin, dest, -1, -1, -1, -1, -1, -1}; 
+            int moves[] = {origin, dest, -1, -1, -1, -1, -1, -1};
+            ctx.state(HUMAN_CHECKER_MOVING);
             ctx.board().setMoves(moves);
             ctx.board().availableMoves.dropDice(origin-dest);
-          } else {
+          } else { //SELECT NEW CHECKER
             if ((Integer)params!=-1)
               ctx.board().selectChecker((Integer)params);
           }
-          break;
-        case PERFORMED_MOVE:
-          ctx.board().updatePInfo();
-          if (!ctx.board().availableMoves.hasMoves())
-            processEvent(ctx, Events.NO_MORE_MOVES, null);
           break;
         case DICE_CLICKED:
           ctx.board().dices.clear();
@@ -170,6 +166,21 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         default:
           return false;
+        }
+        return true;
+      }
+    },
+    
+    HUMAN_CHECKER_MOVING { //HERE ALL TOUCH EVENTS ARE IGNORED!
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case PERFORMED_MOVE:
+            ctx.board().updatePInfo();
+            ctx.state(HUMAN_PERFORM_MOVES);
+            break;
+          default:
+            return false;
         }
         return true;
       }
