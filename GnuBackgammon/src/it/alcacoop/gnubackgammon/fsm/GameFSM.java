@@ -43,12 +43,10 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case DOUBLING_RESPONSE:
           if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
-            
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
             ctx.board().doubleCube();
             ctx.board().rollDices();
           } else { //double not accepted
-
             ctx.state(CHECK_END_MATCH);
           }
           break;
@@ -108,15 +106,24 @@ public class GameFSM extends BaseFSM implements Context {
           ctx.board().removeActor(ctx.board().doubleBtn);
           ctx.board().thinking(true);
           break;
+        case SHOW_DOUBLE_DIALOG:
+          ctx.board().humanDoubleDialog.show(ctx.board().getStage());
+          break;
         case ACCEPT_DOUBLE:
           ctx.board().thinking(false);
           if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
-            ctx.board().resultLabel.setText("CPU accepted double");
+            if(MatchState.matchType == 0)
+              ctx.board().resultLabel.setText("CPU accepted double");
+            else
+              ctx.board().resultLabel.setText("Player accepted double");
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 1);
             ctx.board().doubleCube();
           } else { //CPU HAS NOT ACCEPTED MY DOUBLE
-            ctx.board().resultLabel.setText("CPU has not accepted double");
-            ctx.state(CHECK_END_MATCH);
+            if(MatchState.matchType == 0)
+              ctx.board().resultLabel.setText("CPU has not accepted double");
+            else
+              ctx.board().resultLabel.setText("Player has not accepted double");
+            //ctx.state(CHECK_END_MATCH);
           }
           ctx.board().cpuDoubleDialog.show(ctx.board().getStage());
           break;
