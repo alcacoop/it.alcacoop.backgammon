@@ -32,7 +32,8 @@ public class JSONProperties {
 		}
 		return properties;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	private void load(FileHandle fh) throws IOException {
 		JsonReader reader = new JsonReader();
 		data = (OrderedMap<String,Object>) reader.parse(fh.reader());
@@ -99,12 +100,14 @@ public class JSONProperties {
 		return (Boolean)v;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Array<Object> asArray(String name, Array<Object> fallback) {
 		Object v = getProperty(name);
 		if (v == null) return fallback;
 		return (Array<Object>)v;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONProperties asJSONProperties(String name, JSONProperties fallback) {
 		Object v = getProperty(name);
 		if (v == null) return fallback;
