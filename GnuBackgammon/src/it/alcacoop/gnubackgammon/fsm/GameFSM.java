@@ -27,7 +27,7 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1) {
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
               AICalls.AskForDoubling();
-            else //CRAWFORD GAME
+            else //CRAWFORD GAME //TODO: POST_CRAWFORD GAME
               ctx.board().rollDices();
           } else {
             ctx.board().rollDices();
@@ -43,10 +43,12 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case DOUBLING_RESPONSE:
           if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
+            
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
             ctx.board().doubleCube();
             ctx.board().rollDices();
           } else { //double not accepted
+
             ctx.state(CHECK_END_MATCH);
           }
           break;
@@ -86,15 +88,18 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
         case SET_BOARD:
-          ctx.board().dices.clear();
-          
-          if((MatchState.fCubeOwner != 1) && (MatchState.fCubeUse == 1)) {
+          ctx.board().dices.clear();          
+          if(((MatchState.fCubeOwner == MatchState.fMove) || (MatchState.fCubeOwner == -1)) && (MatchState.fCubeUse == 1)) {
+            System.out.println("IF GIUSTO PER IL CUBO");
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
               ctx.board().addActor(ctx.board().rollBtn);
               ctx.board().addActor(ctx.board().doubleBtn);
+            } else {
+              ctx.board().rollDices();
             }
-          } else 
-            ctx.board().rollDices();
+          } else {
+            ctx.board().addActor(ctx.board().rollBtn);
+          }
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
