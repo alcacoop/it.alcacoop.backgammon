@@ -16,10 +16,6 @@ public class AICalls {
     thread.post(new SetAILevelAICall(l));
   }
   
-  public static void RollDice() {
-    thread.post(new RollDiceAICall());
-  }
-  
   public static void SetBoard(int b1[], int b2[]) {
     thread.post(new SetBoardAICall(b1, b2));
   }

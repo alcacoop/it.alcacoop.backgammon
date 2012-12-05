@@ -2,14 +2,20 @@ package it.alcacoop.gnubackgammon.actors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
+
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class Dices extends Group {
@@ -17,7 +23,80 @@ public class Dices extends Group {
   private float x0, x1, y;
   private ArrayList<_dice> last;
   private Board b;
+  private animation ans[];
+  private float animDuration = 0.8f;
+  int nr = 0;
   
+  
+  class animation extends Group {
+    TextureRegion bg[];
+    Image img;
+    TextureRegionDrawable d;
+    int num;
+    Random generator = new Random();
+    int nr = 0;
+    Action act;
+    
+    animation(int n) {
+      num = n;
+      
+      bg = new TextureRegion[6];
+      for (int i=0;i<6;i++)
+        bg[i] = new TextureRegion(GnuBackgammon.atlas.findRegion("d"+(i+1)));
+
+      img = new Image(bg[0]);
+      addActor(img);
+      setOrigin(img.getWidth()/2, img.getHeight()/2);
+      d = (TextureRegionDrawable) img.getDrawable();
+      
+      addAction(
+        Actions.parallel(
+        Actions.forever(
+            Actions.sequence(
+            Actions.delay(0.3f),
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                int n = 0;
+                while ((n = generator.nextInt(6))==nr);
+                nr = n;
+                d.getRegion().setRegion(bg[nr]);        
+              }
+            })
+            )
+        ),
+        Actions.forever(
+            Actions.rotateBy(360*3, animDuration)
+        )
+        )
+      );
+      
+    }
+    
+    public void show() {
+      
+      float w = img.getWidth()+10;
+      float x = 0;
+      if (MatchState.fMove==0) 
+        x=x0-w;
+      else 
+        x=x1-w;
+      
+      setX(x+w*num + 11);
+      setY(y-img.getHeight()/2);
+      
+      setVisible(true);
+    }
+    
+    public void hide() {
+      setVisible(false);
+    }
+    
+    @Override
+    public void act(float delta) {
+      super.act(delta);
+    }
+  }
   
   class _dice extends Group {
     boolean disabled = false;
@@ -59,6 +138,13 @@ public class Dices extends Group {
         return true;
       }
     });
+    
+    ans = new animation[2];
+    for (int i=0;i<2;i++) {
+      ans[i] = new animation(i);
+      ans[i].setVisible(false);
+      addActor(ans[i]);
+    }
   }
 
   
@@ -69,10 +155,31 @@ public class Dices extends Group {
       itr.remove();
     }
     last.clear();
+    ans[0].hide();
+    ans[1].hide();
   }
   
   
-  public void show(int d1, int d2) {
+  public void animate(final int d1, final int d2) {
+    ans[0].show();
+    ans[1].show();
+    addAction(Actions.sequence(
+        Actions.delay(animDuration),
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            ans[0].hide();
+            ans[1].hide();
+            show(d1, d2);
+          }
+        })
+    ));
+  }
+
+  public void show(final int d1, final int d2) {
+    show(d1, d2, true);
+  }
+  public void show(final int d1, final int d2, boolean event) {
     clear();
     if (d1!=d2) {
       last.add(new _dice(d1));
@@ -82,8 +189,9 @@ public class Dices extends Group {
         last.add(new _dice(d1));
       }
     }
-    
     _show();
+    if (event)
+      GnuBackgammon.fsm.processEvent(GameFSM.Events.DICES_ROLLED, get());
   }
   
   

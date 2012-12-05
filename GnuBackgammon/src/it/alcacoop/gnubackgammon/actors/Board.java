@@ -4,8 +4,8 @@ import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
-import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
@@ -117,7 +117,9 @@ public class Board extends Group {
     rollBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        AICalls.RollDice();
+        Board.this.rollBtn.remove();
+        Board.this.doubleBtn.remove();
+        Board.this.rollDices();
       }
     });
     rollBtn.setWidth(boardbg.getWidth()/5);
@@ -130,6 +132,7 @@ public class Board extends Group {
     doubleBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        Board.this.doubleBtn.remove();
         GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
       }
     });
@@ -388,11 +391,6 @@ public class Board extends Group {
   }
   
   
-  public void setDices(int d1, int d2) {
-    dices.show(d1, d2);
-  }
-  
-  
   public int bearingOff() {
     int count = 0;
     for(int i=6;i<25;i++){
@@ -548,6 +546,18 @@ public class Board extends Group {
   
   public void doubleCube() {
     doublingCube.setValue(MatchState.nCube);
+  }
+  
+  public void rollDices() {
+    dices.clear();
+    int[] ds = {0,0};
+    GnubgAPI.RollDice(ds);
+    dices.animate(ds[0], ds[1]);
+  }
+  
+  public void rollDices(int d1, int d2) {
+    dices.clear();
+    dices.show(d1, d2, false);
   }
   
 } //END CLASS

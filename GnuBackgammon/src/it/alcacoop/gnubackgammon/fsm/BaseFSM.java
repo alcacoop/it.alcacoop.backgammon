@@ -34,6 +34,7 @@ public class BaseFSM implements Context {
     EVALUATE_BEST_MOVE,
     INITIALIZE_ENVIRONMENT,
     ROLL_DICE,
+    DICES_ROLLED,
     SET_BOARD,
     SET_GAME_TURN,
     SET_MATCH_SCORE,
@@ -86,7 +87,7 @@ public class BaseFSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    //System.out.println("PROCESS EVENT: "+evt+" ON "+state());
+    System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
     //System.out.println("DST STATE: "+state());
     return res;

@@ -27,30 +27,29 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1) {
             if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
               AICalls.AskForDoubling();
-          } else
-              AICalls.RollDice();
+          } else {
+            ctx.board().rollDices();
+          }
           break;
         case ASK_FOR_DOUBLING:
           System.out.println("I'D LIKE TO DOUBLE... "+params);
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
             ctx.board().doubleDialog.show(ctx.board().getStage());
-          } else
-            AICalls.RollDice();
+          } else {
+            ctx.board().rollDices();
+          }
           break;
         case DOUBLING_RESPONSE:
           if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
-            System.out.println("DOUBLE ACCEPTED");
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
             ctx.board().doubleCube();
-            AICalls.RollDice();
+            ctx.board().rollDices();
           } else { //double not accepted
-            System.out.println("DOUBLE NOT ACCEPTED");
             ctx.state(CHECK_END_MATCH);
           }
           break;
-        case ROLL_DICE:
+        case DICES_ROLLED:
           int dices[] = (int[])params;
-          ctx.board().setDices(dices[0], dices[1]);
           ctx.board().thinking(true);
           AICalls.EvaluateBestMove(dices);
           break;
@@ -93,7 +92,7 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().addActor(ctx.board().doubleBtn);
             }
           } else 
-            AICalls.RollDice();
+            ctx.board().rollDices();
           break;
         case CPU_DOUBLING_RESPONSE:
           MatchState.SetGameTurn(1, 0);
@@ -114,13 +113,12 @@ public class GameFSM extends BaseFSM implements Context {
           }
           ctx.board().cpuDoubleDialog.show(ctx.board().getStage());
           break;
-        case ROLL_DICE:
+        case DICES_ROLLED:
           ctx.board().removeActor(ctx.board().rollBtn);
           if(MatchState.fCubeUse == 1)
             ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
-          ctx.board().setDices(dices[0], dices[1]);
           break;
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
@@ -231,22 +229,31 @@ public class GameFSM extends BaseFSM implements Context {
         MatchState.UpdateMSCubeInfo(1, -1);
         ctx.board().initBoard();
         ctx.board().updatePInfo();
-        AICalls.RollDice();
+        
+        ctx.board().rollDices();
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        case DICES_ROLLED:
+          int dices[] ={0,0};
+          if (dices[0]==dices[1]) {
+            while (dices[0]==dices[1]) {
+              GnubgAPI.RollDice(dices);
+            }
+          }
+          processEvent(ctx, Events.ROLL_DICE, dices);
+          break;
+          
         case ROLL_DICE:
-          int dices[] =(int[])params;
-          if (dices[0]==dices[1]) AICalls.RollDice();
-          else if (dices[0]>dices[1]) {//START HUMAN
+          dices = (int[])params;
+          if (dices[0]>dices[1]) {//START HUMAN
             MatchState.SetGameTurn(0, 0);
-            ctx.board().setDices(dices[0], dices[1]);
           } else if (dices[0]<dices[1]) {//START CPU
             MatchState.SetGameTurn(1, 1);
-            ctx.board().setDices(dices[0], dices[1]);
           }
+          ctx.board().rollDices(dices[0], dices[1]);
           break;
         case SET_GAME_TURN:
           if (MatchState.fMove == 0)

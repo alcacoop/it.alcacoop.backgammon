@@ -61,11 +61,10 @@ public class SimulationFSM extends BaseFSM implements Context {
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
-            AICalls.RollDice();
+            ctx.board().rollDices();
             break;
-          case ROLL_DICE:
+          case DICES_ROLLED:
             int dices[] = (int[])params;
-            ctx.board().setDices(dices[0], dices[1]);
             AICalls.EvaluateBestMove(dices);
             break;
           case EVALUATE_BEST_MOVE:
