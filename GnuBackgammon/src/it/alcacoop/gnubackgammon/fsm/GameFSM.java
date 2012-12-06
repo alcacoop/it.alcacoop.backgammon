@@ -58,8 +58,13 @@ public class GameFSM extends BaseFSM implements Context {
         case EVALUATE_BEST_MOVE:
           ctx.board().thinking(false);
           int moves[] = (int[])params;
-          moves = (int[])params;
-          ctx.board().setMoves(moves);
+          if(moves[0] == -1) {
+            ctx.board().noMovesLabel.setText("Your opponent has no more moves");
+            ctx.board().noMovesDialog.show(ctx.board().getStage());
+          } else {
+            moves = (int[])params;
+            ctx.board().setMoves(moves);
+          }
           break;
         case PERFORMED_MOVE:
           ctx.board().updatePInfo();
@@ -133,8 +138,9 @@ public class GameFSM extends BaseFSM implements Context {
           if(moves != null) {
             ctx.board().availableMoves.setMoves((int[][])params);
             ctx.state(HUMAN_PERFORM_MOVES);
-          } else {
-            ctx.state(CHECK_WIN);
+          } else { //player (human) has no more moves
+            ctx.board().noMovesLabel.setText("No more moves available");
+            ctx.board().noMovesDialog.show(ctx.board().getStage());
           }
           break;
         default:

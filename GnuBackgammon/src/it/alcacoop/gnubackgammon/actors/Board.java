@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -55,10 +57,12 @@ public class Board extends Group {
   public Label winLabel;
   public Label resultLabel;
   public Label humanDoubleDialogLabel;
+  public Label noMovesLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
   public Dialog cpuDoubleDialog;
   public Dialog humanDoubleDialog;
+  public Dialog noMovesDialog;
   
   public Board() {
     
@@ -208,6 +212,29 @@ public class Board extends Group {
     humanDoubleDialog.setHeight(boardbg.getHeight()/3);
     humanDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
     humanDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
+    
+    noMovesLabel = new Label("No more moves available", GnuBackgammon.skin);
+    noMovesDialog = new Dialog("", GnuBackgammon.skin) {
+      @Override
+      public Dialog show(Stage stage) {
+        addAction(Actions.sequence(
+            Actions.delay(1.5f),
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                hide();
+                GnuBackgammon.fsm.state(States.CHECK_WIN);
+              }
+            })
+            ));
+        return super.show(stage);
+      }
+    };  
+    noMovesDialog.text(noMovesLabel);
+    noMovesDialog.setWidth(boardbg.getWidth()/2);
+    noMovesDialog.setHeight(boardbg.getHeight()/4*3);
+    noMovesDialog.setX(board.getX() + (boardbg.getWidth()-noMovesDialog.getWidth())/2);
+    noMovesDialog.setY(board.getY() + (boardbg.getHeight()-noMovesDialog.getHeight())/2);
   }
 
 
