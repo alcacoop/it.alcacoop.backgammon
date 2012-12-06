@@ -179,13 +179,7 @@ public class Board extends Group {
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
 
-    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin)   {
-      @Override
-      protected void result(Object object) {
-        //TODO: CHIEDERE A SAURINO IL MOTIVO DI QUESTO..
-        //GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
-        }
-    };
+    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
     resultLabel = new Label("Double accepted", GnuBackgammon.skin);
     cpuDoubleDialog.text(resultLabel);
     cpuDoubleDialog.button("Continue");
@@ -194,7 +188,7 @@ public class Board extends Group {
     cpuDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
     cpuDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
     
-    humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin)  {
+    humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
         GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, object);

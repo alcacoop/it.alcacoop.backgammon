@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -24,8 +27,9 @@ public class Dices extends Group {
   private ArrayList<_dice> last;
   private Board b;
   private animation ans[];
-  private float animDuration = 0.8f;
+  private float animDuration = 0.45f;
   int nr = 0;
+  
   
   
   class animation extends Group {
@@ -35,7 +39,7 @@ public class Dices extends Group {
     int num;
     Random generator = new Random();
     int nr = 0;
-    Action act;
+    Action act1, act2, act3;
     
     animation(int n) {
       num = n;
@@ -49,32 +53,28 @@ public class Dices extends Group {
       setOrigin(img.getWidth()/2, img.getHeight()/2);
       d = (TextureRegionDrawable) img.getDrawable();
       
-      addAction(
-        Actions.parallel(
-        Actions.forever(
-            Actions.sequence(
-            Actions.delay(0.3f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                int n = 0;
-                while ((n = generator.nextInt(6))==nr);
-                nr = n;
-                d.getRegion().setRegion(bg[nr]);        
-              }
-            })
-            )
-        ),
-        Actions.forever(
-            Actions.rotateBy(360*3, animDuration)
-        )
-        )
-      );
-      
+      act3 = Actions.delay(0.15f);
+      act1 = 
+          Actions.sequence(
+          act3,
+          Actions.run(new Runnable() {
+            @Override
+            public void run() {
+              int n = 0;
+              while ((n = generator.nextInt(6))==nr);
+              nr = n;
+              d.getRegion().setRegion(bg[nr]);        
+            }
+          })
+        );
+      act2 = Actions.rotateBy(360*2, animDuration);
+      addAction(Actions.parallel(Actions.forever(act1), Actions.forever(act2)));
     }
+
     
     public void show() {
-      
+      ((TemporalAction)act2).setDuration(animDuration*(GnuBackgammon.Instance.prefs.getString("SPEED").equals("Fast")?1:2));
+      ((DelayAction)act3).setDuration(1.5f*(GnuBackgammon.Instance.prefs.getString("SPEED").equals("Fast")?1:2));
       float w = img.getWidth()+10;
       float x = 0;
       if (MatchState.fMove==0) 
@@ -163,8 +163,9 @@ public class Dices extends Group {
   public void animate(final int d1, final int d2) {
     ans[0].show();
     ans[1].show();
+    
     addAction(Actions.sequence(
-        Actions.delay(animDuration),
+        Actions.delay(animDuration*(GnuBackgammon.Instance.prefs.getString("SPEED").equals("Fast")?1:2)),
         Actions.run(new Runnable() {
           @Override
           public void run() {
