@@ -53,12 +53,14 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Screen currentScreen;
   public JSONProperties jp;
   public Preferences prefs;
+  public SoundManager snd;
   
   
   @Override
   public void create() {
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
+    snd = new SoundManager();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();

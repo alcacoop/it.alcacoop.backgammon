@@ -597,6 +597,7 @@ public class Board extends Group {
   }
   
   public void rollDices() {
+    GnuBackgammon.Instance.snd.playRoll();
     dices.clear();
     int[] ds = {0,0};
     GnubgAPI.RollDice(ds);

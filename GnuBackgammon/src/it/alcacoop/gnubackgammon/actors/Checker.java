@@ -143,6 +143,7 @@ public class Checker extends Group {
         Actions.run(new Runnable() {
           @Override
           public void run() {
+            GnuBackgammon.Instance.snd.playMoveStop();
             if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
             if (fsm==GnuBackgammon.fsm) {
               if (!board.checkHit()) fsm.processEvent(Events.PERFORMED_MOVE, null);
@@ -179,6 +180,7 @@ public class Checker extends Group {
   }
 
   public void highlight(boolean b) {
+    if (b) GnuBackgammon.Instance.snd.playMoveStart();
     imgh.setVisible(b);
   }
   
