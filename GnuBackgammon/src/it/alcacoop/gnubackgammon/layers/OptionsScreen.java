@@ -4,7 +4,6 @@ package it.alcacoop.gnubackgammon.layers;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -71,6 +70,7 @@ public class OptionsScreen implements Screen {
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        savePrefs();
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
@@ -108,6 +108,28 @@ public class OptionsScreen implements Screen {
     
     table.row();
     table.add(back).expand().fill().colspan(5).height(height).width(4*width);
+    
+    initFromPrefs();
+  }
+  
+  public void initFromPrefs() {
+    String sound = GnuBackgammon.Instance.prefs.getString("SOUND", "Yes");
+    this.sound.setChecked(sound);
+    String speed = GnuBackgammon.Instance.prefs.getString("SPEED", "Fast");
+    this.speed.setChecked(speed);
+    String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
+    this.lmoves.setChecked(lmoves);
+  }
+  
+  public void savePrefs() {
+    String sound = ((TextButton)this.sound.getChecked()).getText().toString(); 
+    GnuBackgammon.Instance.prefs.putString("SOUND", sound);
+    String speed = ((TextButton)this.speed.getChecked()).getText().toString(); 
+    GnuBackgammon.Instance.prefs.putString("SPEED", speed);
+    String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString(); 
+    GnuBackgammon.Instance.prefs.putString("LMOVES", lmoves);
+    
+    GnuBackgammon.Instance.prefs.flush();
   }
 
 

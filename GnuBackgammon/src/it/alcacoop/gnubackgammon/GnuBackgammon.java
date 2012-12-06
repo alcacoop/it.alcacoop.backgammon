@@ -15,6 +15,7 @@ import it.alcacoop.gnubackgammon.utils.JSONProperties;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -51,11 +52,13 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
+  public Preferences prefs;
   
   
   @Override
   public void create() {
     Instance = this;
+    prefs = Gdx.app.getPreferences("GameOptions");
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
