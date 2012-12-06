@@ -192,7 +192,6 @@ public class MatchOptionsScreen implements Screen {
     bgImg.setWidth(stage.getWidth());
     bgImg.setHeight(stage.getHeight());
     initTable();
-    
     Gdx.input.setInputProcessor(stage);
     table.setColor(1,1,1,0);
     table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));

@@ -36,6 +36,26 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("STATISTICS")) {
           }
           if (params.toString().equals("OPTIONS")) {
+            ctx.state(States.GAME_OPTIONS);
+          }
+          return true;
+        }
+        return false;
+      }
+    },
+    
+    GAME_OPTIONS {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.goToScreen(1);
+      }
+
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt==Events.BUTTON_CLICKED) {
+          System.out.println(params);
+          if (params.toString().equals("BACK")) {
+            ctx.state(States.MAIN_MENU);
           }
           return true;
         }
