@@ -330,6 +330,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
+    MatchState.fPostCrawford = 0;
     MatchState.UpdateMSCubeInfo(1, -1);
   }
 
