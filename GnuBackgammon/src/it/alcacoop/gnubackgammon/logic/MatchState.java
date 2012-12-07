@@ -4,7 +4,7 @@ package it.alcacoop.gnubackgammon.logic;
 public class MatchState {
   
   public static int[][] board = {
- 
+    
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//BLACK (HUMAN) BGV 
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (PC)
     {0, 0, 0, 0, 0, 4, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0},//BLACK (HUMAN) NGV 
@@ -28,6 +28,7 @@ public class MatchState {
   public static int fCubeUse = 0; //USING CUBE
   public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
   public static int fPostCrawford = 0; //POST CRAWFORD RULE
+  public static int resignValue = 0;
   
   
   public static void SwitchTurn() {
