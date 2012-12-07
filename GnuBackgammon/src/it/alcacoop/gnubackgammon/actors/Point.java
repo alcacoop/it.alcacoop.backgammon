@@ -45,7 +45,7 @@ public class Point extends Group {
   
   
   public void highlight() {
-    if (GnuBackgammon.Instance.prefs.getString("LMOVES").equals("Yes"))
+    if (GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes").equals("Yes"))
       img.setColor(color);
     isTarget = true;
   }

@@ -117,7 +117,7 @@ public class Checker extends Group {
     board.removeActor(this);
     board.addActor(this);
     
-    float tt = 0.2f*(GnuBackgammon.Instance.prefs.getString("SPEED").equals("Fast")?1:2.5f);
+    float tt = 0.2f*(GnuBackgammon.Instance.prefs.getString("SPEED", "Fast").equals("Fast")?1:2.5f);
     if (x==24) tt=0.25f;
     
     final int y;
