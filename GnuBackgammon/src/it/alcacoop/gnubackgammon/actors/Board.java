@@ -58,11 +58,15 @@ public class Board extends Group {
   public Label resultLabel;
   public Label humanDoubleDialogLabel;
   public Label noMovesLabel;
+  public Label cpuResignLabel;
   public Dialog winDialog;
   public Dialog doubleDialog;
   public Dialog cpuDoubleDialog;
   public Dialog humanDoubleDialog;
   public Dialog noMovesDialog;
+  public Dialog cpuResignDialog;
+  public Dialog playerResignDialog;
+  public Dialog resignNotDialog;
   
   public Board() {
     
@@ -229,6 +233,48 @@ public class Board extends Group {
     noMovesDialog.setHeight(boardbg.getHeight()/4*3);
     noMovesDialog.setX(board.getX() + (boardbg.getWidth()-noMovesDialog.getWidth())/2);
     noMovesDialog.setY(board.getY() + (boardbg.getHeight()-noMovesDialog.getHeight())/2);
+    
+    cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
+    cpuResignDialog = new Dialog("", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+      }
+    };
+    cpuResignDialog.text(cpuResignLabel);
+    cpuResignDialog.setWidth(boardbg.getWidth()/2);
+    cpuResignDialog.setHeight(boardbg.getHeight()/4*3);
+    cpuResignDialog.setX(board.getX() + (boardbg.getWidth()-cpuResignDialog.getWidth())/2);
+    cpuResignDialog.setY(board.getY() + (boardbg.getHeight()-cpuResignDialog.getHeight())/2);
+    
+    playerResignDialog = new Dialog("", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        MatchState.resignValue = (Integer)object;
+        GnuBackgammon.fsm.state(States.PLAYER_RESIGNED);
+      }
+    };
+    playerResignDialog.button("1", 1);
+    playerResignDialog.button("2", 2);
+    playerResignDialog.button("3", 3);
+    playerResignDialog.text("Resign to...");
+    playerResignDialog.setWidth(boardbg.getWidth()/2);
+    playerResignDialog.setHeight(boardbg.getHeight()/4*3);
+    playerResignDialog.setX(board.getX() + (boardbg.getWidth()-playerResignDialog.getWidth())/2);
+    playerResignDialog.setY(board.getY() + (boardbg.getHeight()-playerResignDialog.getHeight())/2);
+    
+    resignNotDialog = new Dialog("", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      }
+    };
+    resignNotDialog.button("Continue", null);
+    resignNotDialog.text("Your opponent has not accepted resign");
+    resignNotDialog.setWidth(boardbg.getWidth()/2);
+    resignNotDialog.setHeight(boardbg.getHeight()/4*3);
+    resignNotDialog.setX(board.getX() + (boardbg.getWidth()-resignNotDialog.getWidth())/2);
+    resignNotDialog.setY(board.getY() + (boardbg.getHeight()-resignNotDialog.getHeight())/2);
   }
 
 

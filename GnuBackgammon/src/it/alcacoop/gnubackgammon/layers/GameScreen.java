@@ -58,6 +58,7 @@ public class GameScreen implements Screen {
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        board.playerResignDialog.show(board.getStage());
       }
     });
     

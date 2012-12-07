@@ -24,18 +24,25 @@ public class GameFSM extends BaseFSM implements Context {
           break;
         case ASK_FOR_RESIGNATION:
           System.out.println("I'M RESIGNING... "+params);
-          if(MatchState.fCubeUse == 1) {
-            System.out.println("POST CRAWFORD VALUE: " + MatchState.fPostCrawford);
-            if(MatchState.fPostCrawford == 0) { //NOT POST CRAWFORD GAME
-              if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
-                AICalls.AskForDoubling();
-              else //CRAWFORD GAME
-                ctx.board().rollDices();
-            } else { //POST CRAWFORD GAME
-              AICalls.AskForDoubling();
-            }
+          if((Integer)params > 0) {
+            MatchState.resignValue = (Integer)params; 
+            ctx.board().switchTurn();
+            ctx.board().cpuResignLabel.setText("Your opponent resigned game");
+            ctx.board().cpuResignDialog.show(ctx.board().getStage());
           } else {
-            ctx.board().rollDices();
+            if(MatchState.fCubeUse == 1) {
+              System.out.println("POST CRAWFORD VALUE: " + MatchState.fPostCrawford);
+              if(MatchState.fPostCrawford == 0) { //NOT POST CRAWFORD GAME
+                if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
+                  AICalls.AskForDoubling();
+                else //CRAWFORD GAME
+                  ctx.board().rollDices();
+              } else { //POST CRAWFORD GAME
+                AICalls.AskForDoubling();
+              }
+            } else {
+              ctx.board().rollDices();
+            }
           }
           break;
         case ASK_FOR_DOUBLING:
@@ -232,12 +239,17 @@ public class GameFSM extends BaseFSM implements Context {
     CHECK_END_MATCH {
       @Override
       public void enterState(Context ctx) {
-        int game_score = MatchState.nCube*ctx.board().gameScore(MatchState.fMove==1?0:1);
+        int game_score = 0;
+        if(MatchState.resignValue == 0) {
+          game_score = MatchState.nCube*ctx.board().gameScore(MatchState.fMove==1?0:1);
+        } else {
+          game_score = MatchState.resignValue * MatchState.nCube;
+        }
         if(MatchState.fMove == 0) 
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
-        
+  
 
         if(MatchState.fMove==1)
           ctx.board().winLabel.setText("CPU WON "+game_score+" POINTS!");
@@ -325,7 +337,32 @@ public class GameFSM extends BaseFSM implements Context {
         System.out.println("GAME FSM STOPPED");
         ctx.board().initBoard();
       }
-    };
+    }, 
+    
+    PLAYER_RESIGNED {
+      @Override
+      public void enterState(Context ctx) {
+        System.out.println("Player wants to resign");
+        GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]); //TODO: check order
+        AICalls.AcceptResign(MatchState.resignValue);
+      }
+      
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if(evt == Events.ACCEPT_RESIGN) {
+          System.out.println("RESIGN ACCEPTED WITH VALUE: " + params);
+          if((Integer)params == 0) { //resign not accepted
+            ctx.board().resignNotDialog.show(ctx.board().getStage());
+          } else {
+            ctx.board().switchTurn();
+            GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+          }
+          return true;
+        }
+        return false;
+      }
+      
+    }
+    ;
 
 
     //DEFAULT IMPLEMENTATION
