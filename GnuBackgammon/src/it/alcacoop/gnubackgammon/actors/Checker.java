@@ -4,6 +4,7 @@ import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -26,10 +28,10 @@ public class Checker extends Group {
   private BaseFSM fsm;
   private final TextureRegionDrawable dr;
   
-  
   public int color = 0;
   public int boardX = -1; 
   public int boardY = -1;
+  
   
 
   public Checker(Board _board, int _color) {
@@ -56,19 +58,17 @@ public class Checker extends Group {
     dr = new TextureRegionDrawable(region);
     img = new Image(dr);
     
-    label.setAlignment(com.badlogic.gdx.scenes.scene2d.utils.Align.center);
-    
     region = new TextureRegion(GnuBackgammon.atlas.findRegion("ch"));
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
     
-    label.setX(img.getWidth()/2-label.getWidth()/2);
-    label.setY(img.getHeight()/2-label.getHeight()/2);
     addActor(img);
     addActor(label);
     addActor(imgh);
     label.setText("");
+    label.setWrap(false);
+    label.setAlignment(Align.bottom|Align.center);
   }
   
   
@@ -94,12 +94,16 @@ public class Checker extends Group {
       addAction(act);
     }
     
-    if ((boardY>4)&&(boardX!=-1)) 
+    if ((boardY>4)&&(boardX!=-1)) { 
       label.setText(""+(boardY+1));
-    else 
+      
+      TextBounds b = label.getTextBounds();
+      System.out.println("WIDTH: "+b.width + " HEIGHT: "+b.height);
+      label.setX(img.getImageWidth()/2-label.getWidth()/1.9f);
+      label.setY(img.getImageHeight()/2-label.getHeight()/2.3f);
+    } else 
       label.setText("");
-    label.setX(img.getWidth()/2-label.getWidth()/2);
-    label.setY(img.getHeight()/2-label.getHeight()/2);
+    
     imgh.setVisible(false);
   }
 
@@ -144,11 +148,13 @@ public class Checker extends Group {
           @Override
           public void run() {
             GnuBackgammon.Instance.snd.playMoveStop();
-            if ((boardY>4)&&(boardX!=-1)) label.setText(""+(boardY+1));
+            if ((boardY>4)&&(boardX!=-1)) {
+              label.setText(""+(boardY+1));
+              label.setX(img.getImageWidth()/2-label.getWidth()/1.9f);
+              label.setY(getHeight()/2-label.getHeight()/2.3f);
+            }
             if (fsm==GnuBackgammon.fsm) {
               if (!board.checkHit()) fsm.processEvent(Events.PERFORMED_MOVE, null);
-              label.setX(img.getWidth()/2-label.getWidth()/2);
-              label.setY(img.getHeight()/2-label.getHeight()/2);
               if ((x<24)&&(d>0)) board.dices.disable(d);
             }
           }
@@ -209,12 +215,14 @@ public class Checker extends Group {
 
   @Override
   public void setY(float y) {
+    /*
     if ((y<board.getHeight()/2)&&(!dr.getRegion().isFlipY())) {
       dr.getRegion().flip(false, true);
     } 
     if ((y>board.getHeight()/2)&&(dr.getRegion().isFlipY())) {
       dr.getRegion().flip(false, true);
     }
+    */
     super.setY(y);
   }
 }
