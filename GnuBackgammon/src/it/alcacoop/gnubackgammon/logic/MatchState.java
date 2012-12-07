@@ -4,7 +4,7 @@ package it.alcacoop.gnubackgammon.logic;
 public class MatchState {
   
   public static int[][] board = {
-     
+ 
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//BLACK (HUMAN) BGV 
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (PC)
     {0, 0, 0, 0, 0, 4, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0},//BLACK (HUMAN) NGV 
@@ -57,6 +57,8 @@ public class MatchState {
   public static void SetMatchScore(int AIScore, int HumanScore) {
     MatchState.anScore[0] = HumanScore;
     MatchState.anScore[1] = AIScore;
+    if((AIScore == 0) && (HumanScore == 0))
+      MatchState.fPostCrawford = 0;
     GnubgAPI.SetMatchScore(MatchState.anScore[1], MatchState.anScore[0]);
   }
   

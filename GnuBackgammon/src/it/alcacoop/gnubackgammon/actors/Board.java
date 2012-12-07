@@ -280,8 +280,12 @@ public class Board extends Group {
     if(MatchState.fCubeUse == 1) {
       if(MatchState.fCrawford == 0)
         doublingCube.setVisible(true);
-      else if (((MatchState.nMatchTo - MatchState.anScore[0]) == 1) || ((MatchState.nMatchTo - MatchState.anScore[1]) == 1))
-        doublingCube.setVisible(false);
+      else if (((MatchState.nMatchTo - MatchState.anScore[0]) == 1) || ((MatchState.nMatchTo - MatchState.anScore[1]) == 1)) {
+        if(MatchState.fPostCrawford == 0)
+          doublingCube.setVisible(false);
+        else
+          doublingCube.setVisible(true);
+      }
     } else { 
       doublingCube.setVisible(false);
     }
@@ -330,7 +334,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
-    MatchState.fPostCrawford = 0;
+
     MatchState.UpdateMSCubeInfo(1, -1);
   }
 
