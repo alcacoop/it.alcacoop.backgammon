@@ -237,8 +237,19 @@ public class Board extends Group {
     cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
     cpuResignDialog = new Dialog("", GnuBackgammon.skin) {
       @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+      public Dialog show(Stage stage) {
+        addAction(Actions.sequence(
+            Actions.delay(1.5f),
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                hide();
+                MatchState.SetGameTurn(0, 0);
+                GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+              }
+            })
+            ));
+        return super.show(stage);
       }
     };
     cpuResignDialog.text(cpuResignLabel);

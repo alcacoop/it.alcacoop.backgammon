@@ -25,18 +25,21 @@ public class GameFSM extends BaseFSM implements Context {
         case ASK_FOR_RESIGNATION:
           System.out.println("I'M RESIGNING... "+params);
           if((Integer)params > 0) {
-            MatchState.resignValue = (Integer)params; 
-            ctx.board().switchTurn();
-            ctx.board().cpuResignLabel.setText("Your opponent resigned game");
+            MatchState.resignValue = (Integer)params;
+            String s = "Your opponent resigned a game";
+            if ((Integer)params==2) s = "Your opponent resigned a gammon game";
+            if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
+            ctx.board().cpuResignLabel.setText(s);
             ctx.board().cpuResignDialog.show(ctx.board().getStage());
           } else {
             if(MatchState.fCubeUse == 1) {
               System.out.println("POST CRAWFORD VALUE: " + MatchState.fPostCrawford);
               if(MatchState.fPostCrawford == 0) { //NOT POST CRAWFORD GAME
-                if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1)))
+                if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
                   AICalls.AskForDoubling();
-                else //CRAWFORD GAME
+                } else {//CRAWFORD GAME
                   ctx.board().rollDices();
+                }
               } else { //POST CRAWFORD GAME
                 AICalls.AskForDoubling();
               }
