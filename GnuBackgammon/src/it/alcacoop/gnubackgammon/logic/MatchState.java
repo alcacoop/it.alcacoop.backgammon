@@ -9,7 +9,7 @@ public class MatchState {
     {0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},//WHITE (PC)
     {0, 0, 0, 0, 0, 4, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0},//BLACK (HUMAN) NGV 
     {0, 0, 0, 0, 0, 4, 0, 3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0},//WHITE (PC) NGV
-    
+
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF
     
@@ -27,7 +27,8 @@ public class MatchState {
   public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON
   public static int fCubeUse = 0; //USING CUBE
   public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
-  public static int fPostCrawford = 0; //POST CRAWFORD RULE
+  public static boolean fPostCrawford = false; //POST CRAWFORD RULE
+  public static boolean fCrafwordGame = false;
   public static int resignValue = 0;
   
   
@@ -58,8 +59,19 @@ public class MatchState {
   public static void SetMatchScore(int AIScore, int HumanScore) {
     MatchState.anScore[0] = HumanScore;
     MatchState.anScore[1] = AIScore;
-    if((AIScore == 0) && (HumanScore == 0))
-      MatchState.fPostCrawford = 0;
+    if((AIScore == 0) && (HumanScore == 0)) { //RESET CRAWFORD LOGIC
+      fPostCrawford = false;
+      fCrafwordGame = false;
+    }
+    if (((nMatchTo-AIScore<=1)||(nMatchTo-HumanScore<=1))&&(!fCrafwordGame)&&(!fPostCrawford)) {
+      //CRAWFORD GAME!
+      fCrafwordGame = true;
+      fPostCrawford = true;
+    }
+    else if (((nMatchTo-AIScore<=1)||(nMatchTo-HumanScore<=1))&&(fCrafwordGame)&&(fPostCrawford)) {
+      //POST CRAWFORD GAMES!
+      fCrafwordGame = false;
+    }
     GnubgAPI.SetMatchScore(MatchState.anScore[1], MatchState.anScore[0]);
   }
   

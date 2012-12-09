@@ -31,20 +31,19 @@ public class GameFSM extends BaseFSM implements Context {
             if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
             ctx.board().cpuResignLabel.setText(s);
             ctx.board().cpuResignDialog.show(ctx.board().getStage());
-          } else {
-            if(MatchState.fCubeUse == 1) {
-              System.out.println("POST CRAWFORD VALUE: " + MatchState.fPostCrawford);
-              if(MatchState.fPostCrawford == 0) { //NOT POST CRAWFORD GAME
-                if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
-                  AICalls.AskForDoubling();
-                } else {//CRAWFORD GAME
-                  ctx.board().rollDices();
-                }
-              } else { //POST CRAWFORD GAME
-                AICalls.AskForDoubling();
-              }
-            } else {
+          
+          } else { //ASKFORDOUBLING OR ROLL..
+            if(MatchState.fCubeUse == 0) { //NO CUBE USE
               ctx.board().rollDices();
+            } else {
+              if (
+                  ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
+                  ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==1)) //AVAILABLE CUBE
+                 ) {
+                AICalls.AskForDoubling();
+              } else {
+                ctx.board().rollDices();
+              }
             }
           }
           break;
@@ -106,22 +105,19 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
         case SET_BOARD:
-          ctx.board().dices.clear();          
-          if(((MatchState.fCubeOwner == MatchState.fMove) || (MatchState.fCubeOwner == -1)) && (MatchState.fCubeUse == 1)) {
-            System.out.println("POST CRAWFORD VALUE: " + MatchState.fPostCrawford);
-            if(MatchState.fPostCrawford == 0) { //NOT POST CRAWFORD GAME
-              if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] > 1) && (MatchState.nMatchTo - MatchState.anScore[1] > 1))) {
-                ctx.board().addActor(ctx.board().rollBtn);
-                ctx.board().addActor(ctx.board().doubleBtn);
-              } else {
-                ctx.board().rollDices();
-              }
-            } else {
+          ctx.board().dices.clear();
+          if (MatchState.fCubeUse==0) {
+            ctx.board().rollDices();
+          } else {
+            if (
+                ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
+                ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==MatchState.fMove)) //AVAILABLE CUBE
+               ) {
               ctx.board().addActor(ctx.board().rollBtn);
               ctx.board().addActor(ctx.board().doubleBtn);
+            } else {
+              ctx.board().rollDices();
             }
-          } else {
-            ctx.board().addActor(ctx.board().rollBtn);
           }
           break;
         case CPU_DOUBLING_RESPONSE:
@@ -216,11 +212,6 @@ public class GameFSM extends BaseFSM implements Context {
     CHECK_WIN {
       public void enterState(Context ctx) {
         if (ctx.board().gameFinished()) {
-          if(MatchState.fCubeUse == 1) { //set postCrawford Rule
-            if((MatchState.fCrawford == 1) && ((MatchState.nMatchTo - MatchState.anScore[0] == 1) || (MatchState.nMatchTo - MatchState.anScore[1] == 1))) {
-              MatchState.fPostCrawford = 1;
-            }
-          }
           ctx.state(CHECK_END_MATCH);
         } else {
           if (MatchState.fMove==1)
@@ -364,9 +355,7 @@ public class GameFSM extends BaseFSM implements Context {
         return false;
       }
       
-    }
-    ;
-
+    };
 
     //DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, Events evt, Object params) {return false;}

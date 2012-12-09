@@ -145,7 +145,7 @@ public class Board extends Group {
         Board.this.doubleBtn.remove();
         if(MatchState.matchType == 0)
           GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
-        else { //vado in uno stato in cui mostra la window
+        else { //SHOW DOUBLE DIALOG!
           GnuBackgammon.fsm.processEvent(Events.SHOW_DOUBLE_DIALOG, null);
         }
       }
@@ -333,20 +333,16 @@ public class Board extends Group {
   public void initBoard() {
     abandon();
     removeActor(winDialog);
-    doublingCube.setVisible(true);
-    if(MatchState.fCubeUse == 1) {
-      if(MatchState.fCrawford == 0)
-        doublingCube.setVisible(true);
-      else if (((MatchState.nMatchTo - MatchState.anScore[0]) == 1) || ((MatchState.nMatchTo - MatchState.anScore[1]) == 1)) {
-        if(MatchState.fPostCrawford == 0)
-          doublingCube.setVisible(false);
-        else
-          doublingCube.setVisible(true);
-      }
-    } else { 
-      doublingCube.setVisible(false);
-    }
+    
     doublingCube.reset();
+    
+    if (MatchState.fCubeUse==0) { //NOT DOUBLING
+      doublingCube.setVisible(false);
+    } else {
+      doublingCube.setVisible(true);
+      if ((MatchState.fCrawford==1)&&(MatchState.fCrafwordGame))
+        doublingCube.setVisible(false);
+    }
     
     int i0 = 0;
     int i1 = 0;
