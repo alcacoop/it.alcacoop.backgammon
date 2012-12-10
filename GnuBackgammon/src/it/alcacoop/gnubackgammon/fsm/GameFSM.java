@@ -1,10 +1,12 @@
 package it.alcacoop.gnubackgammon.fsm;
 
+
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
+import it.alcacoop.gnubackgammon.ui.UIDialog;
 
 public class GameFSM extends BaseFSM implements Context {
 
@@ -47,23 +49,21 @@ public class GameFSM extends BaseFSM implements Context {
             }
           }
           break;
+          
+          
         case ASK_FOR_DOUBLING:
           System.out.println("I'D LIKE TO DOUBLE... "+params);
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
-            ctx.board().doubleDialog.show(ctx.board().getStage());
+            ctx.state(DIALOG_HANDLER);
+            UIDialog.getYesNoDialog(
+              Events.DOUBLING_RESPONSE, 
+              "CPU is asking for double. Accept?", 
+              ctx.board().getStage());
           } else {
             ctx.board().rollDices();
           }
           break;
-        case DOUBLING_RESPONSE:
-          if(Integer.parseInt(params.toString())==1) { //DOUBLING ACCEPTED
-            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
-            ctx.board().doubleCube();
-            ctx.board().rollDices();
-          } else { //double not accepted
-            ctx.state(CHECK_END_MATCH);
-          }
-          break;
+          
         case DICES_ROLLED:
           int dices[] = (int[])params;
           ctx.board().thinking(true);
@@ -325,13 +325,6 @@ public class GameFSM extends BaseFSM implements Context {
       }
     },
 
-    STOPPED {
-      @Override
-      public void enterState(Context ctx) {
-        System.out.println("GAME FSM STOPPED");
-        ctx.board().initBoard();
-      }
-    }, 
     
     PLAYER_RESIGNED {
       @Override
@@ -354,7 +347,36 @@ public class GameFSM extends BaseFSM implements Context {
         }
         return false;
       }
-      
+    },
+    
+    
+    DIALOG_HANDLER {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case DOUBLING_RESPONSE: //RISPOSTA A CPU DOUBLING REQUEST
+            if((Boolean)params) { //DOUBLING ACCEPTED
+              MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
+              ctx.board().doubleCube();
+              ctx.state(CPU_TURN);
+              ctx.board().rollDices();
+            } else { //double not accepted
+              ctx.state(CHECK_END_MATCH);
+            }
+            break;
+          default: return false;
+        }
+        return true;
+      }
+    },
+    
+    
+    STOPPED {
+      @Override
+      public void enterState(Context ctx) {
+        System.out.println("GAME FSM STOPPED");
+        ctx.board().initBoard();
+      }
     };
 
     //DEFAULT IMPLEMENTATION

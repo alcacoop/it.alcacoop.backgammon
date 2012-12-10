@@ -60,7 +60,6 @@ public class Board extends Group {
   public Label noMovesLabel;
   public Label cpuResignLabel;
   public Dialog winDialog;
-  public Dialog doubleDialog;
   public Dialog cpuDoubleDialog;
   public Dialog humanDoubleDialog;
   public Dialog noMovesDialog;
@@ -155,6 +154,11 @@ public class Board extends Group {
     doubleBtn.setX(board.getX() + jp.asFloat("dice1", 0)-doubleBtn.getWidth()/2);
     doubleBtn.setY(board.getY() + boardbg.getHeight()/2-doubleBtn.getHeight()/2);
     
+    doublingCube = new DoublingCube(this);
+    addActor(doublingCube);
+    
+    
+    //TRASH FROM HERE!
     winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
@@ -170,22 +174,6 @@ public class Board extends Group {
     winDialog.setX(board.getX() + (boardbg.getWidth()-winDialog.getWidth())/2);
     winDialog.setY(board.getY() + (boardbg.getHeight()-winDialog.getHeight())/2);
     
-    doubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.DOUBLING_RESPONSE, object);
-      }
-    };
-    doubleDialog.text("CPU is asking for double. Accept?");
-    doubleDialog.button("No", 0);
-    doubleDialog.button("Yes", 1);
-    doubleDialog.setWidth(boardbg.getWidth()/3);
-    doubleDialog.setHeight(boardbg.getHeight()/3);
-    doubleDialog.setX(board.getX() + (boardbg.getWidth()-doubleDialog.getWidth())/2);
-    doubleDialog.setY(board.getY() + (boardbg.getHeight()-doubleDialog.getHeight())/2);
-    
-    doublingCube = new DoublingCube(this);
-    addActor(doublingCube);
 
     cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
     resultLabel = new Label("Double accepted", GnuBackgammon.skin);
