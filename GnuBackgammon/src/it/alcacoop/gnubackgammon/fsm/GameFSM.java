@@ -233,20 +233,17 @@ public class GameFSM extends BaseFSM implements Context {
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
-  
 
         if(MatchState.fMove==1)
-          ctx.board().winLabel.setText("CPU WON "+game_score+" POINTS!");
+          UIDialog.getContinueDialog(Events.CONTINUE, "CPU WON "+game_score+" POINTS!", ctx.board().getStage());
         else
-          ctx.board().winLabel.setText("HUMAN WON "+game_score+" POINTS!");
+          UIDialog.getContinueDialog(Events.CONTINUE, "HUMAN WON "+game_score+" POINTS!", ctx.board().getStage());
         
-        ctx.board().winDialog.show(ctx.board().getStage());
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.CONTINUE) {
-          
           if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {

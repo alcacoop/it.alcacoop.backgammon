@@ -50,6 +50,7 @@ public final class UIDialog extends Window {
         hide(new Runnable(){
           @Override
           public void run() {
+            instance.remove();
             boolean ret = s.equals("YES")||s.equals("OK");
             GnuBackgammon.fsm.processEvent(instance.evt, ret);
           }
@@ -57,7 +58,8 @@ public final class UIDialog extends Window {
       };
     };
     
-    label = new Label("...", GnuBackgammon.skin);
+    label = new Label("", GnuBackgammon.skin);
+    
     bYes = new TextButton("Yes", GnuBackgammon.skin);
     bYes.addListener(cl);
     bNo = new TextButton("No", GnuBackgammon.skin);
@@ -96,13 +98,7 @@ public final class UIDialog extends Window {
   private void hide(Runnable r) {
     addAction(Actions.sequence(
         Actions.fadeOut(0.3f),
-        Actions.run(r),
-        Actions.run(new Runnable() {
-          @Override
-          public void run() {
-            remove();
-          }
-        })
+        Actions.run(r)
     ));
   }
   
@@ -186,8 +182,8 @@ public final class UIDialog extends Window {
         Actions.run(new Runnable() {
           @Override
           public void run() {
-            GnuBackgammon.fsm.processEvent(instance.evt, true);
             instance.remove();
+            GnuBackgammon.fsm.processEvent(instance.evt, true);
           }
         })
     ));

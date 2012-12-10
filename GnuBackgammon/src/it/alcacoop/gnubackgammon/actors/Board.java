@@ -54,11 +54,9 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton doubleBtn;
   
-  public Label winLabel;
   public Label humanDoubleDialogLabel;
   public Label cpuResignLabel;
   
-  public Dialog winDialog;
   public Dialog humanDoubleDialog;
   public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
@@ -152,23 +150,6 @@ public class Board extends Group {
     addActor(doublingCube);
     
     
-    //TRASH FROM HERE!
-    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.CONTINUE, null);
-      }
-    };
-    
-    winLabel = new Label("CPU WIN!", GnuBackgammon.skin);
-    winDialog.text(winLabel);
-    winDialog.button("Continue");
-    winDialog.setWidth(boardbg.getWidth()/2);
-    winDialog.setHeight(boardbg.getHeight()/4*3);
-    winDialog.setX(board.getX() + (boardbg.getWidth()-winDialog.getWidth())/2);
-    winDialog.setY(board.getY() + (boardbg.getHeight()-winDialog.getHeight())/2);
-    
-
     humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
@@ -282,8 +263,6 @@ public class Board extends Group {
   }
   public void initBoard() {
     abandon();
-    removeActor(winDialog);
-    
     doublingCube.reset();
     
     if (MatchState.fCubeUse==0) { //NOT DOUBLING

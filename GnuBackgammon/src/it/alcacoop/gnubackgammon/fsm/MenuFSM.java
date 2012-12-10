@@ -1,6 +1,5 @@
 package it.alcacoop.gnubackgammon.fsm;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
@@ -75,12 +74,6 @@ public class MenuFSM extends BaseFSM implements Context {
           System.out.println(params);
           if (params.toString().equals("PLAY")) {
             GnuBackgammon.Instance.setFSM("GAME_FSM");
-            
-            if (ctx.board().winDialog.hasParent()) {
-              Dialog.fadeDuration = 0;
-              ctx.board().winDialog.hide();
-              Dialog.fadeDuration = 0.4f;
-            }
           }
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
