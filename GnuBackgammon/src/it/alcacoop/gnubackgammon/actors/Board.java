@@ -56,12 +56,10 @@ public class Board extends Group {
   
   public Label winLabel;
   public Label humanDoubleDialogLabel;
-  public Label noMovesLabel;
   public Label cpuResignLabel;
-  public Dialog winDialog;
   
+  public Dialog winDialog;
   public Dialog humanDoubleDialog;
-  public Dialog noMovesDialog;
   public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
@@ -185,29 +183,6 @@ public class Board extends Group {
     humanDoubleDialog.setHeight(boardbg.getHeight()/3);
     humanDoubleDialog.setX(board.getX() + (boardbg.getWidth()-humanDoubleDialog.getWidth())/2);
     humanDoubleDialog.setY(board.getY() + (boardbg.getHeight()-humanDoubleDialog.getHeight())/2);
-    
-    noMovesLabel = new Label("No more moves available", GnuBackgammon.skin);
-    noMovesDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      public Dialog show(Stage stage) {
-        addAction(Actions.sequence(
-            Actions.delay(1.5f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                hide();
-                GnuBackgammon.fsm.state(States.CHECK_WIN);
-              }
-            })
-            ));
-        return super.show(stage);
-      }
-    };  
-    noMovesDialog.text(noMovesLabel);
-    noMovesDialog.setWidth(boardbg.getWidth()/2);
-    noMovesDialog.setHeight(boardbg.getHeight()/4*3);
-    noMovesDialog.setX(board.getX() + (boardbg.getWidth()-noMovesDialog.getWidth())/2);
-    noMovesDialog.setY(board.getY() + (boardbg.getHeight()-noMovesDialog.getHeight())/2);
     
     cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
     cpuResignDialog = new Dialog("", GnuBackgammon.skin) {

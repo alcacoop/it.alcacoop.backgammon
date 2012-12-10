@@ -73,8 +73,11 @@ public class GameFSM extends BaseFSM implements Context {
           ctx.board().thinking(false);
           int moves[] = (int[])params;
           if(moves[0] == -1) {
-            ctx.board().noMovesLabel.setText("Your opponent has no more moves");
-            ctx.board().noMovesDialog.show(ctx.board().getStage());
+            ctx.state(DIALOG_HANDLER);
+            UIDialog.getFlashDialog(
+              Events.NO_MORE_MOVES, 
+              "Your opponent has no legal moves", 
+              ctx.board().getStage());
           } else {
             moves = (int[])params;
             ctx.board().setMoves(moves);
@@ -139,8 +142,11 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.board().availableMoves.setMoves((int[][])params);
             ctx.state(HUMAN_PERFORM_MOVES);
           } else { //player (human) has no more moves
-            ctx.board().noMovesLabel.setText("No more moves available");
-            ctx.board().noMovesDialog.show(ctx.board().getStage());
+            ctx.state(DIALOG_HANDLER);
+            UIDialog.getFlashDialog(
+              Events.NO_MORE_MOVES, 
+              "No legal moves available", 
+              ctx.board().getStage());
           }
           break;
         default:
@@ -384,6 +390,10 @@ public class GameFSM extends BaseFSM implements Context {
             
           case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
             ctx.state(CHECK_END_MATCH);
+            break;
+            
+          case NO_MORE_MOVES: //NO LEGAL MOVES AVAILABLE
+            GnuBackgammon.fsm.state(States.CHECK_WIN);
             break;
             
           default: return false;
