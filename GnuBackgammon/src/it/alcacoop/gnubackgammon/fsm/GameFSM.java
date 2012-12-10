@@ -124,11 +124,6 @@ public class GameFSM extends BaseFSM implements Context {
           }
           break;
           
-          
-        case SHOW_DOUBLE_DIALOG:
-          ctx.board().humanDoubleDialog.show(ctx.board().getStage());
-          break;
-          
         case DICES_ROLLED:
           ctx.board().removeActor(ctx.board().rollBtn);
           if(MatchState.fCubeUse == 1)
@@ -353,29 +348,33 @@ public class GameFSM extends BaseFSM implements Context {
             break;
           
           case DOUBLE_REQUEST: //DOUBLE BUTTON CLICKED!
-            if(MatchState.matchType == 0) { //CPU vs HUMAN
+            if(MatchState.matchType == 0) { //CPU VS HUMAN
               MatchState.SetGameTurn(1, 0);
               GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
               AICalls.AcceptDouble();
               ctx.board().removeActor(ctx.board().doubleBtn);
               ctx.board().thinking(true);              
             } else { //SHOW DOUBLE DIALOG!
-              //TODO: GnuBackgammon.fsm.processEvent(Events.SHOW_DOUBLE_DIALOG, null);
+              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", ctx.board().getStage());
+            }
+            break;
+            
+          case HUMAN_DOUBLE_RESPONSE: //HUMAN DOUBLE RESPONSE (TWO PLAYERS MODE)
+            boolean res = (Boolean)params;
+            if (res) { //HUMAN OPPONENT ACCEPTED DOUBLE
+              MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+              ctx.board().doubleCube();
+            } else { //HUMAN OPPONENT DIDN'T ACCEPT IT
+              ctx.state(CHECK_END_MATCH);
             }
             break;
             
           case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
             ctx.board().thinking(false);
             if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
-              UIDialog.getFlashDialog(
-                Events.CPU_DOUBLE_ACCEPTED, 
-                "Your opponent accepted double", 
-                ctx.board().getStage());
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", ctx.board().getStage());
             } else { //CPU DIDN'T ACCEPT MY DOUBLE
-              UIDialog.getFlashDialog(
-                  Events.CPU_DOUBLE_NOT_ACCEPTED, 
-                  "Double not accepted", 
-                  ctx.board().getStage());
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", ctx.board().getStage());
             }
             break;
             

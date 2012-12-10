@@ -54,10 +54,10 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton doubleBtn;
   
-  public Label humanDoubleDialogLabel;
+  //public Label humanDoubleDialogLabel;
   public Label cpuResignLabel;
   
-  public Dialog humanDoubleDialog;
+  //public Dialog humanDoubleDialog;
   public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
@@ -149,21 +149,6 @@ public class Board extends Group {
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
     
-    
-    humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, object);
-        }
-    };  
-    humanDoubleDialogLabel = new Label("Accept double?", GnuBackgammon.skin);
-    humanDoubleDialog.text(humanDoubleDialogLabel);
-    humanDoubleDialog.button("No", 0);
-    humanDoubleDialog.button("Yes", 1);
-    humanDoubleDialog.setWidth(boardbg.getWidth()/3);
-    humanDoubleDialog.setHeight(boardbg.getHeight()/3);
-    humanDoubleDialog.setX(board.getX() + (boardbg.getWidth()-humanDoubleDialog.getWidth())/2);
-    humanDoubleDialog.setY(board.getY() + (boardbg.getHeight()-humanDoubleDialog.getHeight())/2);
     
     cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
     cpuResignDialog = new Dialog("", GnuBackgammon.skin) {
