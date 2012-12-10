@@ -120,28 +120,12 @@ public class GameFSM extends BaseFSM implements Context {
             }
           }
           break;
-        case CPU_DOUBLING_RESPONSE:
-          MatchState.SetGameTurn(1, 0);
-          GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
-          AICalls.AcceptDouble();
-          ctx.board().removeActor(ctx.board().doubleBtn);
-          ctx.board().thinking(true);
-          break;
+          
+          
         case SHOW_DOUBLE_DIALOG:
           ctx.board().humanDoubleDialog.show(ctx.board().getStage());
           break;
-        case ACCEPT_DOUBLE:
-          ctx.board().thinking(false);
-          if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
-            ctx.board().resultLabel.setText("Your opponent accepted double");
-            ctx.board().cpuDoubleDialog.show(ctx.board().getStage());
-            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
-            ctx.board().doubleCube();
-          } else { //OPPONENT HAS NOT ACCEPTED MY DOUBLE
-            //ctx.board().resultLabel.setText("Your opponent didn't accept double");
-            ctx.state(CHECK_END_MATCH);
-          }
-          break;
+          
         case DICES_ROLLED:
           ctx.board().removeActor(ctx.board().rollBtn);
           if(MatchState.fCubeUse == 1)
@@ -360,12 +344,52 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().doubleCube();
               ctx.state(CPU_TURN);
               ctx.board().rollDices();
-            } else { //double not accepted
+            } else { //DOUBLING NOT ACCEPTED
               ctx.state(CHECK_END_MATCH);
             }
             break;
+          
+          case DOUBLE_REQUEST: //DOUBLE BUTTON CLICKED!
+            if(MatchState.matchType == 0) { //CPU vs HUMAN
+              MatchState.SetGameTurn(1, 0);
+              GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
+              AICalls.AcceptDouble();
+              ctx.board().removeActor(ctx.board().doubleBtn);
+              ctx.board().thinking(true);              
+            } else { //SHOW DOUBLE DIALOG!
+              //TODO: GnuBackgammon.fsm.processEvent(Events.SHOW_DOUBLE_DIALOG, null);
+            }
+            break;
+            
+          case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
+            ctx.board().thinking(false);
+            if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
+              UIDialog.getFlashDialog(
+                Events.CPU_DOUBLE_ACCEPTED, 
+                "Your opponent accepted double", 
+                ctx.board().getStage());
+            } else { //CPU DIDN'T ACCEPT MY DOUBLE
+              UIDialog.getFlashDialog(
+                  Events.CPU_DOUBLE_NOT_ACCEPTED, 
+                  "Double not accepted", 
+                  ctx.board().getStage());
+            }
+            break;
+            
+          case CPU_DOUBLE_ACCEPTED: //CPU ACCEPTED DOUBLE
+            ctx.state(States.HUMAN_TURN);
+            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+            ctx.board().doubleCube();
+            break;
+            
+          case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
+            ctx.state(CHECK_END_MATCH);
+            break;
+            
           default: return false;
         }
+        
+        
         return true;
       }
     },
