@@ -40,7 +40,10 @@ public class GameFSM extends BaseFSM implements Context {
                   ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
                   ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==1)) //AVAILABLE CUBE
                  ) {
-                AICalls.AskForDoubling();
+                if (MatchState.nMatchTo-MatchState.anScore[1]>1)
+                  AICalls.AskForDoubling();
+                else //DEAD CUBE!!
+                  ctx.board().rollDices();
               } else {
                 ctx.board().rollDices();
               }
