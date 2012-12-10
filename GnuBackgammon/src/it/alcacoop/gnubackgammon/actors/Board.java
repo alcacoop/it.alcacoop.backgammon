@@ -67,6 +67,7 @@ public class Board extends Group {
   public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
+  public Dialog exitDialog;
   
   public Board() {
     
@@ -286,6 +287,27 @@ public class Board extends Group {
     resignNotDialog.setHeight(boardbg.getHeight()/4*3);
     resignNotDialog.setX(board.getX() + (boardbg.getWidth()-resignNotDialog.getWidth())/2);
     resignNotDialog.setY(board.getY() + (boardbg.getHeight()-resignNotDialog.getHeight())/2);
+    
+    exitDialog = new Dialog("", GnuBackgammon.skin);
+    exitDialog.text("Really exit this match?");
+    TextButton no = new TextButton("NO", GnuBackgammon.skin);
+    TextButton yes = new TextButton("YES", GnuBackgammon.skin);
+    no.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        exitDialog.hide();
+        super.clicked(event, x, y);
+      }
+    });
+    yes.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.setFSM("MENU_FSM");
+      }
+    });
+    exitDialog.button(no);
+    exitDialog.button(yes);    
+
   }
 
 

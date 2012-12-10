@@ -6,10 +6,12 @@ import it.alcacoop.gnubackgammon.actors.PlayerInfo;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -39,6 +41,16 @@ public class GameScreen implements Screen {
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     stage.addActor(bgImg);
+    
+    stage.addListener(new InputListener() {
+      @Override
+      public boolean keyDown(InputEvent event, int keycode) {
+        if(Gdx.input.isKeyPressed(Keys.BACK)) { 
+          board.exitDialog.show(board.getStage());
+        }
+        return super.keyDown(event, keycode);
+      }
+    });
     
     board = GnuBackgammon.Instance.board;
     
@@ -106,7 +118,6 @@ public class GameScreen implements Screen {
     stage.draw();
   }
 
-
   @Override
   public void resize(int width, int height) {
     bgImg.setWidth(stage.getWidth());
@@ -130,6 +141,7 @@ public class GameScreen implements Screen {
     pInfo[0].update();
     pInfo[1].update();
     Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
     
     table.setY(stage.getHeight());
     table.addAction(Actions.sequence(

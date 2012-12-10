@@ -6,9 +6,11 @@ import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -35,6 +37,17 @@ public class OptionsScreen implements Screen {
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
+    
+    stage.addListener(new InputListener() {
+      @Override
+      public boolean keyDown(InputEvent event, int keycode) {
+        if(Gdx.input.isKeyPressed(Keys.BACK)) {
+          savePrefs();
+          GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
+        }
+        return super.keyDown(event, keycode);
+      }
+    });
     
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
@@ -156,6 +169,7 @@ public class OptionsScreen implements Screen {
     bgImg.setWidth(stage.getWidth());
     bgImg.setHeight(stage.getHeight());
     Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
     table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }

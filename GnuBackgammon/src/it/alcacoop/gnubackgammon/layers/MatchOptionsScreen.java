@@ -9,9 +9,11 @@ import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -71,6 +73,17 @@ public class MatchOptionsScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     
     stage.addActor(bgImg);
+    
+    stage.addListener(new InputListener() {
+      @Override
+      public boolean keyDown(InputEvent event, int keycode) {
+        if(Gdx.input.isKeyPressed(Keys.BACK)) {
+          savePrefs();
+          GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
+        }
+        return super.keyDown(event, keycode);
+      }
+    });
     
     titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
     difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
@@ -193,6 +206,7 @@ public class MatchOptionsScreen implements Screen {
     bgImg.setHeight(stage.getHeight());
     initTable();
     Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
     table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
