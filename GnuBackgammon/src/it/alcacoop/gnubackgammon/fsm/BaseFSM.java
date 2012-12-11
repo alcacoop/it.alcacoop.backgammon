@@ -27,6 +27,7 @@ public class BaseFSM implements Context {
   private int nMoves; 
 
   public enum Events {
+    NOOP,
     ACCEPT_DOUBLE,
     ACCEPT_RESIGN,
     ASK_FOR_DOUBLING,
