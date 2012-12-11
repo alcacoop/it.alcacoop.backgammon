@@ -67,7 +67,7 @@ public class MainMenuScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)) {
+        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           exitDialog.show(stage);
         }
         return super.keyDown(event, keycode);

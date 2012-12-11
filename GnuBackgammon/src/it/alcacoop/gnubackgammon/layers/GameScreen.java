@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)) { 
+        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           board.exitDialog.show(board.getStage());
         }
         return super.keyDown(event, keycode);
@@ -100,7 +100,6 @@ public class GameScreen implements Screen {
     table.add(abandon).fill().pad(2).height(50);
     
     table.row();
-    //TODO: PROPORTIONAL FILL COULD BE BETTER
     table.add(board).colspan(5).expand().fill();
   }
 

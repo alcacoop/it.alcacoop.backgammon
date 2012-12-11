@@ -77,7 +77,7 @@ public class MatchOptionsScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)) {
+        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           savePrefs();
           GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }
