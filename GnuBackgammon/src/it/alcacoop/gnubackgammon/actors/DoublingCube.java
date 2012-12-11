@@ -4,6 +4,7 @@ import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -41,8 +42,8 @@ public class DoublingCube extends Group {
     TextureRegionDrawable d = new TextureRegionDrawable(region);
     i.setDrawable(d);
     if (MatchState.fCubeOwner == -1) setY(center);
-    else if (MatchState.fMove==0) setY(up);
-    else setY(down);
+    else if (MatchState.fMove==0) addAction(Actions.moveTo(getX(), up, 0.3f));
+    else addAction(Actions.moveTo(getX(), down, 0.3f));
   }
   
   public void reset() {

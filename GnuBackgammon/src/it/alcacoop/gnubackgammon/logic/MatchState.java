@@ -62,6 +62,8 @@ public class MatchState {
     if((AIScore == 0) && (HumanScore == 0)) { //RESET CRAWFORD LOGIC
       fPostCrawford = false;
       fCrafwordGame = false;
+      resignValue = 0;
+      nCube = 1;
     }
     if (((nMatchTo-AIScore<=1)||(nMatchTo-HumanScore<=1))&&(!fCrafwordGame)&&(!fPostCrawford)) {
       //CRAWFORD GAME!

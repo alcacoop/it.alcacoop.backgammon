@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -54,17 +53,6 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton doubleBtn;
   
-  public Label winLabel;
-  public Label resultLabel;
-  public Label humanDoubleDialogLabel;
-  public Label noMovesLabel;
-  public Label cpuResignLabel;
-  public Dialog winDialog;
-  public Dialog doubleDialog;
-  public Dialog cpuDoubleDialog;
-  public Dialog humanDoubleDialog;
-  public Dialog noMovesDialog;
-  public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
   public Dialog exitDialog;
@@ -144,11 +132,8 @@ public class Board extends Group {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         Board.this.doubleBtn.remove();
-        if(MatchState.matchType == 0)
-          GnuBackgammon.fsm.processEvent(Events.CPU_DOUBLING_RESPONSE, null);
-        else { //SHOW DOUBLE DIALOG!
-          GnuBackgammon.fsm.processEvent(Events.SHOW_DOUBLE_DIALOG, null);
-        }
+        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+        GnuBackgammon.fsm.processEvent(Events.DOUBLE_REQUEST, null);
       }
     });
     doubleBtn.setWidth(boardbg.getWidth()/5);
@@ -156,109 +141,11 @@ public class Board extends Group {
     doubleBtn.setX(board.getX() + jp.asFloat("dice1", 0)-doubleBtn.getWidth()/2);
     doubleBtn.setY(board.getY() + boardbg.getHeight()/2-doubleBtn.getHeight()/2);
     
-    winDialog = new Dialog("MATCH FINISHED", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.CONTINUE, null);
-      }
-    };
-    
-    winLabel = new Label("CPU WIN!", GnuBackgammon.skin);
-    winDialog.text(winLabel);
-    winDialog.button("Continue");
-    winDialog.setWidth(boardbg.getWidth()/2);
-    winDialog.setHeight(boardbg.getHeight()/4*3);
-    winDialog.setX(board.getX() + (boardbg.getWidth()-winDialog.getWidth())/2);
-    winDialog.setY(board.getY() + (boardbg.getHeight()-winDialog.getHeight())/2);
-    
-    doubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.DOUBLING_RESPONSE, object);
-      }
-    };
-    doubleDialog.text("CPU is asking for double. Accept?");
-    doubleDialog.button("No", 0);
-    doubleDialog.button("Yes", 1);
-    doubleDialog.setWidth(boardbg.getWidth()/3);
-    doubleDialog.setHeight(boardbg.getHeight()/3);
-    doubleDialog.setX(board.getX() + (boardbg.getWidth()-doubleDialog.getWidth())/2);
-    doubleDialog.setY(board.getY() + (boardbg.getHeight()-doubleDialog.getHeight())/2);
-    
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
+    
 
-    cpuDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin);
-    resultLabel = new Label("Double accepted", GnuBackgammon.skin);
-    cpuDoubleDialog.text(resultLabel);
-    cpuDoubleDialog.button("Continue");
-    cpuDoubleDialog.setWidth(boardbg.getWidth()/3);
-    cpuDoubleDialog.setHeight(boardbg.getHeight()/3);
-    cpuDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
-    cpuDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
-    
-    humanDoubleDialog = new Dialog("DOUBLE", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.processEvent(Events.ACCEPT_DOUBLE, object);
-        }
-    };  
-    humanDoubleDialogLabel = new Label("Accept double?", GnuBackgammon.skin);
-    humanDoubleDialog.text(humanDoubleDialogLabel);
-    humanDoubleDialog.button("No", 0);
-    humanDoubleDialog.button("Yes", 1);
-    humanDoubleDialog.setWidth(boardbg.getWidth()/3);
-    humanDoubleDialog.setHeight(boardbg.getHeight()/3);
-    humanDoubleDialog.setX(board.getX() + (boardbg.getWidth()-cpuDoubleDialog.getWidth())/2);
-    humanDoubleDialog.setY(board.getY() + (boardbg.getHeight()-cpuDoubleDialog.getHeight())/2);
-    
-    noMovesLabel = new Label("No more moves available", GnuBackgammon.skin);
-    noMovesDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      public Dialog show(Stage stage) {
-        addAction(Actions.sequence(
-            Actions.delay(1.5f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                hide();
-                GnuBackgammon.fsm.state(States.CHECK_WIN);
-              }
-            })
-            ));
-        return super.show(stage);
-      }
-    };  
-    noMovesDialog.text(noMovesLabel);
-    noMovesDialog.setWidth(boardbg.getWidth()/2);
-    noMovesDialog.setHeight(boardbg.getHeight()/4*3);
-    noMovesDialog.setX(board.getX() + (boardbg.getWidth()-noMovesDialog.getWidth())/2);
-    noMovesDialog.setY(board.getY() + (boardbg.getHeight()-noMovesDialog.getHeight())/2);
-    
-    cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
-    cpuResignDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      public Dialog show(Stage stage) {
-        addAction(Actions.sequence(
-            Actions.delay(1.5f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                hide();
-                MatchState.SetGameTurn(0, 0);
-                GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
-              }
-            })
-            ));
-        return super.show(stage);
-      }
-    };
-    cpuResignDialog.text(cpuResignLabel);
-    cpuResignDialog.setWidth(boardbg.getWidth()/2);
-    cpuResignDialog.setHeight(boardbg.getHeight()/4*3);
-    cpuResignDialog.setX(board.getX() + (boardbg.getWidth()-cpuResignDialog.getWidth())/2);
-    cpuResignDialog.setY(board.getY() + (boardbg.getHeight()-cpuResignDialog.getHeight())/2);
-    
+    //TRASH FROM HERE
     playerResignDialog = new Dialog("", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
@@ -354,9 +241,10 @@ public class Board extends Group {
   }
   public void initBoard() {
     abandon();
-    removeActor(winDialog);
-    
     doublingCube.reset();
+    MatchState.resignValue = 0;
+    MatchState.fMove = 0;
+    MatchState.fTurn = 0;
     
     if (MatchState.fCubeUse==0) { //NOT DOUBLING
       doublingCube.setVisible(false);
