@@ -263,6 +263,10 @@ public class GameFSM extends BaseFSM implements Context {
         ctx.board().initBoard();
         ctx.board().updatePInfo();
         
+        if (GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes")) {
+          ctx.board().helpDialog.show(ctx.board().getStage());
+        }
+          
         ctx.board().rollDices();
       }
 

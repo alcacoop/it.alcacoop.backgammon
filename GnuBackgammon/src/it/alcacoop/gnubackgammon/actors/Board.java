@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -56,6 +57,9 @@ public class Board extends Group {
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
   public Dialog exitDialog;
+  
+  public Dialog helpDialog;
+  CheckBox helpCheckBox;
   
   public Board() {
     
@@ -195,6 +199,25 @@ public class Board extends Group {
     exitDialog.button(no);
     exitDialog.button(yes);    
 
+    helpCheckBox = new CheckBox("Don't", GnuBackgammon.skin);
+    helpDialog = new Dialog("", GnuBackgammon.skin) {
+      @Override
+      protected void result(Object object) {
+        String showAgain = "Yes";
+        if(helpCheckBox.isChecked()) {
+          showAgain = "No";
+        }
+        GnuBackgammon.Instance.prefs.putString("SHOWHELP", showAgain);
+      }
+    };
+    helpDialog.pad(getWidth()/30);
+    helpDialog.text("Once you rolled dices, select the piece you would move.\n" +
+    		"If legal moves for that piece are available, they will be shown.\n" +
+    		"Click an available point and the piece will move there.\n" +
+    		"You can cancel your moves in current hand just clicking the UNDO button.\n" +
+    		"When you finish your turn, click again the dices to take back them and change turn.\n");
+    helpDialog.add(helpCheckBox);
+    helpDialog.button("Continue...", null);
   }
 
 
