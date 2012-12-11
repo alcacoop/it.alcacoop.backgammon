@@ -65,6 +65,13 @@ public class MainMenuScreen implements Screen {
     stats.addListener(cl);
     TextButton options = new TextButton("Options", GnuBackgammon.skin);
     options.addListener(cl);
+    TextButton howtoplay = new TextButton("How To Play", GnuBackgammon.skin);
+    howtoplay.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        UIDialog.getHelpDialog(stage, false);
+      }
+    });
 
     Table table = new Table();
     table.setFillParent(true);
@@ -83,9 +90,15 @@ public class MainMenuScreen implements Screen {
     
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
+    
+    table.row().pad(2);
+    table.add(options).expand().fill().colspan(2);
+    
+    table.row().pad(2);
+    table.add().colspan(2).fill().expand();
     table.row().pad(2);
     table.add(stats).expand().fill();
-    table.add(options).expand().fill();
+    table.add(howtoplay).expand().fill();
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
     table.row().pad(2);
@@ -93,7 +106,7 @@ public class MainMenuScreen implements Screen {
     
     g = new Group();
     g.setWidth(stage.getWidth()*0.6f);
-    g.setHeight(stage.getHeight()*0.6f);
+    g.setHeight(stage.getHeight()*0.75f);
     g.addActor(table);
     
     g.setX((stage.getWidth()-g.getWidth())/2);
