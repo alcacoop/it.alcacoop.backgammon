@@ -265,14 +265,19 @@ public class GameFSM extends BaseFSM implements Context {
         
         if (GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes")) {
           UIDialog.getHelpDialog(ctx.board().getStage(), true);
+        } else {
+          processEvent(ctx, Events.NOOP, null);
         }
-          
-        ctx.board().rollDices();
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        
+        case NOOP: 
+          ctx.board().rollDices();
+          break;
+        
         case DICES_ROLLED:
           int dices[] ={0,0};
           if (dices[0]==dices[1]) {
