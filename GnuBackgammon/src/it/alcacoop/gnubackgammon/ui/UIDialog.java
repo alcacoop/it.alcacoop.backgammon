@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.ui;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+
 
 public final class UIDialog extends Window {
 
@@ -28,6 +30,7 @@ public final class UIDialog extends Window {
   private static UIDialog instance;
   
   private BaseFSM.Events evt;
+  private boolean quitWindow = false;
   
   
   static {
@@ -44,7 +47,7 @@ public final class UIDialog extends Window {
         final String s;
         if (event.getTarget() instanceof Label) {
           s = ((Label)event.getTarget()).getText().toString().toUpperCase();
-        } else { 
+        } else {
           s = ((TextButton)event.getTarget()).getText().toString().toUpperCase();
         }
         hide(new Runnable(){
@@ -52,7 +55,12 @@ public final class UIDialog extends Window {
           public void run() {
             instance.remove();
             boolean ret = s.equals("YES")||s.equals("OK");
-            GnuBackgammon.fsm.processEvent(instance.evt, ret);
+            
+            if ((instance.quitWindow)&&(ret)) {
+              Gdx.app.exit();
+            } else {
+              GnuBackgammon.fsm.processEvent(instance.evt, ret);
+            }
           }
         });
       };
@@ -103,6 +111,7 @@ public final class UIDialog extends Window {
   }
   
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
+    instance.quitWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -132,6 +141,7 @@ public final class UIDialog extends Window {
   
   
   public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
+    instance.quitWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -159,6 +169,7 @@ public final class UIDialog extends Window {
   
   
   public static void getFlashDialog(BaseFSM.Events evt, String text, Stage stage) {
+    instance.quitWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -187,6 +198,35 @@ public final class UIDialog extends Window {
           }
         })
     ));
+  }
+  
+  
+  public static void getQuitDialog(Stage stage) {
+    instance.quitWindow = true;
+    instance.remove();
+    instance.setText("Really quit the game?");
+    
+    float height = stage.getHeight()*0.4f;
+    float width = stage.getWidth()*0.5f;
+    
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.row().padTop(width/25);
+    instance.add(instance.label).colspan(5).expand().align(Align.center);
+    
+    instance.row().pad(width/25);
+    instance.add();
+    instance.add(instance.bNo).fill().expand().height(height*0.25f).width(width/4);
+    instance.add();
+    instance.add(instance.bYes).fill().expand().height(height*0.25f).width(width/4);
+    instance.add();
+    
+    stage.addActor(instance);
+    instance.addAction(Actions.fadeIn(0.3f));
   }
   
 }

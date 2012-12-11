@@ -2,6 +2,7 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,7 +26,7 @@ public class MainMenuScreen implements Screen {
   private Stage stage;
   private Group g;
   private Image bgImg;
-  private Dialog exitDialog;
+  //private Dialog exitDialog;
   
   public MainMenuScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
@@ -38,25 +38,6 @@ public class MainMenuScreen implements Screen {
     
     stage.addActor(bgImg);
     
-    exitDialog = new Dialog("", GnuBackgammon.skin);
-    exitDialog.text("Really exit the game?");
-    TextButton no = new TextButton("NO", GnuBackgammon.skin);
-    TextButton yes = new TextButton("YES", GnuBackgammon.skin);
-    no.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        exitDialog.hide();
-        super.clicked(event, x, y);
-      }
-    });
-    yes.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        Gdx.app.exit();
-      }
-    });
-    exitDialog.button(no);
-    exitDialog.button(yes);    
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
@@ -68,7 +49,7 @@ public class MainMenuScreen implements Screen {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          exitDialog.show(stage);
+          UIDialog.getQuitDialog(stage);
         }
         return super.keyDown(event, keycode);
       }
