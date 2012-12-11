@@ -18,12 +18,15 @@ public class GameFSM extends BaseFSM implements Context {
     CPU_TURN {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        
         case SET_GAME_TURN:
           AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
+          
         case SET_BOARD:
           AICalls.AskForResignation();
           break;
+          
         case ASK_FOR_RESIGNATION:
           System.out.println("I'M RESIGNING... "+params);
           if((Integer)params > 0) {
@@ -31,9 +34,8 @@ public class GameFSM extends BaseFSM implements Context {
             String s = "Your opponent resigned a game";
             if ((Integer)params==2) s = "Your opponent resigned a gammon game";
             if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
-            ctx.board().cpuResignLabel.setText(s);
-            ctx.board().cpuResignDialog.show(ctx.board().getStage());
-          
+            ctx.state(DIALOG_HANDLER);
+            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, ctx.board().getStage());
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
               ctx.board().rollDices();
@@ -49,7 +51,6 @@ public class GameFSM extends BaseFSM implements Context {
             }
           }
           break;
-          
           
         case ASK_FOR_DOUBLING:
           System.out.println("I'D LIKE TO DOUBLE... "+params);
@@ -69,6 +70,7 @@ public class GameFSM extends BaseFSM implements Context {
           ctx.board().thinking(true);
           AICalls.EvaluateBestMove(dices);
           break;
+          
         case EVALUATE_BEST_MOVE:
           ctx.board().thinking(false);
           int moves[] = (int[])params;
@@ -83,13 +85,16 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.board().setMoves(moves);
           }
           break;
+          
         case PERFORMED_MOVE:
           ctx.board().updatePInfo();
           ctx.board().performNextMove();
           break;
+          
         case NO_MORE_MOVES:
           ctx.state(States.CHECK_WIN);
           break;
+          
         default:
           return false;
         }
@@ -101,12 +106,14 @@ public class GameFSM extends BaseFSM implements Context {
     HUMAN_TURN {
       public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
+        
         case SET_GAME_TURN:
           if (MatchState.fMove == 0)
             AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
           else 
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
+          
         case SET_BOARD:
           ctx.board().dices.clear();
           if (MatchState.fCubeUse==0) {
@@ -131,11 +138,12 @@ public class GameFSM extends BaseFSM implements Context {
           int dices[] = (int[])params;
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           break;
+          
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
           if(moves != null) {
             ctx.board().availableMoves.setMoves((int[][])params);
-            ctx.state(HUMAN_PERFORM_MOVES);
+            //ctx.state(HUMAN_PERFORM_MOVES);
           } else { //player (human) has no more moves
             ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
@@ -144,34 +152,26 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().getStage());
           }
           break;
-        default:
-          return false;
-        }
-        return true;
-      }
-    },
-
-
-    HUMAN_PERFORM_MOVES {
-      public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
-        switch (evt) {
+          
         case POINT_TOUCHED:
           if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
             int origin = ctx.board().selected.boardX;
             int dest = (Integer)params;
-            int moves[] = {origin, dest, -1, -1, -1, -1, -1, -1};
+            int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
             ctx.state(HUMAN_CHECKER_MOVING);
-            ctx.board().setMoves(moves);
+            ctx.board().setMoves(m);
             ctx.board().availableMoves.dropDice(origin-dest);
           } else { //SELECT NEW CHECKER
             if ((Integer)params!=-1)
               ctx.board().selectChecker((Integer)params);
           }
           break;
+          
         case DICE_CLICKED:
           ctx.board().dices.clear();
           ctx.state(CHECK_WIN);
           break;
+          
         default:
           return false;
         }
@@ -183,10 +183,12 @@ public class GameFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        
           case PERFORMED_MOVE:
             ctx.board().updatePInfo();
-            ctx.state(HUMAN_PERFORM_MOVES);
+            ctx.state(HUMAN_TURN);
             break;
+            
           default:
             return false;
         }
@@ -213,8 +215,6 @@ public class GameFSM extends BaseFSM implements Context {
       }
     },
     
-    
-    
     CHECK_END_MATCH {
       @Override
       public void enterState(Context ctx) {
@@ -228,12 +228,14 @@ public class GameFSM extends BaseFSM implements Context {
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
-
-        if(MatchState.fMove==1)
-          UIDialog.getContinueDialog(Events.CONTINUE, "CPU WON "+game_score+" POINTS!", ctx.board().getStage());
-        else
-          UIDialog.getContinueDialog(Events.CONTINUE, "HUMAN WON "+game_score+" POINTS!", ctx.board().getStage());
         
+        String s = "Your opponent won "+game_score+" point";
+        if (MatchState.matchType == 0)
+          if(MatchState.fMove==1)
+            s = "CPU won "+game_score+" point";
+          else
+            s = "You won "+game_score+" point";
+        UIDialog.getContinueDialog(Events.CONTINUE, s, ctx.board().getStage());
       }
 
       @Override
@@ -283,12 +285,14 @@ public class GameFSM extends BaseFSM implements Context {
           }
           ctx.board().rollDices(dices[0], dices[1]);
           break;
+          
         case SET_GAME_TURN:
           if (MatchState.fMove == 0)
             AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
           else 
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           break;
+          
         case SET_BOARD:
           if ((MatchState.fMove == 0)||(MatchState.matchType==1)) {
             ctx.state(HUMAN_TURN);
@@ -300,6 +304,7 @@ public class GameFSM extends BaseFSM implements Context {
             AICalls.EvaluateBestMove(ctx.board().dices.get());
           }
           break;
+          
         default:
           return false;
         }
@@ -336,6 +341,7 @@ public class GameFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        
           case DOUBLING_RESPONSE: //RISPOSTA A CPU DOUBLING REQUEST
             if((Boolean)params) { //DOUBLING ACCEPTED
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
@@ -364,6 +370,7 @@ public class GameFSM extends BaseFSM implements Context {
             if (res) { //HUMAN OPPONENT ACCEPTED DOUBLE
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
               ctx.board().doubleCube();
+              ctx.state(HUMAN_TURN);
             } else { //HUMAN OPPONENT DIDN'T ACCEPT IT
               ctx.state(CHECK_END_MATCH);
             }
@@ -383,13 +390,46 @@ public class GameFSM extends BaseFSM implements Context {
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
             ctx.board().doubleCube();
             break;
-            
+          
+          case CPU_RESIGNED: //CPU RESIGN GAME
           case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
             ctx.state(CHECK_END_MATCH);
             break;
-            
+          
           case NO_MORE_MOVES: //NO LEGAL MOVES AVAILABLE
             GnuBackgammon.fsm.state(States.CHECK_WIN);
+            break;
+            
+          case ACCEPT_RESIGN:
+            int ret = (Integer)params;
+            if (ret == 0) {
+              if (MatchState.fMove == 1)
+                GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+              else
+                GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+              
+              MatchState.resignValue++;
+              AICalls.AcceptResign(MatchState.resignValue);
+            } else {
+              System.out.println("RESIGN CALCULATED: "+ret);
+              //MatchState.resignValue = ret;
+              //processEvent(ctx, Events.HUMAN_RESIGNED, ret);
+              String s = "Really resign the game?";
+              if (ret == 2) s = "Really resign a gammon game?";
+              if (ret == 3) s = "Really resign a backgammon game?";
+              UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, ctx.board().getStage());
+              
+            }
+            break;
+            
+          case HUMAN_RESIGNED: //HUMAN RESIGN GAME
+            if ((Boolean)params) {
+              ctx.board().switchTurn();
+              GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
+            } else {
+              MatchState.resignValue = 0;
+              ctx.state(HUMAN_TURN);
+            }
             break;
             
           default: return false;
@@ -432,5 +472,4 @@ public class GameFSM extends BaseFSM implements Context {
   public Board board() {
     return board;
   }
-
 }

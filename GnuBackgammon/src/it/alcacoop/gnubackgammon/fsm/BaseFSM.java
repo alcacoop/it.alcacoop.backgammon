@@ -57,7 +57,9 @@ public class BaseFSM implements Context {
     HUMAN_DOUBLE_RESPONSE,
     CPU_DOUBLE_ACCEPTED,
     CPU_DOUBLE_NOT_ACCEPTED,
-    SHOW_DOUBLE_DIALOG
+    SHOW_DOUBLE_DIALOG,
+    CPU_RESIGNED,
+    HUMAN_RESIGNED
   }
 
   public enum States implements State {
@@ -91,7 +93,7 @@ public class BaseFSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    //System.out.println("PROCESS EVENT: "+evt+" ON "+state());
+    System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
     //System.out.println("DST STATE: "+state());
     return res;

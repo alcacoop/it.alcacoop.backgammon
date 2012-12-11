@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -54,11 +53,6 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton doubleBtn;
   
-  //public Label humanDoubleDialogLabel;
-  public Label cpuResignLabel;
-  
-  //public Dialog humanDoubleDialog;
-  public Dialog cpuResignDialog;
   public Dialog playerResignDialog;
   public Dialog resignNotDialog;
   
@@ -149,31 +143,8 @@ public class Board extends Group {
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
     
-    
-    cpuResignLabel = new Label("Your opponent wants to resign", GnuBackgammon.skin);
-    cpuResignDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      public Dialog show(Stage stage) {
-        addAction(Actions.sequence(
-            Actions.delay(1.5f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                hide();
-                MatchState.SetGameTurn(0, 0);
-                GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
-              }
-            })
-            ));
-        return super.show(stage);
-      }
-    };
-    cpuResignDialog.text(cpuResignLabel);
-    cpuResignDialog.setWidth(boardbg.getWidth()/2);
-    cpuResignDialog.setHeight(boardbg.getHeight()/4*3);
-    cpuResignDialog.setX(board.getX() + (boardbg.getWidth()-cpuResignDialog.getWidth())/2);
-    cpuResignDialog.setY(board.getY() + (boardbg.getHeight()-cpuResignDialog.getHeight())/2);
-    
+
+    //TRASH FROM HERE
     playerResignDialog = new Dialog("", GnuBackgammon.skin) {
       @Override
       protected void result(Object object) {
@@ -249,6 +220,9 @@ public class Board extends Group {
   public void initBoard() {
     abandon();
     doublingCube.reset();
+    MatchState.resignValue = 0;
+    MatchState.fMove = 0;
+    MatchState.fTurn = 0;
     
     if (MatchState.fCubeUse==0) { //NOT DOUBLING
       doublingCube.setVisible(false);

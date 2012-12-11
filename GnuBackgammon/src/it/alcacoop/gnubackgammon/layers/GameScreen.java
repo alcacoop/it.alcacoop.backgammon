@@ -3,6 +3,7 @@ package it.alcacoop.gnubackgammon.layers;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.actors.PlayerInfo;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
@@ -58,7 +59,8 @@ public class GameScreen implements Screen {
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        board.playerResignDialog.show(board.getStage());
+        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+        GnuBackgammon.fsm.processEvent(Events.ACCEPT_RESIGN, 0);
       }
     });
     
