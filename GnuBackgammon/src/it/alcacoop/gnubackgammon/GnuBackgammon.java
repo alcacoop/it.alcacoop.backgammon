@@ -36,7 +36,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     {800,480},
     {480,320}
   };
-  private static int ss;
+  public static int ss;
   private static String[] resname = {"hdpi", "mdpi", "ldpi"};
   
   private GameFSM gameFSM;

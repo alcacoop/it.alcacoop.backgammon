@@ -3,7 +3,6 @@ package it.alcacoop.gnubackgammon.actors;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,10 +16,10 @@ public class PlayerInfo extends Table {
   private int color;
   
   public PlayerInfo(String title, int color) {
-    float width = Gdx.graphics.getWidth()/6; 
     this.color = color;
     name = new Label(title , GnuBackgammon.skin);
     score = new Label("0", GnuBackgammon.skin);
+    pips = new Label("200", GnuBackgammon.skin);
     TextureRegion region;
     if (color==1)
       region = GnuBackgammon.atlas.findRegion("cw");
@@ -31,12 +30,11 @@ public class PlayerInfo extends Table {
     
     
     Table t = new Table();
-    t.add(name).left().width((width-i.getWidth())/4*3);
-    t.add(score).left().width((width-i.getWidth())/4);
+    t.add(name).left();
+    t.add(score).left().padLeft(5+10*(2-GnuBackgammon.ss));
     t.row();
-    t.add(new Label("PIPS:", GnuBackgammon.skin)).left().width((width-i.getWidth())/4*3);
-    pips = new Label("200", GnuBackgammon.skin);
-    t.add(pips).left().width((width-i.getWidth())/4);
+    t.add(new Label("PIPS:", GnuBackgammon.skin)).left();
+    t.add(pips).left().padLeft(5+10*(2-GnuBackgammon.ss));
     add(t);
   }
 

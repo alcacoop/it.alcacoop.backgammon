@@ -3,9 +3,9 @@ package it.alcacoop.gnubackgammon.layers;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.actors.PlayerInfo;
-import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
+import it.alcacoop.gnubackgammon.ui.GameMenuPopup;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
 public class GameScreen implements Screen {
@@ -29,9 +27,8 @@ public class GameScreen implements Screen {
   private Table table;
   
   private PlayerInfo pInfo[];
-  private TextButton abandon;
-  private TextButton resign;
-  private TextButton undo;
+  private GameMenuPopup menuPopup; 
+
   
   public GameScreen(){
     //STAGE DIM = SCREEN RES
@@ -49,6 +46,9 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           board.exitDialog.show(board.getStage());
         }
+        if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
+          menuPopup.toggle();
+        }
         return super.keyDown(event, keycode);
       }
     });
@@ -59,33 +59,11 @@ public class GameScreen implements Screen {
     pInfo[0] = new PlayerInfo("AI():", 1);
     pInfo[1] = new PlayerInfo("PL1:", 0);      
     
-    abandon = new TextButton("ABANDON", GnuBackgammon.skin2);
-    abandon.addListener(new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.setFSM("MENU_FSM");
-      }
-    });
-    
-    resign = new TextButton("RESIGN", GnuBackgammon.skin2);
-    resign.addListener(new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-        GnuBackgammon.fsm.processEvent(Events.ACCEPT_RESIGN, 0);
-      }
-    });
-    
-    undo = new TextButton("UNDO", GnuBackgammon.skin2);
-    undo.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        board.undoMove();
-      }
-    });
-    
     table = new Table();
     stage.addActor(table);
+    
+    menuPopup = new GameMenuPopup(stage);
+    stage.addActor(menuPopup);
   }
 
   
@@ -93,14 +71,13 @@ public class GameScreen implements Screen {
     table.clear();
     table.setFillParent(true);
     
-    table.add(pInfo[0]).minHeight(50).padTop(5);
-    table.add(pInfo[1]).height(50);
-    table.add(undo).fill().pad(2).height(50);
-    table.add(resign).fill().pad(2).height(50);
-    table.add(abandon).fill().pad(2).height(50);
+    float width = stage.getWidth()/4.5f;
+    table.add().expand();
+    table.add(pInfo[0]).width(width);
+    table.add(pInfo[1]).width(width);
     
     table.row();
-    table.add(board).colspan(5).expand().fill();
+    table.add(board).colspan(3).expand().fill();
   }
 
   
