@@ -5,6 +5,7 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.fsm.MenuFSM;
 import it.alcacoop.gnubackgammon.fsm.SimulationFSM;
+import it.alcacoop.gnubackgammon.layers.AboutScreen;
 import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MainMenuScreen;
@@ -31,6 +32,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private static MainMenuScreen menuScreen;
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
+  private static AboutScreen aboutScreen;
   private int resolutions[][] = {
     {1280,740},
     {800,480},
@@ -96,6 +98,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     menuScreen = new MainMenuScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
+    aboutScreen = new AboutScreen();
     
     setScreen(welcomeScreen);
   }
@@ -131,6 +134,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       case 4:
         currentScreen = gameScreen;
         setScreen(gameScreen);
+        break;
+        
+      case 5:
+        currentScreen = aboutScreen;
+        setScreen(aboutScreen);
         break;
     }
   }
