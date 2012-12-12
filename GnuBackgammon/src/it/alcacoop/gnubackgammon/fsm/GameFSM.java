@@ -383,6 +383,10 @@ public class GameFSM extends BaseFSM implements Context {
             break;
           
           case CPU_RESIGNED: //CPU RESIGN GAME
+            ctx.board().switchTurn();
+            ctx.state(CHECK_END_MATCH);
+            break;
+            
           case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
             ctx.state(CHECK_END_MATCH);
             break;
@@ -391,7 +395,7 @@ public class GameFSM extends BaseFSM implements Context {
             GnuBackgammon.fsm.state(States.CHECK_WIN);
             break;
             
-          case ACCEPT_RESIGN:
+          case ACCEPT_RESIGN: //ASK TO HUMAN IF ACCEPT CALCULATED RESIGN
             int ret = (Integer)params;
             if (ret == 0) {
               if (MatchState.fMove == 1)
@@ -403,13 +407,10 @@ public class GameFSM extends BaseFSM implements Context {
               AICalls.AcceptResign(MatchState.resignValue);
             } else {
               System.out.println("RESIGN CALCULATED: "+ret);
-              //MatchState.resignValue = ret;
-              //processEvent(ctx, Events.HUMAN_RESIGNED, ret);
               String s = "Really resign the game?";
               if (ret == 2) s = "Really resign a gammon game?";
               if (ret == 3) s = "Really resign a backgammon game?";
               UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, ctx.board().getStage());
-              
             }
             break;
             
