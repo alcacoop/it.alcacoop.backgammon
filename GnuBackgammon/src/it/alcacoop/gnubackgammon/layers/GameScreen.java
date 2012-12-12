@@ -31,6 +31,7 @@ public class GameScreen implements Screen {
   private PlayerInfo pInfo[];
   private GameMenuPopup menuPopup;
   public static TextButton menu;
+  private Image logo;
 
   
   public GameScreen(){
@@ -75,6 +76,9 @@ public class GameScreen implements Screen {
       }
     });
     
+    TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
+    logo = new Image(r);
+    
     stage.addActor(menuPopup);
   }
 
@@ -83,11 +87,11 @@ public class GameScreen implements Screen {
     table.clear();
     table.setFillParent(true);
     
-    float width = stage.getWidth()/4.5f;
-    table.add().expand();
+    float width = stage.getWidth()/5f;
+    table.add(logo).left().expand().padLeft(5+5*(2-GnuBackgammon.ss));
     table.add(pInfo[0]).width(width);
     table.add(pInfo[1]).width(width);
-    table.add(menu).fill().width(width/3).padTop(5).padRight(10);
+    table.add(menu).fill().width(width/3).padTop(5).padRight(5+5*(2-GnuBackgammon.ss));
     
     table.row();
     table.add(board).colspan(4).expand().fill();
