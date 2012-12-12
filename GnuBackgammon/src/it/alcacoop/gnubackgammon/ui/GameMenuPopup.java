@@ -5,7 +5,6 @@ import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,18 +17,15 @@ public final class GameMenuPopup extends Table {
 
   private Table t1;
   private Drawable background;
-  Stage stage;
-  
-  TextButton undo, resign, abandon, options;
-  Runnable noop;
+  private TextButton undo, resign, abandon, options;
+  private Actor a;
+  private Runnable noop;
   
   private boolean visible;
   
   
   
   public GameMenuPopup(Stage stage) {
-    this.stage = stage;
-    
     noop = new Runnable(){
       @Override
       public void run() {
@@ -44,12 +40,13 @@ public final class GameMenuPopup extends Table {
     background = GnuBackgammon.skin.getDrawable("default-rect");
     setBackground(background);
     
-    addListener(new InputListener() {
-      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        return true;
+    a = new Actor();
+    a.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        hide(noop);
       }
     });
-
     
     t1 = new Table();
     t1.setFillParent(true);
@@ -122,13 +119,20 @@ public final class GameMenuPopup extends Table {
     else show();
   }
   
+  
   public Actor hit (float x, float y, boolean touchable) {
     Actor hit = super.hit(x, y, touchable);
+    
     if (visible) {
       if (hit != null) return hit;
-      return this;
+      else {
+        return a;
+      }
+      
+    } else {
+      return hit;  
     }
-    else return hit;
+    
   }
 
   
