@@ -1,5 +1,7 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import it.alcacoop.gnubackgammon.ui.GameMenuPopup;
+
 
 public class MatchState {
   
@@ -86,6 +88,7 @@ public class MatchState {
     MatchState.fMove = fMove;
     MatchState.fTurn = fTurn;
     AICalls.SetGameTurn(MatchState.fTurn, MatchState.fMove);
+    GameMenuPopup.setDisabledButtons();
   }
   
   public static void SetCubeUse(int fCubeUse) {

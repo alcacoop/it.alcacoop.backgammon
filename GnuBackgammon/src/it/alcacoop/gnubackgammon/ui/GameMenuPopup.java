@@ -3,6 +3,8 @@ package it.alcacoop.gnubackgammon.ui;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
+import it.alcacoop.gnubackgammon.logic.MatchState;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,7 +19,10 @@ public final class GameMenuPopup extends Table {
 
   private Table t1;
   private Drawable background;
-  private TextButton undo, resign, abandon, options;
+  private static TextButton undo;
+  private static TextButton resign;
+  private TextButton abandon;
+  private TextButton options;
   private Actor a;
   private Runnable noop;
   
@@ -105,6 +110,22 @@ public final class GameMenuPopup extends Table {
     addActor(t1);
   }
 
+  public static void setDisabledButtons() {
+    if ((MatchState.matchType==0) && (MatchState.fMove==1)) { //CPU IS PLAYING
+      System.out.println("DISABILITALI!");
+      undo.setDisabled(true);
+      resign.setDisabled(true);
+      undo.setColor(1,1,1,0.4f);
+      resign.setColor(1,1,1,0.4f);
+    } else {
+      System.out.println("RIABILITALI!");
+      undo.setDisabled(false);
+      resign.setDisabled(false);
+      undo.setColor(1,1,1,1);
+      resign.setColor(1,1,1,1);
+    }
+  }
+  
   private void show() {
     visible = true;
     addAction(Actions.moveTo(0, 0, 0.1f));

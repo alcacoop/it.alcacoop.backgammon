@@ -16,6 +16,7 @@ public class GameFSM extends BaseFSM implements Context {
   public enum States implements State {
 
     CPU_TURN {
+      @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
         
@@ -107,6 +108,7 @@ public class GameFSM extends BaseFSM implements Context {
 
 
     HUMAN_TURN {
+      @Override
       public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
         
