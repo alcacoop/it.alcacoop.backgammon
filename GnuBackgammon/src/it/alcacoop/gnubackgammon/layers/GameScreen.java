@@ -3,9 +3,12 @@ package it.alcacoop.gnubackgammon.layers;
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.actors.PlayerInfo;
+import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.ui.GameMenuPopup;
+import it.alcacoop.gnubackgammon.ui.UIDialog;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -46,8 +49,12 @@ public class GameScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          board.exitDialog.show(board.getStage());
+        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.B)) {
+          GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+          UIDialog.getYesNoDialog(
+              Events.ABANDON_MATCH, 
+              "Really exit this match?", 
+              GnuBackgammon.Instance.board.getStage());
         }
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
           menuPopup.toggle();

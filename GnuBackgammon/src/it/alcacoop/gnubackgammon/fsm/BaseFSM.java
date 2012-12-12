@@ -60,7 +60,8 @@ public class BaseFSM implements Context {
     CPU_DOUBLE_NOT_ACCEPTED,
     SHOW_DOUBLE_DIALOG,
     CPU_RESIGNED,
-    HUMAN_RESIGNED
+    HUMAN_RESIGNED, 
+    ABANDON_MATCH
   }
 
   public enum States implements State {
@@ -79,6 +80,7 @@ public class BaseFSM implements Context {
   };
 
   public State currentState;
+  public State previousState;
 
 
   public void start() {
@@ -103,10 +105,16 @@ public class BaseFSM implements Context {
   public State state() {
     return currentState;
   }
+  
+  public void back() {
+    if(previousState != null)
+      state(previousState);
+  }
 
   public void state(State state) {
     if(currentState != null)
       currentState.exitState(this);
+    previousState = currentState;
     currentState = state;
     if(currentState != null)
       currentState.enterState(this);        

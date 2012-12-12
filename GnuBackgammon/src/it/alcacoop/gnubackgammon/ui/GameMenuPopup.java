@@ -83,7 +83,11 @@ public final class GameMenuPopup extends Table {
       hide(new Runnable(){
       @Override
       public void run() {
-        GnuBackgammon.Instance.setFSM("MENU_FSM");
+        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+        UIDialog.getYesNoDialog(
+            Events.ABANDON_MATCH, 
+            "Really exit this match?", 
+            GnuBackgammon.Instance.board.getStage());
       }});
     }});
     
