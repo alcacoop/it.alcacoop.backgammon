@@ -395,9 +395,9 @@ public class GameFSM extends BaseFSM implements Context {
             int ret = (Integer)params;
             if (ret == 0) {
               if (MatchState.fMove == 1)
-                GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-              else
                 GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+              else
+                GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
               
               MatchState.resignValue++;
               AICalls.AcceptResign(MatchState.resignValue);
