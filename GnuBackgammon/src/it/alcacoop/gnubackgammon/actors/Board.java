@@ -53,8 +53,6 @@ public class Board extends Group {
   public TextButton rollBtn;
   public TextButton doubleBtn;
   
-  public Dialog playerResignDialog;
-  public Dialog resignNotDialog;
   public Dialog exitDialog;
   
   public Board() {
@@ -143,38 +141,7 @@ public class Board extends Group {
     
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
-    
 
-    //TRASH FROM HERE
-    playerResignDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        MatchState.resignValue = (Integer)object;
-        GnuBackgammon.fsm.state(States.PLAYER_RESIGNED);
-      }
-    };
-    playerResignDialog.button("1", 1);
-    playerResignDialog.button("2", 2);
-    playerResignDialog.button("3", 3);
-    playerResignDialog.text("Resign to...");
-    playerResignDialog.setWidth(boardbg.getWidth()/2);
-    playerResignDialog.setHeight(boardbg.getHeight()/4*3);
-    playerResignDialog.setX(board.getX() + (boardbg.getWidth()-playerResignDialog.getWidth())/2);
-    playerResignDialog.setY(board.getY() + (boardbg.getHeight()-playerResignDialog.getHeight())/2);
-    
-    resignNotDialog = new Dialog("", GnuBackgammon.skin) {
-      @Override
-      protected void result(Object object) {
-        GnuBackgammon.fsm.state(States.HUMAN_TURN);
-      }
-    };
-    resignNotDialog.button("Continue", null);
-    resignNotDialog.text("Your opponent has not accepted resign");
-    resignNotDialog.setWidth(boardbg.getWidth()/2);
-    resignNotDialog.setHeight(boardbg.getHeight()/4*3);
-    resignNotDialog.setX(board.getX() + (boardbg.getWidth()-resignNotDialog.getWidth())/2);
-    resignNotDialog.setY(board.getY() + (boardbg.getHeight()-resignNotDialog.getHeight())/2);
-    
     exitDialog = new Dialog("", GnuBackgammon.skin);
     exitDialog.text("Really exit this match?");
     TextButton no = new TextButton("NO", GnuBackgammon.skin);

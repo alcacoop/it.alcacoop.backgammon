@@ -325,28 +325,7 @@ public class GameFSM extends BaseFSM implements Context {
     },
 
     
-    PLAYER_RESIGNED {
-      @Override
-      public void enterState(Context ctx) {
-        System.out.println("Player wants to resign");
-        GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]); //TODO: check order
-        AICalls.AcceptResign(MatchState.resignValue);
-      }
-      
-      public boolean processEvent(Context ctx, Events evt, Object params) {
-        if(evt == Events.ACCEPT_RESIGN) {
-          System.out.println("RESIGN ACCEPTED WITH VALUE: " + params);
-          if((Integer)params == 0) { //resign not accepted
-            ctx.board().resignNotDialog.show(ctx.board().getStage());
-          } else {
-            ctx.board().switchTurn();
-            GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
-          }
-          return true;
-        }
-        return false;
-      }
-    },
+    
     
     
     DIALOG_HANDLER {
