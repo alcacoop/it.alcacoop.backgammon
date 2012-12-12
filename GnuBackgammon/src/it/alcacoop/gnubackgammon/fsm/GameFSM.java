@@ -424,6 +424,13 @@ public class GameFSM extends BaseFSM implements Context {
             }
             break;
             
+          case ABANDON_MATCH: //QUIT MATCH
+            if((Boolean)params) { //ABANDONING
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
+            } else {
+              GnuBackgammon.fsm.back();
+            }
+            break;
           default: return false;
         }
         

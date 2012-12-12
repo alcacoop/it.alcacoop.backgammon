@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -52,8 +51,6 @@ public class Board extends Group {
 
   public TextButton rollBtn;
   public TextButton doubleBtn;
-  
-  public Dialog exitDialog;
   
   public Board() {
     
@@ -141,26 +138,6 @@ public class Board extends Group {
     
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
-
-    exitDialog = new Dialog("", GnuBackgammon.skin);
-    exitDialog.text("Really exit this match?");
-    TextButton no = new TextButton("NO", GnuBackgammon.skin);
-    TextButton yes = new TextButton("YES", GnuBackgammon.skin);
-    no.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        exitDialog.hide();
-        super.clicked(event, x, y);
-      }
-    });
-    yes.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.setFSM("MENU_FSM");
-      }
-    });
-    exitDialog.button(no);
-    exitDialog.button(yes);    
   }
 
 
