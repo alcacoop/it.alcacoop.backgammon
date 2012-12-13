@@ -27,7 +27,9 @@ public class Dices extends Group {
   private Board b;
   private animation ans[];
   private float animDuration = 0.45f;
+  
   int nr = 0;
+  boolean animating = true;
   
   
   
@@ -132,7 +134,7 @@ public class Dices extends Group {
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        if (!b.availableMoves.hasMoves())
+        if ((!b.availableMoves.hasMoves())&&(!animating))
           GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
         return true;
       }
@@ -160,6 +162,7 @@ public class Dices extends Group {
   
   
   public void animate(final int d1, final int d2) {
+    animating = true;
     ans[0].show();
     ans[1].show();
     
@@ -171,6 +174,7 @@ public class Dices extends Group {
             ans[0].hide();
             ans[1].hide();
             show(d1, d2);
+            animating = false;
           }
         })
     ));
