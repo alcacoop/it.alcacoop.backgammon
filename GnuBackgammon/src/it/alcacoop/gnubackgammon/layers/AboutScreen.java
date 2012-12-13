@@ -43,8 +43,8 @@ public class AboutScreen implements Screen {
       }
     });
     
-    Label titleLabel = new Label("GNU BACKGAMMON: ABOUT", GnuBackgammon.skin);
-    Label label1 = new Label("GnuBackgammon for Android is based on GNU Backgammon (gnubg).", GnuBackgammon.skin);
+    Label titleLabel = new Label("ABOUT", GnuBackgammon.skin);
+    Label label1 = new Label("GnuBackgammon Mobile is based on GNU Backgammon (gnubg).", GnuBackgammon.skin);
     label1.setWrap(true);
     Label label2 = new Label("Its source code is released with a GPLv3 License and is available on GitHub at https://github.com/alcacoop/it.alcacoop.gnubackgammon.", GnuBackgammon.skin);
     label2.setWrap(true);

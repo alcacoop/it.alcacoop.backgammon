@@ -31,7 +31,7 @@ public class WelcomeScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     stage.addActor(bgImg);
     
-    Label titleLabel = new Label("GNU BACKGAMMON", GnuBackgammon.skin);
+    Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
     
     TextButton play = new TextButton("PLAY!", GnuBackgammon.skin);
     play.addListener(new ClickListener(){

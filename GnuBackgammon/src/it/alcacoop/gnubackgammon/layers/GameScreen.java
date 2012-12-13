@@ -85,8 +85,8 @@ public class GameScreen implements Screen {
       }
     });
     
-    TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
-    logo = new Image(r);
+    //TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
+    //logo = new Image(r);
     
     stage.addActor(menuPopup);
   }
@@ -97,7 +97,8 @@ public class GameScreen implements Screen {
     table.setFillParent(true);
     
     float width = stage.getWidth()/5f;
-    table.add(logo).left().expand().padLeft(5+5*(2-GnuBackgammon.ss));
+    table.add().expand().fill();
+    //table.add(logo).left().expand().padLeft(5+5*(2-GnuBackgammon.ss));
     table.add(pInfo[0]).width(width);
     table.add(pInfo[1]).width(width);
     table.add(menu).fill().width(width/3).padTop(5).padRight(5+5*(2-GnuBackgammon.ss));

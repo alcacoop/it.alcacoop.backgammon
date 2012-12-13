@@ -55,7 +55,7 @@ public class MainMenuScreen implements Screen {
       }
     });
     
-    Label titleLabel = new Label("GNU BACKGAMMON", GnuBackgammon.skin);
+    Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
     
     TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
     onePlayer.addListener(cl);
