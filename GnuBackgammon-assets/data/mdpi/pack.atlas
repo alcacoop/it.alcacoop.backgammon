@@ -3,135 +3,135 @@ pack.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-bg
-  rotate: false
-  xy: 1, 523
-  size: 800, 500
-  orig: 800, 500
-  offset: 0, 0
-  index: -1
 boardbg
   rotate: false
-  xy: 1, 121
+  xy: 1, 595
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+board
+  rotate: false
+  xy: 1, 193
   size: 711, 400
   orig: 711, 400
   offset: 0, 0
   index: -1
 logo
   rotate: false
-  xy: 1, 79
+  xy: 1, 151
   size: 392, 40
   orig: 392, 40
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 803, 862
+  xy: 714, 834
   size: 43, 161
   orig: 43, 161
   offset: 0, 0
   index: -1
 c8
   rotate: false
-  xy: 714, 471
+  xy: 1, 99
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 1, 27
+  xy: 759, 945
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 848, 973
+  xy: 1, 47
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 714, 419
+  xy: 53, 99
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 53, 27
+  xy: 759, 893
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 c64
   rotate: false
-  xy: 848, 921
+  xy: 811, 945
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 900, 979
+  xy: 1, 1
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 714, 373
+  xy: 53, 53
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 105, 33
+  xy: 105, 105
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 848, 875
+  xy: 759, 847
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 900, 933
+  xy: 811, 899
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 946, 979
+  xy: 863, 951
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 105, 1
+  xy: 395, 161
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 137, 1
+  xy: 714, 802
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 395, 89
+  xy: 151, 119
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
@@ -141,10 +141,10 @@ pack2.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-board
+bg
   rotate: false
   xy: 1, 1
-  size: 711, 400
-  orig: 711, 400
+  size: 500, 334
+  orig: 500, 334
   offset: 0, 0
   index: -1
