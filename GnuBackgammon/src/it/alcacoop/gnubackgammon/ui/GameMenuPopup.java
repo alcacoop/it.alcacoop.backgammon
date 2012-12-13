@@ -64,6 +64,7 @@ public final class GameMenuPopup extends Table {
         hide(new Runnable(){
         @Override
         public void run() {
+          if (undo.isDisabled()) return;
           GnuBackgammon.Instance.board.undoMove();
         }});
       }
@@ -76,8 +77,9 @@ public final class GameMenuPopup extends Table {
         hide(new Runnable(){
           @Override
           public void run() {
-          GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-          GnuBackgammon.fsm.processEvent(Events.ACCEPT_RESIGN, 0);
+            if (resign.isDisabled()) return;
+            GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+            GnuBackgammon.fsm.processEvent(Events.ACCEPT_RESIGN, 0);
         }});
         
       }
@@ -89,6 +91,7 @@ public final class GameMenuPopup extends Table {
       hide(new Runnable(){
       @Override
       public void run() {
+        if (abandon.isDisabled()) return;
         GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
         UIDialog.getYesNoDialog(
             Events.ABANDON_MATCH, 
