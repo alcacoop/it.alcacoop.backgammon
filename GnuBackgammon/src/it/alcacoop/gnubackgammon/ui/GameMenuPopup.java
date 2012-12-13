@@ -21,7 +21,7 @@ public final class GameMenuPopup extends Table {
   private Drawable background;
   private static TextButton undo;
   private static TextButton resign;
-  private TextButton abandon;
+  private static TextButton abandon;
   private TextButton options;
   private Actor a;
   private Runnable noop;
@@ -124,14 +124,18 @@ public final class GameMenuPopup extends Table {
       System.out.println("DISABILITALI!");
       undo.setDisabled(true);
       resign.setDisabled(true);
+      abandon.setDisabled(true);
       undo.setColor(1,1,1,0.4f);
       resign.setColor(1,1,1,0.4f);
+      abandon.setColor(1,1,1,0.4f);
     } else {
       System.out.println("RIABILITALI!");
       undo.setDisabled(false);
       resign.setDisabled(false);
+      abandon.setDisabled(false);
       undo.setColor(1,1,1,1);
       resign.setColor(1,1,1,1);
+      abandon.setColor(1,1,1,1);
     }
   }
   

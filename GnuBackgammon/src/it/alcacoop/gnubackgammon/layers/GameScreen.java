@@ -50,12 +50,14 @@ public class GameScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.B)) {
-          GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-          UIDialog.getYesNoDialog(
+        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if ((MatchState.matchType==1) || (MatchState.fMove==0)) { //CPU IS PLAYING
+            GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+            UIDialog.getYesNoDialog(
               Events.ABANDON_MATCH, 
               "Really exit this match?", 
               GnuBackgammon.Instance.board.getStage());
+          }
         }
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
           menuPopup.toggle();
