@@ -19,10 +19,8 @@ public class GameOptionsTable extends Table {
   private FixedButtonGroup sound;
   private FixedButtonGroup lmoves;
 
-  public GameOptionsTable(float w, float h, boolean decoration) {
-    setWidth(w);
-    setHeight(h);
-    debug();
+  public GameOptionsTable(boolean decoration) {
+    setFillParent(true);
     
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     
@@ -53,38 +51,42 @@ public class GameOptionsTable extends Table {
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     
+    Label l = new Label("Animation Speed:", GnuBackgammon.skin);
     
-    float width = w/3;
-    float height = h/7;
-    if (!decoration) {
-      width = w;
-      height = h/2.4f;
-    }
+    float width = l.getWidth()*0.8f;
+    float height = l.getHeight()*1.8f;
+    
     
     if (decoration) {
       add(new Label("GAME OPTIONS", GnuBackgammon.skin)).expand().colspan(5);
-      row();
-      add().fill().expand().colspan(5);
     }
+    
+    row();
+    add().fill().expand().colspan(5);
 
-    row().padTop(6).padBottom(6);
-    add(new Label("Sounds:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(sn1).fill().height(height).width(width);
-    add(sn2).fill().height(height).width(width);
-    add().colspan(2);
+    row().height(height*1.4f);
+    add().fill().height(height).expandX();
+    add(new Label("Sounds:", GnuBackgammon.skin)).right().spaceRight(6).height(height);
+    add(sn1).width(width).fillY().height(height).spaceRight(6);
+    add(sn2).width(width).fillY().height(height);
+    add().fill().height(height).expandX();
     
-    row().padTop(6).padBottom(6);
-    add(new Label("Animation Speed:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(sp1).fill().height(height).width(width);
-    add(sp2).fill().height(height).width(width);
-    add().colspan(2);
     
-    row().padTop(6).padBottom(6);
+    row().height(height*1.4f);
+    add().fill().height(height).expandX();
+    add(l).right().spaceRight(6);
+    add(sp1).height(height).width(width).spaceRight(6);
+    add(sp2).height(height).width(width);
+    add().fill().height(height).expandX();
+    
+    row();
+    add().fill().height(height).expandX();
     add(new Label("Legal Moves:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(lm1).fill().height(height).width(width);
-    add(lm2).fill().height(height).width(width);
-    add().colspan(2);
+    add(lm1).height(height).width(width).spaceRight(6);
+    add(lm2).height(height).width(width);
+    add().fill().height(height).expandX();
 
+    
     if (decoration) {
       row();
       add().fill().expand().colspan(5);

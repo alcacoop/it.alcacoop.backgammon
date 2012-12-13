@@ -49,7 +49,7 @@ public final class UIDialog extends Window {
     setModal(true);
     setMovable(false);
     
-    opts = new GameOptionsTable(100,100, false);
+    opts = new GameOptionsTable(false);
     
     cl = new ClickListener(){
       public void clicked(InputEvent event, float x, float y) {
@@ -306,8 +306,8 @@ public final class UIDialog extends Window {
     instance.optionsWindow = true;
     instance.remove();
     
-    float width = stage.getWidth()*0.6f;
-    float height = stage.getHeight()*0.65f;
+    float width = stage.getWidth()*0.65f;
+    float height = stage.getHeight()*0.75f;
     
     instance.clear();
     instance.setWidth(width);
@@ -315,7 +315,9 @@ public final class UIDialog extends Window {
     instance.setX((stage.getWidth()-width)/2);
     instance.setY((stage.getHeight()-height)/2);
     
-    instance.add(instance.opts).expand().fill();
+    instance.add(instance.opts).fill().expand();
+    instance.row();
+    instance.add().fill().expand();
     instance.row();
     instance.add(instance.bContinue).padBottom(height/13).width(width*0.3f).height(height*0.13f);
     
