@@ -72,6 +72,8 @@ public class MainMenuScreen implements Screen {
         UIDialog.getHelpDialog(stage, false);
       }
     });
+    TextButton about = new TextButton("About", GnuBackgammon.skin);
+    about.addListener(cl);
 
     Table table = new Table();
     table.setFillParent(true);
@@ -99,6 +101,10 @@ public class MainMenuScreen implements Screen {
     table.row().pad(2);
     table.add(stats).expand().fill();
     table.add(howtoplay).expand().fill();
+
+    table.row().pad(2);
+    table.add(about).expand().fill().colspan(2);
+
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
     table.row().pad(2);
