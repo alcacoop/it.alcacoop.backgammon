@@ -97,6 +97,14 @@ public final class GameMenuPopup extends Table {
     }});
     
     options = new TextButton("Options", GnuBackgammon.skin);
+    options.addListener(new ClickListener(){@Override
+      public void clicked(InputEvent event, float x, float y) {
+        hide(new Runnable(){
+        @Override
+        public void run() {
+          UIDialog.getOptionsDialog(GnuBackgammon.Instance.board.getStage());
+        }});
+      }});
     
     float pad = getHeight()/8;
     float w = getWidth()/4 - pad;

@@ -1,6 +1,7 @@
 package it.alcacoop.gnubackgammon.ui;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.actors.GameOptionsTable;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 
@@ -34,6 +35,9 @@ public final class UIDialog extends Window {
   
   private BaseFSM.Events evt;
   private boolean quitWindow = false;
+  private boolean optionsWindow = false;
+  
+  private GameOptionsTable opts;
   
   
   static {
@@ -44,6 +48,8 @@ public final class UIDialog extends Window {
     super("", GnuBackgammon.skin);
     setModal(true);
     setMovable(false);
+    
+    opts = new GameOptionsTable(100,100, false);
     
     cl = new ClickListener(){
       public void clicked(InputEvent event, float x, float y) {
@@ -63,6 +69,7 @@ public final class UIDialog extends Window {
               Gdx.app.exit();
             } else {
               GnuBackgammon.fsm.processEvent(instance.evt, ret);
+              if (instance.optionsWindow) opts.savePrefs();
             }
           }
         });
@@ -129,6 +136,7 @@ public final class UIDialog extends Window {
   
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
     instance.quitWindow = false;
+    instance.optionsWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -159,6 +167,7 @@ public final class UIDialog extends Window {
   
   public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
     instance.quitWindow = false;
+    instance.optionsWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -187,6 +196,7 @@ public final class UIDialog extends Window {
   
   public static void getFlashDialog(BaseFSM.Events evt, String text, Stage stage) {
     instance.quitWindow = false;
+    instance.optionsWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -220,6 +230,7 @@ public final class UIDialog extends Window {
   
   public static void getQuitDialog(Stage stage) {
     instance.quitWindow = true;
+    instance.optionsWindow = false;
     instance.remove();
     instance.setText("Really quit the game?");
     
@@ -250,6 +261,7 @@ public final class UIDialog extends Window {
   public static void getHelpDialog(Stage stage, Boolean cb) {
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
+    instance.optionsWindow = false;
     instance.remove();
     Label l = new Label(
         "Once you rolled dices, select the piece you would move.\n" +
@@ -281,6 +293,31 @@ public final class UIDialog extends Window {
     instance.setHeight(height);
     instance.setX((stage.getWidth()-width)/2);
     instance.setY((stage.getHeight()-height)/2);
+    
+    stage.addActor(instance);
+    instance.addAction(Actions.fadeIn(0.3f));
+  }
+  
+  
+  
+  public static void getOptionsDialog(Stage stage) {
+    instance.evt = Events.NOOP;
+    instance.quitWindow = false;
+    instance.optionsWindow = true;
+    instance.remove();
+    
+    float width = stage.getWidth()*0.6f;
+    float height = stage.getHeight()*0.65f;
+    
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.add(instance.opts).expand().fill();
+    instance.row();
+    instance.add(instance.bContinue).padBottom(height/13).width(width*0.3f).height(height*0.13f);
     
     stage.addActor(instance);
     instance.addAction(Actions.fadeIn(0.3f));
