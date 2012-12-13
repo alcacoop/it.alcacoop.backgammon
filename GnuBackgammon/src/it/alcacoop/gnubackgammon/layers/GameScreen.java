@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
   
   private PlayerInfo pInfo[];
   private GameMenuPopup menuPopup;
-  public static TextButton menu;
+  private TextButton menu;
   private Image logo;
 
   

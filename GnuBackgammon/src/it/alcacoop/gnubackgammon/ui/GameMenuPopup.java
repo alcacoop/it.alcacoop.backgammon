@@ -4,9 +4,9 @@ import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 import it.alcacoop.gnubackgammon.fsm.GameFSM.States;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -46,10 +46,11 @@ public final class GameMenuPopup extends Table {
     setBackground(background);
     
     a = new Actor();
-    a.addListener(new ClickListener(){
+    a.addListener(new InputListener(){
       @Override
-      public void clicked(InputEvent event, float x, float y) {
+      public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         hide(noop);
+        return true;
       }
     });
     
