@@ -8,8 +8,9 @@ import java.io.OutputStream;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -24,11 +25,32 @@ import com.google.ads.AdView;
 
 
 
-public class MainActivity extends AndroidApplication implements OnInitListener, NativeFunctions {
+public class MainActivity extends AndroidApplication implements NativeFunctions {
   
   private String data_dir;
   TextToSpeech tts;
-  private boolean ready = false; 
+  protected AdView adView;
+  private final int SHOW_ADS = 1;
+  private final int HIDE_ADS = 0;
+
+  protected Handler handler = new Handler()
+  {
+      @Override
+      public void handleMessage(Message msg) {
+          switch(msg.what) {
+              case SHOW_ADS:
+              {
+                  adView.setVisibility(View.VISIBLE);
+                  break;
+              }
+              case HIDE_ADS:
+              {
+                  adView.setVisibility(View.GONE);
+                  break;
+              }
+          }
+      }
+  };
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +74,9 @@ public class MainActivity extends AndroidApplication implements OnInitListener, 
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
     View gameView = initializeForView(new GnuBackgammon(), cfg);
-    AdView adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
+    adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
     adView.loadAd(new AdRequest());
+    adView.setVisibility(View.GONE);
     
     layout.addView(gameView);
     RelativeLayout.LayoutParams adParams = 
@@ -122,13 +145,8 @@ public class MainActivity extends AndroidApplication implements OnInitListener, 
   }
 
   @Override
-  public void onInit(int status) {
-    ready = true;
-  }
-  
-  public void speak(String s) {
-    if (ready)
-      tts.speak(s, TextToSpeech.QUEUE_ADD, null);
+  public void showAds(boolean show) {
+    handler.sendEmptyMessage(show ? SHOW_ADS : HIDE_ADS);
   }
   
 }

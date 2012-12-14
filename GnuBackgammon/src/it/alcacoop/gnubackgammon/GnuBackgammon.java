@@ -57,7 +57,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public JSONProperties jp;
   public Preferences prefs;
   public SoundManager snd;
+  private NativeFunctions myRequestHandler;
   
+  public GnuBackgammon(NativeFunctions n) {
+    myRequestHandler = n;
+  }
   
   @Override
   public void create() {
@@ -113,31 +117,37 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     switch (s) {
       case 0:
         currentScreen = welcomeScreen;
+        myRequestHandler.showAds(false);
         setScreen(welcomeScreen);
         break;
         
       case 1:
         currentScreen = optionsScreen;
+        myRequestHandler.showAds(false);
         setScreen(optionsScreen);
         break;
       
       case 2:
         currentScreen = menuScreen;
+        myRequestHandler.showAds(false);
         setScreen(menuScreen);
         break;
       
       case 3:
         currentScreen = matchOptionsScreen;
+        myRequestHandler.showAds(false);
         setScreen(matchOptionsScreen);
         break;
         
       case 4:
         currentScreen = gameScreen;
+        myRequestHandler.showAds(true);
         setScreen(gameScreen);
         break;
         
       case 5:
         currentScreen = aboutScreen;
+        myRequestHandler.showAds(false);
         setScreen(aboutScreen);
         break;
         
