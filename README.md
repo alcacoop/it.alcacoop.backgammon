@@ -9,3 +9,7 @@ GnuBackgammon for Android is released with a GPLv3 License, its source code is a
 ## Rules
 
 For more info about playing Backgammon, look at [http://www.bkgm.com/](http://www.bkgm.com/) and [http://en.wikipedia.org/wiki/Backgammon#Rules](http://en.wikipedia.org/wiki/Backgammon#Rules).
+
+# License
+
+GnuBackgammon for Android is released under a GPLv3 license, please look at LICENSE file.
