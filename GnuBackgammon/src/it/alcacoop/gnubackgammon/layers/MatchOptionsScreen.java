@@ -27,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MatchOptionsScreen implements Screen {
 
   private Image bgImg;
-  private Stage stage;
+  public Stage stage;
   private Preferences prefs;
   
   private final FixedButtonGroup level;

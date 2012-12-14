@@ -3,7 +3,9 @@ package it.alcacoop.gnubackgammon.fsm;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
+import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.logic.MatchState;
+import it.alcacoop.gnubackgammon.ui.UIDialog;
 
 
 // MENU FSM
@@ -74,14 +76,22 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
-          System.out.println(params);
           if (params.toString().equals("PLAY")) {
-            GnuBackgammon.Instance.setFSM("GAME_FSM");
+            if((MatchState.currentLevel.ordinal() == 5) || (MatchState.currentLevel.ordinal() == 6) || (MatchState.currentLevel.ordinal() == 7)) {
+              UIDialog.getYesNoDialog(
+                Events.LEVEL_ALERT, 
+                "AI Level choosed is very CPU intensive. \nAre you sure to proceed?", 
+                ((MatchOptionsScreen)GnuBackgammon.Instance.currentScreen).stage);
+            } else
+              GnuBackgammon.Instance.setFSM("GAME_FSM");
           }
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }
           return true;
+        } else if (evt == Events.LEVEL_ALERT) {
+          if ((Boolean)params)
+            GnuBackgammon.Instance.setFSM("GAME_FSM");
         }
         return false;
       }

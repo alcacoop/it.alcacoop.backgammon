@@ -61,7 +61,8 @@ public class BaseFSM implements Context {
     SHOW_DOUBLE_DIALOG,
     CPU_RESIGNED,
     HUMAN_RESIGNED, 
-    ABANDON_MATCH
+    ABANDON_MATCH, 
+    LEVEL_ALERT
   }
 
   public enum States implements State {
