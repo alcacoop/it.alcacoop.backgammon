@@ -57,22 +57,22 @@ public class MainMenuScreen implements Screen {
     
     Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
     
-    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin);
+    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin2);
     onePlayer.addListener(cl);
-    TextButton twoPlayers = new TextButton("Two Players", GnuBackgammon.skin);
+    TextButton twoPlayers = new TextButton("Two Players", GnuBackgammon.skin2);
     twoPlayers.addListener(cl);
-    TextButton stats = new TextButton("Statistics", GnuBackgammon.skin);
+    TextButton stats = new TextButton("Statistics", GnuBackgammon.skin2);
     stats.addListener(cl);
-    TextButton options = new TextButton("Options", GnuBackgammon.skin);
+    TextButton options = new TextButton("Options", GnuBackgammon.skin2);
     options.addListener(cl);
-    TextButton howtoplay = new TextButton("How To Play", GnuBackgammon.skin);
+    TextButton howtoplay = new TextButton("How To Play", GnuBackgammon.skin2);
     howtoplay.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
         UIDialog.getHelpDialog(stage, false);
       }
     });
-    TextButton about = new TextButton("About", GnuBackgammon.skin);
+    TextButton about = new TextButton("About", GnuBackgammon.skin2);
     about.addListener(cl);
 
     Table table = new Table();

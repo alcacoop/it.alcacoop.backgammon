@@ -3,9 +3,16 @@ myskin.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-test
+button
   rotate: false
   xy: 1, 1
+  size: 212, 59
+  orig: 212, 59
+  offset: 0, 0
+  index: -1
+test
+  rotate: false
+  xy: 215, 20
   size: 93, 40
   split: 15, 16, 14, 16
   orig: 93, 40

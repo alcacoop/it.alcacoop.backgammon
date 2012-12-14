@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
 public class GameScreen implements Screen {
@@ -77,7 +78,7 @@ public class GameScreen implements Screen {
     
     menuPopup = new GameMenuPopup(stage);
     
-    menu = new TextButton("M", GnuBackgammon.skin);
+    menu = new TextButton("M", GnuBackgammon.skin2);
     menu.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -99,9 +100,16 @@ public class GameScreen implements Screen {
     float width = stage.getWidth()/5f;
     table.add().expand().fill();
     //table.add(logo).left().expand().padLeft(5+5*(2-GnuBackgammon.ss));
-    table.add(pInfo[0]).width(width);
-    table.add(pInfo[1]).width(width);
-    table.add(menu).fill().width(width/3).padTop(5).padRight(5+5*(2-GnuBackgammon.ss));
+    
+    Table t = new Table();
+    Drawable bg = GnuBackgammon.skin2.getDrawable("button");
+    t.setBackground(bg);
+    t.add(pInfo[0]).left().expand();
+    t.add(pInfo[1]).left().expand();
+    table.add(t).width(width*2);
+    
+    //table.add(pInfo[1]).width(width);
+    table.add(menu).fillY().width(width/2).padRight(5+5*(2-GnuBackgammon.ss)).height(t.getHeight()).pad(2);
     
     table.row();
     table.add(board).colspan(4).expand().fill();

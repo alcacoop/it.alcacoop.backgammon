@@ -107,7 +107,7 @@ public class Board extends Group {
     thinking.setVisible(false);
     addActor(thinking);
 
-    rollBtn = new TextButton("Roll", GnuBackgammon.skin);
+    rollBtn = new TextButton("Roll", GnuBackgammon.skin2);
     rollBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -122,7 +122,7 @@ public class Board extends Group {
     rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
 
 
-    doubleBtn = new TextButton("Double", GnuBackgammon.skin);
+    doubleBtn = new TextButton("Double", GnuBackgammon.skin2);
     doubleBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
