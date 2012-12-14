@@ -136,14 +136,21 @@ public class AvailableMoves {
       for (int j=0;j<4;j++) {
         for (int k=0;k<dices.size();k++) {
           if (moves.get(i)[2*j]==nPoint) {
-            int max_point = b.bearingOff(); 
-            if (max_point==-1) {
-              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
-            } else {
-              //BOFF WITH BIGGER DICE
-              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) ret.add(moves.get(i)[2*j+1]);
-              else if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]<=dices.get(k))&&(nPoint==max_point)&&(moves.get(i)[2*j+1]<0)) 
+            int max_point = b.bearingOff();
+            if (max_point==-1) { //STANDARD MOVE...
+              if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k))&&(moves.get(i)[2*j+1]!=-1)) {
+                ret.add(moves.get(i)[2*j+1]);//TODO
+              }
+            } else { //BOFF
+              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) {
+                //STANDARD BEAROFF
                 ret.add(moves.get(i)[2*j+1]);
+              }
+              else if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]<=dices.get(k))&&(nPoint==max_point)&&(moves.get(i)[2*j+1]<0)) {
+                //BEARFOFF WITH BIGGER DICE
+                ret.add(moves.get(i)[2*j+1]); //TODO
+              }
+                
             }
           }
         }
