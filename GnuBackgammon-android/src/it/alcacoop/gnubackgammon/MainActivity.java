@@ -11,8 +11,16 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 
 
 
@@ -28,16 +36,34 @@ public class MainActivity extends AndroidApplication implements OnInitListener, 
     
     //tts = new TextToSpeech(getBaseContext(), this);
     
-    
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
     
     data_dir = getBaseContext().getApplicationInfo().dataDir+"/gnubg/";
     
     copyAssetsIfNotExists();
-    
-    initialize(new GnuBackgammon(), cfg);
     GnubgAPI.InitializeEnvironment(data_dir);
+    
+    // Create the layout
+    RelativeLayout layout = new RelativeLayout(this);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+    View gameView = initializeForView(new GnuBackgammon(), cfg);
+    AdView adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
+    adView.loadAd(new AdRequest());
+    
+    layout.addView(gameView);
+    RelativeLayout.LayoutParams adParams = 
+        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+    adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+    layout.addView(adView, adParams);
+    setContentView(layout);
   }
   
   
