@@ -306,7 +306,7 @@ public final class UIDialog extends Window {
     instance.optionsWindow = true;
     instance.remove();
     
-    float width = stage.getWidth()*0.65f;
+    float width = stage.getWidth()*0.75f;
     float height = stage.getHeight()*0.75f;
     
     instance.clear();
