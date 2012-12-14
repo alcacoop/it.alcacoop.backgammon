@@ -46,8 +46,16 @@ public class AboutScreen implements Screen {
     Label titleLabel = new Label("ABOUT", GnuBackgammon.skin);
     Label label1 = new Label("GnuBackgammon Mobile is based on GNU Backgammon (gnubg).", GnuBackgammon.skin);
     label1.setWrap(true);
-    Label label2 = new Label("Its source code is released with a GPLv3 License and is available on GitHub at https://github.com/alcacoop/it.alcacoop.gnubackgammon.", GnuBackgammon.skin);
+    Label label1Link = new Label("http://www.gnubg.org", GnuBackgammon.skin);
+    label1Link.setWrap(true);
+    Label label2 = new Label("Its source code is released under a GPLv3 License", GnuBackgammon.skin);
     label2.setWrap(true);
+    Label label2Link = new Label("http://www.gnu.org/licenses/gpl.html", GnuBackgammon.skin);
+    label2Link.setWrap(true);
+    Label label3 = new Label("and is available on GitHub at", GnuBackgammon.skin);
+    label3.setWrap(true);
+    Label label3Link = new Label("https://github.com/alcacoop/it.alcacoop.gnubackgammon", GnuBackgammon.skin);
+    label3Link.setWrap(true);
     
     Table table = new Table();
     table.setWidth(stage.getWidth()*0.8f);
@@ -61,7 +69,15 @@ public class AboutScreen implements Screen {
     table.row().pad(2);
     table.add(label1).expand().fill().colspan(2);
     table.row().pad(2);
+    table.add(label1Link).expand().fill().colspan(2);
+    table.row().pad(2);
     table.add(label2).expand().fill().colspan(2);
+    table.row().pad(2);
+    table.add(label2Link).expand().fill().colspan(2);
+    table.row().pad(2);
+    table.add(label3).expand().fill().colspan(2);
+    table.row().pad(2);
+    table.add(label3Link).expand().fill().colspan(2);
 
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
