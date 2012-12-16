@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -77,14 +78,16 @@ public final class UIDialog extends Window {
     
     label = new Label("", GnuBackgammon.skin);
     
-    bYes = new TextButton("Yes", GnuBackgammon.skin);
+    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    
+    bYes = new TextButton("Yes", tl);
     bYes.addListener(cl);
-    bNo = new TextButton("No", GnuBackgammon.skin);
+    bNo = new TextButton("No", tl);
     bNo.addListener(cl);
-    bContinue = new TextButton("Ok", GnuBackgammon.skin);
+    bContinue = new TextButton("Ok", tl);
     bContinue.addListener(cl);
 
-    background = GnuBackgammon.skin.getDrawable("default-window");
+    background = GnuBackgammon.skin2.getDrawable("default-window");
     setBackground(background);
     
     t1 = new Table();

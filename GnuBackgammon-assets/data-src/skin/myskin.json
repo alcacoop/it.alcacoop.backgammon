@@ -9,8 +9,8 @@ com.badlogic.gdx.graphics.Color: {
 },
 
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: brown},
-	button: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: brown},
+	default: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	button: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
   toggle: { down: check-down, up: check, checked: check-selected, font: default-font, fontColor: white }
 }
 }
