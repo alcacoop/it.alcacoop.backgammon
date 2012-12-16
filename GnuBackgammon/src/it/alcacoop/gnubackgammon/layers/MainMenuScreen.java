@@ -15,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
@@ -26,7 +26,6 @@ public class MainMenuScreen implements Screen {
   private Stage stage;
   private Group g;
   private Image bgImg;
-  //private Dialog exitDialog;
   
   public MainMenuScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
@@ -55,30 +54,34 @@ public class MainMenuScreen implements Screen {
       }
     });
     
-    Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
+    //Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
+    TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
+    Image i = new Image(r);
     
-    TextButton onePlayer = new TextButton("Single Player", GnuBackgammon.skin2);
+    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    
+    TextButton onePlayer = new TextButton("Single Player", tl);
     onePlayer.addListener(cl);
-    TextButton twoPlayers = new TextButton("Two Players", GnuBackgammon.skin2);
+    TextButton twoPlayers = new TextButton("Two Players", tl);
     twoPlayers.addListener(cl);
-    TextButton stats = new TextButton("Statistics", GnuBackgammon.skin2);
+    TextButton stats = new TextButton("Statistics", tl);
     stats.addListener(cl);
-    TextButton options = new TextButton("Options", GnuBackgammon.skin2);
+    TextButton options = new TextButton("Options", tl);
     options.addListener(cl);
-    TextButton howtoplay = new TextButton("How To Play", GnuBackgammon.skin2);
+    TextButton howtoplay = new TextButton("How To Play", tl);
     howtoplay.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
         UIDialog.getHelpDialog(stage, false);
       }
     });
-    TextButton about = new TextButton("About", GnuBackgammon.skin2);
+    TextButton about = new TextButton("About", tl);
     about.addListener(cl);
 
     Table table = new Table();
     table.setFillParent(true);
     
-    table.add(titleLabel).colspan(2);
+    table.add(i).colspan(2);
     
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
@@ -112,7 +115,7 @@ public class MainMenuScreen implements Screen {
     
     g = new Group();
     g.setWidth(stage.getWidth()*0.6f);
-    g.setHeight(stage.getHeight()*0.75f);
+    g.setHeight(stage.getHeight()*0.85f);
     g.addActor(table);
     
     g.setX((stage.getWidth()-g.getWidth())/2);

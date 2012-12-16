@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
@@ -31,9 +31,12 @@ public class WelcomeScreen implements Screen {
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
     stage.addActor(bgImg);
     
-    Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
+    //Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
+    TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
+    Image i = new Image(r);
     
-    TextButton play = new TextButton("PLAY!", GnuBackgammon.skin);
+    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButton play = new TextButton("PLAY!", tl);
     play.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -46,11 +49,14 @@ public class WelcomeScreen implements Screen {
     table = new Table();
     table.setFillParent(true);
     
-    table.add(titleLabel).colspan(5).height(stage.getHeight()*0.1f);
+    table.row();
+    table.add().fill().expand().colspan(5);
+    table.row();
+    table.add(i).colspan(5);
     
     table.row().height(stage.getHeight()*0.75f);
     table.add().width(stage.getWidth()*0.1f);
-    table.add(GnuBackgammon.Instance.board).width(stage.getWidth()*0.8f).colspan(3);
+    table.add(GnuBackgammon.Instance.board).width(stage.getWidth()*0.7f).colspan(3).height(stage.getHeight()*0.65f);
     table.add().width(stage.getWidth()*0.1f);
     
     table.row().height(stage.getHeight()*0.1f);
@@ -59,6 +65,9 @@ public class WelcomeScreen implements Screen {
     table.add(play).fill().expand();
     table.add().width(stage.getWidth()*0.2f);
     table.add().fill().expand();
+    
+    table.row();
+    table.add().fill().expand().colspan(5);
     
     stage.addActor(table);
   }

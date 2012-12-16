@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.Stack;
@@ -107,7 +108,8 @@ public class Board extends Group {
     thinking.setVisible(false);
     addActor(thinking);
 
-    rollBtn = new TextButton("Roll", GnuBackgammon.skin2);
+    TextButtonStyle ts = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    rollBtn = new TextButton("Roll", ts);
     rollBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -122,7 +124,7 @@ public class Board extends Group {
     rollBtn.setY(board.getY() + boardbg.getHeight()/2-rollBtn.getHeight()/2);
 
 
-    doubleBtn = new TextButton("Double", GnuBackgammon.skin2);
+    doubleBtn = new TextButton("Double", ts);
     doubleBtn.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {

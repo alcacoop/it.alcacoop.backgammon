@@ -84,7 +84,7 @@ public class AboutScreen implements Screen {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
     back.addListener(cl);
     
     float width = table.getWidth()/12;

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
@@ -38,11 +39,11 @@ public final class GameMenuPopup extends Table {
     };
         
     setWidth(stage.getWidth());
-    setHeight(stage.getHeight()/8);
+    setHeight(stage.getHeight()/7);
     setX(0);
     setY(-getHeight());
     
-    background = GnuBackgammon.skin.getDrawable("default-rect");
+    background = GnuBackgammon.skin2.getDrawable("popup-region");
     setBackground(background);
     
     a = new Actor();
@@ -57,7 +58,9 @@ public final class GameMenuPopup extends Table {
     t1 = new Table();
     t1.setFillParent(true);
     
-    undo = new TextButton("Undo Move", GnuBackgammon.skin);
+    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    
+    undo = new TextButton("Undo Move", tl);
     undo.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -70,7 +73,7 @@ public final class GameMenuPopup extends Table {
       }
     });
     
-    resign = new TextButton("Resign Game", GnuBackgammon.skin);
+    resign = new TextButton("Resign Game", tl);
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -85,7 +88,7 @@ public final class GameMenuPopup extends Table {
       }
     });
     
-    abandon = new TextButton("Abandon Match", GnuBackgammon.skin);
+    abandon = new TextButton("Abandon Match", tl);
     abandon.addListener(new ClickListener(){@Override
     public void clicked(InputEvent event, float x, float y) {
       hide(new Runnable(){
@@ -100,7 +103,7 @@ public final class GameMenuPopup extends Table {
       }});
     }});
     
-    options = new TextButton("Options", GnuBackgammon.skin);
+    options = new TextButton("Options", tl);
     options.addListener(new ClickListener(){@Override
       public void clicked(InputEvent event, float x, float y) {
         hide(new Runnable(){
@@ -110,8 +113,8 @@ public final class GameMenuPopup extends Table {
         }});
       }});
     
-    float pad = getHeight()/8;
-    float w = getWidth()/4 - pad;
+    float pad = getHeight()/15;
+    float w = getWidth()/3.3f - pad;
     
     add(undo).fill().expand().pad(pad).width(w);
     add(resign).fill().expand().pad(pad).width(w);

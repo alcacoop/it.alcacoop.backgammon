@@ -3,18 +3,51 @@ myskin.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-button
+popup-region
   rotate: false
   xy: 1, 1
-  size: 212, 59
-  orig: 212, 59
+  size: 50, 44
+  split: 6, 6, 13, 2
+  orig: 50, 44
   offset: 0, 0
   index: -1
-test
+check-down
   rotate: false
-  xy: 215, 20
-  size: 93, 40
-  split: 15, 16, 14, 16
-  orig: 93, 40
+  xy: 53, 9
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 91, 9
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check-selected
+  rotate: false
+  xy: 129, 9
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check
+  rotate: false
+  xy: 167, 9
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button-down
+  rotate: false
+  xy: 205, 9
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
   offset: 0, 0
   index: -1

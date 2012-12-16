@@ -21,8 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
 public class GameScreen implements Screen {
@@ -78,7 +78,8 @@ public class GameScreen implements Screen {
     
     menuPopup = new GameMenuPopup(stage);
     
-    menu = new TextButton("M", GnuBackgammon.skin2);
+    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    menu = new TextButton("M", tl);
     menu.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
