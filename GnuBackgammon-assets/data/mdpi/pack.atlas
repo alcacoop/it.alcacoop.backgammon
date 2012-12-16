@@ -143,8 +143,22 @@ filter: Linear,Linear
 repeat: none
 bg
   rotate: false
-  xy: 1, 1
+  xy: 1, 645
   size: 500, 334
   orig: 500, 334
+  offset: 0, 0
+  index: -1
+gnu
+  rotate: false
+  xy: 1, 323
+  size: 320, 320
+  orig: 320, 320
+  offset: 0, 0
+  index: -1
+alca
+  rotate: false
+  xy: 1, 1
+  size: 320, 320
+  orig: 320, 320
   offset: 0, 0
   index: -1

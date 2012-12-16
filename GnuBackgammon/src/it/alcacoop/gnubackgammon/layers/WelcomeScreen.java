@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -47,27 +46,26 @@ public class WelcomeScreen implements Screen {
     GnuBackgammon.Instance.setFSM("SIMULATED_FSM");
     
     table = new Table();
-    table.setFillParent(true);
     
-    table.row();
-    table.add().fill().expand().colspan(5);
-    table.row();
+    table.setWidth(stage.getWidth()*0.9f);
+    table.setHeight(stage.getHeight()*0.85f);
+    table.setX((stage.getWidth()-table.getWidth())/2);
+    table.setY((stage.getHeight()-table.getHeight())/2);
+    
     table.add(i).colspan(5);
     
-    table.row().height(stage.getHeight()*0.75f);
-    table.add().width(stage.getWidth()*0.1f);
-    table.add(GnuBackgammon.Instance.board).width(stage.getWidth()*0.7f).colspan(3).height(stage.getHeight()*0.65f);
-    table.add().width(stage.getWidth()*0.1f);
-    
-    table.row().height(stage.getHeight()*0.1f);
-    table.add().fill().expand();
-    table.add().width(stage.getWidth()*0.2f);
-    table.add(play).fill().expand();
-    table.add().width(stage.getWidth()*0.2f);
-    table.add().fill().expand();
+    table.row();
+    table.add().expand().fill();
+    table.add(GnuBackgammon.Instance.board).expand().width(stage.getWidth()*0.65f).height(stage.getHeight()*0.6f).colspan(3);
+    table.add().expand().fill();
     
     table.row();
-    table.add().fill().expand().colspan(5);
+    table.add().colspan(5).fill().expand();
+    
+    table.row();
+    table.add().fill().expand().colspan(2);
+    table.add(play).fill().expand().width(stage.getWidth()*0.35f);
+    table.add().fill().expand().colspan(2);
     
     stage.addActor(table);
   }
@@ -94,8 +92,6 @@ public class WelcomeScreen implements Screen {
     bgImg.setWidth(stage.getWidth());
     bgImg.setHeight(stage.getHeight());
     Gdx.input.setInputProcessor(stage);
-    table.setColor(1,1,1,0);
-    table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override

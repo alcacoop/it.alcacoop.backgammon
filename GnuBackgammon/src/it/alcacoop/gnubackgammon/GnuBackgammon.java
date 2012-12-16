@@ -10,6 +10,7 @@ import it.alcacoop.gnubackgammon.layers.GameScreen;
 import it.alcacoop.gnubackgammon.layers.MatchOptionsScreen;
 import it.alcacoop.gnubackgammon.layers.MainMenuScreen;
 import it.alcacoop.gnubackgammon.layers.OptionsScreen;
+import it.alcacoop.gnubackgammon.layers.SplashScreen;
 import it.alcacoop.gnubackgammon.layers.WelcomeScreen;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
 
@@ -92,7 +93,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     fsm = simulationFSM;
     
-    
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
     menuScreen = new MainMenuScreen();
@@ -100,7 +100,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     welcomeScreen = new WelcomeScreen();
     aboutScreen = new AboutScreen();
     
-    setScreen(welcomeScreen);
+    setScreen(new SplashScreen());
   }
 
   
@@ -139,6 +139,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       case 5:
         currentScreen = aboutScreen;
         setScreen(aboutScreen);
+        break;
+        
+      case 6:
+        currentScreen = welcomeScreen;
+        setScreen(welcomeScreen);
         break;
     }
   }
