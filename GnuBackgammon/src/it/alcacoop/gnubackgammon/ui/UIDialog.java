@@ -1,7 +1,6 @@
 package it.alcacoop.gnubackgammon.ui;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.actors.GameOptionsTable;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 

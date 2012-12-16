@@ -2,8 +2,9 @@ package it.alcacoop.gnubackgammon.layers;
 
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
-import it.alcacoop.gnubackgammon.actors.GameOptionsTable;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
+import it.alcacoop.gnubackgammon.ui.GameOptionsTable;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;

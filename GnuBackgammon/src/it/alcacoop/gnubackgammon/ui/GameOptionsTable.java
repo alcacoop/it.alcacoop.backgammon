@@ -1,6 +1,7 @@
-package it.alcacoop.gnubackgammon.actors;
+package it.alcacoop.gnubackgammon.ui;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
+import it.alcacoop.gnubackgammon.actors.FixedButtonGroup;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,7 +23,7 @@ public class GameOptionsTable extends Table {
   public GameOptionsTable(boolean decoration) {
     setFillParent(true);
     
-    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
+    TextButtonStyle ts = GnuBackgammon.skin2.get("toggle", TextButtonStyle.class);
     
     speed = new FixedButtonGroup();
     TextButton sp1 = new TextButton("Fast", ts);
@@ -48,7 +49,7 @@ public class GameOptionsTable extends Table {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
     back.addListener(cl);
     
     Label l = new Label("Animation Speed:", GnuBackgammon.skin);
