@@ -290,7 +290,6 @@ public class Board extends Group {
     try {
       Move m = moves.pop();
      
-      
       if (m!=null) {
         playedMoves.push(m);
         m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
