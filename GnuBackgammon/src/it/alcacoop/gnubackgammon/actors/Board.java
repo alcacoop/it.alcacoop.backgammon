@@ -324,6 +324,16 @@ public class Board extends Group {
   }
 
   
+  public int getAutoDestination(int x) {
+    int ps[] = availableMoves.getPoints(x);
+    if ((ps!=null)&&(ps.length==1))
+      return ps[0];
+    else if ((ps!=null)&&(ps.length==2))
+      return ps[0]<=ps[1]?ps[0]:ps[1];
+    else return -2;
+  }
+  
+  
   public void selectChecker(int x) {
     if (_board[MatchState.fMove][x]>0) {
 
