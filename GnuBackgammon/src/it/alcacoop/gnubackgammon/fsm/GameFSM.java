@@ -1,12 +1,12 @@
 package it.alcacoop.gnubackgammon.fsm;
 
-
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.ui.UIDialog;
+
 
 public class GameFSM extends BaseFSM implements Context {
 

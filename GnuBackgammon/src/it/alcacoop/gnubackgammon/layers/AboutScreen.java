@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon.layers;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.fsm.BaseFSM.Events;
-import it.alcacoop.gnubackgammon.ui.UIDialog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
@@ -37,7 +36,7 @@ public class AboutScreen implements Screen {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          UIDialog.getQuitDialog(stage);
+          GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }
         return super.keyDown(event, keycode);
       }
