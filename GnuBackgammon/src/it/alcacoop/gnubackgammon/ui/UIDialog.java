@@ -195,7 +195,46 @@ public final class UIDialog extends Window {
     stage.addActor(instance);
     instance.addAction(Actions.fadeIn(0.3f));
   }
-  
+ 
+  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, Stage stage) {
+    instance.quitWindow = false;
+    instance.optionsWindow = false;
+    instance.evt = evt;
+    instance.remove();
+    
+    float height = stage.getHeight()*0.6f;
+    float width = stage.getWidth()*0.6f;
+    
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.row().padTop(width/25);
+    instance.add().expand();
+    instance.add(text1).colspan(2).expand().align(Align.center);
+    instance.add().expand();
+    
+
+    instance.row();
+    instance.add().expand();
+    instance.add("Overall Score" + text).colspan(2).expand().align(Align.center);
+    instance.add().expand();
+    instance.row();
+    instance.add().expand();
+    instance.add(score1).expand().align(Align.center);
+    instance.add(score2).expand().align(Align.center);
+    instance.add().expand();
+    
+    instance.row();
+    instance.add();
+    instance.add(instance.bContinue).colspan(2).fill().expand().height(height*0.15f).width(width/4);
+    instance.add();
+    
+    stage.addActor(instance);
+    instance.addAction(Actions.fadeIn(0.3f));
+  }
   
   public static void getFlashDialog(BaseFSM.Events evt, String text, Stage stage) {
     instance.quitWindow = false;

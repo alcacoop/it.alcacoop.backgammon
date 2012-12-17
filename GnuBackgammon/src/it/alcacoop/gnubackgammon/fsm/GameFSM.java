@@ -244,13 +244,27 @@ public class GameFSM extends BaseFSM implements Context {
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
         
-        String s = "Your opponent won "+game_score+" point";
-        if (MatchState.matchType == 0)
-          if(MatchState.fMove==1)
-            s = "CPU won "+game_score+" point";
-          else
-            s = "You won "+game_score+" point";
-        UIDialog.getContinueDialog(Events.CONTINUE, s, ctx.board().getStage());
+        String matchProgress = " (match in progress)";
+        if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) {
+          matchProgress = " (match finished)";
+        }
+        
+        String gameString = "Your opponent won "+game_score+" point";
+        String score1 = "";
+        String score2 = "";
+        if (MatchState.matchType == 0) {
+          if(MatchState.fMove==1) {
+            gameString = "CPU WON "+game_score+" POINT!";
+          } else {
+            gameString = "YOU WON "+game_score+" POINT!";
+          }
+          score1 = "CPU: " + MatchState.anScore[1];
+          score2 = "YOU: " + MatchState.anScore[0];
+        } else {
+          score1 = "Player1: " + MatchState.anScore[1];
+          score2 = "Player2: " + MatchState.anScore[0];
+        }
+        UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2, ctx.board().getStage());
       }
 
       @Override
