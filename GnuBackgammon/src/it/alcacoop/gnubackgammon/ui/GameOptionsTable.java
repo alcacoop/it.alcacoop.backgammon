@@ -40,7 +40,7 @@ public class GameOptionsTable extends Table {
     sound.add(sn2);
     
     automoves = new FixedButtonGroup();
-    TextButton am1 = new TextButton("Click", ts);
+    TextButton am1 = new TextButton("Tap", ts);
     TextButton am2 = new TextButton("Auto", ts);
     automoves.add(am1);
     automoves.add(am2);
@@ -122,7 +122,7 @@ public class GameOptionsTable extends Table {
     this.sound.setChecked(sound);
     String speed = GnuBackgammon.Instance.prefs.getString("SPEED", "Fast");
     this.speed.setChecked(speed);
-    String automoves = GnuBackgammon.Instance.prefs.getString("AMOVES", "Click");
+    String automoves = GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap");
     this.automoves.setChecked(automoves);
     String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
