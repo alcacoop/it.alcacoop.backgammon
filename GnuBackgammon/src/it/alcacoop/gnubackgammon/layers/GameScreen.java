@@ -18,11 +18,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class GameScreen implements Screen {
@@ -34,7 +40,7 @@ public class GameScreen implements Screen {
   
   private PlayerInfo pInfo[];
   private GameMenuPopup menuPopup;
-  private TextButton menu;
+  private ImageButton menu;
 
   
   public GameScreen(){
@@ -78,7 +84,16 @@ public class GameScreen implements Screen {
     menuPopup = new GameMenuPopup(stage);
     
     TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
-    menu = new TextButton("M", tl);
+    ImageButtonStyle ibs = new ImageButtonStyle(
+        GnuBackgammon.skin2.getDrawable("button"),
+        GnuBackgammon.skin2.getDrawable("button-down"),
+        null,
+        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),
+        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),
+        null
+    );
+    
+    menu = new ImageButton(ibs);
     menu.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {

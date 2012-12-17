@@ -136,6 +136,13 @@ cw
   orig: 30, 30
   offset: 0, 0
   index: -1
+wheel
+  rotate: false
+  xy: 864, 995
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: -1
 
 pack2.png
 format: RGBA8888

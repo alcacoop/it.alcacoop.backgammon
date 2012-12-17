@@ -157,3 +157,10 @@ cw
   orig: 46, 46
   offset: 0, 0
   index: -1
+wheel
+  rotate: false
+  xy: 1607, 1407
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1

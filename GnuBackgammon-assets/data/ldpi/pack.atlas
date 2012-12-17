@@ -136,6 +136,13 @@ d3
   orig: 30, 30
   offset: 0, 0
   index: -1
+wheel
+  rotate: false
+  xy: 985, 880
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
 ch
   rotate: false
   xy: 503, 677
@@ -152,7 +159,7 @@ cb
   index: -1
 cw
   rotate: false
-  xy: 985, 882
+  xy: 852, 719
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
