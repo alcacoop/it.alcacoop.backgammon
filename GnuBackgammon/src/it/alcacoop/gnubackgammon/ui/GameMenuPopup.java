@@ -160,7 +160,12 @@ public final class GameMenuPopup extends Table {
   
   public void toggle() {
     if (visible) hide(noop);
-    else show();
+    else {
+      GnuBackgammon.Instance.board.points.reset();
+      if (GnuBackgammon.Instance.board.selected!=null) 
+        GnuBackgammon.Instance.board.selected.highlight(false);
+      show();
+    }
   }
   
   
