@@ -161,6 +161,7 @@ public class Dices extends Group {
 
   
   public void clear() {
+    firstBigger = true;
     Iterator<_dice> itr = last.iterator();
     while (itr.hasNext()) {
       removeActor(itr.next());
