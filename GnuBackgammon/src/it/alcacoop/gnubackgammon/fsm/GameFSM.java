@@ -1,6 +1,8 @@
 package it.alcacoop.gnubackgammon.fsm;
 
 
+import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
+
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;
@@ -12,6 +14,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
+  private boolean helpShown = false;
 
   public enum States implements State {
 
@@ -276,8 +279,9 @@ public class GameFSM extends BaseFSM implements Context {
         ctx.board().initBoard();
         ctx.board().updatePInfo();
         
-        if (GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes")) {
+        if ((!((GameFSM)GnuBackgammon.fsm).helpShown)&&(GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
           UIDialog.getHelpDialog(ctx.board().getStage(), true);
+          ((GameFSM)GnuBackgammon.fsm).helpShown = true;
         } else {
           processEvent(ctx, Events.NOOP, null);
         }
@@ -479,6 +483,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   public void stop() {
     state(States.STOPPED);
+    helpShown = false;
   }
 
   public Board board() {
