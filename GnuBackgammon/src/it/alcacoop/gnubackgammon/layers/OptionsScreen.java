@@ -82,6 +82,7 @@ public class OptionsScreen implements Screen {
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
     table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    opts.initFromPrefs();
   }
 
   @Override
