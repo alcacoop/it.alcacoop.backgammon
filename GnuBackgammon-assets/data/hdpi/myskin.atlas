@@ -59,3 +59,17 @@ button-down
   orig: 36, 36
   offset: 0, 0
   index: -1
+slider
+  rotate: false
+  xy: 94, 23
+  size: 6, 22
+  orig: 6, 22
+  offset: 0, 0
+  index: -1
+scroll
+  rotate: false
+  xy: 186, 105
+  size: 6, 22
+  orig: 6, 22
+  offset: 0, 0
+  index: -1

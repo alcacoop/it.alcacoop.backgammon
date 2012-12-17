@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -266,20 +267,37 @@ public final class UIDialog extends Window {
     instance.optionsWindow = false;
     instance.remove();
     Label l = new Label(
-        "Once you rolled dices, select the piece you would move.\n" +
+        "GAME TYPE\n" +
+        "You can choose two game type, and several options:\n" +
+        "Backgammon - usual starting position\n" +
+        "Nackgammon - Nack's starting position, attenuates lucky starting roll\n" +
+        "Doubling Cube: use or not the doubling cube, with or without Crawford rule\n\n" +
+        "START TURN\n" +
+        "If cube isn't available, dices are rolled automatically,\n" +
+        "else you must click on 'Double' or 'Roll' button\n\n" +
+        "MOVING MECHANIC\n" +
+        "You can choose two moves mechanic (Options->Move Logic):\n" +
+        "TAP - once you rolled dices, select the piece you would move.\n" +
         "If legal moves for that piece are available, they will be shown.\n" +
         "Click an available point and the piece will move there.\n" +
-        "You can cancel your moves in current hand just clicking the UNDO button.\n" +
+        "AUTO - click on a piece and it moves automatically to destination point.\n" +
+        "Bigger dice is played first. You can change dice order clicking on dices\n\n" +
+        "You can cancel your moves in current hand just clicking the UNDO button\n" +
+        "in the game options menu popup.\n\n" +
+        "END TURN\n" +
         "When you finish your turn, click again the dices to take back them and change turn.\n"
     , GnuBackgammon.skin);
     l.setWrap(true);
+    
+    ScrollPane sc = new ScrollPane(l,GnuBackgammon.skin2);
+    sc.setFadeScrollBars(true);
     
     float height = stage.getHeight()*0.75f;
     float width = stage.getWidth()*0.9f;
     
     instance.clear();
     instance.row().padTop(width/25);
-    instance.add(l).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
+    instance.add(sc).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
     
     if (cb) {
       instance.row().padTop(width/25);
