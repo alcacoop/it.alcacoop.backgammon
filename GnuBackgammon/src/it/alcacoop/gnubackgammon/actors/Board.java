@@ -524,12 +524,20 @@ public class Board extends Group {
     dices.clear();
     int[] ds = {0,0};
     GnubgAPI.RollDice(ds);
-    dices.animate(ds[0], ds[1]);
+    
+    //SHOW ALWAYS BIGGER DICE ON LEFT
+    if (ds[0]>=ds[1])
+      dices.animate(ds[0], ds[1]);
+    else
+      dices.animate(ds[1], ds[0]);
   }
   
   public void rollDices(int d1, int d2) {
     dices.clear();
-    dices.show(d1, d2, false);
+    
+    //SHOW ALWAYS BIGGER DICE ON LEFT
+    if (d1>d2) dices.show(d1, d2, false);
+    else dices.show(d2, d1, false);
   }
   
 } //END CLASS
