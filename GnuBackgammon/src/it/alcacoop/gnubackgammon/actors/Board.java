@@ -328,8 +328,12 @@ public class Board extends Group {
     int ps[] = availableMoves.getPoints(x);
     if ((ps!=null)&&(ps.length==1))
       return ps[0];
-    else if ((ps!=null)&&(ps.length==2))
-      return ps[0]<=ps[1]?ps[0]:ps[1];
+    else if ((ps!=null)&&(ps.length==2)) {
+      if (dices.getDiceOrder()) //FIRST BIGGER
+        return ps[0]<=ps[1]?ps[0]:ps[1];
+      else //FIRST SMALLER
+        return ps[0]>=ps[1]?ps[0]:ps[1];
+    }
     else return -2;
   }
   

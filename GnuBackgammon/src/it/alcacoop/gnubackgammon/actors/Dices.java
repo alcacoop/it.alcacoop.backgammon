@@ -30,6 +30,7 @@ public class Dices extends Group {
   
   int nr = 0;
   boolean animating = true;
+  boolean firstBigger = true;
   
   
   
@@ -133,9 +134,19 @@ public class Dices extends Group {
     y = b.getHeight()/2;
     
     addListener(new InputListener() {
-      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+      public boolean touchDown (InputEvent event, float _x, float _y, int pointer, int button) {
         if ((!b.availableMoves.hasMoves())&&(!animating))
           GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
+        else { //SWITCH DICES
+          firstBigger = !firstBigger;
+          if (last.size()==2) {
+            //SWAP DICES
+            float leftX = last.get(0).getX();
+            float rightX = last.get(1).getX();
+            last.get(1).setX(leftX);
+            last.get(0).setX(rightX);
+          }
+        }
         return true;
       }
     });
@@ -291,6 +302,10 @@ public class Dices extends Group {
     for (int i=0;i<last.size();i++)
       ret[i] = last.get(i).value;
     return ret;
+  }
+  
+  public boolean getDiceOrder() {
+    return firstBigger; 
   }
 
 }
