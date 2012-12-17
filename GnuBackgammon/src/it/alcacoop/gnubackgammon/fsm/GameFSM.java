@@ -1,8 +1,6 @@
 package it.alcacoop.gnubackgammon.fsm;
 
 
-import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
-
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.actors.Board;
 import it.alcacoop.gnubackgammon.logic.AICalls;

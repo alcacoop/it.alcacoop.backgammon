@@ -5,154 +5,154 @@ filter: Linear,Linear
 repeat: none
 boardbg
   rotate: false
-  xy: 1, 1384
+  xy: 1, 1365
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 1, 762
+  xy: 1, 743
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 gnu
   rotate: false
-  xy: 1105, 1464
+  xy: 1105, 1445
   size: 540, 540
   orig: 540, 540
   offset: 0, 0
   index: -1
 alca
   rotate: false
-  xy: 1, 220
+  xy: 1, 201
   size: 540, 540
   orig: 540, 540
   offset: 0, 0
   index: -1
 bg
   rotate: false
-  xy: 1105, 1128
+  xy: 1105, 1109
   size: 500, 334
   orig: 500, 334
   offset: 0, 0
   index: -1
 logo
   rotate: false
-  xy: 1, 143
-  size: 448, 75
-  orig: 448, 75
+  xy: 543, 666
+  size: 597, 75
+  orig: 597, 75
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 1647, 1720
+  xy: 1647, 1701
   size: 75, 284
   orig: 75, 284
   offset: 0, 0
   index: -1
 c8
   rotate: false
-  xy: 543, 686
+  xy: 1, 125
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 1105, 1052
+  xy: 543, 590
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 1, 67
+  xy: 1105, 1033
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 451, 144
+  xy: 1647, 1625
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 1647, 1644
+  xy: 1724, 1911
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c64
   rotate: false
-  xy: 1724, 1930
+  xy: 1, 49
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 543, 620
+  xy: 77, 135
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 619, 696
+  xy: 543, 524
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 1105, 986
+  xy: 619, 600
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 1181, 1062
+  xy: 1105, 967
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 1, 1
+  xy: 1181, 1043
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 77, 77
+  xy: 1647, 1559
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ch
   rotate: false
-  xy: 1647, 1596
+  xy: 1724, 1863
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 cb
   rotate: false
-  xy: 1724, 1882
+  xy: 1800, 1939
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 cw
   rotate: false
-  xy: 1800, 1958
+  xy: 1, 1
   size: 46, 46
   orig: 46, 46
   offset: 0, 0

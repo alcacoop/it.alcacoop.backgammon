@@ -20,8 +20,8 @@ board
 logo
   rotate: false
   xy: 1, 164
-  size: 329, 55
-  orig: 329, 55
+  size: 389, 55
+  orig: 389, 55
   offset: 0, 0
   index: -1
 point
@@ -40,7 +40,7 @@ c8
   index: -1
 c32
   rotate: false
-  xy: 332, 169
+  xy: 392, 169
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -68,7 +68,7 @@ c2
   index: -1
 c64
   rotate: false
-  xy: 384, 169
+  xy: 444, 169
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -110,7 +110,7 @@ d6
   index: -1
 d3
   rotate: false
-  xy: 436, 175
+  xy: 496, 175
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
