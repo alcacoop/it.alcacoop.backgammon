@@ -159,27 +159,28 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case POINT_TOUCHED:
-          int orig = (Integer)params;
-          int dest = ctx.board().getAutoDestination(orig);
-          if (dest!=-2) {
-            int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
-            ctx.state(HUMAN_CHECKER_MOVING);
-            ctx.board().setMoves(m);
-            ctx.board().availableMoves.dropDice(orig-dest);
+          if (GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap").equals("Auto")) {
+            int orig = (Integer)params;
+            int dest = ctx.board().getAutoDestination(orig);
+            if (dest!=-2) {
+              int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
+              ctx.state(HUMAN_CHECKER_MOVING);
+              ctx.board().setMoves(m);
+              ctx.board().availableMoves.dropDice(orig-dest);
+            }
+          } else {
+            if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
+              int origin = ctx.board().selected.boardX;
+              int dest = (Integer)params;
+              int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
+              ctx.state(HUMAN_CHECKER_MOVING);
+              ctx.board().setMoves(m);
+              ctx.board().availableMoves.dropDice(origin-dest);
+            } else { //SELECT NEW CHECKER
+              if ((Integer)params!=-1)
+                ctx.board().selectChecker((Integer)params);
+            }
           }
-          /*
-          if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
-            int origin = ctx.board().selected.boardX;
-            int dest = (Integer)params;
-            int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
-            ctx.state(HUMAN_CHECKER_MOVING);
-            ctx.board().setMoves(m);
-            ctx.board().availableMoves.dropDice(origin-dest);
-          } else { //SELECT NEW CHECKER
-            if ((Integer)params!=-1)
-              ctx.board().selectChecker((Integer)params);
-          }
-          */
           break;
           
         case DICE_CLICKED:
