@@ -1,5 +1,6 @@
 package it.alcacoop.gnubackgammon.logic;
 
+import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.ui.GameMenuPopup;
 
 
@@ -35,10 +36,16 @@ public class MatchState {
   
   
   public static void SwitchTurn() {
+    Float left1 = GnuBackgammon.Instance.board.rollBtn.getX();
+    Float left2 = GnuBackgammon.Instance.board.doubleBtn.getX();
     if (fMove == 0) {
       SetGameTurn(1, 1);
+      GnuBackgammon.Instance.board.rollBtn.setX(Math.min(left1, left2));
+      GnuBackgammon.Instance.board.doubleBtn.setX(Math.max(left1, left2));
     } else {
       SetGameTurn(0, 0);
+      GnuBackgammon.Instance.board.rollBtn.setX(Math.max(left1, left2));
+      GnuBackgammon.Instance.board.doubleBtn.setX(Math.min(left1, left2));
     }
   }
   
