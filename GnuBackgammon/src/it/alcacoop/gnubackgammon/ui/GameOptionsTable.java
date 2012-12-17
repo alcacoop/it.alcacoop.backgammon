@@ -18,11 +18,13 @@ public class GameOptionsTable extends Table {
   
   private FixedButtonGroup speed;
   private FixedButtonGroup sound;
+  private FixedButtonGroup automoves;
   private FixedButtonGroup lmoves;
 
+  
   public GameOptionsTable(boolean decoration) {
-    setFillParent(true);
     
+    setFillParent(decoration);
     TextButtonStyle ts = GnuBackgammon.skin2.get("toggle", TextButtonStyle.class);
     
     speed = new FixedButtonGroup();
@@ -36,6 +38,12 @@ public class GameOptionsTable extends Table {
     TextButton sn2 = new TextButton("No", ts);
     sound.add(sn1);
     sound.add(sn2);
+    
+    automoves = new FixedButtonGroup();
+    TextButton am1 = new TextButton("Click", ts);
+    TextButton am2 = new TextButton("Auto", ts);
+    automoves.add(am1);
+    automoves.add(am2);
     
     lmoves = new FixedButtonGroup();
     TextButton lm1 = new TextButton("Yes", ts);
@@ -60,10 +68,11 @@ public class GameOptionsTable extends Table {
     
     if (decoration) {
       add(new Label("GAME OPTIONS", GnuBackgammon.skin)).expand().colspan(5);
+      row();
+      add().fill().expand().colspan(5);
     }
     
-    row();
-    add().fill().expand().colspan(5);
+    
 
     row().height(height*1.4f);
     add().fill().height(height).expandX();
@@ -80,6 +89,15 @@ public class GameOptionsTable extends Table {
     add(sp2).height(height).width(width);
     add().fill().height(height).expandX();
     
+    
+    row().height(height*1.4f);
+    add().fill().height(height).expandX();
+    add(new Label("Move Logic:", GnuBackgammon.skin)).right().spaceRight(6);
+    add(am1).height(height).width(width).spaceRight(6);
+    add(am2).height(height).width(width);
+    add().fill().height(height).expandX();
+
+    
     row();
     add().fill().height(height).expandX();
     add(new Label("Legal Moves:", GnuBackgammon.skin)).right().spaceRight(6);
@@ -91,7 +109,6 @@ public class GameOptionsTable extends Table {
     if (decoration) {
       row();
       add().fill().expand().colspan(5);
-    
       row();
       add(back).expand().fill().colspan(5).height(height).width(1.5f*width);
     }
@@ -105,6 +122,8 @@ public class GameOptionsTable extends Table {
     this.sound.setChecked(sound);
     String speed = GnuBackgammon.Instance.prefs.getString("SPEED", "Fast");
     this.speed.setChecked(speed);
+    String automoves = GnuBackgammon.Instance.prefs.getString("AMOVES", "Click");
+    this.automoves.setChecked(automoves);
     String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
   }
@@ -114,6 +133,8 @@ public class GameOptionsTable extends Table {
     GnuBackgammon.Instance.prefs.putString("SOUND", sound);
     String speed = ((TextButton)this.speed.getChecked()).getText().toString(); 
     GnuBackgammon.Instance.prefs.putString("SPEED", speed);
+    String amoves = ((TextButton)this.automoves.getChecked()).getText().toString(); 
+    GnuBackgammon.Instance.prefs.putString("AMOVES", amoves);
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString(); 
     GnuBackgammon.Instance.prefs.putString("LMOVES", lmoves);
     
