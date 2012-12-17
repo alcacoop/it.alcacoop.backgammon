@@ -96,9 +96,6 @@ public class Checker extends Group {
     
     if ((boardY>4)&&(boardX!=-1)) { 
       label.setText(""+(boardY+1));
-      
-      TextBounds b = label.getTextBounds();
-      System.out.println("WIDTH: "+b.width + " HEIGHT: "+b.height);
       label.setX(img.getImageWidth()/2-label.getWidth()/1.9f);
       label.setY(img.getImageHeight()/2-label.getHeight()/2.3f);
     } else 

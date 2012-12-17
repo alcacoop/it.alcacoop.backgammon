@@ -30,7 +30,6 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case ASK_FOR_RESIGNATION:
-          System.out.println("I'M RESIGNING... "+params);
           if((Integer)params > 0) {
             MatchState.resignValue = (Integer)params;
             String s = "Your opponent resigned a game";
@@ -58,7 +57,6 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case ASK_FOR_DOUBLING:
-          System.out.println("I'D LIKE TO DOUBLE... "+params);
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
             ctx.state(DIALOG_HANDLER);
             UIDialog.getYesNoDialog(
@@ -421,7 +419,6 @@ public class GameFSM extends BaseFSM implements Context {
               MatchState.resignValue++;
               AICalls.AcceptResign(MatchState.resignValue);
             } else {
-              System.out.println("RESIGN CALCULATED: "+ret);
               String s = "Really resign the game?";
               if (ret == 2) s = "Really resign a gammon game?";
               if (ret == 3) s = "Really resign a backgammon game?";
@@ -458,7 +455,6 @@ public class GameFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("GAME FSM STOPPED");
         ctx.board().initBoard();
       }
     };

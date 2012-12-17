@@ -98,7 +98,6 @@ public class SimulationFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("SIMULATION FSM STOPPED");
         ctx.board().initBoard();
       }
     };

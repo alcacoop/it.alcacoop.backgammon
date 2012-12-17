@@ -69,7 +69,6 @@ public class BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("BASE FSM STOPPED");
       }
     };
 

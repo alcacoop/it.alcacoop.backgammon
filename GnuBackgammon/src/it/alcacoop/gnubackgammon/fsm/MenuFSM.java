@@ -25,7 +25,6 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
-          System.out.println(params);
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
             ctx.state(States.MATCH_OPTIONS);
@@ -57,7 +56,6 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
-          System.out.println(params);
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }
@@ -103,7 +101,6 @@ public class MenuFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("MENU FSM STOPPED");
       }
     }, 
     
@@ -116,7 +113,6 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
-          System.out.println(params);
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }

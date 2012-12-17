@@ -127,7 +127,6 @@ public final class GameMenuPopup extends Table {
 
   public static void setDisabledButtons() {
     if ((MatchState.matchType==0) && (MatchState.fMove==1)) { //CPU IS PLAYING
-      System.out.println("DISABILITALI!");
       undo.setDisabled(true);
       resign.setDisabled(true);
       abandon.setDisabled(true);
@@ -135,7 +134,6 @@ public final class GameMenuPopup extends Table {
       resign.setColor(1,1,1,0.4f);
       abandon.setColor(1,1,1,0.4f);
     } else {
-      System.out.println("RIABILITALI!");
       undo.setDisabled(false);
       resign.setDisabled(false);
       abandon.setDisabled(false);
