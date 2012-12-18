@@ -32,6 +32,8 @@ public class Dices extends Group {
   boolean animating = true;
   boolean firstBigger = true;
   
+  private float leftX, rightX;
+  
   
   
   class animation extends Group {
@@ -141,10 +143,13 @@ public class Dices extends Group {
           firstBigger = !firstBigger;
           if (last.size()==2) {
             //SWAP DICES
-            float leftX = last.get(0).getX();
-            float rightX = last.get(1).getX();
-            last.get(1).setX(leftX);
-            last.get(0).setX(rightX);
+            if (last.get(0).getX()==leftX) {
+              last.get(1).addAction(Actions.moveTo(leftX, last.get(1).getY(), 0.2f));  //setX(leftX);
+              last.get(0).addAction(Actions.moveTo(rightX, last.get(1).getY(), 0.2f)); //setX(rightX);
+            } else {
+              last.get(1).addAction(Actions.moveTo(rightX, last.get(1).getY(), 0.2f));  //setX(leftX);
+              last.get(0).addAction(Actions.moveTo(leftX, last.get(1).getY(), 0.2f)); //setX(rightX)
+            }
           }
         }
         return true;
@@ -223,6 +228,11 @@ public class Dices extends Group {
       last.get(i).setX(x+w*i + 11);
       last.get(i).setY(y-last.get(i).i.getHeight()/2);
       addActor(last.get(i));
+    }
+    
+    if (last.size()==2) {
+      leftX=last.get(0).getX();
+      rightX=last.get(1).getX();
     }
   }
 
