@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -30,7 +29,6 @@ public final class UIDialog extends Window {
   private Label label;
   private Drawable background;
   private ClickListener cl;
-  private CheckBox helpCheckBox;
   
   private static UIDialog instance;
   
@@ -110,19 +108,6 @@ public final class UIDialog extends Window {
     t3.add().expand();
     
     setColor(1,1,1,0);
-    
-    helpCheckBox = new CheckBox(" Don't show again", GnuBackgammon.skin);
-    helpCheckBox.addListener(new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        String showAgain = "Yes";
-        if(helpCheckBox.isChecked()) {
-          showAgain = "No";
-        }
-        GnuBackgammon.Instance.prefs.putString("SHOWHELP", showAgain);
-        GnuBackgammon.Instance.prefs.flush();
-      }
-    });
     
   }
   
@@ -337,11 +322,6 @@ public final class UIDialog extends Window {
     instance.clear();
     instance.row().padTop(width/25);
     instance.add(sc).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
-    
-    if (cb) {
-      instance.row().padTop(width/25);
-      instance.add(instance.helpCheckBox).colspan(3).left().padLeft(width/35);
-    }
     
     instance.row().pad(width/25);
     instance.add();

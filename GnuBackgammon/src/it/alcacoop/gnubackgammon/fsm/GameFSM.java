@@ -304,6 +304,8 @@ public class GameFSM extends BaseFSM implements Context {
         switch (evt) {
         
         case NOOP: 
+          GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
+          GnuBackgammon.Instance.prefs.flush();
           ctx.board().rollDices();
           break;
         
