@@ -163,9 +163,9 @@ public class GameFSM extends BaseFSM implements Context {
             int dest = ctx.board().getAutoDestination(orig);
             if (dest!=-2) {
               int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
-              ctx.state(HUMAN_CHECKER_MOVING);
-              ctx.board().setMoves(m);
               ctx.board().availableMoves.dropDice(orig-dest);
+              ctx.state(HUMAN_CHECKER_MOVING);
+              ctx.board().humanMove(m);
             }
           } else {
             if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
@@ -173,7 +173,7 @@ public class GameFSM extends BaseFSM implements Context {
               int dest = (Integer)params;
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
               ctx.state(HUMAN_CHECKER_MOVING);
-              ctx.board().setMoves(m);
+              ctx.board().humanMove(m);
               ctx.board().availableMoves.dropDice(origin-dest);
             } else { //SELECT NEW CHECKER
               if ((Integer)params!=-1)

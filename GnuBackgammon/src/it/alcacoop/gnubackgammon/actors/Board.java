@@ -264,29 +264,33 @@ public class Board extends Group {
   }
 
 
-  public void setMoves(int _moves[]) {
+  public void humanMove(int _moves[]) { //HUMAN SET A SINGLE MOVE
+    fsm = GnuBackgammon.fsm;
+    moves.clear();
+    Move m = new Move(this, _moves[0], _moves[1]);
+    playedMoves.push(m);
+    m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
+    Checker c = getChecker(MatchState.fMove, m.from);
+    lastMoved = c;
+    c.moveTo(m.to);
+  }
+  
+  
+  public void setMoves(int _moves[]) { //CPU SET GROUP OF MOVES
     fsm = GnuBackgammon.fsm;
     moves.clear();
     
     if (_moves.length<8) return;
-    int ms = 0;
     for (int i=3;i>=0;i--) {
       if (_moves[2*i]!=-1) {
         Move m = new Move(this, _moves[2*i], _moves[2*i+1]);
         moves.push(m);
-        ms++;
       }
     }
-
-    if (ms==1) performNextMove(true);
-    else performNextMove();
+    performNextMove();
   }
 
-
-  public void performNextMove() { 
-    performNextMove(false);
-  }
-  public void performNextMove(boolean nodelay) {
+  public void performNextMove() {
     try {
       Move m = moves.pop();
      
@@ -294,8 +298,7 @@ public class Board extends Group {
         playedMoves.push(m);
         m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
         Checker c = getChecker(MatchState.fMove, m.from);
-        if (nodelay) c.moveTo(m.to);
-        else c.moveToDelayed(m.to, 0.2f);
+        c.moveToDelayed(m.to, 0.2f);
         lastMoved = c;
       }  
     } catch (Exception e) {
