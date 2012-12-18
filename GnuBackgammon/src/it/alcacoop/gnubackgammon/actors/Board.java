@@ -9,6 +9,7 @@ import it.alcacoop.gnubackgammon.logic.AvailableMoves;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import it.alcacoop.gnubackgammon.logic.MatchState;
 import it.alcacoop.gnubackgammon.logic.Move;
+import it.alcacoop.gnubackgammon.ui.UIDialog;
 import it.alcacoop.gnubackgammon.utils.JSONProperties;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -269,11 +270,15 @@ public class Board extends Group {
     moves.clear();
     Move m = new Move(this, _moves[0], _moves[1]);
     Checker c = getChecker(MatchState.fMove, m.from);
-    if (c!=null) {
+    if ((c!=null)&&(m.from!=m.to)) {
       playedMoves.push(m);
       m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
       c.moveTo(m.to);
       lastMoved = c;
+    } else {
+      System.out.println("PROBLEMA!!!");
+      UIDialog.getFlashDialog(Events.NOOP, "PROBLEMA SERIO QUI!", getStage());
+      GnuBackgammon.fsm.state(States.HUMAN_TURN);
     }
   }
   
