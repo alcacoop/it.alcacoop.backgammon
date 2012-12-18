@@ -268,11 +268,13 @@ public class Board extends Group {
     fsm = GnuBackgammon.fsm;
     moves.clear();
     Move m = new Move(this, _moves[0], _moves[1]);
-    playedMoves.push(m);
-    m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
     Checker c = getChecker(MatchState.fMove, m.from);
-    lastMoved = c;
-    c.moveTo(m.to);
+    if (c!=null) {
+      playedMoves.push(m);
+      m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
+      c.moveTo(m.to);
+      lastMoved = c;
+    }
   }
   
   
