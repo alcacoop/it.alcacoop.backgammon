@@ -2,7 +2,6 @@ package it.alcacoop.gnubackgammon.actors;
 
 import it.alcacoop.gnubackgammon.GnuBackgammon;
 import it.alcacoop.gnubackgammon.logic.MatchState;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,28 +14,26 @@ public class PlayerInfo extends Table {
   private Label pips;
   private int color;
   
-  public PlayerInfo(String title, int color) {
+  public PlayerInfo(String title, int color, float width) {
     this.color = color;
     name = new Label(title , GnuBackgammon.skin);
     score = new Label("0", GnuBackgammon.skin);
     pips = new Label("200", GnuBackgammon.skin);
+    
     TextureRegion region;
     if (color==1)
       region = GnuBackgammon.atlas.findRegion("cw");
     else 
       region = GnuBackgammon.atlas.findRegion("cb");
     Image i =new Image(region);
-    add(i).width(i.getWidth()).spaceRight(6);
     
-    
-    Table t = new Table();
-    t.add(name).left();
-    t.add(score).left().padLeft(5+10*(2-GnuBackgammon.ss));
-    t.row();
-    t.add(new Label("PIPS:", GnuBackgammon.skin)).left();
-    t.add(pips).left().padLeft(5+10*(2-GnuBackgammon.ss));
-    add(t);
+    float w = width*0.6f;
+    add(name).width(w*0.7f);
+    add(score).width(w*0.3f);
+    add(i).center().width(i.getWidth()*0.5f).height(i.getHeight()*0.5f).padRight(3+3*(2-GnuBackgammon.ss));
+    add(pips).left();
   }
+  
 
   public void setName(String name) {
     this.name.setText(name);
