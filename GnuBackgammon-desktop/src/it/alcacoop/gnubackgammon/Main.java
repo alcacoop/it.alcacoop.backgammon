@@ -32,4 +32,9 @@ public class Main implements NativeFunctions {
   
   protected Object handler = new Object() {
   };
+
+
+  @Override
+  public void openURL(String url) {
+  }
 }

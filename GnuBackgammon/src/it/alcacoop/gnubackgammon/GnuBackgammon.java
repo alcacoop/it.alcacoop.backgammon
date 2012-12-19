@@ -57,7 +57,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public JSONProperties jp;
   public Preferences prefs;
   public SoundManager snd;
-  private NativeFunctions myRequestHandler;
+  public NativeFunctions myRequestHandler;
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
@@ -105,6 +105,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     aboutScreen = new AboutScreen();
     
     setScreen(new SplashScreen());
+    //setScreen(welcomeScreen);
   }
 
   

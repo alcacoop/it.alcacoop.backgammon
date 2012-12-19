@@ -13,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
@@ -23,6 +25,7 @@ public class AboutScreen implements Screen {
   private Stage stage;
   private Image bgImg;
   private Table table;
+  private Table tableContent;
   
   public AboutScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
@@ -44,42 +47,104 @@ public class AboutScreen implements Screen {
       }
     });
     
-    Label titleLabel = new Label("ABOUT", GnuBackgammon.skin);
-    Label label1 = new Label("GnuBackgammon Mobile is based on GNU Backgammon (gnubg).", GnuBackgammon.skin);
-    label1.setWrap(true);
-    Label label1Link = new Label("http://www.gnubg.org", GnuBackgammon.skin);
-    label1Link.setWrap(true);
-    Label label2 = new Label("Its source code is released under a GPLv3 License", GnuBackgammon.skin);
-    label2.setWrap(true);
-    Label label2Link = new Label("http://www.gnu.org/licenses/gpl.html", GnuBackgammon.skin);
-    label2Link.setWrap(true);
-    Label label3 = new Label("and is available on GitHub at", GnuBackgammon.skin);
-    label3.setWrap(true);
-    Label label3Link = new Label("https://github.com/alcacoop/it.alcacoop.gnubackgammon", GnuBackgammon.skin);
-    label3Link.setWrap(true);
+    final String gnuBgLink = "http://www.gnubg.org";
+    final String gplLink = "http://www.gnu.org/licenses/gpl.html";
+    final String githubLink1 = "https://github.com/alcacoop/it.alcacoop.gnubackgammon";
+    final String githubLink2 = "https://github.com/alcacoop/libgnubg-android";
+    final String wikipediaLink = "http://en.wikipedia.org/wiki/Backgammon#Rules";
     
+    Label titleLabel = new Label("ABOUT", GnuBackgammon.skin);
+    
+    Label label1 = new Label("GnuBackgammon Mobile is based on GNU Backgammon (gnubg)", GnuBackgammon.skin);
+    Label label1Link = new Label(gnuBgLink, GnuBackgammon.skin);
+    label1Link.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(gnuBgLink);
+      };
+    });
+    
+    Label label2 = new Label("Its source code is released under a GPLv3 License", GnuBackgammon.skin);
+    Label label2Link = new Label(gplLink, GnuBackgammon.skin);
+    label2Link.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(gplLink);
+      };
+    });
+    
+    Label label3 = new Label("and is available on GitHub at:", GnuBackgammon.skin);
+    Label label3Link = new Label(githubLink1, GnuBackgammon.skin);
+    label3Link.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink1);
+      };
+    });
+    Label label3Link2 = new Label(githubLink2, GnuBackgammon.skin);
+    label3Link2.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink2);
+      };
+    });
+    
+    Label label4 = new Label("You can find a detailed description of game rules on Wikipedia at:", GnuBackgammon.skin);
+    Label label4Link = new Label(wikipediaLink, GnuBackgammon.skin);
+    label4Link.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(wikipediaLink);
+      };
+    });
+
+    Label label5 = new Label("If you enjoy our game support us rating on the Play Store", GnuBackgammon.skin);
+    Label label6 = new Label("or buying the ad-free version.", GnuBackgammon.skin);
+   
     table = new Table();
-    table.setWidth(stage.getWidth()*0.8f);
+    table.setWidth(stage.getWidth()*0.95f);
     table.setHeight(stage.getHeight()*0.9f);
     table.setX((stage.getWidth() - table.getWidth()) / 2);
     table.setY((stage.getHeight() - table.getHeight()) / 2);
-    
-    table.row().pad(2);
-    table.add(titleLabel).colspan(2);
-    
-    table.row().pad(2);
-    table.add(label1).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add(label1Link).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add(label2).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add(label2Link).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add(label3).expand().fill().colspan(2);
-    table.row().pad(2);
-    table.add(label3Link).expand().fill().colspan(2);
 
+    float width = table.getWidth()/12;
+    float height = table.getWidth()/15;
+    
+    tableContent = new Table();
+    tableContent.row();
+    tableContent.add(label1).expand();
+    tableContent.row();
+    tableContent.add(label1Link).expand();
+    tableContent.row();
+    tableContent.add(label5).expand();
+    tableContent.row();
+    tableContent.add(label6).expand();
+    tableContent.row();
+    tableContent.add().expand().height(height/2);
+    tableContent.row();
+    tableContent.add(label2).expand();
+    tableContent.row();
+    tableContent.add(label2Link).expand();
+    tableContent.row();
+    tableContent.add().expand().height(height/2);
+    tableContent.row();
+    tableContent.add(label3).expand();
+    tableContent.row();
+    tableContent.add(label3Link).expand();
+    tableContent.row();
+    tableContent.add(label3Link2).expand();
+    tableContent.row();
+    tableContent.add().expand().height(height/2);
+    tableContent.row();
+    tableContent.add(label4).expand();
+    tableContent.row();
+    tableContent.add(label4Link).expand();
+    tableContent.row();
+    tableContent.add().expand().height(height/2);
+
+    ScrollPane sc = new ScrollPane(tableContent,GnuBackgammon.skin2);
+    sc.setFadeScrollBars(false);    
+
+    table.row().pad(2);
+    table.add(titleLabel).height(height).expand();
+    table.row();
+    table.add(sc).height(height*6).expand().fill();
+    
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
@@ -88,8 +153,7 @@ public class AboutScreen implements Screen {
     TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
     back.addListener(cl);
     
-    float width = table.getWidth()/12;
-    float height = table.getWidth()/15;
+
     table.row();
     table.add(back).expand().fill().colspan(5).height(height).width(4*width);
 

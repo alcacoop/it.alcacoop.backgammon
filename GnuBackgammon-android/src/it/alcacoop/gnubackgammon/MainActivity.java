@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -147,6 +149,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   @Override
   public void showAds(boolean show) {
     handler.sendEmptyMessage(show ? SHOW_ADS : HIDE_ADS);
+  }
+
+  @Override
+  public void openURL(String url) {
+    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    startActivity(myIntent);
   }
   
 }
