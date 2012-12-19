@@ -314,7 +314,7 @@ public final class UIDialog extends Window {
     l.setWrap(true);
     
     ScrollPane sc = new ScrollPane(l,GnuBackgammon.skin2);
-    sc.setFadeScrollBars(true);
+    sc.setFadeScrollBars(false);
     
     float height = stage.getHeight()*0.75f;
     float width = stage.getWidth()*0.9f;
