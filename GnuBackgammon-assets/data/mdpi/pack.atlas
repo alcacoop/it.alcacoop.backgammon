@@ -143,6 +143,20 @@ wheel
   orig: 28, 28
   offset: 0, 0
   index: -1
+cb-small
+  rotate: false
+  xy: 542, 203
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+cw-small
+  rotate: false
+  xy: 46, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 
 pack2.png
 format: RGBA8888

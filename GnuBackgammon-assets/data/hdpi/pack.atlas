@@ -164,3 +164,17 @@ wheel
   orig: 36, 36
   offset: 0, 0
   index: -1
+cb-small
+  rotate: false
+  xy: 77, 109
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+cw-small
+  rotate: false
+  xy: 143, 175
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1

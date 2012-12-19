@@ -70,8 +70,8 @@ public class GameScreen implements Screen {
     board = GnuBackgammon.Instance.board;
     
     pInfo = new PlayerInfo[2];
-    pInfo[0] = new PlayerInfo("AI():", 1, stage.getWidth()/4.6f);
-    pInfo[1] = new PlayerInfo("PL1:", 0, stage.getWidth()/4.6f);      
+    pInfo[0] = new PlayerInfo("AI():", 1, stage.getWidth()/4.2f);
+    pInfo[1] = new PlayerInfo("PL1:", 0, stage.getWidth()/4.2f);      
     
     table = new Table();
     stage.addActor(table);
@@ -103,14 +103,14 @@ public class GameScreen implements Screen {
     table.clear();
     table.setFillParent(true);
     
-    float width = stage.getWidth()/4.4f;
+    float width = stage.getWidth()/4.2f;
     
     TextureRegion r = GnuBackgammon.atlas.findRegion("logo");
     Image i = new Image(r);
     i.setScale(0.8f);
     
     table.row().minHeight(44); //BANNER ON ldpi
-    table.add(i).expandX().left().padLeft(6+6*(2-GnuBackgammon.ss));//.padTop(3+3*(2-GnuBackgammon.ss));
+    table.add(i).expandX().left().padLeft(6+6*(2-GnuBackgammon.ss));
     
     Table t = new Table();
     //t.debug();

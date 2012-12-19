@@ -14,8 +14,8 @@ public class Main implements NativeFunctions {
   public static void main(String[] args) {
     LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
     cfg.title = "GnuBackgammon";
-    cfg.width = 800;
-    cfg.height = 480;
+    cfg.width = 1280;
+    cfg.height = 740;
     instance = new Main();
     
     new LwjglApplication(new GnuBackgammon(instance), cfg);

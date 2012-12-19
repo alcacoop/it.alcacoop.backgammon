@@ -22,16 +22,26 @@ public class PlayerInfo extends Table {
     
     TextureRegion region;
     if (color==1)
-      region = GnuBackgammon.atlas.findRegion("cw");
+      region = GnuBackgammon.atlas.findRegion("cw-small");
     else 
-      region = GnuBackgammon.atlas.findRegion("cb");
+      region = GnuBackgammon.atlas.findRegion("cb-small");
     Image i =new Image(region);
     
+    setWidth(width);
+    
     float w = width*0.6f;
-    add(name).width(w*0.7f);
-    add(score).width(w*0.3f);
-    add(i).center().width(i.getWidth()*0.5f).height(i.getHeight()*0.5f).padRight(3+3*(2-GnuBackgammon.ss));
-    add(pips).left();
+    row().height(0);
+    add().minWidth(w*0.7f).height(0);
+    add().width(w*0.1f).height(0);
+    add().width(w*0.3f).height(0);
+    add(i).width(i.getWidth()).height(i.getHeight()).padRight(2+(2-GnuBackgammon.ss)).height(0);
+    add().height(0);
+    row();
+    add(name).right();
+    add();
+    add(score).left();
+    add(i).center().height(i.getHeight()).padRight(2+(2-GnuBackgammon.ss));
+    add(pips);
   }
   
 
