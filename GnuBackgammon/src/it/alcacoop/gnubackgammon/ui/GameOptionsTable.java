@@ -16,6 +16,7 @@ public class GameOptionsTable extends Table {
   private FixedButtonGroup sound;
   private FixedButtonGroup automoves;
   private FixedButtonGroup lmoves;
+  private TextButton lm1, lm2; 
 
   
   public GameOptionsTable(boolean decoration) {
@@ -42,17 +43,29 @@ public class GameOptionsTable extends Table {
     automoves.add(am2);
     
     lmoves = new FixedButtonGroup();
-    TextButton lm1 = new TextButton("Yes", ts);
-    TextButton lm2 = new TextButton("No", ts);
+    lm1 = new TextButton("Yes", ts);
+    lm2 = new TextButton("No", ts);
     lmoves.add(lm1);
     lmoves.add(lm2);
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         savePrefs();
-        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+        String s = ((TextButton)event.getListenerActor()).getText().toString().toUpperCase();
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, s);
       };
     };
+    ClickListener cl2 = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        String s = ((TextButton)event.getListenerActor()).getText().toString().toUpperCase();
+        System.out.println(s);
+        if (s.equals("TAP")) setDisabledLmoves(false);
+        if (s.equals("AUTO")) setDisabledLmoves(true);
+      };
+    };
+    am1.addListener(cl2);
+    am2.addListener(cl2);
+    
     TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
     back.addListener(cl);
     
@@ -100,7 +113,6 @@ public class GameOptionsTable extends Table {
     add(lm1).height(height).width(width).spaceRight(6);
     add(lm2).height(height).width(width);
     add().fill().height(height).expandX();
-
     
     if (decoration) {
       row();
@@ -112,6 +124,21 @@ public class GameOptionsTable extends Table {
     initFromPrefs();
   }
   
+  private void setDisabledLmoves(boolean disabled) {
+    if (disabled) {
+      lm1.setDisabled(true);
+      lm1.setColor(1,1,1,0.4f);
+      lm2.setDisabled(true);
+      lm2.setColor(1,1,1,0.4f);
+    } else {
+      lm1.setDisabled(false);
+      lm1.setColor(1,1,1,1);
+      lm2.setDisabled(false);
+      lm2.setColor(1,1,1,1);
+    }
+  } 
+  
+  
   
   public void initFromPrefs() {
     String sound = GnuBackgammon.Instance.prefs.getString("SOUND", "Yes");
@@ -120,6 +147,10 @@ public class GameOptionsTable extends Table {
     this.speed.setChecked(speed);
     String automoves = GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap");
     this.automoves.setChecked(automoves);
+    
+    if (automoves.equals("Tap")) setDisabledLmoves(false);
+    if (automoves.equals("Auto")) setDisabledLmoves(true);
+    
     String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
   }
