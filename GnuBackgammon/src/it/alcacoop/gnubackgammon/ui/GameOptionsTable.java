@@ -58,7 +58,6 @@ public class GameOptionsTable extends Table {
     ClickListener cl2 = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         String s = ((TextButton)event.getListenerActor()).getText().toString().toUpperCase();
-        System.out.println(s);
         if (s.equals("TAP")) setDisabledLmoves(false);
         if (s.equals("AUTO")) setDisabledLmoves(true);
       };

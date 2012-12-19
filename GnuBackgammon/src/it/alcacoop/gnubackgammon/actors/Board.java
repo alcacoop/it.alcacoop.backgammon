@@ -276,7 +276,6 @@ public class Board extends Group {
       c.moveTo(m.to);
       lastMoved = c;
     } else {
-      System.out.println("PROBLEMA!!!");
       UIDialog.getFlashDialog(Events.NOOP, "PROBLEMA SERIO QUI!", getStage());
       GnuBackgammon.fsm.state(States.HUMAN_TURN);
     }
