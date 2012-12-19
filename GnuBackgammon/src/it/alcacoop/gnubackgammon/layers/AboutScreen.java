@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,6 +22,7 @@ public class AboutScreen implements Screen {
 
   private Stage stage;
   private Image bgImg;
+  private Table table;
   
   public AboutScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
@@ -56,7 +58,7 @@ public class AboutScreen implements Screen {
     Label label3Link = new Label("https://github.com/alcacoop/it.alcacoop.gnubackgammon", GnuBackgammon.skin);
     label3Link.setWrap(true);
     
-    Table table = new Table();
+    table = new Table();
     table.setWidth(stage.getWidth()*0.8f);
     table.setHeight(stage.getHeight()*0.9f);
     table.setX((stage.getWidth() - table.getWidth()) / 2);
@@ -117,6 +119,8 @@ public class AboutScreen implements Screen {
     bgImg.setHeight(stage.getHeight());
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
+    table.setColor(1,1,1,0);
+    table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override
