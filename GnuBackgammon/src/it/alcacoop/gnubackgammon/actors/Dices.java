@@ -139,10 +139,9 @@ public class Dices extends Group {
       public boolean touchDown (InputEvent event, float _x, float _y, int pointer, int button) {
         if ((!b.availableMoves.hasMoves())&&(!animating))
           GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
-        else { //SWITCH DICES
+        else if (!animating) { //SWAP DICES
           firstBigger = !firstBigger;
           if (last.size()==2) {
-            //SWAP DICES
             if (last.get(0).getX()==leftX) {
               last.get(1).addAction(Actions.moveTo(leftX, last.get(1).getY(), 0.2f));  //setX(leftX);
               last.get(0).addAction(Actions.moveTo(rightX, last.get(1).getY(), 0.2f)); //setX(rightX);
