@@ -433,7 +433,8 @@ public class GameFSM extends BaseFSM implements Context {
             
           case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
             ctx.board().thinking(false);
-            if((Integer)params == 1) { //CPU ACCEPTED MY DOUBLE
+            if(((Integer)params == 1)||(MatchState.nMatchTo-MatchState.anScore[0]==1)) { //CPU ACCEPTED MY DOUBLE || OPPONENT IS WINNING (DEAD CUBE!!) 
+              //TODO: need fix in native API
               UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", ctx.board().getStage());
             } else { //CPU DIDN'T ACCEPT MY DOUBLE
               UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", ctx.board().getStage());
