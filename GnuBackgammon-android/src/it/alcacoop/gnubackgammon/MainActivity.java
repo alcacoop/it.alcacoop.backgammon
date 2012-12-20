@@ -91,8 +91,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    //tts = new TextToSpeech(getBaseContext(), this);
-    
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
     
@@ -108,7 +106,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-    View gameView = initializeForView(new GnuBackgammon(), cfg);
+    View gameView = initializeForView(new GnuBackgammon(this), cfg);
     adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
     adView.loadAd(new AdRequest());
     adView.setVisibility(View.GONE);
