@@ -45,6 +45,13 @@ logo
   orig: 239, 40
   offset: 0, 0
   index: -1
+logo-gnu
+  rotate: false
+  xy: 203, 363
+  size: 239, 40
+  orig: 239, 40
+  offset: 0, 0
+  index: -1
 point
   rotate: false
   xy: 985, 904
@@ -54,84 +61,84 @@ point
   index: -1
 c8
   rotate: false
-  xy: 203, 367
+  xy: 744, 703
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 744, 703
+  xy: 203, 325
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 203, 329
+  xy: 444, 367
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 241, 367
+  xy: 782, 703
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 782, 703
+  xy: 203, 287
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c64
   rotate: false
-  xy: 203, 291
+  xy: 241, 325
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 241, 335
+  xy: 820, 709
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 279, 373
+  xy: 203, 255
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 820, 709
+  xy: 241, 293
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 203, 259
+  xy: 279, 331
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 241, 303
+  xy: 852, 709
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 311, 373
+  xy: 203, 223
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
@@ -159,21 +166,21 @@ cb
   index: -1
 cw
   rotate: false
-  xy: 852, 719
+  xy: 311, 341
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 cb-small
   rotate: false
-  xy: 203, 245
+  xy: 884, 727
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 cw-small
   rotate: false
-  xy: 343, 391
+  xy: 203, 209
   size: 12, 12
   orig: 12, 12
   offset: 0, 0

@@ -45,6 +45,13 @@ logo
   orig: 597, 75
   offset: 0, 0
   index: -1
+logo-gnu
+  rotate: false
+  xy: 543, 589
+  size: 597, 75
+  orig: 597, 75
+  offset: 0, 0
+  index: -1
 point
   rotate: false
   xy: 1647, 1701
@@ -61,14 +68,14 @@ c8
   index: -1
 c32
   rotate: false
-  xy: 543, 590
+  xy: 1105, 1033
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 1105, 1033
+  xy: 543, 513
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
@@ -103,28 +110,28 @@ d1
   index: -1
 d2
   rotate: false
-  xy: 543, 524
+  xy: 1105, 967
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 619, 600
+  xy: 1181, 1043
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 1105, 967
+  xy: 543, 447
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 1181, 1043
+  xy: 619, 523
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
