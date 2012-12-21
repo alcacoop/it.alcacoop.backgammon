@@ -183,7 +183,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
         
       case 4:
         currentScreen = gameScreen;
-        myRequestHandler.showAds(true);
+        myRequestHandler.showAds(false);
         setScreen(gameScreen);
         break;
         
