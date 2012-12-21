@@ -15,4 +15,6 @@ GnuBackgammon-android/bin/
 GnuBackgammon-android/gen/
 GnuBackgammon-desktop/bin/
 GnuBackgammon/bin/
+Backgammon-android/bin/
+Backgammon-android/gen/
 *.log
