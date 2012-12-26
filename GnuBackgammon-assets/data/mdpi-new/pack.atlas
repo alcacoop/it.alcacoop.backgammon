@@ -1,0 +1,19 @@
+
+pack.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boardbg
+  rotate: false
+  xy: 1, 403
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+board
+  rotate: false
+  xy: 1, 1
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
