@@ -108,7 +108,7 @@ public class MenuFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
           if (params.toString().equals("PLAY")) {
-            if((MatchState.currentLevel.ordinal() == 5) || (MatchState.currentLevel.ordinal() == 6) || (MatchState.currentLevel.ordinal() == 7)) {
+            if((MatchState.currentLevel.ordinal() >= 5)&&(MatchState.matchType==0)) {
               UIDialog.getYesNoDialog(
                 Events.LEVEL_ALERT, 
                 "AI Level choosed is very CPU intensive. \nAre you sure to proceed?", 
