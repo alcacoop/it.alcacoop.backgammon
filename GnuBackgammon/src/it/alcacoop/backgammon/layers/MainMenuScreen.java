@@ -98,10 +98,12 @@ public class MainMenuScreen implements Screen {
     onePlayer.addListener(cl);
     TextButton twoPlayers = new TextButton("Two Players", tl);
     twoPlayers.addListener(cl);
-    //TextButton stats = new TextButton("Statistics", tl);
-    //stats.addListener(cl);
     TextButton options = new TextButton("Options", tl);
     options.addListener(cl);
+    
+    TextButton appearence = new TextButton("Appearence", tl);
+    appearence.addListener(cl);
+    
     TextButton howtoplay = new TextButton("How To Play", tl);
     howtoplay.addListener(new ClickListener(){
       @Override
@@ -126,15 +128,16 @@ public class MainMenuScreen implements Screen {
     table.add(onePlayer).expand().fill().colspan(2);
     table.row().pad(2);
     table.add(twoPlayers).expand().fill().colspan(2);
+    
     table.row().pad(2);
-    table.add(options).expand().fill().colspan(2);
+    table.add(options).expand().fill().width(table.getWidth()/2);
+    table.add(appearence).expand().fill().width(table.getWidth()/2);
     
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
     table.row().pad(2);
-    //table.add(stats).expand().fill();
     table.add(howtoplay).colspan(2).expand().fill();
 
     table.row().pad(2);
