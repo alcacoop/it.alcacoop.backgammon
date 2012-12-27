@@ -90,7 +90,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
-  public Preferences prefs;
+  public Preferences prefs, appearencePrefs;
   public SoundManager snd;
   public NativeFunctions myRequestHandler;
   public boolean isGNU = false;
@@ -110,6 +110,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void create() {
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
+    appearencePrefs = Gdx.app.getPreferences("Appearence");
     snd = new SoundManager();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS

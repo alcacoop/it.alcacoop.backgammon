@@ -80,6 +80,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -89,6 +90,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 
 
 public class AppearenceScreen implements Screen {
@@ -97,12 +99,12 @@ public class AppearenceScreen implements Screen {
   public Stage stage;
   private Preferences prefs;
   
-  //private final FixedButtonGroup board;
-  //private final FixedButtonGroup checkers;
-  //private final FixedButtonGroup direction;
+  private final FixedButtonGroup board;
+  private final FixedButtonGroup checkers;
+  private final FixedButtonGroup direction;
   private Table table;
   private TextButton back, d1, d2;
-  ImageButton b1, b2, b3, cs1, cs2;
+  private ImageButton b1, b2, b3, cs1, cs2;
   
   
   public AppearenceScreen(){
@@ -110,7 +112,7 @@ public class AppearenceScreen implements Screen {
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     
-    prefs = Gdx.app.getPreferences("Appearence");
+    prefs = GnuBackgammon.Instance.appearencePrefs;
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
@@ -150,6 +152,7 @@ public class AppearenceScreen implements Screen {
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b1"))
     );
     b1 = new ImageButton(ibs);
+    b1.setName("B1");
     ibs = new ImageButtonStyle(
         GnuBackgammon.skin2.getDrawable("check"),
         GnuBackgammon.skin2.getDrawable("check-down"),
@@ -159,6 +162,7 @@ public class AppearenceScreen implements Screen {
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b2"))
     );
     b2 = new ImageButton(ibs);
+    b2.setName("B2");
     ibs = new ImageButtonStyle(
         GnuBackgammon.skin2.getDrawable("check"),
         GnuBackgammon.skin2.getDrawable("check-down"),
@@ -168,6 +172,12 @@ public class AppearenceScreen implements Screen {
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b3"))
     );
     b3 = new ImageButton(ibs);
+    b3.setName("B3");
+    
+    board = new FixedButtonGroup();
+    board.add(b1);
+    board.add(b2);
+    board.add(b3);
     
     ibs = new ImageButtonStyle(
         GnuBackgammon.skin2.getDrawable("check"),
@@ -178,6 +188,7 @@ public class AppearenceScreen implements Screen {
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs1"))
     );
     cs1 = new ImageButton(ibs);
+    cs1.setName("CS1");
     ibs = new ImageButtonStyle(
         GnuBackgammon.skin2.getDrawable("check"),
         GnuBackgammon.skin2.getDrawable("check-down"),
@@ -187,27 +198,50 @@ public class AppearenceScreen implements Screen {
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs2"))
     );
     cs2 = new ImageButton(ibs);
+    cs2.setName("CS2");
+    checkers = new FixedButtonGroup();
+    checkers.add(cs1);
+    checkers.add(cs2);
+    
     
     d1 = new TextButton("AntiClockwise", ts);
     d2 = new TextButton("Clockwise", ts);
+    direction = new FixedButtonGroup();
+    direction.add(d1);
+    direction.add(d2);
     
     back = new TextButton("BACK", GnuBackgammon.skin2);
     back.addListener(cl);
-    initFromPrefs();
     table = new Table();
     stage.addActor(table);
   }
 
   
   public void initFromPrefs() {
-    String sLevel = prefs.getString("LEVEL", "Beginner");
-    //level.setChecked(sLevel);
+    String sBoard = prefs.getString("BOARD", "B1");
+    Array<Button> b = board.getButtons();
+    for (int i=0; i<b.size;i++) {
+      if (b.get(i).getName().toString().equals(sBoard)) b.get(i).setChecked(true);
+    }
+    
+    String sCheckers = prefs.getString("CHECKERS", "CS1");
+    b = checkers.getButtons();
+    for (int i=0; i<b.size;i++) {
+      if (b.get(i).getName().toString().equals(sCheckers)) b.get(i).setChecked(true);
+    }
+    
+    String sDirection = prefs.getString("DIRECTION", "AntiClockwise");
+    direction.setChecked(sDirection);
   }
 
   
   public void savePrefs() {
-    //String sLevel = ((TextButton)level.getChecked()).getText().toString(); 
-    //prefs.putString("LEVEL", sLevel);
+    String sBoard = ((Button)board.getChecked()).getName();
+    prefs.putString("BOARD", sBoard);
+    String sCheckers = ((Button)checkers.getChecked()).getName();
+    prefs.putString("CHECKERS", sCheckers);
+    String sDirection = ((TextButton)direction.getChecked()).getText().toString();
+    prefs.putString("DIRECTION", sDirection);
     prefs.flush();
   }
   
@@ -229,6 +263,7 @@ public class AppearenceScreen implements Screen {
   
   @Override
   public void show() {
+    initFromPrefs();
     bgImg.setWidth(stage.getWidth());
     bgImg.setHeight(stage.getHeight());
     initTable();
