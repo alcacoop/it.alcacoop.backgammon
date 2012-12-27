@@ -416,7 +416,7 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().removeActor(ctx.board().doubleBtn);
               ctx.board().thinking(true);              
             } else { //SHOW DOUBLE DIALOG!
-              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", ctx.board().getStage());
+              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", 0.82f, ctx.board().getStage());
             }
             break;
             
