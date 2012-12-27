@@ -156,6 +156,9 @@ public final class UIDialog extends Window {
   }
   
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
+    getYesNoDialog(evt, text, 1, stage);
+  }
+  public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.evt = evt;
@@ -182,7 +185,7 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
   

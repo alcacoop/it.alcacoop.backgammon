@@ -94,7 +94,7 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.state(DIALOG_HANDLER);
             UIDialog.getYesNoDialog(
               Events.DOUBLING_RESPONSE, 
-              "CPU is asking for double. Accept?", 
+              "CPU is asking for double. Accept?", 0.82f, 
               ctx.board().getStage());
           } else {
             ctx.board().rollDices();
