@@ -203,11 +203,22 @@ public class Board extends Group {
         
       default: //ON THE TABLE
         if (color==0) { //BLACK
-          ret.x = pos[x].x;
+          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+            ret.x = pos[x].x;
+          }
+          else {
+            if (x>11) ret.x = pos[35-x].x;
+            else ret.x = pos[11-x].x;
+          }
           if (x<12) ret.y = board.getY() + pos[x].y + cdim*y;
           else ret.y = board.getY() + pos[x].y - cdim*(y+1);
         } else { //WHITE
-          ret.x = pos[23-x].x;
+          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+            ret.x = pos[23-x].x;
+          } else {
+            if (x<=11) ret.x = pos[35-(23-x)].x;
+            else ret.x = pos[11-(23-x)].x;
+          }
           if (x<12) ret.y = board.getY() + pos[23-x].y - cdim*(y+1);
           else ret.y = board.getY() + pos[23-x].y + cdim*y;
         }
