@@ -71,6 +71,12 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("OPTIONS")) {
             ctx.state(States.GAME_OPTIONS);
           }
+          if (params.toString().equals("RATE IT!")) {
+            if (!GnuBackgammon.Instance.isGNU)
+              GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
+            else
+              GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
+          }
           if (params.toString().equals("ABOUT")) {
             ctx.state(States.ABOUT);
           }

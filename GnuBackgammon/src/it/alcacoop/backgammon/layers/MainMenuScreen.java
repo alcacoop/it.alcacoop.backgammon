@@ -111,6 +111,8 @@ public class MainMenuScreen implements Screen {
     });
     TextButton about = new TextButton("About", tl);
     about.addListener(cl);
+    TextButton rate = new TextButton("Rate it!", tl);
+    rate.addListener(cl);
 
     Table table = new Table();
     table.setFillParent(true);
@@ -134,11 +136,11 @@ public class MainMenuScreen implements Screen {
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
     table.row().pad(2);
-    //table.add(stats).expand().fill();
     table.add(howtoplay).colspan(2).expand().fill();
 
     table.row().pad(2);
-    table.add(about).expand().fill().colspan(2);
+    table.add(rate).expand().fill().width(table.getWidth()/2);
+    table.add(about).expand().fill().width(table.getWidth()/2);
 
     table.row().pad(2);
     table.add().colspan(2).fill().expand();
