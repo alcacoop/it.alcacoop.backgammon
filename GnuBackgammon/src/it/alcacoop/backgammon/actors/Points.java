@@ -99,8 +99,21 @@ public class Points extends Group {
   }
   
   
-  private int rotate(int i) {
-    if (MatchState.fMove==0) return i;
-    return 23-i;
+  private int rotate(int nPoint) {
+    if (MatchState.fMove==0) { //BLACK
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+        return nPoint;
+      } else {
+        if (nPoint>11) return 35-nPoint;
+        else return 11-nPoint;
+      }
+    } else { //WHITE
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      return 23-nPoint;
+      } else {
+        if (nPoint<=11) return 35-(23-nPoint);
+        else return 11-(23-nPoint);
+      }
+    }
   }
 }
