@@ -168,10 +168,6 @@
       <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/mdpi"/>
     </antcall>
     <antcall target="call-texturepacker">
-      <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/mdpi-new"/>
-      <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/mdpi-new"/>
-    </antcall>
-    <antcall target="call-texturepacker">
       <param name="texture_packer_src" value="${basedir}/GnuBackgammon-assets/data-src/hdpi"/>
       <param name="texture_packer_dst" value="${basedir}/GnuBackgammon-assets/data/hdpi"/>
     </antcall>

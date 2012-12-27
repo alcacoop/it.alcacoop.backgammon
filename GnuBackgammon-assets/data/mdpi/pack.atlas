@@ -3,14 +3,14 @@ pack.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-boardbg
+B3-BG
   rotate: false
   xy: 1, 619
   size: 711, 400
   orig: 711, 400
   offset: 0, 0
   index: -1
-board
+B3
   rotate: false
   xy: 1, 217
   size: 711, 400
@@ -201,6 +201,44 @@ cw-small
   index: -1
 
 pack2.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+B2-BG
+  rotate: false
+  xy: 1, 403
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+B1-BG
+  rotate: false
+  xy: 1, 1
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+
+pack3.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+B2
+  rotate: false
+  xy: 1, 403
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+B1
+  rotate: false
+  xy: 1, 1
+  size: 711, 400
+  orig: 711, 400
+  offset: 0, 0
+  index: -1
+
+pack4.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none

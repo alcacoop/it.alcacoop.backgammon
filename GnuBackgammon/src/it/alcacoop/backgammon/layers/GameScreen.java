@@ -186,6 +186,7 @@ public class GameScreen implements Screen {
   
   @Override
   public void show() {
+    loadTextures();
     initTable();
     board.initBoard();
        
@@ -233,5 +234,10 @@ public class GameScreen implements Screen {
   public void dispose() {
   }
 
+  private void loadTextures() {
+    String sBoard = GnuBackgammon.Instance.appearencePrefs.getString("BOARD", "B1");
+    GnuBackgammon.atlas.findRegion("board").setRegion(GnuBackgammon.atlas.findRegion(sBoard));
+    GnuBackgammon.atlas.findRegion("boardbg").setRegion(GnuBackgammon.atlas.findRegion(sBoard+"-BG"));
+  }
 
 }

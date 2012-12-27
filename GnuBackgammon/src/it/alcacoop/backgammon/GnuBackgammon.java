@@ -133,10 +133,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     f  = skin2.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
-    //TextureAtlas atlas2 = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"-new/pack.atlas"));
-    //atlas.findRegion("board").setRegion(atlas2.findRegion("board"));
-    //atlas.findRegion("boardbg").setRegion(atlas2.findRegion("boardbg"));
-    
+    GnuBackgammon.atlas.addRegion("board", atlas.findRegion("B1"));
+    GnuBackgammon.atlas.addRegion("boardbg", atlas.findRegion("B1-BG"));
     board = new Board();
     
     gameFSM = new GameFSM(board);
