@@ -126,7 +126,7 @@ public class MatchOptionsScreen implements Screen {
     crawfordLabel = new Label("Crawford R.:", GnuBackgammon.skin);
     gameTypeLabel = new Label("Variant:", GnuBackgammon.skin);
     
-    TextButtonStyle ts = GnuBackgammon.skin2.get("toggle", TextButtonStyle.class);
+    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     levelButtons = new TextButton[_levels.length];
     level = new FixedButtonGroup();
     for (int i=0; i<_levels.length; i++) {
@@ -168,9 +168,9 @@ public class MatchOptionsScreen implements Screen {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    play = new TextButton("PLAY", GnuBackgammon.skin2);
+    play = new TextButton("PLAY", GnuBackgammon.skin);
     play.addListener(cl);
-    back = new TextButton("BACK", GnuBackgammon.skin2);
+    back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     initFromPrefs();
     table = new Table();

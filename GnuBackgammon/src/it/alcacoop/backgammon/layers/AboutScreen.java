@@ -170,7 +170,7 @@ public class AboutScreen implements Screen {
     tableContent.row();
     tableContent.add().expand().height(height/2);
 
-    ScrollPane sc = new ScrollPane(tableContent,GnuBackgammon.skin2);
+    ScrollPane sc = new ScrollPane(tableContent,GnuBackgammon.skin);
     sc.setFadeScrollBars(false);    
 
     table.row().pad(2);
@@ -183,7 +183,7 @@ public class AboutScreen implements Screen {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     
 

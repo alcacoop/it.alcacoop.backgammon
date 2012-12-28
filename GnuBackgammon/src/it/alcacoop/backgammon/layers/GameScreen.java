@@ -112,8 +112,8 @@ public class GameScreen implements Screen {
     menuPopup = new GameMenuPopup(stage);
     
     ImageButtonStyle ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("button"),
-        GnuBackgammon.skin2.getDrawable("button-down"),
+        GnuBackgammon.skin.getDrawable("button"),
+        GnuBackgammon.skin.getDrawable("button-down"),
         null,
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),

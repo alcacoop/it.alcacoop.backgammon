@@ -141,12 +141,12 @@ public class AppearenceScreen implements Screen {
     };
     
     
-    TextButtonStyle ts = GnuBackgammon.skin2.get("toggle", TextButtonStyle.class);
+    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     
     ImageButtonStyle ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("check"),
-        GnuBackgammon.skin2.getDrawable("check-down"),
-        GnuBackgammon.skin2.getDrawable("check-selected"),
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b1")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b1")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b1"))
@@ -154,9 +154,9 @@ public class AppearenceScreen implements Screen {
     b1 = new ImageButton(ibs);
     b1.setName("B1");
     ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("check"),
-        GnuBackgammon.skin2.getDrawable("check-down"),
-        GnuBackgammon.skin2.getDrawable("check-selected"),
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b2")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b2")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b2"))
@@ -164,9 +164,9 @@ public class AppearenceScreen implements Screen {
     b2 = new ImageButton(ibs);
     b2.setName("B2");
     ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("check"),
-        GnuBackgammon.skin2.getDrawable("check-down"),
-        GnuBackgammon.skin2.getDrawable("check-selected"),
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b3")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b3")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("b3"))
@@ -180,9 +180,9 @@ public class AppearenceScreen implements Screen {
     board.add(b3);
     
     ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("check"),
-        GnuBackgammon.skin2.getDrawable("check-down"),
-        GnuBackgammon.skin2.getDrawable("check-selected"),
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs1")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs1")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs1"))
@@ -190,9 +190,9 @@ public class AppearenceScreen implements Screen {
     cs1 = new ImageButton(ibs);
     cs1.setName("CS1");
     ibs = new ImageButtonStyle(
-        GnuBackgammon.skin2.getDrawable("check"),
-        GnuBackgammon.skin2.getDrawable("check-down"),
-        GnuBackgammon.skin2.getDrawable("check-selected"),
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs2")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs2")),
         new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs2"))
@@ -210,7 +210,7 @@ public class AppearenceScreen implements Screen {
     direction.add(d1);
     direction.add(d2);
     
-    back = new TextButton("BACK", GnuBackgammon.skin2);
+    back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     table = new Table();
     stage.addActor(table);

@@ -83,7 +83,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
-  public static Skin skin, skin2;
+  public static Skin skin;
   public static int resolution[];
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
@@ -121,8 +121,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
-    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/uiskin.json"));
-    skin2 = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
+    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
     atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
@@ -130,7 +129,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     BitmapFont f  = skin.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    f  = skin2.getFont("default-font");
+    f  = skin.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
     GnuBackgammon.atlas.addRegion("board", atlas.findRegion("B1"));

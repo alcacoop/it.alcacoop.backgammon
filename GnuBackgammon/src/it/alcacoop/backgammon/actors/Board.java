@@ -143,7 +143,7 @@ public class Board extends Group {
     thinking.setVisible(false);
     addActor(thinking);
 
-    TextButtonStyle ts = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButtonStyle ts = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     rollBtn = new TextButton("Roll", ts);
     rollBtn.addListener(new ClickListener(){
       @Override

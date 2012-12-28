@@ -69,7 +69,7 @@ public class WelcomeScreen implements Screen {
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     
-    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     TextButton play = new TextButton("PLAY!", tl);
     play.addListener(new ClickListener(){
       @Override
