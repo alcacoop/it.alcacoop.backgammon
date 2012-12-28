@@ -186,7 +186,11 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+        if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+          ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+        } else {
+          ret.x = board.getX() + boardbg.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) - GnuBackgammon.Instance.jp.asFloat("pos", 0)/3;
+        }
         if (color==0)
           ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)*y;
         else
@@ -232,6 +236,7 @@ public class Board extends Group {
   }
   public void initBoard() {
     abandon();
+    points.resetBoff();
     doublingCube.reset();
     MatchState.resignValue = 0;
     MatchState.fMove = 0;

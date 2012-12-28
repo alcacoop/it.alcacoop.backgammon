@@ -62,7 +62,6 @@ public class Point extends Group {
     
     addListener(new InputListener() {
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-        System.out.println(nPoint());
         GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, nPoint());
         return true;
       }

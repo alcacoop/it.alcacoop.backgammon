@@ -41,11 +41,13 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class Points extends Group {
 
-  Point points[];
-  Point bar[];
-  Point boff[];
+  private Point points[];
+  private Point bar[];
+  private Point boff[];
+  private Board b;
   
-  public Points(Board b) {
+  public Points(Board _b) {
+    b = _b;
     bar = new Point[2];
     boff = new Point[2];
     points = new Point[24];
@@ -115,5 +117,16 @@ public class Points extends Group {
         else return 11-(23-nPoint);
       }
     }
+  }
+  
+  public void resetBoff() {
+    float x = 0;
+    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      x = b.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+    } else {
+      x = b.getX() + b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0);
+    }
+    boff[0].setX(x);
+    boff[1].setX(x);
   }
 }
