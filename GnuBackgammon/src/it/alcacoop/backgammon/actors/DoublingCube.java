@@ -49,16 +49,16 @@ public class DoublingCube extends Group {
   private Image i;
   int value = 64;
   float up, down, center, x;
+  private Board b;
   
-  public DoublingCube(Board b) {
+  public DoublingCube(Board _b) {
+    b = _b;
     region = GnuBackgammon.atlas.findRegion("c"+value);
     i = new Image(region);
     i.setAlign(Align.left);
     addActor(i);
     
-    x = b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) -
-        i.getWidth()/2 -
-        GnuBackgammon.Instance.jp.asFloat("pos", 0)/3.7f;
+    evaluateX();
     
     center = (b.getHeight()-i.getHeight())/2 - GnuBackgammon.Instance.jp.asFloat("pos", 0)/5.9f;
     down = GnuBackgammon.Instance.jp.asFloat("pos", 0)*2;
@@ -70,6 +70,8 @@ public class DoublingCube extends Group {
   }
 
   public void setValue(int v) {
+    evaluateX();
+    setX(x);
     value = v;
     if (v>64) value = 64;
     region = GnuBackgammon.atlas.findRegion("c"+value);
@@ -82,5 +84,17 @@ public class DoublingCube extends Group {
   
   public void reset() {
     setValue(64);
+  }
+  
+  
+  private void evaluateX(){
+    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise"))
+      x = b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) -
+        i.getWidth()/2 -
+        GnuBackgammon.Instance.jp.asFloat("pos", 0)/3.7f;
+    else
+      x = GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) -
+        i.getWidth()/2 +
+        GnuBackgammon.Instance.jp.asFloat("pos", 0)/2f;
   }
 }

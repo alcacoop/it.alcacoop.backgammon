@@ -92,16 +92,18 @@ public class MainMenuScreen implements Screen {
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     
-    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     
     TextButton onePlayer = new TextButton("Single Player", tl);
     onePlayer.addListener(cl);
     TextButton twoPlayers = new TextButton("Two Players", tl);
     twoPlayers.addListener(cl);
-    //TextButton stats = new TextButton("Statistics", tl);
-    //stats.addListener(cl);
     TextButton options = new TextButton("Options", tl);
     options.addListener(cl);
+    
+    TextButton appearence = new TextButton("Appearence", tl);
+    appearence.addListener(cl);
+    
     TextButton howtoplay = new TextButton("How To Play", tl);
     howtoplay.addListener(new ClickListener(){
       @Override
@@ -128,8 +130,10 @@ public class MainMenuScreen implements Screen {
     table.add(onePlayer).expand().fill().colspan(2);
     table.row().pad(2);
     table.add(twoPlayers).expand().fill().colspan(2);
+    
     table.row().pad(2);
-    table.add(options).expand().fill().colspan(2);
+    table.add(options).expand().fill().width(table.getWidth()/2);
+    table.add(appearence).expand().fill().width(table.getWidth()/2);
     
     table.row().pad(2);
     table.add().colspan(2).fill().expand();

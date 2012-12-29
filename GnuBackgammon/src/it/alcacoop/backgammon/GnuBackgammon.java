@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
 import it.alcacoop.backgammon.layers.AboutScreen;
+import it.alcacoop.backgammon.layers.AppearenceScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
@@ -67,6 +68,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
   private static AboutScreen aboutScreen;
+  private static AppearenceScreen appearenceScreen;
   private int resolutions[][] = {
     {1280,740},
     {800,480},
@@ -81,14 +83,14 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
-  public static Skin skin, skin2;
+  public static Skin skin;
   public static int resolution[];
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
-  public Preferences prefs;
+  public Preferences prefs, appearencePrefs;
   public SoundManager snd;
   public NativeFunctions myRequestHandler;
   public boolean isGNU = false;
@@ -108,6 +110,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void create() {
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
+    appearencePrefs = Gdx.app.getPreferences("Appearence");
     snd = new SoundManager();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
@@ -118,8 +121,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
-    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/uiskin.json"));
-    skin2 = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
+    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
     atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
@@ -127,8 +129,14 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     BitmapFont f  = skin.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    f  = skin2.getFont("default-font");
+    f  = skin.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    
+    GnuBackgammon.atlas.addRegion("board", atlas.findRegion("B1"));
+    GnuBackgammon.atlas.addRegion("boardbg", atlas.findRegion("B1-BG"));
+    GnuBackgammon.atlas.addRegion("cb", atlas.findRegion("CS1-B"));
+    GnuBackgammon.atlas.addRegion("cw", atlas.findRegion("CS1-W"));
+    GnuBackgammon.atlas.addRegion("ch", atlas.findRegion("CS1-H"));
     
     board = new Board();
     
@@ -144,6 +152,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     aboutScreen = new AboutScreen();
+    appearenceScreen = new AppearenceScreen();
     
     setScreen(new SplashScreen());
     //setScreen(welcomeScreen);
@@ -196,6 +205,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       case 6:
         currentScreen = welcomeScreen;
         setScreen(welcomeScreen);
+        break;
+        
+      case 7:
+        currentScreen = appearenceScreen;
+        setScreen(appearenceScreen);
         break;
     }
   }

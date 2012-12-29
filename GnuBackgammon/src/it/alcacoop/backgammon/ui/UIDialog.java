@@ -110,7 +110,7 @@ public final class UIDialog extends Window {
     
     label = new Label("", GnuBackgammon.skin);
     
-    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     
     bYes = new TextButton("Yes", tl);
     bYes.addListener(cl);
@@ -119,7 +119,7 @@ public final class UIDialog extends Window {
     bContinue = new TextButton("Ok", tl);
     bContinue.addListener(cl);
 
-    background = GnuBackgammon.skin2.getDrawable("default-window");
+    background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
     
     t1 = new Table();
@@ -349,7 +349,7 @@ public final class UIDialog extends Window {
     , GnuBackgammon.skin);
     l.setWrap(true);
     
-    ScrollPane sc = new ScrollPane(l,GnuBackgammon.skin2);
+    ScrollPane sc = new ScrollPane(l,GnuBackgammon.skin);
     sc.setFadeScrollBars(false);
     
     float height = stage.getHeight()*0.75f;

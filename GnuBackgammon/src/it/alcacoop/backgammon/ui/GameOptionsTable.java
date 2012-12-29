@@ -56,7 +56,7 @@ public class GameOptionsTable extends Table {
   public GameOptionsTable(boolean decoration) {
     
     setFillParent(decoration);
-    TextButtonStyle ts = GnuBackgammon.skin2.get("toggle", TextButtonStyle.class);
+    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     
     speed = new FixedButtonGroup();
     TextButton sp1 = new TextButton("Fast", ts);
@@ -99,7 +99,7 @@ public class GameOptionsTable extends Table {
     am1.addListener(cl2);
     am2.addListener(cl2);
     
-    TextButton back = new TextButton("BACK", GnuBackgammon.skin2);
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     
     Label l = new Label("Animation Speed:", GnuBackgammon.skin);

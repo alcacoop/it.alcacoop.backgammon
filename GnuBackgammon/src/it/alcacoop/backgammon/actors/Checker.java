@@ -77,12 +77,12 @@ public class Checker extends Group {
     TextureRegion region;
     
     if (color==1) {//WHITE
-      region = new TextureRegion(GnuBackgammon.atlas.findRegion("cw"));
+      region = GnuBackgammon.atlas.findRegion("cw");
       LabelStyle styleBlack = new LabelStyle(GnuBackgammon.font, Color.BLACK);
       label = new Label("1", styleBlack);
       label.setColor(0,0,0,1);
     } else { 
-      region = new TextureRegion(GnuBackgammon.atlas.findRegion("cb"));
+      region = GnuBackgammon.atlas.findRegion("cb");
       LabelStyle styleWhite = new LabelStyle(GnuBackgammon.font, Color.WHITE);
       label = new Label("1", styleWhite);
       label.setColor(1,1,1,1);
@@ -91,7 +91,7 @@ public class Checker extends Group {
     dr = new TextureRegionDrawable(region);
     img = new Image(dr);
     
-    region = new TextureRegion(GnuBackgammon.atlas.findRegion("ch"));
+    region = GnuBackgammon.atlas.findRegion("ch");
     imgh = new Image(region);
     imgh.setScaling(Scaling.none);
     imgh.addAction(Actions.forever(Actions.sequence(Actions.fadeIn(0.4f), Actions.fadeOut(0.2f))));
@@ -239,20 +239,6 @@ public class Checker extends Group {
   }
   
   public void resetActions() {
-    if (act!=null) //act.setActor(null);
-      act.reset();
-  }
-
-  @Override
-  public void setY(float y) {
-    /*
-    if ((y<board.getHeight()/2)&&(!dr.getRegion().isFlipY())) {
-      dr.getRegion().flip(false, true);
-    } 
-    if ((y>board.getHeight()/2)&&(dr.getRegion().isFlipY())) {
-      dr.getRegion().flip(false, true);
-    }
-    */
-    super.setY(y);
+    if (act!=null) act.reset();
   }
 }

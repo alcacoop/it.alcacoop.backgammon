@@ -91,9 +91,24 @@ public class Point extends Group {
   }
 
   private int nPoint() {
-    if ((nPoint == 24) || (nPoint==-1)) return nPoint; //BAR
-    if (MatchState.fMove==0) return nPoint;
-    else return 23-nPoint;
+    if ((nPoint == 24) || (nPoint==-1)) return nPoint; //BAR||BOFF
+    
+    if (MatchState.fMove==0) { //BLACK
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+        return nPoint;
+      } else {
+        if (nPoint>11) return 35-nPoint;
+        else return 11-nPoint;
+      }
+    } else { //WHITE
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      return 23-nPoint;
+      } else {
+        if (nPoint<=11) return 35-(23-nPoint);
+        else return 11-(23-nPoint);
+      }
+    }
+    
   }
   
   @Override

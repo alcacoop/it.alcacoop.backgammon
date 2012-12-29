@@ -81,7 +81,7 @@ public class Board extends Group {
   public Dices dices;
   public AvailableMoves availableMoves;
   
-  private Image boardbg;
+  private Image boardbg, larrow, rarrow;
   public BoardImage board;
   public JSONProperties jp;
 
@@ -142,8 +142,16 @@ public class Board extends Group {
     thinking.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
     thinking.setVisible(false);
     addActor(thinking);
-
-    TextButtonStyle ts = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    
+    larrow = new Image(GnuBackgammon.atlas.findRegion("larrow"));
+    rarrow = new Image(GnuBackgammon.atlas.findRegion("rarrow"));
+    larrow.setVisible(false);
+    rarrow.setVisible(false);
+    addActor(larrow);
+    addActor(rarrow);
+    
+    
+    TextButtonStyle ts = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     rollBtn = new TextButton("Roll", ts);
     rollBtn.addListener(new ClickListener(){
       @Override
@@ -186,7 +194,11 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+        if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+          ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+        } else {
+          ret.x = board.getX() + boardbg.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) - GnuBackgammon.Instance.jp.asFloat("pos", 0)/3;
+        }
         if (color==0)
           ret.y = board.getY() + GnuBackgammon.Instance.jp.asFloat("down", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)*y;
         else
@@ -203,11 +215,22 @@ public class Board extends Group {
         
       default: //ON THE TABLE
         if (color==0) { //BLACK
-          ret.x = pos[x].x;
+          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+            ret.x = pos[x].x;
+          }
+          else {
+            if (x>11) ret.x = pos[35-x].x;
+            else ret.x = pos[11-x].x;
+          }
           if (x<12) ret.y = board.getY() + pos[x].y + cdim*y;
           else ret.y = board.getY() + pos[x].y - cdim*(y+1);
         } else { //WHITE
-          ret.x = pos[23-x].x;
+          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+            ret.x = pos[23-x].x;
+          } else {
+            if (x<=11) ret.x = pos[35-(23-x)].x;
+            else ret.x = pos[11-(23-x)].x;
+          }
           if (x<12) ret.y = board.getY() + pos[23-x].y - cdim*(y+1);
           else ret.y = board.getY() + pos[23-x].y + cdim*y;
         }
@@ -221,6 +244,9 @@ public class Board extends Group {
   }
   public void initBoard() {
     abandon();
+    points.resetBoff();
+    larrow.setVisible(false);
+    rarrow.setVisible(false);
     doublingCube.reset();
     MatchState.resignValue = 0;
     MatchState.fMove = 0;
@@ -566,6 +592,7 @@ public class Board extends Group {
   }
   
   public void rollDices() {
+    showArrow();
     GnuBackgammon.Instance.snd.playRoll();
     dices.clear();
     int[] ds = {0,0};
@@ -579,11 +606,30 @@ public class Board extends Group {
   }
   
   public void rollDices(int d1, int d2) {
+    showArrow();
     dices.clear();
-    
     //SHOW ALWAYS BIGGER DICE ON LEFT
     if (d1>d2) dices.show(d1, d2, false);
     else dices.show(d2, d1, false);
   }
   
+  public void showArrow() {
+    Vector2 p = getBoardCoord(MatchState.fMove, -1, 0);
+    if (MatchState.fMove==0)
+      p.y -= larrow.getHeight()*2.8f/2;
+    else
+      p.y += 2*GnuBackgammon.Instance.jp.asFloat("pos", 0)+larrow.getHeight()*3f/2;
+    p.x -= larrow.getWidth()/2;
+    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      //RARROW
+      larrow.setVisible(false);
+      rarrow.setVisible(true);
+      rarrow.setPosition(p.x, p.y);
+    } else {
+      //LARROW
+      larrow.setVisible(true);
+      rarrow.setVisible(false);
+      larrow.setPosition(p.x, p.y);
+    }
+  }
 } //END CLASS

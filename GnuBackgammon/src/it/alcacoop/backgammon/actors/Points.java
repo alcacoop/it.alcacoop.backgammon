@@ -41,11 +41,13 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class Points extends Group {
 
-  Point points[];
-  Point bar[];
-  Point boff[];
+  private Point points[];
+  private Point bar[];
+  private Point boff[];
+  private Board b;
   
-  public Points(Board b) {
+  public Points(Board _b) {
+    b = _b;
     bar = new Point[2];
     boff = new Point[2];
     points = new Point[24];
@@ -99,8 +101,32 @@ public class Points extends Group {
   }
   
   
-  private int rotate(int i) {
-    if (MatchState.fMove==0) return i;
-    return 23-i;
+  private int rotate(int nPoint) {
+    if (MatchState.fMove==0) { //BLACK
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+        return nPoint;
+      } else {
+        if (nPoint>11) return 35-nPoint;
+        else return 11-nPoint;
+      }
+    } else { //WHITE
+      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      return 23-nPoint;
+      } else {
+        if (nPoint<=11) return 35-(23-nPoint);
+        else return 11-(23-nPoint);
+      }
+    }
+  }
+  
+  public void resetBoff() {
+    float x = 0;
+    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      x = b.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
+    } else {
+      x = b.getX() + b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0);
+    }
+    boff[0].setX(x);
+    boff[1].setX(x);
   }
 }

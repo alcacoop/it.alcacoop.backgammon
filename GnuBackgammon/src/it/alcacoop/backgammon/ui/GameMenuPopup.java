@@ -77,7 +77,7 @@ public final class GameMenuPopup extends Table {
     setX(0);
     setY(-getHeight());
     
-    background = GnuBackgammon.skin2.getDrawable("popup-region");
+    background = GnuBackgammon.skin.getDrawable("popup-region");
     setBackground(background);
     
     a = new Actor();
@@ -92,7 +92,7 @@ public final class GameMenuPopup extends Table {
     t1 = new Table();
     t1.setFillParent(true);
     
-    TextButtonStyle tl = GnuBackgammon.skin2.get("button", TextButtonStyle.class);
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     
     undo = new TextButton("Undo Move", tl);
     undo.addListener(new ClickListener(){

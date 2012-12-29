@@ -29,7 +29,7 @@
  #  If not, see <http://http://www.gnu.org/licenses/>             #
  #                                                                #
  ##################################################################
-*/
+ */
 
 package it.alcacoop.backgammon.fsm;
 
@@ -54,7 +54,7 @@ public class MenuFSM extends BaseFSM implements Context {
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.goToScreen(2);
       }
-      
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
@@ -77,6 +77,9 @@ public class MenuFSM extends BaseFSM implements Context {
             else
               GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
           }
+          if (params.toString().equals("APPEARENCE")) {
+            ctx.state(States.APPEARENCE);
+          }
           if (params.toString().equals("ABOUT")) {
             ctx.state(States.ABOUT);
           }
@@ -85,7 +88,7 @@ public class MenuFSM extends BaseFSM implements Context {
         return false;
       }
     },
-    
+
     GAME_OPTIONS {
       @Override
       public void enterState(Context ctx) {
@@ -103,22 +106,22 @@ public class MenuFSM extends BaseFSM implements Context {
         return false;
       }
     },
-    
+
     MATCH_OPTIONS {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.goToScreen(3);
       }
-      
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
           if (params.toString().equals("PLAY")) {
             if((MatchState.currentLevel.ordinal() >= 5)&&(MatchState.matchType==0)) {
               UIDialog.getYesNoDialog(
-                Events.LEVEL_ALERT, 
-                "AI Level choosed is very CPU intensive. \nAre you sure to proceed?", 
-                ((MatchOptionsScreen)GnuBackgammon.Instance.currentScreen).stage);
+                  Events.LEVEL_ALERT, 
+                  "AI Level choosed is very CPU intensive. \nAre you sure to proceed?", 
+                  ((MatchOptionsScreen)GnuBackgammon.Instance.currentScreen).stage);
             } else
               GnuBackgammon.Instance.setFSM("GAME_FSM");
           }
@@ -133,16 +136,31 @@ public class MenuFSM extends BaseFSM implements Context {
         return false;
       }
     },
-    
-    OPTIONS {
+
+    APPEARENCE {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.goToScreen(7);
+      }
+
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt==Events.BUTTON_CLICKED) {
+          if (params.toString().equals("BACK")) {
+            ctx.state(States.MAIN_MENU);
+          }
+          return true;
+        }
+        return false;
+      }
     },
-    
+
     STOPPED {
       @Override
       public void enterState(Context ctx) {
       }
     }, 
-    
+
     ABOUT {
       @Override
       public void enterState(Context ctx) {
@@ -160,12 +178,12 @@ public class MenuFSM extends BaseFSM implements Context {
         return false;
       }      
     };
-    
+
     //DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
     public void enterState(Context ctx) {}
     public void exitState(Context ctx) {}
-    
+
   };
 
 
@@ -180,9 +198,9 @@ public class MenuFSM extends BaseFSM implements Context {
   public void stop() {
     state(States.STOPPED);
   }
-  
+
   public Board board() {
     return board;
   }
-  
+
 }
