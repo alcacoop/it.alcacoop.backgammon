@@ -238,6 +238,11 @@ public class GameScreen implements Screen {
     String sBoard = GnuBackgammon.Instance.appearencePrefs.getString("BOARD", "B1");
     GnuBackgammon.atlas.findRegion("board").setRegion(GnuBackgammon.atlas.findRegion(sBoard));
     GnuBackgammon.atlas.findRegion("boardbg").setRegion(GnuBackgammon.atlas.findRegion(sBoard+"-BG"));
+    String sCs = GnuBackgammon.Instance.appearencePrefs.getString("CHECKERS", "CS1");
+    System.out.println(sCs);
+    GnuBackgammon.atlas.findRegion("cb").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-B"));
+    GnuBackgammon.atlas.findRegion("cw").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-W"));
+    GnuBackgammon.atlas.findRegion("ch").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-H"));
   }
 
 }

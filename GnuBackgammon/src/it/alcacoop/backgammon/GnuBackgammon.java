@@ -134,6 +134,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     GnuBackgammon.atlas.addRegion("board", atlas.findRegion("B1"));
     GnuBackgammon.atlas.addRegion("boardbg", atlas.findRegion("B1-BG"));
+    GnuBackgammon.atlas.addRegion("cb", atlas.findRegion("CS1-B"));
+    GnuBackgammon.atlas.addRegion("cw", atlas.findRegion("CS1-W"));
+    GnuBackgammon.atlas.addRegion("ch", atlas.findRegion("CS1-H"));
+    
     board = new Board();
     
     gameFSM = new GameFSM(board);

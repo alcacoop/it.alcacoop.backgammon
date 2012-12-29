@@ -104,7 +104,7 @@ public class AppearenceScreen implements Screen {
   private final FixedButtonGroup direction;
   private Table table;
   private TextButton back, d1, d2;
-  private ImageButton b1, b2, b3, cs1, cs2;
+  private ImageButton b1, b2, b3, cs1, cs2, cs3;
   
   
   public AppearenceScreen(){
@@ -199,9 +199,20 @@ public class AppearenceScreen implements Screen {
     );
     cs2 = new ImageButton(ibs);
     cs2.setName("CS2");
+    ibs = new ImageButtonStyle(
+        GnuBackgammon.skin.getDrawable("check"),
+        GnuBackgammon.skin.getDrawable("check-down"),
+        GnuBackgammon.skin.getDrawable("check-selected"),
+        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs3")),
+        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs3")),
+        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("cs3"))
+    );
+    cs3 = new ImageButton(ibs);
+    cs3.setName("CS3");
     checkers = new FixedButtonGroup();
     checkers.add(cs1);
     checkers.add(cs2);
+    checkers.add(cs3);
     
     
     d1 = new TextButton("AntiClockwise", ts);
@@ -316,7 +327,8 @@ public class AppearenceScreen implements Screen {
     table.add(new Label("Checkers:", GnuBackgammon.skin)).right().padRight(7);
     table.add(cs1).width(b1.getWidth());
     table.add(cs2).width(b1.getWidth());
-    table.add().fill().expand().colspan(2);
+    table.add(cs3).width(b1.getWidth());
+    table.add().fill().expand();
     
     table.row();
     table.add().fill().expand();
