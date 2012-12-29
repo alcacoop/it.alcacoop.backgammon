@@ -81,7 +81,7 @@ public class Board extends Group {
   public Dices dices;
   public AvailableMoves availableMoves;
   
-  private Image boardbg;
+  private Image boardbg, larrow, rarrow;
   public BoardImage board;
   public JSONProperties jp;
 
@@ -142,7 +142,15 @@ public class Board extends Group {
     thinking.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
     thinking.setVisible(false);
     addActor(thinking);
-
+    
+    larrow = new Image(GnuBackgammon.atlas.findRegion("larrow"));
+    rarrow = new Image(GnuBackgammon.atlas.findRegion("rarrow"));
+    larrow.setVisible(false);
+    rarrow.setVisible(false);
+    addActor(larrow);
+    addActor(rarrow);
+    
+    
     TextButtonStyle ts = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     rollBtn = new TextButton("Roll", ts);
     rollBtn.addListener(new ClickListener(){
@@ -237,6 +245,8 @@ public class Board extends Group {
   public void initBoard() {
     abandon();
     points.resetBoff();
+    larrow.setVisible(false);
+    rarrow.setVisible(false);
     doublingCube.reset();
     MatchState.resignValue = 0;
     MatchState.fMove = 0;
@@ -582,6 +592,7 @@ public class Board extends Group {
   }
   
   public void rollDices() {
+    showArrow();
     GnuBackgammon.Instance.snd.playRoll();
     dices.clear();
     int[] ds = {0,0};
@@ -595,11 +606,30 @@ public class Board extends Group {
   }
   
   public void rollDices(int d1, int d2) {
+    showArrow();
     dices.clear();
-    
     //SHOW ALWAYS BIGGER DICE ON LEFT
     if (d1>d2) dices.show(d1, d2, false);
     else dices.show(d2, d1, false);
   }
   
+  public void showArrow() {
+    Vector2 p = getBoardCoord(MatchState.fMove, -1, 0);
+    if (MatchState.fMove==0)
+      p.y -= larrow.getHeight()*2.8f/2;
+    else
+      p.y += 2*GnuBackgammon.Instance.jp.asFloat("pos", 0)+larrow.getHeight()*3f/2;
+    p.x -= larrow.getWidth()/2;
+    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      //RARROW
+      larrow.setVisible(false);
+      rarrow.setVisible(true);
+      rarrow.setPosition(p.x, p.y);
+    } else {
+      //LARROW
+      larrow.setVisible(true);
+      rarrow.setVisible(false);
+      larrow.setPosition(p.x, p.y);
+    }
+  }
 } //END CLASS

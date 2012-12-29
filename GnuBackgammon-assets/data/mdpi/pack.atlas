@@ -234,6 +234,20 @@ wheel
   orig: 28, 28
   offset: 0, 0
   index: -1
+rarrow
+  rotate: false
+  xy: 766, 832
+  size: 23, 12
+  orig: 23, 12
+  offset: 0, 0
+  index: -1
+larrow
+  rotate: false
+  xy: 836, 850
+  size: 23, 12
+  orig: 23, 12
+  offset: 0, 0
+  index: -1
 cb-small
   rotate: false
   xy: 2026, 2024
@@ -243,7 +257,7 @@ cb-small
   index: -1
 cw-small
   rotate: false
-  xy: 766, 828
+  xy: 888, 898
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
