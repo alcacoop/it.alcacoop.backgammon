@@ -115,18 +115,18 @@ cs2
   orig: 64, 40
   offset: 0, 0
   index: -1
-cs1
+cs3
   rotate: false
   xy: 1818, 1671
   size: 64, 40
   orig: 64, 40
   offset: 0, 0
   index: -1
-cs3
+cs1
   rotate: false
   xy: 1036, 1146
-  size: 64, 40
-  orig: 64, 40
+  size: 63, 40
+  orig: 63, 40
   offset: 0, 0
   index: -1
 c8
@@ -236,7 +236,7 @@ CS2-W
   index: -1
 CS1-H
   rotate: false
-  xy: 1102, 1156
+  xy: 1101, 1156
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
