@@ -188,8 +188,10 @@ public final class UIDialog extends Window {
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
-  
   public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
+    getContinueDialog(evt, text, 1, stage);
+  }
+  public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.evt = evt;
@@ -214,10 +216,14 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
  
+  
   public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, Stage stage) {
+    getEndGameDialog(evt, text, text1, score1, score2, 1, stage);
+  }
+  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.evt = evt;
@@ -254,10 +260,14 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
+  
   public static void getFlashDialog(BaseFSM.Events evt, String text, Stage stage) {
+    getFlashDialog(evt, text, 1, stage);
+  }
+  public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.evt = evt;
@@ -277,7 +287,7 @@ public final class UIDialog extends Window {
     
     stage.addActor(instance);
     instance.addAction(Actions.sequence(
-        Actions.fadeIn(0.3f),
+        Actions.alpha(alpha, 0.3f),
         Actions.delay(1.5f),
         Actions.fadeOut(0.3f),
         Actions.run(new Runnable() {
@@ -290,8 +300,10 @@ public final class UIDialog extends Window {
     ));
   }
   
-  
   public static void getQuitDialog(Stage stage) {
+    getQuitDialog(1, stage);
+  }
+  public static void getQuitDialog(float alpha, Stage stage) {
     instance.quitWindow = true;
     instance.optionsWindow = false;
     instance.remove();
@@ -317,11 +329,14 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
 
   
   public static void getHelpDialog(Stage stage, Boolean cb) {
+    getHelpDialog(1, stage, cb);
+  }
+  public static void getHelpDialog(float alpha, Stage stage, Boolean cb) {
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -370,12 +385,14 @@ public final class UIDialog extends Window {
     instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
   
-  
   public static void getOptionsDialog(Stage stage) {
+    getOptionsDialog(1, stage);
+  }
+  public static void getOptionsDialog(float alpha, Stage stage) {
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.optionsWindow = true;
@@ -401,6 +418,6 @@ public final class UIDialog extends Window {
     instance.add(instance.bContinue).padBottom(height/13).width(width*0.3f).height(height*0.13f);
     
     stage.addActor(instance);
-    instance.addAction(Actions.fadeIn(0.3f));
+    instance.addAction(Actions.alpha(alpha, 0.3f));
   }
 }

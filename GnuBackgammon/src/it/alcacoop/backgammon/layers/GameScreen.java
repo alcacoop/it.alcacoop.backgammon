@@ -89,7 +89,8 @@ public class GameScreen implements Screen {
             GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
             UIDialog.getYesNoDialog(
               Events.ABANDON_MATCH, 
-              "Really exit this match?", 
+              "Really exit this match?",
+              0.82f,
               GnuBackgammon.Instance.board.getStage());
           }
         }

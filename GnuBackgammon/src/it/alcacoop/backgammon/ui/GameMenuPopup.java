@@ -133,6 +133,7 @@ public final class GameMenuPopup extends Table {
         UIDialog.getYesNoDialog(
             Events.ABANDON_MATCH, 
             "Really exit this match?", 
+            0.82f,
             GnuBackgammon.Instance.board.getStage());
       }});
     }});
@@ -143,7 +144,7 @@ public final class GameMenuPopup extends Table {
         hide(new Runnable(){
         @Override
         public void run() {
-          UIDialog.getOptionsDialog(GnuBackgammon.Instance.board.getStage());
+          UIDialog.getOptionsDialog(0.82f, GnuBackgammon.Instance.board.getStage());
         }});
       }});
     

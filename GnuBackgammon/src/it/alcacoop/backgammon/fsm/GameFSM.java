@@ -69,7 +69,7 @@ public class GameFSM extends BaseFSM implements Context {
             if ((Integer)params==2) s = "Your opponent resigned a gammon game";
             if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
             ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, ctx.board().getStage());
+            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
               ctx.board().rollDices();
@@ -114,7 +114,8 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
               Events.NO_MORE_MOVES, 
-              "Your opponent has no legal moves", 
+              "Your opponent has no legal moves",
+              0.82f,
               ctx.board().getStage());
           } else {
             moves = (int[])params;
@@ -185,7 +186,8 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
               Events.NO_MORE_MOVES, 
-              "No legal moves available", 
+              "No legal moves available",
+              0.82f,
               ctx.board().getStage());
           }
           break;
@@ -299,7 +301,7 @@ public class GameFSM extends BaseFSM implements Context {
           score1 = "Player1: " + MatchState.anScore[1];
           score2 = "Player2: " + MatchState.anScore[0];
         }
-        UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2, ctx.board().getStage());
+        UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2, 0.82f, ctx.board().getStage());
       }
 
       @Override
@@ -325,7 +327,7 @@ public class GameFSM extends BaseFSM implements Context {
         ctx.board().updatePInfo();
         
         if ((!((GameFSM)GnuBackgammon.fsm).helpShown)&&(GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
-          UIDialog.getHelpDialog(ctx.board().getStage(), true);
+          UIDialog.getHelpDialog(0.82f, ctx.board().getStage(), true);
           ((GameFSM)GnuBackgammon.fsm).helpShown = true;
         } else {
           processEvent(ctx, Events.NOOP, null);
@@ -435,9 +437,9 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.board().thinking(false);
             if(((Integer)params == 1)||(MatchState.nMatchTo-MatchState.anScore[0]==1)) { //CPU ACCEPTED MY DOUBLE || OPPONENT IS WINNING (DEAD CUBE!!) 
               //TODO: need fix in native API
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", ctx.board().getStage());
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", 0.82f, ctx.board().getStage());
             } else { //CPU DIDN'T ACCEPT MY DOUBLE
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", ctx.board().getStage());
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", 0.82f, ctx.board().getStage());
             }
             break;
             
@@ -474,7 +476,7 @@ public class GameFSM extends BaseFSM implements Context {
               String s = "Really resign the game?";
               if (ret == 2) s = "Really resign a gammon game?";
               if (ret == 3) s = "Really resign a backgammon game?";
-              UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, ctx.board().getStage());
+              UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
             }
             break;
             
