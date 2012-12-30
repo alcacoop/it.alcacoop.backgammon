@@ -204,7 +204,6 @@ public final class GameMenuPopup extends Table {
   
   public Actor hit (float x, float y, boolean touchable) {
     Actor hit = super.hit(x, y, touchable);
-    
     if (visible) {
       if (hit != null) return hit;
       else {
@@ -214,8 +213,12 @@ public final class GameMenuPopup extends Table {
     } else {
       return hit;  
     }
-    
   }
 
-  
+  public void setButtonsStyle(String b) {
+    undo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    resign.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    abandon.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    options.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+  }
 }

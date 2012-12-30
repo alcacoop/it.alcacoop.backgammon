@@ -11,6 +11,9 @@ com.badlogic.gdx.graphics.Color: {
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
 	button: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	button-B1: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	button-B2: { down: button2-down, up: button2, font: default-font, fontColor: white, downFontColor: white},
+	button-B3: { down: button3-down, up: button3, font: default-font, fontColor: white, downFontColor: white},
   toggle: { down: check-down, up: check, checked: check-selected, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {

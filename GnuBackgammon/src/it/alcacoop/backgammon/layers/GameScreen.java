@@ -55,6 +55,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -69,6 +70,7 @@ public class GameScreen implements Screen {
   private PlayerInfo pInfo[];
   private GameMenuPopup menuPopup;
   private ImageButton menu;
+  private TextureRegionDrawable wheel;
 
   
   public GameScreen(){
@@ -111,13 +113,14 @@ public class GameScreen implements Screen {
     stage.addActor(table);
     
     menuPopup = new GameMenuPopup(stage);
+    wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")); 
     
     ImageButtonStyle ibs = new ImageButtonStyle(
         GnuBackgammon.skin.getDrawable("button"),
         GnuBackgammon.skin.getDrawable("button-down"),
         null,
-        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),
-        new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")),
+        wheel,
+        wheel,
         null
     );
     
@@ -239,11 +242,23 @@ public class GameScreen implements Screen {
     String sBoard = GnuBackgammon.Instance.appearencePrefs.getString("BOARD", "B1");
     GnuBackgammon.atlas.findRegion("board").setRegion(GnuBackgammon.atlas.findRegion(sBoard));
     GnuBackgammon.atlas.findRegion("boardbg").setRegion(GnuBackgammon.atlas.findRegion(sBoard+"-BG"));
+    board.rollBtn.setStyle(GnuBackgammon.skin.get("button-"+sBoard, TextButtonStyle.class));
+    board.doubleBtn.setStyle(GnuBackgammon.skin.get("button-"+sBoard, TextButtonStyle.class));
+    menuPopup.setButtonsStyle(sBoard);
     String sCs = GnuBackgammon.Instance.appearencePrefs.getString("CHECKERS", "CS1");
     System.out.println(sCs);
     GnuBackgammon.atlas.findRegion("cb").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-B"));
     GnuBackgammon.atlas.findRegion("cw").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-W"));
     GnuBackgammon.atlas.findRegion("ch").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-H"));
+    ImageButtonStyle ibs = new ImageButtonStyle(
+        GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)),
+        GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)+"-down"),
+        null,
+        wheel,
+        wheel,
+        null
+    );
+    menu.setStyle(ibs);
   }
 
 }
