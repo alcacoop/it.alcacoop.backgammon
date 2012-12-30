@@ -220,6 +220,13 @@ CS1-H
   orig: 46, 46
   offset: 0, 0
   index: -1
+CS2-H
+  rotate: false
+  xy: 898, 135
+  size: 46, 46
+  orig: 46, 46
+  offset: 0, 0
+  index: -1
 CS1-W
   rotate: false
   xy: 1647, 1573
@@ -248,13 +255,6 @@ CS1-B
   orig: 46, 46
   offset: 0, 0
   index: -1
-CS2-H
-  rotate: false
-  xy: 1866, 1875
-  size: 46, 46
-  orig: 46, 46
-  offset: 0, 0
-  index: -1
 wheel
   rotate: false
   xy: 1607, 927
@@ -271,7 +271,7 @@ rarrow
   index: -1
 larrow
   rotate: false
-  xy: 898, 115
+  xy: 1866, 1903
   size: 35, 18
   orig: 35, 18
   offset: 0, 0
