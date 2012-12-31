@@ -93,7 +93,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
 
-public class AppearenceScreen implements Screen {
+public class AppearanceScreen implements Screen {
 
   private Image bgImg;
   public Stage stage;
@@ -107,12 +107,12 @@ public class AppearenceScreen implements Screen {
   private ImageButton b1, b2, b3, cs1, cs2, cs3;
   
   
-  public AppearenceScreen(){
+  public AppearanceScreen(){
     
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     
-    prefs = GnuBackgammon.Instance.appearencePrefs;
+    prefs = GnuBackgammon.Instance.appearancePrefs;
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
@@ -309,7 +309,7 @@ public class AppearenceScreen implements Screen {
     table.setX((stage.getWidth()-table.getWidth())/2);
     table.setY((stage.getHeight()-table.getHeight())/2);
     
-    table.add(new Label("APPEARENCE", GnuBackgammon.skin)).colspan(6);
+    table.add(new Label("APPEARANCE", GnuBackgammon.skin)).colspan(6);
     
     table.row();
     table.add(back).fill().expand().colspan(6);

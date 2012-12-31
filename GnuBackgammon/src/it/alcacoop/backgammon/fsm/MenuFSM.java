@@ -77,8 +77,8 @@ public class MenuFSM extends BaseFSM implements Context {
             else
               GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
           }
-          if (params.toString().equals("APPEARENCE")) {
-            ctx.state(States.APPEARENCE);
+          if (params.toString().equals("APPEARANCE")) {
+            ctx.state(States.APPEARANCE);
           }
           if (params.toString().equals("ABOUT")) {
             ctx.state(States.ABOUT);
@@ -137,7 +137,7 @@ public class MenuFSM extends BaseFSM implements Context {
       }
     },
 
-    APPEARENCE {
+    APPEARANCE {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.goToScreen(7);

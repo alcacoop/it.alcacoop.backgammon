@@ -103,14 +103,14 @@ public class Points extends Group {
   
   private int rotate(int nPoint) {
     if (MatchState.fMove==0) { //BLACK
-      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
         return nPoint;
       } else {
         if (nPoint>11) return 35-nPoint;
         else return 11-nPoint;
       }
     } else { //WHITE
-      if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
       return 23-nPoint;
       } else {
         if (nPoint<=11) return 35-(23-nPoint);
@@ -121,7 +121,7 @@ public class Points extends Group {
   
   public void resetBoff() {
     float x = 0;
-    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+    if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
       x = b.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
     } else {
       x = b.getX() + b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0);

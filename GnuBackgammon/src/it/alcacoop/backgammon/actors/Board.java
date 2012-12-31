@@ -194,7 +194,7 @@ public class Board extends Group {
     switch (x) {
     
       case -1: //BEAR OFF
-        if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+        if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
           ret.x = board.getX() + GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) + GnuBackgammon.Instance.jp.asFloat("pos", 0)/2;
         } else {
           ret.x = board.getX() + boardbg.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) - GnuBackgammon.Instance.jp.asFloat("pos", 0)/3;
@@ -215,7 +215,7 @@ public class Board extends Group {
         
       default: //ON THE TABLE
         if (color==0) { //BLACK
-          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+          if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
             ret.x = pos[x].x;
           }
           else {
@@ -225,7 +225,7 @@ public class Board extends Group {
           if (x<12) ret.y = board.getY() + pos[x].y + cdim*y;
           else ret.y = board.getY() + pos[x].y - cdim*(y+1);
         } else { //WHITE
-          if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+          if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
             ret.x = pos[23-x].x;
           } else {
             if (x<=11) ret.x = pos[35-(23-x)].x;
@@ -620,7 +620,7 @@ public class Board extends Group {
     else
       p.y += 2*GnuBackgammon.Instance.jp.asFloat("pos", 0)+larrow.getHeight()*3f/2;
     p.x -= larrow.getWidth()/2;
-    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+    if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
       //RARROW
       larrow.setVisible(false);
       rarrow.setVisible(true);

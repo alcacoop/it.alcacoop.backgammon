@@ -101,8 +101,8 @@ public class MainMenuScreen implements Screen {
     TextButton options = new TextButton("Options", tl);
     options.addListener(cl);
     
-    TextButton appearence = new TextButton("Appearence", tl);
-    appearence.addListener(cl);
+    TextButton appearance = new TextButton("Appearance", tl);
+    appearance.addListener(cl);
     
     TextButton howtoplay = new TextButton("How To Play", tl);
     howtoplay.addListener(new ClickListener(){
@@ -133,7 +133,7 @@ public class MainMenuScreen implements Screen {
     
     table.row().pad(2);
     table.add(options).expand().fill().width(table.getWidth()/2);
-    table.add(appearence).expand().fill().width(table.getWidth()/2);
+    table.add(appearance).expand().fill().width(table.getWidth()/2);
     
     table.row().pad(2);
     table.add().colspan(2).fill().expand();

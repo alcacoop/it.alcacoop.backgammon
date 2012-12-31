@@ -39,7 +39,7 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
 import it.alcacoop.backgammon.layers.AboutScreen;
-import it.alcacoop.backgammon.layers.AppearenceScreen;
+import it.alcacoop.backgammon.layers.AppearanceScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
@@ -68,7 +68,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
   private static AboutScreen aboutScreen;
-  private static AppearenceScreen appearenceScreen;
+  private static AppearanceScreen appearanceScreen;
   private int resolutions[][] = {
     {1280,740},
     {800,480},
@@ -90,7 +90,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
-  public Preferences prefs, appearencePrefs;
+  public Preferences prefs, appearancePrefs;
   public SoundManager snd;
   public NativeFunctions myRequestHandler;
   public boolean isGNU = false;
@@ -110,7 +110,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void create() {
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
-    appearencePrefs = Gdx.app.getPreferences("Appearence");
+    appearancePrefs = Gdx.app.getPreferences("Appearance");
     snd = new SoundManager();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
@@ -152,7 +152,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     aboutScreen = new AboutScreen();
-    appearenceScreen = new AppearenceScreen();
+    appearanceScreen = new AppearanceScreen();
     
     setScreen(new SplashScreen());
     //setScreen(welcomeScreen);
@@ -208,8 +208,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
         break;
         
       case 7:
-        currentScreen = appearenceScreen;
-        setScreen(appearenceScreen);
+        currentScreen = appearanceScreen;
+        setScreen(appearanceScreen);
         break;
     }
   }

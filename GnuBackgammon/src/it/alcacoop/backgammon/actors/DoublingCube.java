@@ -88,7 +88,7 @@ public class DoublingCube extends Group {
   
   
   private void evaluateX(){
-    if (GnuBackgammon.Instance.appearencePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise"))
+    if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise"))
       x = b.getWidth()-GnuBackgammon.Instance.jp.asFloat("pos_bo", 0) -
         i.getWidth()/2 -
         GnuBackgammon.Instance.jp.asFloat("pos", 0)/3.7f;
