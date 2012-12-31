@@ -420,4 +420,11 @@ public final class UIDialog extends Window {
     stage.addActor(instance);
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
+  
+  public static void setButtonsStyle(String b) {
+    instance.bContinue.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bYes.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bNo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.opts.setButtonsStyle(b);
+  }
 }

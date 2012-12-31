@@ -224,6 +224,7 @@ public class GameScreen implements Screen {
   @Override
   public void hide() {
     board.initBoard();
+    UIDialog.setButtonsStyle("B1");
   }
 
   @Override
@@ -239,24 +240,20 @@ public class GameScreen implements Screen {
   }
 
   private void loadTextures() {
-    String sBoard = GnuBackgammon.Instance.appearencePrefs.getString("BOARD", "B1");
+    String sBoard = GnuBackgammon.Instance.appearancePrefs.getString("BOARD", "B1");
     GnuBackgammon.atlas.findRegion("board").setRegion(GnuBackgammon.atlas.findRegion(sBoard));
     GnuBackgammon.atlas.findRegion("boardbg").setRegion(GnuBackgammon.atlas.findRegion(sBoard+"-BG"));
     board.rollBtn.setStyle(GnuBackgammon.skin.get("button-"+sBoard, TextButtonStyle.class));
     board.doubleBtn.setStyle(GnuBackgammon.skin.get("button-"+sBoard, TextButtonStyle.class));
     menuPopup.setButtonsStyle(sBoard);
-    String sCs = GnuBackgammon.Instance.appearencePrefs.getString("CHECKERS", "CS1");
-    System.out.println(sCs);
+    UIDialog.setButtonsStyle(sBoard);
+    String sCs = GnuBackgammon.Instance.appearancePrefs.getString("CHECKERS", "CS1");
     GnuBackgammon.atlas.findRegion("cb").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-B"));
     GnuBackgammon.atlas.findRegion("cw").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-W"));
     GnuBackgammon.atlas.findRegion("ch").setRegion(GnuBackgammon.atlas.findRegion(sCs+"-H"));
     ImageButtonStyle ibs = new ImageButtonStyle(
-        GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)),
-        GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)+"-down"),
-        null,
-        wheel,
-        wheel,
-        null
+        GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)), GnuBackgammon.skin.getDrawable("button"+sBoard.charAt(1)+"-down"), null,
+        wheel, wheel, null
     );
     menu.setStyle(ibs);
   }

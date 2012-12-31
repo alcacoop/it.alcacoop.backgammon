@@ -38,11 +38,13 @@ import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class GameOptionsTable extends Table {
   
@@ -201,5 +203,21 @@ public class GameOptionsTable extends Table {
     GnuBackgammon.Instance.prefs.flush();
   }
 
+  
+  public void setButtonsStyle(String b) {
+    Array<Button> a;
+    a = speed.getButtons();
+    for (int i=0;i<a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+    a = sound.getButtons();
+    for (int i=0;i<a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+    a = automoves.getButtons();
+    for (int i=0;i<a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+    a = lmoves.getButtons();
+    for (int i=0;i<a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+  }
 
 }
