@@ -146,13 +146,6 @@ public class GameFSM extends BaseFSM implements Context {
         switch (evt) {
         
         case SET_GAME_TURN:
-          if (MatchState.fMove == 0)
-            AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-          else 
-            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-          break;
-          
-        case SET_BOARD:
           ctx.board().dices.clear();
           if (MatchState.fCubeUse==0) {
             ctx.board().rollDices();
@@ -412,11 +405,10 @@ public class GameFSM extends BaseFSM implements Context {
           
           case DOUBLE_REQUEST: //DOUBLE BUTTON CLICKED!
             if(MatchState.matchType == 0) { //CPU VS HUMAN
-              MatchState.SetGameTurn(1, 0);
-              GnubgAPI.SetBoard(MatchState.board[1], MatchState.board[0]);
-              AICalls.AcceptDouble();
               ctx.board().removeActor(ctx.board().doubleBtn);
-              ctx.board().thinking(true);              
+              GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+              ctx.board().thinking(true); 
+              AICalls.AcceptDouble();
             } else { //SHOW DOUBLE DIALOG!
               UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", 0.82f, ctx.board().getStage());
             }
