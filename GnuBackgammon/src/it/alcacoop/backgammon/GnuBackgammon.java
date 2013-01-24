@@ -47,6 +47,7 @@ import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.JSONProperties;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -95,6 +96,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public NativeFunctions myRequestHandler;
   public boolean isGNU = false;
   
+  public MatchRecorder rec;
+  
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
@@ -108,6 +111,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   @Override
   
   public void create() {
+    rec = new MatchRecorder();
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
