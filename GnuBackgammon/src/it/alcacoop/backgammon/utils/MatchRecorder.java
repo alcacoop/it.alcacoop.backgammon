@@ -39,10 +39,8 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
-
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.logic.MatchState;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -100,8 +98,12 @@ public class MatchRecorder {
       moves.add(m);
     }
     
-    public void addResult(String re) {
-      gameInfo.put("re", re);
+    public void addResult(int color, int game_score, boolean resigned) {
+      String RE = "B+";
+      if (color==1) RE="W+";
+      RE+=game_score;
+      if (resigned) RE+="R";
+      gameInfo.put("re", RE);
     }
   }
 
@@ -144,21 +146,13 @@ public class MatchRecorder {
     
     private static String asString(int ms[], int color){
       String conv[][] = {
-        {
-          "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l",
-          "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a", "y" //!!!
-        },
-        {
-          "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", 
-          "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"
-        }
+        {"x","w","v","u","t","s","r","q","p","o","n","m","l","k","j","i","h","g","f","e","d","c","b","a","y"},
+        {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"}
       };
       String m = "";
       for (int i=0;i<4;i++) {
         if (ms[i*2]==-1) break;
-        
         m += conv[color][ms[i*2]];
-        
         if (ms[i*2+1]==-1) m+="z";
         else
           m += conv[color][ms[i*2+1]];
@@ -200,8 +194,8 @@ public class MatchRecorder {
     matchInfo.get(matchInfo.size-1).addMove(Move.getPL(color, d1, d2));
   }
   
-  public void addResult(String re) {
-    matchInfo.get(matchInfo.size-1).addResult(re);
+  public void addResult(int color, int game_score, boolean resigned) {
+    matchInfo.get(matchInfo.size-1).addResult(color, game_score, resigned);
   }
   
   public void reset() {

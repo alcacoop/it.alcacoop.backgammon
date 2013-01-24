@@ -301,11 +301,7 @@ public class GameFSM extends BaseFSM implements Context {
         
         //game_score: final game score (with cube)
         //fMove: who won the game!
-        String RE = "B+";
-        if (MatchState.fMove==1) RE="W+";
-        RE+=game_score;
-        if (MatchState.resignValue>0) RE+="R";
-        GnuBackgammon.Instance.rec.addResult(RE);
+        GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
         GnuBackgammon.Instance.rec.saveJson();
         
         if(MatchState.fMove == 0) 
