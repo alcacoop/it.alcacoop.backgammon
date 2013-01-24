@@ -196,10 +196,14 @@ public class GameScreen implements Screen {
        
     if(MatchState.matchType == 0){ //single player
       pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
+      MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
       pInfo[1].setName("PL1:");
+      MatchState.pl1 = "PL1";
     } else {
       pInfo[0].setName("PL1:");
+      MatchState.pl0 = "PL1";
       pInfo[1].setName("PL2:");
+      MatchState.pl1 = "PL2";
     }
     
     pInfo[0].update();
