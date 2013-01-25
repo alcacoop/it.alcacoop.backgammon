@@ -60,6 +60,13 @@ public class MatchRecorder {
       gameInfo.put("_bb", GnuBackgammon.Instance.board.getBoardAsString(0));
       gameInfo.put("_bw", GnuBackgammon.Instance.board.getBoardAsString(1));
     }
+
+    public Game(OrderedMap<String, Object> gameInfo) {
+      this.gameInfo = gameInfo;
+      put("gameinfo", gameInfo);
+      moves = new Array<OrderedMap<String, Object>>();
+      put("moves", moves);
+    }
     
     public Game(int game) {
       gameInfo = new OrderedMap<String, Object>();
@@ -202,8 +209,8 @@ public class MatchRecorder {
     matchInfo.clear();
   }
   
-  public void saveJson() {
-    FileHandle fh = new FileHandle("/tmp/pippo.json");
+  public void saveJson(String fname) {
+    FileHandle fh = new FileHandle(fname);
     Writer writer = fh.writer(false);
     Json json = new Json(OutputType.json);
     try {
@@ -213,16 +220,17 @@ public class MatchRecorder {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    saveSGF();
   }
   
-  public void saveSGF() {
+  public void saveSGF(String fname) {
     String sgf = "";
     for (int i=0;i<matchInfo.size;i++) {
       Game g = matchInfo.get(i);
+      
       sgf += "(\n";
       sgf += ";FF[4]GM[6]CA[UTF-8]AP[BackgammonMobile:0.1]MI[length:";
-      sgf += (Integer)(g.gameInfo.get("mi_length"))+"][game:"+((Integer)(g.gameInfo.get("mi_game"))-1);
+      sgf += (Integer)(g.gameInfo.get("mi_length"));
+      sgf += "][game:"+((Integer)(g.gameInfo.get("mi_game"))-1);
       sgf += "][ws:"+(Integer)(g.gameInfo.get("mi_ws"));
       sgf += "][bs:"+(Integer)(g.gameInfo.get("mi_bs"));
       sgf += "]PW["+(String)(g.gameInfo.get("pw"));
@@ -231,7 +239,7 @@ public class MatchRecorder {
       sgf += "]";
       
       if (((Integer)(g.gameInfo.get("_cr"))>0)
-          &&(GnuBackgammon.Instance.prefs.getString("MATCHTO", "1")!="1")) {
+          &&(Integer)(g.gameInfo.get("mi_length"))!=1) {
         String ru = "RU[Crawford";
         if ((Boolean)(g.gameInfo.get("_cg")))
           ru += ":CrawfordGame]";
@@ -274,7 +282,7 @@ public class MatchRecorder {
       sgf += ")\n";
     }
     
-    FileHandle fh = new FileHandle("/tmp/pippo.sgf");
+    FileHandle fh = new FileHandle(fname);
     Writer writer = fh.writer(false);
     try {
       writer.write(sgf);
@@ -282,6 +290,50 @@ public class MatchRecorder {
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
+    }
+  }
+  
+  
+  public void loadFromFile(String fname) {
+    FileHandle fh = new FileHandle(fname);
+    matchInfo.clear();
+    
+    JSONProperties jp = new JSONProperties(fh);
+    Array<Object> a = (Array<Object>)jp.asArray("matchInfo", null);
+    
+    for (int i=0;i<a.size;i++) {
+      @SuppressWarnings("unchecked")
+      OrderedMap<String, Object> m = (OrderedMap<String, Object>) a.get(i);
+      @SuppressWarnings("unchecked")
+      OrderedMap<String, Object> gi = (OrderedMap<String, Object>) m.get("gameinfo");
+      
+      gi.put("ff", ((Float)gi.get("ff")).intValue());
+      gi.put("gm", ((Float)gi.get("gm")).intValue());
+      gi.put("mi_length", ((Float)gi.get("mi_length")).intValue());
+      gi.put("mi_game", ((Float)gi.get("mi_game")).intValue());
+      gi.put("mi_ws", ((Float)gi.get("mi_ws")).intValue());
+      gi.put("mi_bs", ((Float)gi.get("mi_bs")).intValue());
+      gi.put("_cr", ((Float)gi.get("_cr")).intValue());
+      gi.put("_df", ((Float)gi.get("_df")).intValue());
+      gi.put("_co", ((Float)gi.get("_co")).intValue());
+      gi.put("_cv", ((Float)gi.get("_cv")).intValue());
+      
+      Game g = new Game(gi);
+      
+      @SuppressWarnings("unchecked")
+      Array<Object> ar = (Array<Object>) m.get("moves");
+      for (int j=0;j<ar.size;j++) {
+        @SuppressWarnings("unchecked")
+        OrderedMap<String, Object> mv = (OrderedMap<String, Object>) ar.get(j);
+        mv.put("type", ((Float)mv.get("type")).intValue());
+        mv.put("c", ((Float)mv.get("c")).intValue());
+        if (mv.containsKey("d1")) mv.put("d1", ((Float)mv.get("d1")).intValue());
+        if (mv.containsKey("d2")) mv.put("d2", ((Float)mv.get("d2")).intValue());
+        if (mv.containsKey("m")) mv.put("m", (mv.get("m")).toString());
+        g.moves.add(mv);
+      }
+      
+      matchInfo.add(g);
     }
   }
   

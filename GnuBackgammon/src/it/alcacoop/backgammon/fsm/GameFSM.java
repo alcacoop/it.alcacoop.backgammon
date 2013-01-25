@@ -299,10 +299,9 @@ public class GameFSM extends BaseFSM implements Context {
           game_score = MatchState.resignValue * MatchState.nCube;
         }
         
-        //game_score: final game score (with cube)
-        //fMove: who won the game!
         GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
-        GnuBackgammon.Instance.rec.saveJson();
+        GnuBackgammon.Instance.rec.saveJson("/tmp/pippo.json");
+        GnuBackgammon.Instance.rec.saveSGF("/tmp/pippo.sgf");
         
         if(MatchState.fMove == 0) 
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
