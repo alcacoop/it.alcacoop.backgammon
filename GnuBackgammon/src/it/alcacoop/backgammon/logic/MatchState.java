@@ -49,7 +49,6 @@ public class MatchState {
 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF
-    
   };
   
   /* NOTE: ON NATIVE API HUMAN=1 AND PC=0 */
@@ -61,7 +60,7 @@ public class MatchState {
   public static int fCrawford = 0; //REGOLA DI CRAWFORD
   public static int nMatchTo = 0; 
   public static int[] anScore = {0,0}; //MATCH SCORES
-  public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON
+  public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON 2=RESTORED_GAME
   public static int fCubeUse = 0; //USING CUBE
   public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
   public static boolean fPostCrawford = false; //POST CRAWFORD RULE
@@ -143,5 +142,14 @@ public class MatchState {
   public static void SetCrawford(int fCrawford) {
     MatchState.fCrawford = fCrawford;
     GnubgAPI.SetCrawford(fCrawford);
+  }
+  
+  public static void setBoardFromString(String sbb, String sbw) {
+    String ssw[] = sbw.split(":");
+    String ssb[] = sbb.split(":");
+    for (int i=0;i<25;i++) {
+      MatchState.board[4][i] = Integer.parseInt(ssb[i]);
+      MatchState.board[5][i] = Integer.parseInt(ssw[i]);
+    }
   }
 }
