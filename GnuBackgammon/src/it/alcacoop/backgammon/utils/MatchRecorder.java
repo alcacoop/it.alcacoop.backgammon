@@ -105,6 +105,12 @@ public class MatchRecorder {
       moves.add(m);
     }
     
+    public void addDices(int d1, int d2, boolean rolled) {
+      gameInfo.put("_d1", d1);
+      gameInfo.put("_d2", d2);
+      gameInfo.put("_rl", rolled);
+    }
+    
     public void addResult(int color, int game_score, boolean resigned) {
       String RE = "B+";
       if (color==1) RE="W+";
@@ -199,6 +205,11 @@ public class MatchRecorder {
   
   public void addPlayerState(int color, int d1, int d2) {
     matchInfo.get(matchInfo.size-1).addMove(Move.getPL(color, d1, d2));
+  }
+  
+  public void addDices(int d1, int d2, boolean rolled) {
+    System.out.println(rolled);
+    matchInfo.get(matchInfo.size-1).addDices(d1, d2, rolled);
   }
   
   public void addResult(int color, int game_score, boolean resigned) {

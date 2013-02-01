@@ -106,7 +106,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case DICES_ROLLED:
           int dices[] = (int[])params;
-          GnuBackgammon.Instance.rec.addPlayerState(1, dices[0], dices[1]);
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], false);
           ctx.board().thinking(true);
           AICalls.EvaluateBestMove(dices);
           break;
@@ -174,7 +174,7 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1)
             ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
-          GnuBackgammon.Instance.rec.addPlayerState(0, dices[0], dices[1]);
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], true);
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           break;
           
@@ -303,8 +303,8 @@ public class GameFSM extends BaseFSM implements Context {
         }
         
         GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
-        GnuBackgammon.Instance.rec.saveJson("/tmp/pippo.json");
-        GnuBackgammon.Instance.rec.saveSGF("/tmp/pippo.sgf");
+        GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
+        GnuBackgammon.Instance.rec.saveSGF(GnuBackgammon.fname+"sgf");
         
         if(MatchState.fMove == 0) 
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
@@ -389,7 +389,8 @@ public class GameFSM extends BaseFSM implements Context {
         case ROLL_DICE:
           dices = (int[])params;
           ctx.board().rollDices(dices[0], dices[1]);
-          GnuBackgammon.Instance.rec.addPlayerState(MatchState.fMove, dices[0], dices[1]);
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], dices[0]>dices[1]);
+          
           if (dices[0]>dices[1]) {//START HUMAN
             MatchState.SetGameTurn(0, 0);
           } else if (dices[0]<dices[1]) {//START CPU
@@ -528,7 +529,7 @@ public class GameFSM extends BaseFSM implements Context {
             
           case ABANDON_MATCH: //QUIT MATCH
             if((Boolean)params) { //ABANDONING
-              GnuBackgammon.Instance.rec.saveJson("/tmp/pippo.json");
+              GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
               GnuBackgammon.Instance.setFSM("MENU_FSM");
               GnuBackgammon.Instance.rec.reset();
             } else {

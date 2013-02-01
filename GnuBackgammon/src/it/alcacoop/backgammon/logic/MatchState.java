@@ -72,14 +72,17 @@ public class MatchState {
   
   
   public static void SwitchTurn() {
+    SwitchTurn(true);
+  }
+  public static void SwitchTurn(boolean event) {
     Float left1 = GnuBackgammon.Instance.board.rollBtn.getX();
     Float left2 = GnuBackgammon.Instance.board.doubleBtn.getX();
     if (fMove == 0) {
-      SetGameTurn(1, 1);
+      if (event) SetGameTurn(1, 1);
       GnuBackgammon.Instance.board.rollBtn.setX(Math.min(left1, left2));
       GnuBackgammon.Instance.board.doubleBtn.setX(Math.max(left1, left2));
     } else {
-      SetGameTurn(0, 0);
+      if (event) SetGameTurn(0, 0);
       GnuBackgammon.Instance.board.rollBtn.setX(Math.max(left1, left2));
       GnuBackgammon.Instance.board.doubleBtn.setX(Math.min(left1, left2));
     }

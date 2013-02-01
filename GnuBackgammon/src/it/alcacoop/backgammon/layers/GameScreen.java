@@ -154,15 +154,11 @@ public class GameScreen implements Screen {
     table.add(i).expandX().left().padLeft(6+6*(2-GnuBackgammon.ss));
     
     Table t = new Table();
-    //t.debug();
     t.add(pInfo[0]).left();
     t.row();
     t.add(pInfo[1]).left();
-    
     table.add(t).width(width).padTop(3+3*(2-GnuBackgammon.ss)).right().padRight(2+3*(2-GnuBackgammon.ss));
-    
     table.add(menu).fillY().width(width/2.5f).padRight(6+6*(2-GnuBackgammon.ss)).padTop(3+3*(2-GnuBackgammon.ss));
-    
     table.row();
     table.add(board).colspan(4).expand().fill();
   }
@@ -199,15 +195,17 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     
-    //initNewMatch();
-    restoreOldMatch();
+    if (Gdx.files.internal(GnuBackgammon.fname+"json").exists())
+      restoreOldMatch();
+    else
+      initNewMatch();
     
     table.setY(stage.getHeight());
   }
 
   
   public void restoreOldMatch() {
-    GnuBackgammon.Instance.rec.loadFromFile("/tmp/pippo.json");
+    GnuBackgammon.Instance.rec.loadFromFile(GnuBackgammon.fname+"json");
     OrderedMap<String, Object> gi = GnuBackgammon.Instance.rec.getLastGameInfo();
     
     MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
@@ -229,26 +227,31 @@ public class GameScreen implements Screen {
     MatchState.pl1 = "PL1";
     pInfo[0].update();
     pInfo[1].update();
+
+    MatchState.fMove = 1;
+    MatchState.SwitchTurn(false);
     
-    OrderedMap<String, Object> move = GnuBackgammon.Instance.rec.getLastMove();
-    int type = (Integer)move.get("type");
-    if (type!=9) {
-      System.out.println("UNABLE TO RESTORE...");
-      initNewMatch();
+    boolean rolled = (Boolean)gi.get("_rl");
+    if (!rolled) {
+      System.out.println("NOT YET ROLLED...");
+      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      MatchState.SetGameTurn(0, 0);
     } else {
-      int fm = (Integer) move.get("c");
-      GnubgAPI.SetGameTurn(fm, fm);
-      MatchState.fMove = fm;
-      MatchState.fTurn = fm;
+      System.out.println("HUMAN ROLLED...");
+      
+      GnubgAPI.SetGameTurn(0, 0);
+      MatchState.fMove = 0;
+      MatchState.fTurn = 0;
+      
       int d[] = new int[2];
-      d[0]=(Integer) move.get("d1");
-      d[1]=(Integer) move.get("d2");
+      d[0] = ((Float)gi.get("_d1")).intValue();
+      d[1]= ((Float)gi.get("_d2")).intValue();
       
       board.rollDices(d[0], d[1]);
       board.rollDices(d[0], d[1]);
+      
       GnuBackgammon.fsm.state(States.HUMAN_TURN);
       AICalls.GenerateMoves(board, d[0], d[1]);
-      
     }
     
     table.addAction(Actions.sequence(
