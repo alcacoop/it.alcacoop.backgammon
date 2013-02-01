@@ -38,10 +38,12 @@ import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.PlayerInfo;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
-
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -58,6 +60,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.OrderedMap;
 
 
 public class GameScreen implements Screen {
@@ -192,8 +195,70 @@ public class GameScreen implements Screen {
   public void show() {
     loadTextures();
     initTable();
+
+    Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
+    
+    //initNewMatch();
+    restoreOldMatch();
+    
+    table.setY(stage.getHeight());
+  }
+
+  
+  public void restoreOldMatch() {
+    GnuBackgammon.Instance.rec.loadFromFile("/tmp/pippo.json");
+    OrderedMap<String, Object> gi = GnuBackgammon.Instance.rec.getLastGameInfo();
+    
+    MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
+    board.initBoard(2);
+    GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
+    
+    MatchState.SetMatchTo(""+gi.get("mi_length"));
+    MatchState.SetAILevel(AILevels.getAILevelFromString(""+gi.get("_df")));
+    MatchState.SetMatchScore((Integer)gi.get("mi_ws"), (Integer)gi.get("mi_bs"));
+    MatchState.SetCrawford((Integer)gi.get("_cr"));
+    MatchState.fCrafwordGame = (Boolean)gi.get("_cg");
+    MatchState.SetCubeUse(1); //TODO
+    MatchState.UpdateMSCubeInfo((Integer)gi.get("_cv"), (Integer)gi.get("_co"));
+    MatchState.SetGameVariant(0);
+
+    pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
+    MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
+    pInfo[1].setName("PL1:");
+    MatchState.pl1 = "PL1";
+    pInfo[0].update();
+    pInfo[1].update();
+    
+    OrderedMap<String, Object> move = GnuBackgammon.Instance.rec.getLastMove();
+    int type = (Integer)move.get("type");
+    if (type!=9) {
+      System.out.println("UNABLE TO RESTORE...");
+      initNewMatch();
+    } else {
+      int fm = (Integer) move.get("c");
+      GnubgAPI.SetGameTurn(fm, fm);
+      MatchState.fMove = fm;
+      MatchState.fTurn = fm;
+      int d[] = new int[2];
+      d[0]=(Integer) move.get("d1");
+      d[1]=(Integer) move.get("d2");
+      
+      board.rollDices(d[0], d[1]);
+      board.rollDices(d[0], d[1]);
+      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      AICalls.GenerateMoves(board, d[0], d[1]);
+      
+    }
+    
+    table.addAction(Actions.sequence(
+      Actions.delay(0.1f),
+      Actions.moveTo(0, 0, 0.3f)
+    ));
+  }
+  
+  public void initNewMatch() {
     board.initBoard();
-       
     if(MatchState.matchType == 0){ //single player
       pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
       MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
@@ -208,10 +273,7 @@ public class GameScreen implements Screen {
     
     pInfo[0].update();
     pInfo[1].update();
-    Gdx.input.setInputProcessor(stage);
-    Gdx.input.setCatchBackKey(true);
-    
-    table.setY(stage.getHeight());
+
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f),
@@ -223,7 +285,6 @@ public class GameScreen implements Screen {
       })
     ));
   }
-
   
   @Override
   public void hide() {

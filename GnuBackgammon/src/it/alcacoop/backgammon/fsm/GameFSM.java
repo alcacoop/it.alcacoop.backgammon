@@ -106,6 +106,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case DICES_ROLLED:
           int dices[] = (int[])params;
+          GnuBackgammon.Instance.rec.addPlayerState(1, dices[0], dices[1]);
           ctx.board().thinking(true);
           AICalls.EvaluateBestMove(dices);
           break;
@@ -173,11 +174,13 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1)
             ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
+          GnuBackgammon.Instance.rec.addPlayerState(0, dices[0], dices[1]);
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           break;
           
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
+          
           if(moves != null) {
             ctx.board().availableMoves.setMoves((int[][])params);
           } else { //player (human) has no more moves
@@ -385,12 +388,13 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ROLL_DICE:
           dices = (int[])params;
+          ctx.board().rollDices(dices[0], dices[1]);
+          GnuBackgammon.Instance.rec.addPlayerState(MatchState.fMove, dices[0], dices[1]);
           if (dices[0]>dices[1]) {//START HUMAN
             MatchState.SetGameTurn(0, 0);
           } else if (dices[0]<dices[1]) {//START CPU
             MatchState.SetGameTurn(1, 1);
           }
-          ctx.board().rollDices(dices[0], dices[1]);
           break;
           
         case SET_GAME_TURN:
@@ -524,6 +528,7 @@ public class GameFSM extends BaseFSM implements Context {
             
           case ABANDON_MATCH: //QUIT MATCH
             if((Boolean)params) { //ABANDONING
+              GnuBackgammon.Instance.rec.saveJson("/tmp/pippo.json");
               GnuBackgammon.Instance.setFSM("MENU_FSM");
               GnuBackgammon.Instance.rec.reset();
             } else {
