@@ -224,7 +224,6 @@ public class Dices extends Group {
             ans[0].hide();
             ans[1].hide();
             show(d1, d2);
-            animating = false;
           }
         })
     ));
@@ -244,6 +243,7 @@ public class Dices extends Group {
       }
     }
     _show();
+    animating = false;
     if (event)
       GnuBackgammon.fsm.processEvent(GameFSM.Events.DICES_ROLLED, get());
   }
