@@ -210,7 +210,8 @@ public class MatchRecorder {
   }
   public OrderedMap<String, Object> getLastMove() {
     Array<OrderedMap<String, Object>> ar = matchInfo.get(matchInfo.size-1).moves;
-    return ar.get(ar.size-1);
+    if (ar.size==0) return null;
+    else return ar.get(ar.size-1);
   }
   
   public void reset() {
