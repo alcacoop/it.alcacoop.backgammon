@@ -48,12 +48,12 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -97,6 +97,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public boolean isGNU = false;
   
   public MatchRecorder rec;
+  public static String fname;
   
   
   public GnuBackgammon(NativeFunctions n) {
@@ -124,6 +125,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (pWidth<=800) ss = 1;
     else ss = 0;
     resolution = resolutions[ss];
+    
+    FileHandle _f = Gdx.files.internal("data/match.");
+    fname = _f.file().getAbsolutePath();
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
