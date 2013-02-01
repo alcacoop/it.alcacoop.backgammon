@@ -205,6 +205,14 @@ public class MatchRecorder {
     matchInfo.get(matchInfo.size-1).addResult(color, game_score, resigned);
   }
   
+  public OrderedMap<String, Object> getLastGameInfo() {
+    return matchInfo.get(matchInfo.size-1).gameInfo;
+  }
+  public OrderedMap<String, Object> getLastMove() {
+    Array<OrderedMap<String, Object>> ar = matchInfo.get(matchInfo.size-1).moves;
+    return ar.get(ar.size-1);
+  }
+  
   public void reset() {
     matchInfo.clear();
   }
