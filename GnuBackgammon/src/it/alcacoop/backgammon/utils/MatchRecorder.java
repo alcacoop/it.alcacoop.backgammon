@@ -56,11 +56,6 @@ public class MatchRecorder {
     public OrderedMap<String, Object> gameInfo;
     public Array<OrderedMap<String, Object>> moves;
     
-    public void updateBoards() {
-      gameInfo.put("_bb", GnuBackgammon.Instance.board.getBoardAsString(0));
-      gameInfo.put("_bw", GnuBackgammon.Instance.board.getBoardAsString(1));
-    }
-
     public Game(OrderedMap<String, Object> gameInfo) {
       this.gameInfo = gameInfo;
       put("gameinfo", gameInfo);
@@ -99,6 +94,11 @@ public class MatchRecorder {
       
       put("gameinfo", gameInfo);
       put("moves", moves);
+    }
+    
+    public void updateBoards() {
+      gameInfo.put("_bb", GnuBackgammon.Instance.board.getBoardAsString(0));
+      gameInfo.put("_bw", GnuBackgammon.Instance.board.getBoardAsString(1));
     }
     
     public void addMove(OrderedMap<String, Object> m) {
@@ -208,7 +208,6 @@ public class MatchRecorder {
   }
   
   public void addDices(int d1, int d2, boolean rolled) {
-    System.out.println(rolled);
     matchInfo.get(matchInfo.size-1).addDices(d1, d2, rolled);
   }
   
