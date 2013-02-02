@@ -257,6 +257,7 @@ public class GameScreen implements Screen {
       AICalls.GenerateMoves(board, d[0], d[1]);
     }
     
+    GameMenuPopup.setDisabledButtons();
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f)
