@@ -492,10 +492,6 @@ public class Board extends Group {
   }
   
   private void abandon() {
-    for (int i=0; i<15; i++) {
-      checkers[0][i].resetActions();
-      checkers[1][i].resetActions();
-    }
     if (dices!=null) dices.clear();
     if (moves!=null) moves.clear();
     if (playedMoves!=null) playedMoves.clear();
@@ -637,6 +633,13 @@ public class Board extends Group {
   
   public void setCube(int v, int o) {
     doublingCube.setValue(v, o);
+  }
+  
+  public void stopCheckers() {
+    for (int i=0;i<15;i++) {
+      checkers[0][i].resetActions();
+      checkers[1][i].resetActions();
+    }
   }
   
   public String getBoardAsString(int c) {

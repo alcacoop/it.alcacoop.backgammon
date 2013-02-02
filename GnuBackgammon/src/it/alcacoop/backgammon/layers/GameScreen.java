@@ -293,8 +293,8 @@ public class GameScreen implements Screen {
   
   @Override
   public void hide() {
-    board.initBoard();
-    UIDialog.setButtonsStyle("B1");
+    board.stopCheckers();
+    UIDialog.setButtonsStyle("B1"); //RESTORE STANDARD THEME
   }
 
   @Override

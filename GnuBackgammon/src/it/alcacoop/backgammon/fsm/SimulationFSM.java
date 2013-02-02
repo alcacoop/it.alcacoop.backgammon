@@ -34,6 +34,8 @@
 package it.alcacoop.backgammon.fsm;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
@@ -47,6 +49,8 @@ public class SimulationFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
+  public static RunnableAction runAction;
+  public static SequenceAction seqAction;
 
   public enum States implements State {
     STARTING_SIMULATION {
@@ -54,19 +58,22 @@ public class SimulationFSM extends BaseFSM implements Context {
       
       public void enterState(Context ctx) {
         resetted = 0;
+        
         ctx.setMoves(0);
         ctx.board().initBoard(2);
         MatchState.SetGameVariant(0);
         MatchState.SetGameTurn(0, 0);
-        ctx.board().addAction(Actions.sequence(
+        runAction = Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            GnuBackgammon.Instance.board.animate(4.5f); //TODO: FIX ON RESTORING...
+          }
+        }); 
+        seqAction = Actions.sequence(
             Actions.delay(0.8f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                GnuBackgammon.Instance.board.animate(0.6f);
-              }
-            }) 
-        ));
+            runAction
+        );
+        ctx.board().addAction(seqAction);
       };
      
       @Override
@@ -132,7 +139,15 @@ public class SimulationFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        ctx.board().initBoard();
+        if (seqAction!=null) {
+          seqAction.reset();
+          seqAction = null;
+        }
+        if (runAction!=null) {
+          runAction.reset();
+          runAction = null;
+        }
+        ctx.board().stopCheckers();
       }
     };
     
