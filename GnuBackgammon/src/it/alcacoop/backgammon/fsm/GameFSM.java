@@ -388,14 +388,13 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ROLL_DICE:
           dices = (int[])params;
-          ctx.board().rollDices(dices[0], dices[1]);
           GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], dices[0]>dices[1]);
-          
           if (dices[0]>dices[1]) {//START HUMAN
             MatchState.SetGameTurn(0, 0);
           } else if (dices[0]<dices[1]) {//START CPU
             MatchState.SetGameTurn(1, 1);
           }
+          ctx.board().rollDices(dices[0], dices[1]);
           break;
           
         case SET_GAME_TURN:
