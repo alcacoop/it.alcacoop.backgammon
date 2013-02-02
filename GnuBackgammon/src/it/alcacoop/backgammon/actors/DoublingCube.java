@@ -82,6 +82,20 @@ public class DoublingCube extends Group {
     else addAction(Actions.moveTo(getX(), down, 0.3f));
   }
   
+  public void setValue (int v, int o) {
+    evaluateX();
+    setX(x);
+    value = v;
+    System.out.println("CUBE: "+v+" "+o);
+    if (v==1) value = 64;
+    region = GnuBackgammon.atlas.findRegion("c"+value);
+    TextureRegionDrawable d = new TextureRegionDrawable(region);
+    i.setDrawable(d);
+    if (o == -1) setY(center);
+    else if (o==1) setY(up);
+    else setY(down);
+  }
+  
   public void reset() {
     setValue(64);
   }

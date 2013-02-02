@@ -216,6 +216,12 @@ public class MatchRecorder {
     matchInfo.get(matchInfo.size-1).addResult(color, game_score, resigned);
   }
   
+  public void setCube(int value, int owner) {
+    matchInfo.get(matchInfo.size-1).gameInfo.put("_cv", value);
+    matchInfo.get(matchInfo.size-1).gameInfo.put("_co", owner);
+    System.out.println("called!");
+  }
+  
   public OrderedMap<String, Object> getLastGameInfo() {
     return matchInfo.get(matchInfo.size-1).gameInfo;
   }

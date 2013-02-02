@@ -635,6 +635,10 @@ public class Board extends Group {
     }
   }
   
+  public void setCube(int v, int o) {
+    doublingCube.setValue(v, o);
+  }
+  
   public String getBoardAsString(int c) {
     String s = "";
     for (int i=0;i<24;i++) {

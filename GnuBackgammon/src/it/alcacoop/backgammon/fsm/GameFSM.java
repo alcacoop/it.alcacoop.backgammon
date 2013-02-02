@@ -437,6 +437,7 @@ public class GameFSM extends BaseFSM implements Context {
             if((Boolean)params) { //DOUBLING ACCEPTED
               GnuBackgammon.Instance.rec.addDoubleTake(0);
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
+              GnuBackgammon.Instance.rec.setCube(MatchState.nCube, 0);
               ctx.board().doubleCube();
               ctx.state(CPU_TURN);
               ctx.board().rollDices();
@@ -462,6 +463,7 @@ public class GameFSM extends BaseFSM implements Context {
             boolean res = (Boolean)params;
             if (res) { //HUMAN OPPONENT ACCEPTED DOUBLE
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+              GnuBackgammon.Instance.rec.setCube(MatchState.nCube, MatchState.fMove==0?1:0);
               ctx.board().doubleCube();
               ctx.state(HUMAN_TURN);
             } else { //HUMAN OPPONENT DIDN'T ACCEPT IT
@@ -481,6 +483,7 @@ public class GameFSM extends BaseFSM implements Context {
           case CPU_DOUBLE_ACCEPTED: //CPU ACCEPTED DOUBLE
             ctx.state(States.HUMAN_TURN);
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+            GnuBackgammon.Instance.rec.setCube(MatchState.nCube, 1);
             GnuBackgammon.Instance.rec.addDoubleTake(1);
             ctx.board().doubleCube();
             break;

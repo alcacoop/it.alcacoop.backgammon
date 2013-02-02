@@ -218,7 +218,10 @@ public class GameScreen implements Screen {
     MatchState.SetCrawford((Integer)gi.get("_cr"));
     MatchState.fCrafwordGame = (Boolean)gi.get("_cg");
     MatchState.SetCubeUse(1); //TODO
-    MatchState.UpdateMSCubeInfo((Integer)gi.get("_cv"), (Integer)gi.get("_co"));
+    int cubeValue = (Integer)gi.get("_cv");
+    int cubeOwner = (Integer)gi.get("_co");
+    MatchState.UpdateMSCubeInfo(cubeValue, cubeOwner);
+    board.setCube(cubeValue, cubeOwner);
     MatchState.SetGameVariant(0);
 
     pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
