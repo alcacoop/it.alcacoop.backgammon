@@ -425,8 +425,6 @@ public class GameFSM extends BaseFSM implements Context {
 
     
     
-    
-    
     DIALOG_HANDLER {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -550,7 +548,6 @@ public class GameFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        ctx.board().initBoard();
       }
     };
 
