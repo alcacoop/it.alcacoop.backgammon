@@ -208,6 +208,8 @@ public class GameScreen implements Screen {
     GnuBackgammon.Instance.rec.loadFromFile(GnuBackgammon.fname+"json");
     OrderedMap<String, Object> gi = GnuBackgammon.Instance.rec.getLastGameInfo();
     
+    MatchState.SetCubeUse(((Float)gi.get("_cu")).intValue());
+    
     MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
     board.initBoard(2);
     GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
@@ -217,11 +219,9 @@ public class GameScreen implements Screen {
     MatchState.SetMatchScore((Integer)gi.get("mi_ws"), (Integer)gi.get("mi_bs"));
     MatchState.SetCrawford((Integer)gi.get("_cr"));
     MatchState.fCrafwordGame = (Boolean)gi.get("_cg");
-    MatchState.SetCubeUse(1); //TODO
     int cubeValue = (Integer)gi.get("_cv");
     int cubeOwner = (Integer)gi.get("_co");
     MatchState.UpdateMSCubeInfo(cubeValue, cubeOwner);
-    board.setCube(cubeValue, cubeOwner);
     MatchState.SetGameVariant(0);
 
     pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
@@ -256,6 +256,7 @@ public class GameScreen implements Screen {
     }
     
     GameMenuPopup.setDisabledButtons();
+    board.setCube(cubeValue, cubeOwner);
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f)

@@ -78,7 +78,7 @@ public class DoublingCube extends Group {
     TextureRegionDrawable d = new TextureRegionDrawable(region);
     i.setDrawable(d);
     if (MatchState.fCubeOwner == -1) setY(center);
-    else if (MatchState.fMove==0) addAction(Actions.moveTo(getX(), up, 0.3f));
+    else if (MatchState.fCubeOwner==1) addAction(Actions.moveTo(getX(), up, 0.3f));
     else addAction(Actions.moveTo(getX(), down, 0.3f));
   }
   

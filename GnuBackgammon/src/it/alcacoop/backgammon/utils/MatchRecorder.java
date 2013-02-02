@@ -82,6 +82,7 @@ public class MatchRecorder {
       Date date = new Date(GregorianCalendar.getInstance().getTimeInMillis());
       gameInfo.put("dt", dateFormat.format(date));
       
+      gameInfo.put("_cu", MatchState.nMatchTo>1?MatchState.fCubeUse:0);
       gameInfo.put("_cr", MatchState.fCrawford);
       gameInfo.put("_cg", MatchState.fCrafwordGame);
       gameInfo.put("_df", MatchState.currentLevel.ordinal()+1);
