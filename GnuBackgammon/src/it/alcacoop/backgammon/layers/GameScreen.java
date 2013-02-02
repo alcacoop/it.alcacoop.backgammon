@@ -231,17 +231,15 @@ public class GameScreen implements Screen {
     pInfo[0].update();
     pInfo[1].update();
 
+    //WORKAROUND!
     MatchState.fMove = 1;
     MatchState.SwitchTurn(false);
     
     boolean rolled = (Boolean)gi.get("_rl");
     if (!rolled) {
-      System.out.println("NOT YET ROLLED...");
       GnuBackgammon.fsm.state(States.HUMAN_TURN);
       MatchState.SetGameTurn(0, 0);
     } else {
-      System.out.println("HUMAN ROLLED...");
-      
       GnubgAPI.SetGameTurn(0, 0);
       MatchState.fMove = 0;
       MatchState.fTurn = 0;
