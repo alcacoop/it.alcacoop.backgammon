@@ -66,7 +66,7 @@ public class SimulationFSM extends BaseFSM implements Context {
         runAction = Actions.run(new Runnable() {
           @Override
           public void run() {
-            GnuBackgammon.Instance.board.animate(4.5f); //TODO: FIX ON RESTORING...
+            GnuBackgammon.Instance.board.animate(0.6f);
           }
         }); 
         seqAction = Actions.sequence(
