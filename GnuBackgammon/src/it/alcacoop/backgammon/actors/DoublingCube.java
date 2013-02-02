@@ -86,7 +86,6 @@ public class DoublingCube extends Group {
     evaluateX();
     setX(x);
     value = v;
-    System.out.println("CUBE: "+v+" "+o);
     if (v==1) value = 64;
     region = GnuBackgammon.atlas.findRegion("c"+value);
     TextureRegionDrawable d = new TextureRegionDrawable(region);
