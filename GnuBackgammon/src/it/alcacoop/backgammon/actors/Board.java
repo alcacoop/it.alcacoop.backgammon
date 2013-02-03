@@ -46,6 +46,9 @@ import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -54,6 +57,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -87,6 +91,9 @@ public class Board extends Group {
 
   public TextButton rollBtn;
   public TextButton doubleBtn;
+  
+  private Label ns[];
+  
   
   public Board() {
     
@@ -183,6 +190,13 @@ public class Board extends Group {
     
     doublingCube = new DoublingCube(this);
     addActor(doublingCube);
+    
+    ns = new Label[24];
+    BitmapFont f  = GnuBackgammon.skin.getFont("alternate-font");
+    f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    LabelStyle stl = new LabelStyle(f, Color.WHITE);
+    for (int i=0;i<24;i++)
+      ns[i] = new Label((i+1)+"", stl);
   }
 
 
@@ -243,7 +257,17 @@ public class Board extends Group {
     initBoard();
   }
   public void initBoard() {
+    if (GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION","AntiClockwise").equals("AntiClockwise")) {
+      for (int i=0;i<24;i++)
+        ns[i].setText((i+1)+"");
+    } else {
+      for (int i=12;i<24;i++)
+        ns[i].setText((36-i)+"");
+      for (int i=0;i<12;i++)
+        ns[i].setText((12-i)+"");
+    }
     abandon();
+    showArrow();
     points.resetBoff();
     larrow.setVisible(false);
     rarrow.setVisible(false);
@@ -592,7 +616,6 @@ public class Board extends Group {
   }
   
   public void rollDices() {
-    showArrow();
     GnuBackgammon.Instance.snd.playRoll();
     dices.clear();
     int[] ds = {0,0};
@@ -606,7 +629,6 @@ public class Board extends Group {
   }
   
   public void rollDices(int d1, int d2) {
-    showArrow();
     dices.clear();
     //SHOW ALWAYS BIGGER DICE ON LEFT
     if (d1>d2) dices.show(d1, d2, false);
@@ -631,5 +653,41 @@ public class Board extends Group {
       rarrow.setVisible(false);
       larrow.setPosition(p.x, p.y);
     }
+    
+    showNumbers();
+  }
+  
+  public void showNumbers() {
+    for (int i=0;i<24;i++) {
+      ns[i].setX(pos[i].x-ns[i].getWidth()/2);
+    }
+    float top, bottom;
+    if (GnuBackgammon.ss==0) { //HDPI
+      bottom = ns[23].getHeight()*0.65f; 
+      top = getHeight()-ns[23].getHeight()*1.6f;
+    } else if (GnuBackgammon.ss==1) { //MDPI
+      bottom = ns[23].getHeight()*0.5f; 
+      top = getHeight()-ns[23].getHeight()*1.4f;
+    } else { //LDPI
+      bottom = ns[23].getHeight()*0.4f; 
+      top = getHeight()-ns[23].getHeight()*1.3f;
+    }
+    
+    for (int i=0;i<12;i++) {
+      if (MatchState.fMove==0)
+        ns[i].setY(bottom); //BOTTOM
+      else
+        ns[i].setY(top); //TOP
+      addActor(ns[i]);
+    }
+    
+    for (int i=12;i<24;i++) {
+      if (MatchState.fMove==0)
+        ns[i].setY(top); //TOP
+      else
+        ns[i].setY(bottom); //BOTTOM
+      addActor(ns[i]);
+    }
+    
   }
 } //END CLASS

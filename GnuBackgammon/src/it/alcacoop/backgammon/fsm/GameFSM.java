@@ -354,6 +354,7 @@ public class GameFSM extends BaseFSM implements Context {
           } else if (dices[0]<dices[1]) {//START CPU
             MatchState.SetGameTurn(1, 1);
           }
+          ctx.board().showArrow();
           ctx.board().rollDices(dices[0], dices[1]);
           break;
           

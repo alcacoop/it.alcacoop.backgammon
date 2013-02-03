@@ -81,6 +81,7 @@ public class MatchState {
       GnuBackgammon.Instance.board.rollBtn.setX(Math.max(left1, left2));
       GnuBackgammon.Instance.board.doubleBtn.setX(Math.min(left1, left2));
     }
+    GnuBackgammon.Instance.board.showArrow();
   }
   
   public static void SetGameVariant(int type) {
