@@ -130,11 +130,7 @@ public final class GameMenuPopup extends Table {
       public void run() {
         if (abandon.isDisabled()) return;
         GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-        UIDialog.getYesNoDialog(
-            Events.ABANDON_MATCH, 
-            "Really exit this match?", 
-            0.82f,
-            GnuBackgammon.Instance.board.getStage());
+        UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
       }});
     }});
     

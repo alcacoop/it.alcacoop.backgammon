@@ -33,6 +33,7 @@
 
 package it.alcacoop.backgammon.fsm;
 
+import com.badlogic.gdx.Gdx;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
@@ -528,14 +529,23 @@ public class GameFSM extends BaseFSM implements Context {
             break;
             
           case ABANDON_MATCH: //QUIT MATCH
-            if((Boolean)params) { //ABANDONING
+            if (((String)params).equals("YES")) {
+              //SAVING AND ABANDONING
               GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
               GnuBackgammon.Instance.rec.reset();
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
+            } else if (((String)params).equals("NO")) {
+              //ABANDONING
+              Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+              Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
+              GnuBackgammon.Instance.rec.reset();
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
             } else {
+              //CANCEL!
               GnuBackgammon.fsm.back();
             }
             break;
+            
           default: return false;
         }
         

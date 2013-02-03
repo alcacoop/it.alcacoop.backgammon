@@ -58,6 +58,7 @@ public final class UIDialog extends Window {
   private TextButton bContinue;
   private TextButton bYes;
   private TextButton bNo;
+  private TextButton bCancel;
   
   private Label label;
   private Drawable background;
@@ -68,6 +69,7 @@ public final class UIDialog extends Window {
   private BaseFSM.Events evt;
   private boolean quitWindow = false;
   private boolean optionsWindow = false;
+  private boolean leaveWindow = false;
   
   private GameOptionsTable opts;
   
@@ -95,6 +97,11 @@ public final class UIDialog extends Window {
           @Override
           public void run() {
             instance.remove();
+            if (leaveWindow) {
+              GnuBackgammon.fsm.processEvent(instance.evt, s);
+              return;
+            }
+            
             boolean ret = s.equals("YES")||s.equals("OK");
             
             if ((instance.quitWindow)&&(ret)) {
@@ -118,6 +125,8 @@ public final class UIDialog extends Window {
     bNo.addListener(cl);
     bContinue = new TextButton("Ok", tl);
     bContinue.addListener(cl);
+    bCancel = new TextButton("Cancel", tl);
+    bCancel.addListener(cl);
 
     background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
@@ -161,6 +170,7 @@ public final class UIDialog extends Window {
   public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
+    instance.leaveWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -194,6 +204,7 @@ public final class UIDialog extends Window {
   public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
+    instance.leaveWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -226,6 +237,7 @@ public final class UIDialog extends Window {
   public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
+    instance.leaveWindow = false;
     instance.evt = evt;
     instance.remove();
     
@@ -270,6 +282,7 @@ public final class UIDialog extends Window {
   public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
     instance.quitWindow = false;
     instance.optionsWindow = false;
+    instance.leaveWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -306,6 +319,7 @@ public final class UIDialog extends Window {
   public static void getQuitDialog(float alpha, Stage stage) {
     instance.quitWindow = true;
     instance.optionsWindow = false;
+    instance.leaveWindow = false;
     instance.remove();
     instance.setText("Really quit the game?");
     
@@ -333,12 +347,53 @@ public final class UIDialog extends Window {
   }
 
   
+  public static void getLeaveDialog(BaseFSM.Events evt, float alpha, Stage stage) {
+    instance.quitWindow = false;
+    instance.optionsWindow = false;
+    instance.leaveWindow = true;
+    instance.evt = evt;
+    instance.remove();
+    
+    instance.setText("You are leaving current match.");
+    
+    float height = stage.getHeight()*0.45f;
+    float width = stage.getWidth()*0.6f;
+    
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.row().padTop(width/25);
+    instance.add(instance.label).colspan(7).expand().align(Align.center);
+    instance.row().padTop(width/45);
+    instance.add(new Label("Do you want to save it?", GnuBackgammon.skin)).colspan(7).expand().align(Align.center);
+    
+    instance.row().padTop(width/25);
+    instance.add();
+    instance.add(instance.bYes).fill().expand().height(height*0.25f).width(width/4.5f);
+    instance.add();
+    instance.add(instance.bNo).fill().expand().height(height*0.25f).width(width/4.5f);
+    instance.add();
+    instance.add(instance.bCancel).fill().expand().height(height*0.25f).width(width/4.5f);
+    instance.add();
+    
+    instance.row().padBottom(width/35);
+    instance.add();
+    
+    
+    stage.addActor(instance);
+    instance.addAction(Actions.alpha(alpha, 0.3f));
+  }
+  
   public static void getHelpDialog(Stage stage, Boolean cb) {
     getHelpDialog(1, stage, cb);
   }
   public static void getHelpDialog(float alpha, Stage stage, Boolean cb) {
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
+    instance.leaveWindow = false;
     instance.optionsWindow = false;
     instance.remove();
     Label l = new Label(
@@ -395,6 +450,7 @@ public final class UIDialog extends Window {
   public static void getOptionsDialog(float alpha, Stage stage) {
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
+    instance.leaveWindow = false;
     instance.optionsWindow = true;
     instance.remove();
     
@@ -425,6 +481,7 @@ public final class UIDialog extends Window {
     instance.bContinue.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bYes.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bNo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bCancel.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
   }
 }
