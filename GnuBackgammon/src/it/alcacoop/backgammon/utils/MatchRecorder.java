@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.logic.MatchState;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -235,7 +237,7 @@ public class MatchRecorder {
   }
   
   public void saveJson(String fname) {
-    FileHandle fh = new FileHandle(fname);
+    FileHandle fh = Gdx.files.absolute(fname);
     Writer writer = fh.writer(false);
     Json json = new Json(OutputType.json);
     try {
@@ -307,7 +309,7 @@ public class MatchRecorder {
       sgf += ")\n";
     }
     
-    FileHandle fh = new FileHandle(fname);
+    FileHandle fh = Gdx.files.absolute(fname);
     Writer writer = fh.writer(false);
     try {
       writer.write(sgf);
@@ -320,7 +322,7 @@ public class MatchRecorder {
   
   
   public void loadFromFile(String fname) {
-    FileHandle fh = new FileHandle(fname);
+    FileHandle fh = Gdx.files.absolute(fname);
     matchInfo.clear();
     
     JSONProperties jp = new JSONProperties(fh);

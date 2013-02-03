@@ -45,6 +45,7 @@ import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 public class Main implements NativeFunctions {
   private static Main instance;
+  private static String data_dir;
   
   
   public static void main(String[] args) {
@@ -58,6 +59,7 @@ public class Main implements NativeFunctions {
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");
+    data_dir = s;
     s+="/libs/";
     GnubgAPI.InitializeEnvironment(s);
   }
@@ -72,5 +74,10 @@ public class Main implements NativeFunctions {
 
   @Override
   public void openURL(String url) {
+  }
+
+  @Override
+  public String getDataDir() {
+    return data_dir;
   }
 }

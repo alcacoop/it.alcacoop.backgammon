@@ -53,7 +53,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -126,8 +125,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else ss = 0;
     resolution = resolutions[ss];
     
-    FileHandle _f = Gdx.files.internal("data/match.");
-    fname = _f.file().getAbsolutePath();
+    fname = myRequestHandler.getDataDir()+"/data/match.";
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
@@ -163,8 +161,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     aboutScreen = new AboutScreen();
     appearanceScreen = new AppearanceScreen();
     
-    setScreen(new SplashScreen());
-    //setScreen(welcomeScreen);
+    //setScreen(new SplashScreen());
+    setScreen(welcomeScreen);
   }
 
   

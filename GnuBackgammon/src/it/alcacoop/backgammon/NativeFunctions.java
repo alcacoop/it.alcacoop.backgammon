@@ -36,4 +36,5 @@ package it.alcacoop.backgammon;
 public interface NativeFunctions {
   public void showAds(boolean show);
   public void openURL(String url);
+  public String getDataDir(); 
 }

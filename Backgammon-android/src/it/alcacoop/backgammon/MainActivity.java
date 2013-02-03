@@ -190,5 +190,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     startActivity(myIntent);
   }
+
+  @Override
+  public String getDataDir() {
+    return data_dir;
+  }
   
 }
