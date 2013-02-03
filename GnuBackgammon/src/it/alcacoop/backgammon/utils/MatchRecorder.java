@@ -249,7 +249,8 @@ public class MatchRecorder {
     }
   }
   
-  public void saveSGF(String fname) {
+  
+  public String saveSGF() {
     String sgf = "";
     for (int i=0;i<matchInfo.size;i++) {
       Game g = matchInfo.get(i);
@@ -304,20 +305,10 @@ public class MatchRecorder {
         }
         sgf += "]\n";
       }
-      
-      //END GAME
-      sgf += ")\n";
+      sgf += ")\n";//END GAME
     }
     
-    FileHandle fh = Gdx.files.absolute(fname);
-    Writer writer = fh.writer(false);
-    try {
-      writer.write(sgf);
-      writer.flush();
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    return sgf;
   }
   
   

@@ -35,6 +35,7 @@ package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -79,5 +80,9 @@ public class Main implements NativeFunctions {
   @Override
   public String getDataDir() {
     return data_dir;
+  }
+
+  @Override
+  public void shareMatch(MatchRecorder rec) {
   }
 }

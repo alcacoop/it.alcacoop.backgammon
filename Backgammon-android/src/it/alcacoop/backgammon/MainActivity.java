@@ -38,14 +38,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
@@ -54,7 +59,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.ads.AdRequest;
@@ -73,6 +77,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
 
   protected Handler handler = new Handler()
   {
+      @SuppressLint("HandlerLeak")
       @Override
       public void handleMessage(Message msg) {
           switch(msg.what) {
@@ -194,6 +199,45 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   @Override
   public String getDataDir() {
     return data_dir;
+  }
+
+  @Override
+  public void shareMatch(MatchRecorder rec) {
+    final Intent intent = new Intent(Intent.ACTION_SEND);
+    
+    intent.setType("text/plain");
+    intent.setType("message/rfc822");
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+    Date date = new Date();
+    String d = dateFormat.format(date);
+    intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"domenico.martella@alcacoop.it"});
+    intent.putExtra(Intent.EXTRA_SUBJECT, "Backgammon Mobile exported Match (Played on "+d+")");
+    intent.putExtra(Intent.EXTRA_TEXT, "You can analize attached file with desktop version of GNU Backgammon\nNOTE: GNU Backgammon is available for Windows, MacOS and Linux\n\nIf you enjoyed Backgammon Mobile please help us rating it on the market");
+    
+    try {
+      dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+      d = dateFormat.format(date);
+      File dir = new File(Environment.getExternalStorageDirectory(), "gnubg-sgf");
+      dir.mkdir();
+      final File data = new File(dir, "match-"+d+".sgf");
+      
+      FileOutputStream out = new FileOutputStream(data);
+      out.write(rec.saveSGF().getBytes());
+      out.close();
+      
+      Uri uri = Uri.fromFile(data);
+      intent.putExtra(Intent.EXTRA_STREAM, uri);
+      
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          startActivity(Intent.createChooser(intent, "Send email..."));
+        }
+      });
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
   
 }
