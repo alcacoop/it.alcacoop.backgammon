@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -61,6 +62,7 @@ public class Dices extends Group {
   private Board b;
   private animation ans[];
   private float animDuration = 0.45f;
+  private BaseFSM fsm;
   
   int nr = 0;
   boolean animating = true;
@@ -212,6 +214,7 @@ public class Dices extends Group {
   
   
   public void animate(final int d1, final int d2) {
+    fsm = GnuBackgammon.fsm;
     animating = true;
     ans[0].show();
     ans[1].show();
@@ -244,7 +247,7 @@ public class Dices extends Group {
     }
     _show();
     animating = false;
-    if (event)
+    if ((event)&&(fsm == GnuBackgammon.fsm))
       GnuBackgammon.fsm.processEvent(GameFSM.Events.DICES_ROLLED, get());
   }
   
