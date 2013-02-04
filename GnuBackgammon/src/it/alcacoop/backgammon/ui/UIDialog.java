@@ -36,7 +36,7 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-
+import it.alcacoop.backgammon.logic.MatchState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -59,6 +59,7 @@ public final class UIDialog extends Window {
   private TextButton bYes;
   private TextButton bNo;
   private TextButton bCancel;
+  private TextButton bExport;
   
   private Label label;
   private Drawable background;
@@ -127,6 +128,14 @@ public final class UIDialog extends Window {
     bContinue.addListener(cl);
     bCancel = new TextButton("Cancel", tl);
     bCancel.addListener(cl);
+    bExport = new TextButton("Export Match", tl);
+    bExport.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.shareMatch(GnuBackgammon.Instance.rec);
+        super.clicked(event, x, y);
+      }
+    });
 
     background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
@@ -255,10 +264,9 @@ public final class UIDialog extends Window {
     instance.add(text1).colspan(2).expand().align(Align.center);
     instance.add().expand();
     
-
     instance.row();
     instance.add().expand();
-    instance.add("Overall Score" + text).colspan(2).expand().align(Align.center);
+    instance.add("Overall Score " + text).colspan(2).expand().align(Align.center);
     instance.add().expand();
     instance.row();
     instance.add().expand();
@@ -266,10 +274,17 @@ public final class UIDialog extends Window {
     instance.add(score2).expand().align(Align.center);
     instance.add().expand();
     
+    Table t1 = new Table();
+    t1.row().expand().fill();
+    t1.add();
+    t1.add(instance.bContinue).colspan(2).fill().expand().height(height*0.15f).width(width/3);
+    if (MatchState.anScore[0]>=MatchState.nMatchTo||MatchState.anScore[1]>=MatchState.nMatchTo) {
+      t1.add();
+      t1.add(instance.bExport).colspan(2).fill().expand().height(height*0.15f).width(width/3);
+    }
+    t1.add();
     instance.row();
-    instance.add();
-    instance.add(instance.bContinue).colspan(2).fill().expand().height(height*0.15f).width(width/4);
-    instance.add();
+    instance.add(t1).colspan(4).fill().padBottom(width/25);
     
     stage.addActor(instance);
     instance.addAction(Actions.alpha(alpha, 0.3f));

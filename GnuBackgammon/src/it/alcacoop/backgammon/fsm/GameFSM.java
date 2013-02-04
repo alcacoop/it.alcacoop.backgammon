@@ -338,7 +338,8 @@ public class GameFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.CONTINUE) {
           if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
-            GnuBackgammon.Instance.myRequestHandler.shareMatch(GnuBackgammon.Instance.rec);
+            Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+            GnuBackgammon.Instance.rec.reset();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
             ctx.state(OPENING_ROLL);
@@ -537,7 +538,6 @@ public class GameFSM extends BaseFSM implements Context {
             } else if (((String)params).equals("NO")) {
               //ABANDONING
               Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
-              Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
               GnuBackgammon.Instance.rec.reset();
               GnuBackgammon.Instance.setFSM("MENU_FSM");
             } else {
