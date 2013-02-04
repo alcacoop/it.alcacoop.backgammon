@@ -36,7 +36,6 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -52,6 +51,7 @@ public class GameOptionsTable extends Table {
   private FixedButtonGroup sound;
   private FixedButtonGroup automoves;
   private FixedButtonGroup lmoves;
+  private FixedButtonGroup npoints;
   private TextButton lm1, lm2; 
 
   
@@ -84,6 +84,12 @@ public class GameOptionsTable extends Table {
     lmoves.add(lm1);
     lmoves.add(lm2);
     
+    npoints = new FixedButtonGroup();
+    TextButton np1 = new TextButton("Yes", ts);
+    TextButton np2 = new TextButton("No", ts);
+    npoints.add(np1);
+    npoints.add(np2);
+    
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         savePrefs();
@@ -98,8 +104,16 @@ public class GameOptionsTable extends Table {
         if (s.equals("AUTO")) setDisabledLmoves(true);
       };
     };
+    ClickListener cl3 = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        savePrefs();
+        GnuBackgammon.Instance.board.showArrow();
+      };
+    };
     am1.addListener(cl2);
     am2.addListener(cl2);
+    np1.addListener(cl3);
+    np2.addListener(cl3);
     
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
@@ -115,38 +129,43 @@ public class GameOptionsTable extends Table {
       row();
       add().fill().expand().colspan(5);
     }
-    
-    
 
-    row().height(height*1.4f);
-    add().fill().height(height).expandX();
+    row().height(height*1.3f);
+    add().fill().height(height*1.3f).expandX();
     add(new Label("Sounds:", GnuBackgammon.skin)).right().spaceRight(6).height(height);
     add(sn1).width(width).fillY().height(height).spaceRight(6);
     add(sn2).width(width).fillY().height(height);
     add().fill().height(height).expandX();
     
     
-    row().height(height*1.4f);
-    add().fill().height(height).expandX();
+    row().height(height*1.3f);
+    add().fill().height(height*1.3f).expandX();
     add(l).right().spaceRight(6);
     add(sp1).height(height).width(width).spaceRight(6);
     add(sp2).height(height).width(width);
     add().fill().height(height).expandX();
     
     
-    row().height(height*1.4f);
-    add().fill().height(height).expandX();
+    row().height(height*1.3f);
+    add().fill().height(height*1.3f).expandX();
     add(new Label("Move Logic:", GnuBackgammon.skin)).right().spaceRight(6);
     add(am1).height(height).width(width).spaceRight(6);
     add(am2).height(height).width(width);
     add().fill().height(height).expandX();
 
     
-    row();
-    add().fill().height(height).expandX();
+    row().height(height*1.3f);
+    add().fill().height(height*1.3f).expandX();
     add(new Label("Legal Moves:", GnuBackgammon.skin)).right().spaceRight(6);
     add(lm1).height(height).width(width).spaceRight(6);
     add(lm2).height(height).width(width);
+    add().fill().height(height).expandX();
+    
+    row();
+    add().fill().height(height*1.3f).expandX();
+    add(new Label("Numbered points:", GnuBackgammon.skin)).right().spaceRight(6);
+    add(np1).height(height).width(width).spaceRight(6);
+    add(np2).height(height).width(width);
     add().fill().height(height).expandX();
     
     if (decoration) {
@@ -188,6 +207,9 @@ public class GameOptionsTable extends Table {
     
     String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
+    
+    String points = GnuBackgammon.Instance.prefs.getString("NPOINTS", "Yes");
+    this.npoints.setChecked(points);
   }
   
   public void savePrefs() {
@@ -199,6 +221,8 @@ public class GameOptionsTable extends Table {
     GnuBackgammon.Instance.prefs.putString("AMOVES", amoves);
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString(); 
     GnuBackgammon.Instance.prefs.putString("LMOVES", lmoves);
+    String points = ((TextButton)this.npoints.getChecked()).getText().toString(); 
+    GnuBackgammon.Instance.prefs.putString("NPOINTS", points);
     
     GnuBackgammon.Instance.prefs.flush();
   }
@@ -216,6 +240,9 @@ public class GameOptionsTable extends Table {
     for (int i=0;i<a.size; i++)
       a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
     a = lmoves.getButtons();
+    for (int i=0;i<a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+    a = npoints.getButtons();
     for (int i=0;i<a.size; i++)
       a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
   }

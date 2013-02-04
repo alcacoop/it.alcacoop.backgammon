@@ -401,7 +401,7 @@ public final class UIDialog extends Window {
     instance.opts.initFromPrefs();
     
     float width = stage.getWidth()*0.75f;
-    float height = stage.getHeight()*0.85f;
+    float height = stage.getHeight()*0.95f;
     
     instance.clear();
     instance.setWidth(width);
@@ -415,7 +415,7 @@ public final class UIDialog extends Window {
     instance.row();
     instance.add().fill().expand();
     instance.row();
-    instance.add(instance.bContinue).padBottom(height/13).width(width*0.3f).height(height*0.13f);
+    instance.add(instance.bContinue).padBottom(height/27).width(width*0.3f).height(height*0.10f);
     
     stage.addActor(instance);
     instance.addAction(Actions.alpha(alpha, 0.3f));

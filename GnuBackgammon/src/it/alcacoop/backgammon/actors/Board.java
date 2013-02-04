@@ -636,6 +636,13 @@ public class Board extends Group {
   }
   
   public void showArrow() {
+    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
+      larrow.setVisible(false);
+      rarrow.setVisible(false);
+      showNumbers();
+      return;
+    }
+    
     Vector2 p = getBoardCoord(MatchState.fMove, -1, 0);
     if (MatchState.fMove==0)
       p.y -= larrow.getHeight()*2.8f/2;
@@ -658,6 +665,11 @@ public class Board extends Group {
   }
   
   public void showNumbers() {
+    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
+      for (int i=0;i<24;i++) 
+        ns[i].remove();
+      return;
+    }
     for (int i=0;i<24;i++) {
       ns[i].setX(pos[i].x-ns[i].getWidth()/2);
     }
