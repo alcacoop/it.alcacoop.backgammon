@@ -54,11 +54,6 @@ public class GameFSM extends BaseFSM implements Context {
 
     CPU_TURN {
       @Override
-      public void enterState(Context ctx) {
-        ((GameFSM)GnuBackgammon.fsm).hnmove = 0;
-        super.enterState(ctx);
-      }
-      @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
         
@@ -153,12 +148,6 @@ public class GameFSM extends BaseFSM implements Context {
 
 
     HUMAN_TURN {
-      @Override
-      public void enterState(Context ctx) {
-        ((GameFSM)GnuBackgammon.fsm).hnmove = 0;
-        super.enterState(ctx);
-      }
-      
       @Override
       public boolean processEvent(Context ctx, GameFSM.Events evt, Object params) {
         switch (evt) {
@@ -596,6 +585,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   public void start() {
     GnuBackgammon.Instance.goToScreen(4);
+    hnmove = 0;
   }
 
   public void stop() {
