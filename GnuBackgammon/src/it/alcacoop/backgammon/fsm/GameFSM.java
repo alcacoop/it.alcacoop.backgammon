@@ -311,9 +311,9 @@ public class GameFSM extends BaseFSM implements Context {
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
         
-        String matchProgress = " (match in progress)";
+        String matchProgress = " (match to "+MatchState.nMatchTo+" in progress)";
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) {
-          matchProgress = " (match finished)";
+          matchProgress = " (match to "+MatchState.nMatchTo+" finished)";
         }
         
         String gameString = "Your opponent won "+game_score+" point";
