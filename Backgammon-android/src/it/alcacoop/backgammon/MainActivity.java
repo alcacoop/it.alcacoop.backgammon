@@ -210,7 +210,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     Date date = new Date();
     String d = dateFormat.format(date);
-    intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"domenico.martella@alcacoop.it"});
     intent.putExtra(Intent.EXTRA_SUBJECT, "Backgammon Mobile exported Match (Played on "+d+")");
     intent.putExtra(Intent.EXTRA_TEXT, "You can analize attached file with desktop version of GNU Backgammon\nNOTE: GNU Backgammon is available for Windows, MacOS and Linux\n\nIf you enjoyed Backgammon Mobile please help us rating it on the market");
     
