@@ -161,8 +161,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     aboutScreen = new AboutScreen();
     appearanceScreen = new AppearanceScreen();
     
-    //setScreen(new SplashScreen());
-    setScreen(welcomeScreen);
+    setScreen(new SplashScreen());
   }
 
   
