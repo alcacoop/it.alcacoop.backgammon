@@ -92,7 +92,7 @@ public class MainMenuScreen implements Screen {
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     
-    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
+    TextButtonStyle tl = GnuBackgammon.skin.get("mainmenu", TextButtonStyle.class);
     
     TextButton onePlayer = new TextButton("Single Player", tl);
     onePlayer.addListener(cl);
