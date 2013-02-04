@@ -33,13 +33,19 @@
 
 package it.alcacoop.backgammon;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 
@@ -84,5 +90,22 @@ public class Main implements NativeFunctions {
 
   @Override
   public void shareMatch(MatchRecorder rec) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+    Date date = new Date();
+    String d = dateFormat.format(date);
+    
+    String path = Gdx.files.external("data/gnubg-sgf/match-"+d+".sgf").path();
+    
+    FileHandle fh = Gdx.files.absolute(path);
+    Writer writer = fh.writer(false);
+    try {
+      writer.write(rec.saveSGF());
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    
   }
 }
