@@ -278,7 +278,7 @@ public final class UIDialog extends Window {
     t1.row().expand().fill();
     t1.add();
     t1.add(instance.bContinue).colspan(2).fill().expand().height(height*0.15f).width(width/3);
-    if (MatchState.anScore[0]>=MatchState.nMatchTo||MatchState.anScore[1]>=MatchState.nMatchTo) {
+    if ((MatchState.anScore[0]>=MatchState.nMatchTo||MatchState.anScore[1]>=MatchState.nMatchTo)&&(MatchState.matchType==0)) {
       t1.add();
       t1.add(instance.bExport).colspan(2).fill().expand().height(height*0.15f).width(width/3);
     }

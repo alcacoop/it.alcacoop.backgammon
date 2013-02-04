@@ -314,7 +314,8 @@ public class GameFSM extends BaseFSM implements Context {
         }
         
         GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
-        GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
+        if (MatchState.matchType==0)
+          GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
         
         if(MatchState.fMove == 0) 
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
@@ -348,7 +349,8 @@ public class GameFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.CONTINUE) {
           if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
-            Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+            if (MatchState.matchType==0)
+              Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
             GnuBackgammon.Instance.rec.reset();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
@@ -540,19 +542,28 @@ public class GameFSM extends BaseFSM implements Context {
             break;
             
           case ABANDON_MATCH: //QUIT MATCH
-            if (((String)params).equals("YES")) {
-              //SAVING AND ABANDONING
-              GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
-              GnuBackgammon.Instance.rec.reset();
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
-            } else if (((String)params).equals("NO")) {
-              //ABANDONING
-              Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
-              GnuBackgammon.Instance.rec.reset();
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
+            if (MatchState.matchType==1) {
+              if ((Boolean)params) { //ABANDON
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else  { //CANCEL
+                GnuBackgammon.fsm.back();
+              }
             } else {
-              //CANCEL!
-              GnuBackgammon.fsm.back();
+              if (((String)params).equals("YES")) {
+                //SAVING AND ABANDONING
+                GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else if (((String)params).equals("NO")) {
+                //ABANDONING
+                Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else {
+                //CANCEL!
+                GnuBackgammon.fsm.back();
+              }
             }
             break;
             

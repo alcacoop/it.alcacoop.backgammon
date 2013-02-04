@@ -195,7 +195,7 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     
-    if (Gdx.files.absolute(GnuBackgammon.fname+"json").exists())
+    if ((Gdx.files.absolute(GnuBackgammon.fname+"json").exists())&&(MatchState.matchType==0))
       restoreOldMatch();
     else
       initNewMatch();
@@ -231,7 +231,7 @@ public class GameScreen implements Screen {
     pInfo[0].update();
     pInfo[1].update();
 
-    //WORKAROUND!
+    //TODO: WORKAROUND!
     MatchState.fMove = 1;
     MatchState.SwitchTurn(false);
     
