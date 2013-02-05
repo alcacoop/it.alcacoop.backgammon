@@ -82,7 +82,7 @@ public class OptionsScreen implements Screen {
     
     table = new Table();
     table.setFillParent(true);
-    opts = new GameOptionsTable(true);
+    opts = new GameOptionsTable(true, null);
     table.add(opts).expand().fill();
     stage.addActor(table);
   }

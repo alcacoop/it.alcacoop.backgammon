@@ -52,10 +52,10 @@ public class GameOptionsTable extends Table {
   private FixedButtonGroup automoves;
   private FixedButtonGroup lmoves;
   private FixedButtonGroup npoints;
-  private TextButton lm1, lm2; 
+  private TextButton lm1, lm2, ok; 
 
   
-  public GameOptionsTable(boolean decoration) {
+  public GameOptionsTable(boolean decoration, ClickListener _cl) {
     
     setFillParent(decoration);
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
@@ -118,6 +118,9 @@ public class GameOptionsTable extends Table {
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     
+    ok = new TextButton("OK", GnuBackgammon.skin);
+    ok.addListener(_cl);
+    
     Label l = new Label("Animation Speed:", GnuBackgammon.skin);
     
     float width = l.getWidth()*0.8f;
@@ -126,6 +129,9 @@ public class GameOptionsTable extends Table {
     
     if (decoration) {
       add(new Label("GAME OPTIONS", GnuBackgammon.skin)).expand().colspan(5);
+      row();
+      add().fill().expand().colspan(5);
+    } else {
       row();
       add().fill().expand().colspan(5);
     }
@@ -161,19 +167,25 @@ public class GameOptionsTable extends Table {
     add(lm2).height(height).width(width);
     add().fill().height(height).expandX();
     
-    row();
+    row().height(height*1.3f);
     add().fill().height(height*1.3f).expandX();
     add(new Label("Numbered points:", GnuBackgammon.skin)).right().spaceRight(6);
     add(np1).height(height).width(width).spaceRight(6);
     add(np2).height(height).width(width);
     add().fill().height(height).expandX();
+
+    row();
+    add().fill().expand().colspan(5);
     
     if (decoration) {
-      row();
-      add().fill().expand().colspan(5);
-      row();
+      row().height(height*1.3f);
       add(back).expand().fill().colspan(5).height(height).width(1.5f*width);
+    } else {
+      row().height(height*1.3f);
+      add(ok).expandX().fillX().colspan(5).height(height).width(1.5f*width);
     }
+    row();
+    add().fill().expand().colspan(5);
     
     initFromPrefs();
   }
@@ -245,6 +257,8 @@ public class GameOptionsTable extends Table {
     a = npoints.getButtons();
     for (int i=0;i<a.size; i++)
       a.get(i).setStyle(GnuBackgammon.skin.get("toggle-"+b, TextButtonStyle.class));
+    
+    ok.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
   }
 
 }

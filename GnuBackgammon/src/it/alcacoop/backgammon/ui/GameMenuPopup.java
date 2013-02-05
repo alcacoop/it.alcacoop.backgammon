@@ -144,7 +144,7 @@ public final class GameMenuPopup extends Table {
         hide(new Runnable(){
         @Override
         public void run() {
-          UIDialog.getOptionsDialog(0.95f, GnuBackgammon.Instance.board.getStage());
+          UIDialog.getOptionsDialog(0.9f, GnuBackgammon.Instance.board.getStage());
         }});
       }});
     
