@@ -73,7 +73,7 @@ public final class GameMenuPopup extends Table {
     };
         
     setWidth(stage.getWidth());
-    setHeight(stage.getHeight()/(6.8f-GnuBackgammon.ss));
+    setHeight(stage.getHeight()/(6.3f-GnuBackgammon.ss));
     setX(0);
     setY(-getHeight());
     
