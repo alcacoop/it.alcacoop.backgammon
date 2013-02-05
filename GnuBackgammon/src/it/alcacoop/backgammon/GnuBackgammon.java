@@ -47,7 +47,7 @@ import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.JSONProperties;
-
+import it.alcacoop.backgammon.utils.MatchRecorder;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -95,6 +95,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public NativeFunctions myRequestHandler;
   public boolean isGNU = false;
   
+  public MatchRecorder rec;
+  public static String fname;
+  
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
@@ -108,10 +111,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   @Override
   
   public void create() {
+    
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
     snd = new SoundManager();
+    rec = new MatchRecorder();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
@@ -119,6 +124,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (pWidth<=800) ss = 1;
     else ss = 0;
     resolution = resolutions[ss];
+    
+    fname = myRequestHandler.getDataDir()+"/data/match.";
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
@@ -155,7 +162,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     
     setScreen(new SplashScreen());
-    //setScreen(welcomeScreen);
   }
 
   

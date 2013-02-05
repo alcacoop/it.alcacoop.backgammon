@@ -36,13 +36,13 @@ package it.alcacoop.backgammon.actors;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -58,6 +58,7 @@ public class Checker extends Group {
   private Label label;
   private Image img, imgh;
   private ParallelAction act;
+  private MoveToAction mv;
   private BaseFSM fsm;
   private final TextureRegionDrawable dr;
   
@@ -118,7 +119,8 @@ public class Checker extends Group {
       setY(_p.y);
     }
     else {
-      act = Actions.sequence(Actions.moveTo(_p.x, _p.y, t),Actions.run(new Runnable() {
+      mv = Actions.moveTo(_p.x, _p.y, t);
+      act = Actions.sequence(mv, Actions.run(new Runnable() {
         @Override
         public void run() {
           GnuBackgammon.fsm.processEvent(Events.CHECKER_RESETTED, null);
@@ -239,6 +241,11 @@ public class Checker extends Group {
   }
   
   public void resetActions() {
-    if (act!=null) act.reset();
+    if (mv!=null) {
+      this.removeAction(act);
+      mv.setDuration(0);
+      mv = null;
+      act = null;
+    }
   }
 }

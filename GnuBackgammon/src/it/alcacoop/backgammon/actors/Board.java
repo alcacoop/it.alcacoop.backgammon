@@ -35,6 +35,7 @@ package it.alcacoop.backgammon.actors;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
 import it.alcacoop.backgammon.layers.GameScreen;
@@ -505,6 +506,7 @@ public class Board extends Group {
     if (playedMoves.size()>0) {
       playedMoves.pop().undo();
       updatePInfo();
+      ((GameFSM)GnuBackgammon.fsm).hnmove--;
     }
   }
   
@@ -514,10 +516,6 @@ public class Board extends Group {
   }
   
   private void abandon() {
-    for (int i=0; i<15; i++) {
-      checkers[0][i].resetActions();
-      checkers[1][i].resetActions();
-    }
     if (dices!=null) dices.clear();
     if (moves!=null) moves.clear();
     if (playedMoves!=null) playedMoves.clear();
@@ -701,5 +699,24 @@ public class Board extends Group {
       addActor(ns[i]);
     }
     
+  }
+  
+  public void setCube(int v, int o) {
+    doublingCube.setValue(v, o);
+  }
+  
+  public void stopCheckers() {
+    for (int i=0;i<15;i++) {
+      checkers[0][i].resetActions();
+      checkers[1][i].resetActions();
+    }
+  }
+  
+  public String getBoardAsString(int c) {
+    String s = "";
+    for (int i=0;i<24;i++) {
+      s+=_board[c][i]+":";
+    }
+    return s+_board[c][24];
   }
 } //END CLASS

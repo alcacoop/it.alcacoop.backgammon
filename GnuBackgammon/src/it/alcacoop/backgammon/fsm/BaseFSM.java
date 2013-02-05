@@ -95,7 +95,8 @@ public class BaseFSM implements Context {
     CPU_RESIGNED,
     HUMAN_RESIGNED, 
     ABANDON_MATCH, 
-    LEVEL_ALERT
+    LEVEL_ALERT, 
+    RESTORE_ANSWER
   }
 
   public enum States implements State {
@@ -129,9 +130,7 @@ public class BaseFSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    //System.out.println("PROCESS EVENT: "+evt+" ON "+state());
     boolean res = state().processEvent(this, evt, params);
-    //System.out.println("DST STATE: "+state());
     return res;
   }
 

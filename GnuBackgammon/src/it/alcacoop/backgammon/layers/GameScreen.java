@@ -38,10 +38,12 @@ import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.PlayerInfo;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
-
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -58,6 +60,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.OrderedMap;
 
 
 public class GameScreen implements Screen {
@@ -89,11 +92,10 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           if ((MatchState.matchType==1) || (MatchState.fMove==0)) { //CPU IS PLAYING
             GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-            UIDialog.getYesNoDialog(
-              Events.ABANDON_MATCH, 
-              "Really exit this match?",
-              0.82f,
-              GnuBackgammon.Instance.board.getStage());
+            if (MatchState.matchType==0)
+              UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
+            else
+              UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
           }
         }
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
@@ -151,15 +153,11 @@ public class GameScreen implements Screen {
     table.add(i).expandX().left().padLeft(6+6*(2-GnuBackgammon.ss));
     
     Table t = new Table();
-    //t.debug();
     t.add(pInfo[0]).left();
     t.row();
     t.add(pInfo[1]).left();
-    
     table.add(t).width(width).padTop(3+3*(2-GnuBackgammon.ss)).right().padRight(2+3*(2-GnuBackgammon.ss));
-    
     table.add(menu).fillY().width(width/2.5f).padRight(6+6*(2-GnuBackgammon.ss)).padTop(3+3*(2-GnuBackgammon.ss));
-    
     table.row();
     table.add(board).colspan(4).expand().fill();
   }
@@ -191,22 +189,95 @@ public class GameScreen implements Screen {
   public void show() {
     loadTextures();
     initTable();
+
+    Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
+    
+    if ((Gdx.files.absolute(GnuBackgammon.fname+"json").exists())&&(MatchState.matchType==0))
+      restoreOldMatch();
+    else
+      initNewMatch();
+    
+    table.setY(stage.getHeight());
+  }
+
+  
+  public void restoreOldMatch() {
+    GnuBackgammon.Instance.rec.loadFromFile(GnuBackgammon.fname+"json");
+    OrderedMap<String, Object> gi = GnuBackgammon.Instance.rec.getLastGameInfo();
+    
+    MatchState.SetCubeUse(((Float)gi.get("_cu")).intValue());
+    
+    MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
+    board.initBoard(2);
+    GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
+    
+    MatchState.SetMatchTo(""+gi.get("mi_length"));
+    MatchState.SetAILevel(AILevels.getAILevelFromString(""+gi.get("_df")));
+    MatchState.SetMatchScore((Integer)gi.get("mi_ws"), (Integer)gi.get("mi_bs"));
+    MatchState.SetCrawford((Integer)gi.get("_cr"));
+    MatchState.fCrafwordGame = (Boolean)gi.get("_cg");
+    int cubeValue = (Integer)gi.get("_cv");
+    int cubeOwner = (Integer)gi.get("_co");
+    MatchState.UpdateMSCubeInfo(cubeValue, cubeOwner);
+    MatchState.SetGameVariant(0);
+
+    pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
+    MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
+    pInfo[1].setName("PL1:");
+    MatchState.pl1 = "PL1";
+    pInfo[0].update();
+    pInfo[1].update();
+
+    //TODO: WORKAROUND!
+    MatchState.fMove = 1;
+    MatchState.SwitchTurn(false);
+    
+    boolean rolled = (Boolean)gi.get("_rl");
+    if (!rolled) {
+      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      MatchState.SetGameTurn(0, 0);
+    } else {
+      GnubgAPI.SetGameTurn(0, 0);
+      MatchState.fMove = 0;
+      MatchState.fTurn = 0;
+      
+      int d[] = new int[2];
+      d[0] = ((Float)gi.get("_d1")).intValue();
+      d[1]= ((Float)gi.get("_d2")).intValue();
+      
+      board.rollDices(d[0], d[1]);
+      board.rollDices(d[0], d[1]);
+      
+      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      AICalls.GenerateMoves(board, d[0], d[1]);
+    }
+    
+    GameMenuPopup.setDisabledButtons();
+    board.setCube(cubeValue, cubeOwner);
+    table.addAction(Actions.sequence(
+      Actions.delay(0.1f),
+      Actions.moveTo(0, 0, 0.3f)
+    ));
+  }
+  
+  public void initNewMatch() {
     board.initBoard();
-       
     if(MatchState.matchType == 0){ //single player
       pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
+      MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
       pInfo[1].setName("PL1:");
+      MatchState.pl1 = "PL1";
     } else {
       pInfo[0].setName("PL1:");
+      MatchState.pl0 = "PL1";
       pInfo[1].setName("PL2:");
+      MatchState.pl1 = "PL2";
     }
     
     pInfo[0].update();
     pInfo[1].update();
-    Gdx.input.setInputProcessor(stage);
-    Gdx.input.setCatchBackKey(true);
-    
-    table.setY(stage.getHeight());
+
     table.addAction(Actions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f),
@@ -218,12 +289,11 @@ public class GameScreen implements Screen {
       })
     ));
   }
-
   
   @Override
   public void hide() {
-    board.initBoard();
-    UIDialog.setButtonsStyle("B1");
+    board.stopCheckers();
+    UIDialog.setButtonsStyle("B1"); //RESTORE STANDARD THEME
   }
 
   @Override

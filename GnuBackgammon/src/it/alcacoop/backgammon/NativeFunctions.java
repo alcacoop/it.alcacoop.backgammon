@@ -33,7 +33,11 @@
 
 package it.alcacoop.backgammon;
 
+import it.alcacoop.backgammon.utils.MatchRecorder;
+
 public interface NativeFunctions {
   public void showAds(boolean show);
   public void openURL(String url);
+  public String getDataDir(); 
+  public void shareMatch(MatchRecorder rec);
 }

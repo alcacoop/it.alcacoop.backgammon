@@ -161,6 +161,10 @@ public class MainMenuScreen implements Screen {
     
     stage.addActor(g);
   }
+  
+  public Stage getStage() {
+    return stage;
+  }
 
 
   @Override

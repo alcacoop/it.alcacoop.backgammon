@@ -33,6 +33,7 @@
 
 package it.alcacoop.backgammon.fsm;
 
+import com.badlogic.gdx.Gdx;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
@@ -46,6 +47,8 @@ public class GameFSM extends BaseFSM implements Context {
   private Board board;
   public State currentState;
   private boolean helpShown = false;
+  private int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
+  public int hnmove = 0;
 
   public enum States implements State {
 
@@ -91,6 +94,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ASK_FOR_DOUBLING:
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
+            GnuBackgammon.Instance.rec.addDoubleRequest(1);
             ctx.state(DIALOG_HANDLER);
             UIDialog.getYesNoDialog(
               Events.DOUBLING_RESPONSE, 
@@ -103,6 +107,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case DICES_ROLLED:
           int dices[] = (int[])params;
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], false);
           ctx.board().thinking(true);
           AICalls.EvaluateBestMove(dices);
           break;
@@ -110,6 +115,8 @@ public class GameFSM extends BaseFSM implements Context {
         case EVALUATE_BEST_MOVE:
           ctx.board().thinking(false);
           int moves[] = (int[])params;
+          int[] d = ctx.board().dices.get();
+          GnuBackgammon.Instance.rec.addMove(1, d[0], d[1], moves);
           if(moves[0] == -1) {
             ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
@@ -167,16 +174,22 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1)
             ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], true);
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           break;
           
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
+          
           if(moves != null) {
             ctx.board().availableMoves.setMoves((int[][])params);
-            //ctx.state(HUMAN_PERFORM_MOVES);
           } else { //player (human) has no more moves
             ctx.state(DIALOG_HANDLER);
+            
+            int[] d = ctx.board().dices.get();
+            int[] m = {-1,-1,-1,-1,-1,-1,-1,-1};
+            GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], m);
+            
             UIDialog.getFlashDialog(
               Events.NO_MORE_MOVES, 
               "No legal moves available",
@@ -193,6 +206,12 @@ public class GameFSM extends BaseFSM implements Context {
             int dest = ctx.board().getAutoDestination(orig);
             if (dest!=-2) {
               int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
+              
+              int idx = ((GameFSM)GnuBackgammon.fsm).hnmove;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2] = orig;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
+              ((GameFSM)GnuBackgammon.fsm).hnmove++;
+              
               ctx.board().availableMoves.dropDice(orig-dest);
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
@@ -202,6 +221,12 @@ public class GameFSM extends BaseFSM implements Context {
               int origin = ctx.board().selected.boardX;
               int dest = (Integer)params;
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
+              
+              int idx = ((GameFSM)GnuBackgammon.fsm).hnmove;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx] = origin;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx+1] = dest;
+              ((GameFSM)GnuBackgammon.fsm).hnmove++;
+              
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
               ctx.board().availableMoves.dropDice(origin-dest);
@@ -213,6 +238,8 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case DICE_CLICKED:
+          int[] d = ctx.board().dices.get();
+          GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], ((GameFSM)GnuBackgammon.fsm).hmoves);
           ctx.board().dices.clear();
           ctx.state(CHECK_WIN);
           break;
@@ -243,6 +270,11 @@ public class GameFSM extends BaseFSM implements Context {
 
     CHECK_WIN {
       public void enterState(Context ctx) {
+        for (int i=0;i<8;i++)
+          ((GameFSM)GnuBackgammon.fsm).hmoves[i] = -1;
+        ((GameFSM)GnuBackgammon.fsm).hnmove = 0;
+        GnuBackgammon.Instance.rec.updateBoard();
+        
         if (ctx.board().gameFinished()) {
           ctx.state(CHECK_END_MATCH);
         } else {
@@ -269,14 +301,19 @@ public class GameFSM extends BaseFSM implements Context {
         } else {
           game_score = MatchState.resignValue * MatchState.nCube;
         }
+        
+        GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
+        if (MatchState.matchType==0)
+          GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
+        
         if(MatchState.fMove == 0) 
           MatchState.SetMatchScore(MatchState.anScore[1], MatchState.anScore[MatchState.fMove]+game_score);
         else 
           MatchState.SetMatchScore(MatchState.anScore[MatchState.fMove]+game_score, MatchState.anScore[0]);
         
-        String matchProgress = " (match in progress)";
+        String matchProgress = " (match to "+MatchState.nMatchTo+" in progress)";
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) {
-          matchProgress = " (match finished)";
+          matchProgress = " (match to "+MatchState.nMatchTo+" finished)";
         }
         
         String gameString = "Your opponent won "+game_score+" point";
@@ -301,6 +338,9 @@ public class GameFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.CONTINUE) {
           if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) { //MATCH FINISHED: GO TO MAIN MENU
+            if (MatchState.matchType==0)
+              Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+            GnuBackgammon.Instance.rec.reset();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
             ctx.state(OPENING_ROLL);
@@ -318,6 +358,8 @@ public class GameFSM extends BaseFSM implements Context {
         MatchState.UpdateMSCubeInfo(1, -1);
         ctx.board().initBoard();
         ctx.board().updatePInfo();
+        
+        GnuBackgammon.Instance.rec.addGame();
         
         if ((!((GameFSM)GnuBackgammon.fsm).helpShown)&&(GnuBackgammon.Instance.prefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
           UIDialog.getHelpDialog(0.82f, ctx.board().getStage(), true);
@@ -349,6 +391,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ROLL_DICE:
           dices = (int[])params;
+          GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], dices[0]>dices[1]);
           if (dices[0]>dices[1]) {//START HUMAN
             MatchState.SetGameTurn(0, 0);
           } else if (dices[0]<dices[1]) {//START CPU
@@ -386,8 +429,6 @@ public class GameFSM extends BaseFSM implements Context {
 
     
     
-    
-    
     DIALOG_HANDLER {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -395,20 +436,24 @@ public class GameFSM extends BaseFSM implements Context {
         
           case DOUBLING_RESPONSE: //RISPOSTA A CPU DOUBLING REQUEST
             if((Boolean)params) { //DOUBLING ACCEPTED
+              GnuBackgammon.Instance.rec.addDoubleTake(0);
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
+              GnuBackgammon.Instance.rec.setCube(MatchState.nCube, 0);
               ctx.board().doubleCube();
               ctx.state(CPU_TURN);
               ctx.board().rollDices();
             } else { //DOUBLING NOT ACCEPTED
+              GnuBackgammon.Instance.rec.addDoubleDrop(0);
               ctx.state(CHECK_END_MATCH);
             }
             break;
           
           case DOUBLE_REQUEST: //DOUBLE BUTTON CLICKED!
             if(MatchState.matchType == 0) { //CPU VS HUMAN
+              GnuBackgammon.Instance.rec.addDoubleRequest(0);
               ctx.board().removeActor(ctx.board().doubleBtn);
               GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-              ctx.board().thinking(true); 
+              ctx.board().thinking(true);
               AICalls.AcceptDouble();
             } else { //SHOW DOUBLE DIALOG!
               UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", 0.82f, ctx.board().getStage());
@@ -419,6 +464,7 @@ public class GameFSM extends BaseFSM implements Context {
             boolean res = (Boolean)params;
             if (res) { //HUMAN OPPONENT ACCEPTED DOUBLE
               MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+              GnuBackgammon.Instance.rec.setCube(MatchState.nCube, MatchState.fMove==0?1:0);
               ctx.board().doubleCube();
               ctx.state(HUMAN_TURN);
             } else { //HUMAN OPPONENT DIDN'T ACCEPT IT
@@ -429,7 +475,6 @@ public class GameFSM extends BaseFSM implements Context {
           case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
             ctx.board().thinking(false);
             if(((Integer)params == 1)||(MatchState.nMatchTo-MatchState.anScore[0]==1)) { //CPU ACCEPTED MY DOUBLE || OPPONENT IS WINNING (DEAD CUBE!!) 
-              //TODO: need fix in native API
               UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", 0.82f, ctx.board().getStage());
             } else { //CPU DIDN'T ACCEPT MY DOUBLE
               UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", 0.82f, ctx.board().getStage());
@@ -439,6 +484,8 @@ public class GameFSM extends BaseFSM implements Context {
           case CPU_DOUBLE_ACCEPTED: //CPU ACCEPTED DOUBLE
             ctx.state(States.HUMAN_TURN);
             MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
+            GnuBackgammon.Instance.rec.setCube(MatchState.nCube, 1);
+            GnuBackgammon.Instance.rec.addDoubleTake(1);
             ctx.board().doubleCube();
             break;
           
@@ -448,6 +495,7 @@ public class GameFSM extends BaseFSM implements Context {
             break;
             
           case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
+            GnuBackgammon.Instance.rec.addDoubleDrop(1);
             ctx.state(CHECK_END_MATCH);
             break;
           
@@ -484,12 +532,31 @@ public class GameFSM extends BaseFSM implements Context {
             break;
             
           case ABANDON_MATCH: //QUIT MATCH
-            if((Boolean)params) { //ABANDONING
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
+            if (MatchState.matchType==1) {
+              if ((Boolean)params) { //ABANDON
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else  { //CANCEL
+                GnuBackgammon.fsm.back();
+              }
             } else {
-              GnuBackgammon.fsm.back();
+              if (((String)params).equals("YES")) {
+                //SAVING AND ABANDONING
+                GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.fname+"json");
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else if (((String)params).equals("NO")) {
+                //ABANDONING
+                Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+                GnuBackgammon.Instance.rec.reset();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+              } else {
+                //CANCEL!
+                GnuBackgammon.fsm.back();
+              }
             }
             break;
+            
           default: return false;
         }
         
@@ -502,7 +569,6 @@ public class GameFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        ctx.board().initBoard();
       }
     };
 
@@ -520,6 +586,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   public void start() {
     GnuBackgammon.Instance.goToScreen(4);
+    hnmove = 0;
   }
 
   public void stop() {

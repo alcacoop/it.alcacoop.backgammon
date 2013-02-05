@@ -34,8 +34,10 @@
 package it.alcacoop.backgammon.fsm;
 
 
+import com.badlogic.gdx.Gdx;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
+import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
@@ -60,7 +62,15 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
-            ctx.state(States.MATCH_OPTIONS);
+            if (!Gdx.files.absolute(GnuBackgammon.fname+"json").exists()) { //NO SAVED MATCHE
+              Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
+              ctx.state(States.MATCH_OPTIONS);
+            } else { //SAVED MATCH PRESENT!
+              UIDialog.getYesNoDialog(
+                  Events.RESTORE_ANSWER, 
+                  "Restore previous match?", 
+                  ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+            }
           }
           if (params.toString().equals("TWO PLAYERS")) {
             MatchState.matchType = 1;
@@ -82,6 +92,16 @@ public class MenuFSM extends BaseFSM implements Context {
           }
           if (params.toString().equals("ABOUT")) {
             ctx.state(States.ABOUT);
+          }
+          return true;
+          
+        } else if (evt==Events.RESTORE_ANSWER) {
+          if ((Boolean)params) {
+            GnuBackgammon.Instance.setFSM("GAME_FSM");
+          } else {
+            Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
+            Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
+            ctx.state(States.MATCH_OPTIONS);
           }
           return true;
         }

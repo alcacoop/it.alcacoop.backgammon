@@ -49,7 +49,6 @@ public class MatchState {
 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//ALL BEARED OFF
-    
   };
   
   /* NOTE: ON NATIVE API HUMAN=1 AND PC=0 */
@@ -61,23 +60,29 @@ public class MatchState {
   public static int fCrawford = 0; //REGOLA DI CRAWFORD
   public static int nMatchTo = 0; 
   public static int[] anScore = {0,0}; //MATCH SCORES
-  public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON
+  public static int bgv = 0; //0=BACKGAMMON 1=NACKGAMMON 2=RESTORED_GAME
   public static int fCubeUse = 0; //USING CUBE
   public static int matchType = 0; //0=SINGLE PLAYER, 1=TWO PLAYERS
   public static boolean fPostCrawford = false; //POST CRAWFORD RULE
   public static boolean fCrafwordGame = false;
   public static int resignValue = 0;
   
+  public static String pl0;
+  public static String pl1;
+  
   
   public static void SwitchTurn() {
+    SwitchTurn(true);
+  }
+  public static void SwitchTurn(boolean event) {
     Float left1 = GnuBackgammon.Instance.board.rollBtn.getX();
     Float left2 = GnuBackgammon.Instance.board.doubleBtn.getX();
     if (fMove == 0) {
-      SetGameTurn(1, 1);
+      if (event) SetGameTurn(1, 1);
       GnuBackgammon.Instance.board.rollBtn.setX(Math.min(left1, left2));
       GnuBackgammon.Instance.board.doubleBtn.setX(Math.max(left1, left2));
     } else {
-      SetGameTurn(0, 0);
+      if (event) SetGameTurn(0, 0);
       GnuBackgammon.Instance.board.rollBtn.setX(Math.max(left1, left2));
       GnuBackgammon.Instance.board.doubleBtn.setX(Math.min(left1, left2));
     }
@@ -141,5 +146,14 @@ public class MatchState {
   public static void SetCrawford(int fCrawford) {
     MatchState.fCrawford = fCrawford;
     GnubgAPI.SetCrawford(fCrawford);
+  }
+  
+  public static void setBoardFromString(String sbb, String sbw) {
+    String ssw[] = sbw.split(":");
+    String ssb[] = sbb.split(":");
+    for (int i=0;i<25;i++) {
+      MatchState.board[4][i] = Integer.parseInt(ssb[i]);
+      MatchState.board[5][i] = Integer.parseInt(ssw[i]);
+    }
   }
 }

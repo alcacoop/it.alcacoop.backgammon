@@ -33,18 +33,26 @@
 
 package it.alcacoop.backgammon;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 
 
 public class Main implements NativeFunctions {
   private static Main instance;
+  private static String data_dir;
   
   
   public static void main(String[] args) {
@@ -58,6 +66,7 @@ public class Main implements NativeFunctions {
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");
+    data_dir = s;
     s+="/libs/";
     GnubgAPI.InitializeEnvironment(s);
   }
@@ -72,5 +81,31 @@ public class Main implements NativeFunctions {
 
   @Override
   public void openURL(String url) {
+  }
+
+  @Override
+  public String getDataDir() {
+    return data_dir;
+  }
+
+  @Override
+  public void shareMatch(MatchRecorder rec) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+    Date date = new Date();
+    String d = dateFormat.format(date);
+    
+    String path = Gdx.files.external("data/gnubg-sgf/match-"+d+".sgf").path();
+    
+    FileHandle fh = Gdx.files.absolute(path);
+    Writer writer = fh.writer(false);
+    try {
+      writer.write(rec.saveSGF());
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    
   }
 }
