@@ -39,6 +39,7 @@ import java.io.IOException;
 
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
@@ -87,6 +88,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private GameFSM gameFSM;
   private SimulationFSM simulationFSM;
   private MenuFSM menuFSM;
+  private FIBSFSM fibsFSM;
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
@@ -183,6 +185,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     gameFSM = new GameFSM(board);
     simulationFSM = new SimulationFSM(board);
     menuFSM = new MenuFSM(board);
+    fibsFSM = new FIBSFSM(board);
     
     fsm = simulationFSM;
     
@@ -192,7 +195,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     appearanceScreen = new AppearanceScreen();
-    setScreen(new SplashScreen());
+    
+    //setScreen(new SplashScreen());
+    setScreen(welcomeScreen);
   }
 
   public String getResName() {
@@ -252,7 +257,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       fsm = menuFSM;
     else if (type == "GAME_FSM")
       fsm = gameFSM;
-    
+    else if (type == "FIBS_FSM")
+      fsm = fibsFSM;
     fsm.start();
   }
   

@@ -99,6 +99,8 @@ public class MainMenuScreen implements Screen {
     onePlayer.addListener(cl);
     TextButton twoPlayers = new TextButton("Two Players", tl);
     twoPlayers.addListener(cl);
+    TextButton fibs  = new TextButton("FIBS", tl);
+    fibs.addListener(cl);
     TextButton options = new TextButton("Options", tl);
     options.addListener(cl);
     
@@ -136,7 +138,8 @@ public class MainMenuScreen implements Screen {
     table.row().pad(2);
     table.add(onePlayer).expand().fill().colspan(2);
     table.row().pad(2);
-    table.add(twoPlayers).expand().fill().colspan(2);
+    table.add(twoPlayers).expand().fill().width(table.getWidth()/2);;
+    table.add(fibs).expand().fill().width(table.getWidth()/2);;
     
     table.row().pad(2);
     table.add(options).expand().fill().width(table.getWidth()/2);

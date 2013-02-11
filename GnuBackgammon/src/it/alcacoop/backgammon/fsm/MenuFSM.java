@@ -76,6 +76,10 @@ public class MenuFSM extends BaseFSM implements Context {
             MatchState.matchType = 1;
             ctx.state(States.MATCH_OPTIONS);
           }
+          if (params.toString().equals("FIBS")) {
+            MatchState.matchType = 2;
+            GnuBackgammon.Instance.setFSM("FIBS_FSM");
+          }
           if (params.toString().equals("STATISTICS")) {
           }
           if (params.toString().equals("OPTIONS")) {

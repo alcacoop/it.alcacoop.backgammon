@@ -36,7 +36,8 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.GameFSM.States;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.logic.AICalls;
 
@@ -109,9 +110,12 @@ public final class GameMenuPopup extends Table {
           @Override
           public void run() {
             if (resign.isDisabled()) return;
-            GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+            if (MatchState.matchType==2)
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            else
+              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
             
-            if (MatchState.fTurn==0)
+			if (MatchState.fTurn==0)
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
             else
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
@@ -127,7 +131,10 @@ public final class GameMenuPopup extends Table {
       @Override
       public void run() {
         if (abandon.isDisabled()) return;
-        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+        if (MatchState.matchType==2)
+          GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+        else
+          GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
         if (MatchState.matchType==0)
           UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
         else

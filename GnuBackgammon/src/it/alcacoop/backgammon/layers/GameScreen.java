@@ -37,8 +37,9 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.PlayerInfo;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.GameFSM.States;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -94,8 +95,11 @@ public class GameScreen implements Screen {
         if(UIDialog.isOpened()) return false;
         
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          if ((MatchState.matchType==1) || (MatchState.fMove==0)) { //CPU IS PLAYING
-            GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+          if ((MatchState.matchType>0) || (MatchState.fMove==0)) { //CPU IS PLAYING
+            if (MatchState.matchType==1)
+              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+            else
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
             if (MatchState.matchType==0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
             else
@@ -246,7 +250,10 @@ public class GameScreen implements Screen {
     
     boolean rolled = (Boolean)gi.get("_rl");
     if (!rolled) {
-      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      if (MatchState.matchType==1)
+        GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
+      else if (MatchState.matchType==2)
+        GnuBackgammon.fsm.state(FIBSFSM.States.HUMAN_TURN);
       MatchState.SetGameTurn(0, 0);
     } else {
       GnubgAPI.SetGameTurn(0, 0);
@@ -260,7 +267,10 @@ public class GameScreen implements Screen {
       board.rollDices(d[0], d[1]);
       board.rollDices(d[0], d[1]);
       
-      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      if (MatchState.matchType==2)
+        GnuBackgammon.fsm.state(FIBSFSM.States.HUMAN_TURN);
+      else
+        GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
       AICalls.GenerateMoves(board, d[0], d[1]);
     }
     
@@ -295,7 +305,10 @@ public class GameScreen implements Screen {
       Actions.run(new Runnable() {
         @Override
         public void run() {
-          GnuBackgammon.fsm.state(States.OPENING_ROLL);
+          if (MatchState.matchType<2)
+            GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
+          else
+            GnuBackgammon.fsm.state(FIBSFSM.States.OPENING_ROLL);
         }
       })
     ));
