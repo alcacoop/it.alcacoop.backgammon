@@ -617,8 +617,19 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
   
   public void parseMove(String s) {
+    if (s.charAt(s.length()-1)=='.')
+      s = s.replace(s.substring(s.length()-1), "");
+    
     String tmp[] = s.split(" ");
     System.out.println("\nPARSE MOVE LENGTH: "+tmp.length);
-    System.out.println("MOVED "+((tmp.length-2)/2)+" CHECKERS!\n");
+    int nmoves = ((tmp.length-2)/2);
+    int moves[] = {-1,-1,-1,-1,-1,-1,-1,-1};
+    for (int i=0;i<nmoves;i++) {
+      moves[i*2] = Integer.parseInt(tmp[2+2*i]);
+      moves[i*2+1] = Integer.parseInt(tmp[2+2*i+1]);
+    }
+      
+    System.out.println("MOVED "+nmoves+" CHECKERS!\n");
+    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);
   }
 }
