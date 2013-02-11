@@ -33,6 +33,10 @@
 
 package it.alcacoop.backgammon;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
@@ -47,6 +51,10 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
+import bsh.Interpreter;
+import bsh.util.JConsole;
+
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -56,9 +64,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.buckosoft.fibs.BuckoFIBS.CommandDispatcherImpl;
+import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
 
 
-public class GnuBackgammon extends Game {
+public class GnuBackgammon extends Game implements ApplicationListener {
   
   private static GameScreen gameScreen;
   private static MatchOptionsScreen matchOptionsScreen;
@@ -95,6 +105,11 @@ public class GnuBackgammon extends Game {
   public MatchRecorder rec;
   public static String fname;
   
+  /* NEW CODE */
+  static Interpreter bsh;
+  static JConsole mScriptConsole;
+  static BeanShellEditor mScriptEditor;
+  static CommandDispatcherImpl commandDispatcher;
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
@@ -115,6 +130,26 @@ public class GnuBackgammon extends Game {
     appearancePrefs = Gdx.app.getPreferences("Appearance");
     snd = new SoundManager();
     rec = new MatchRecorder();
+    
+    
+    /* NEW CODE */
+    mScriptConsole = new JConsole();
+    bsh = new Interpreter(mScriptConsole);
+    mScriptEditor = new BeanShellEditor();
+    commandDispatcher = new CommandDispatcherImpl();
+    setBsh("devconsole", mScriptConsole);
+    setBsh("deveditor", mScriptEditor);
+    setBsh("disp", commandDispatcher);
+    setBsh("bsh", bsh);
+    //runBsh("libs/devtools.bsh");
+    runBsh(Gdx.files.internal("data/devtools.bsh").path());
+    
+    new Thread(bsh).start();
+    //INIT CONNECTION AND LOGIN
+    commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+    
+    
+    
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
@@ -157,15 +192,12 @@ public class GnuBackgammon extends Game {
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     appearanceScreen = new AppearanceScreen();
-
     setScreen(new SplashScreen());
   }
 
-  
   public String getResName() {
     return resname[ss];
   }
-  
   
   public void goToScreen(int s) {
     switch (s) {
@@ -211,7 +243,6 @@ public class GnuBackgammon extends Game {
     }
   }
 
-
   public void setFSM(String type) {
     if (fsm!=null) fsm.stop();
     
@@ -224,6 +255,64 @@ public class GnuBackgammon extends Game {
     
     fsm.start();
   }
+  
+  
+  /* NEW CODE */
+  public static void evalBsh(String cmds) {
+    try {
+      bsh.eval(cmds);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
 
+  public static void runBsh(String filename) {
+    String bsh_text ="";
+    try {
+      bsh_text = getContent(filename);
+    } catch (IOException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
 
+    
+    try {
+      bsh.eval(bsh_text);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
+
+  public static void setBsh(String where, Object what) {
+    try {
+      bsh.set(where,what);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
+
+  
+  public static String getContent(String fname) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(fname));
+    String text ="";
+    try {
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
+
+        while (line != null) {
+            sb.append(line);
+            sb.append("\n");
+            line = br.readLine();
+        }
+        text = sb.toString();
+        
+    } catch (Exception e) {
+    } finally {
+        br.close();
+    }
+    return text;
+  }
 }
