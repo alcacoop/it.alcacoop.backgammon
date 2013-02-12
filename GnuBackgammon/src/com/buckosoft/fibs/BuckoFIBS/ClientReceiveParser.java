@@ -7,6 +7,10 @@
  */ 
  
 package com.buckosoft.fibs.BuckoFIBS;
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.logic.FibsBoard;
+
 import com.buckosoft.fibs.domain.Player;
 import com.buckosoft.fibs.net.ClientAdapter;
 import com.buckosoft.fibs.net.ClientConnection;
@@ -53,13 +57,15 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       return;
     }
     
+    System.out.println("--->MSG: "+s);
+    
     switch (cookie) {
       // These do nothing here.
       case CLIP_MOTD_END:
       case FIBS_BoardstyleSetTo:
       case FIBS_SavedMatchesHeader:
       case FIBS_Empty:
-      case FIBS_UsersHeardYou: // JavaFIBS puts this in the status bar, which i don't have
+      case FIBS_UsersHeardYou:
       case FIBS_YouAlreadyRolled:
         break;
       case CLIP_OWN_INFO:
@@ -74,7 +80,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_SavedMatchPlaying:
       case FIBS_SavedMatchReady:
       case FIBS_SavedMatch:
-        //if (DEBUG)
         System.out.println(s);
         this.commandDispatcher.dispatch(CommandDispatcher.Command.SAVED_MATCH, s);
         break;
@@ -154,7 +159,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_ResumeMatchAck5:
         parseGameMessage(s);
         startNewGame();
-        // this.matchResuming = true;
         break;
       case FIBS_Turn:
         parseGameMessage(s);
@@ -166,8 +170,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case FIBS_Board:
         System.out.println(s);
-        //Line gl = new Line(cookie, s);
-        //this.commandDispatcher.dispatch(CommandDispatcher.Command.GAME_MOVE, gl);
         parseBoard(s);
         break;
       case FIBS_YouWinMatch:
@@ -186,7 +188,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
-        System.out.println("ROLL "+s);
+        parseRolls(s);
         break;
         
       case FIBS_PlayerMoves:
@@ -194,8 +196,16 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
         
       case FIBS_FirstRoll:
-      case FIBS_MakesFirstMove:
+        System.out.println("FIRST ROLL: "+s);
+        //parseFirstRoll(s);
+        break;
+        
       case FIBS_CantMove:
+        int m[] = {-1,-1,-1,-1,-1,-1,-1,-1};
+        GnuBackgammon.fsm.processEvent(Events.EVALUATE_BEST_MOVE, m);
+        break;
+      
+      case FIBS_MakesFirstMove:
       case FIBS_OnlyPossibleMove:
       case FIBS_PlayerWinsGame:
       case FIBS_ScoreUpdate:
@@ -327,9 +337,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         System.out.println(s);
         break;
       case FIBS_Unknown:
-        //System.out.println("Unknown message from FIBS: '" + s + "'");
-        //System.out.println("First char is " + new Integer(s.charAt(0)));
-        System.out.println(s);
+        System.out.println("Unknown message from FIBS: '" + s + "'");
         break;
       default:
         String t = "Cookie? " + cookie + " '" + s + "'";
@@ -601,35 +609,71 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
   
   public void parseBoard(String s) {
-    String tmp[] = s.split(":");
-    System.out.println("\nPARSE BOARD LENGTH: "+tmp.length);
-    System.out.println("TURN: "+Integer.parseInt(tmp[32]));
-    System.out.println("COLOR: "+Integer.parseInt(tmp[41]));
-    System.out.println("DIRECTION: "+Integer.parseInt(tmp[42]));
-    
-    if (Integer.parseInt(tmp[33])!=0) {
-      System.out.println("YOU ROLL: "+tmp[33]+"-"+tmp[34]);
-    }
-    if (Integer.parseInt(tmp[35])!=0) {
-      System.out.println("OPPONENT ROLLS: "+tmp[35]+"-"+tmp[36]);
-    }
-    System.out.println();
+    FibsBoard b = new FibsBoard(s);
+    GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD, b);
   }
+  
+  
   
   public void parseMove(String s) {
     if (s.charAt(s.length()-1)=='.')
       s = s.replace(s.substring(s.length()-1), "");
     
     String tmp[] = s.split(" ");
+    String _tmp[];
+    if (tmp[2].contains("-")) {//FIBS STYLE
+      _tmp = new String[(tmp.length-2)*2+2];
+      System.out.println("LENGTH: "+_tmp.length);
+      _tmp[0] = "X";
+      _tmp[1] = "X";
+      for (int i=0;i<tmp.length-2;i++) {
+        String ms[] = tmp[2+i].split("-");
+        _tmp[2*i+2] = ms[0];
+        _tmp[2*i+3] = ms[1];
+      }
+      tmp = _tmp;
+    }
     System.out.println("\nPARSE MOVE LENGTH: "+tmp.length);
     int nmoves = ((tmp.length-2)/2);
     int moves[] = {-1,-1,-1,-1,-1,-1,-1,-1};
     for (int i=0;i<nmoves;i++) {
-      moves[i*2] = Integer.parseInt(tmp[2+2*i]);
-      moves[i*2+1] = Integer.parseInt(tmp[2+2*i+1]);
+      if (tmp[2+2*i].contains("b")) {//BAR
+        if (Integer.parseInt(tmp[2+2*i+1])>10) tmp[2+2*i]="25";
+        else tmp[2+2*i]="0";
+      } else if (tmp[2+2*i+1].contains("o")) { //BOFF
+        if (Integer.parseInt(tmp[2+2*i])<10) tmp[2+2*i+1]="0";
+        else tmp[2+2*i+1]="25";
+      } else {
+        moves[i*2] = Integer.parseInt(tmp[2+2*i]);
+        moves[i*2+1] = Integer.parseInt(tmp[2+2*i+1]);
+      }
     }
       
     System.out.println("MOVED "+nmoves+" CHECKERS!\n");
-    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);
+    
+    //NORMALIZE MOVES TO GNUBG CONVENTION...
+    if (moves[0]<moves[1]) {
+      for (int i=0;i<8;i++) {
+        if (moves[i]!=-1) moves[i]=24-moves[i];
+      }
+    } else {  
+      for (int i=0;i<8;i++)
+        if (moves[i]!=-1) moves[i]=moves[i]-1;
+    }
+    
+    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);  
+    GnuBackgammon.fsm.processEvent(Events.EVALUATE_BEST_MOVE, moves);
+  }
+  
+
+  public void parseRolls(String s) {
+    System.out.println("PLAYER ROLLS!!!!");
+    String tmp[] = s.split(" ");
+    int dices[] = {0,0};
+    
+    dices[0] = Integer.parseInt(tmp[2].charAt(0)+"");
+    dices[1] = Integer.parseInt(tmp[4].charAt(0)+"");
+    System.out.println("ROLLED: "+dices[0]+":"+dices[1]);
+    GnuBackgammon.fsm.processEvent(Events.DICES_ROLLED, dices);
   }
 }

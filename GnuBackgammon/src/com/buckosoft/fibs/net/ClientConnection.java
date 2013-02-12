@@ -61,17 +61,14 @@ public class ClientConnection extends Thread {
     pushbackString = s;
   }
 
-  /** Queue a message up for transmission to the server
-   * @param s The message to send (must include eol).
-   */
+  
   public void sendMessage(String s) {
     if (s == null)
       throw new RuntimeException("Can't send a null message");
     accessOutMessages(s);
   }
 
-  /** Kill the connection to the server.
-  */
+  
   public void shutDown() {
     shuttingDown = true;
     try {
@@ -93,9 +90,7 @@ public class ClientConnection extends Thread {
     }
   }
 
-  /** Either append a message to the end, or remove a message from the head
-   * @param s a network message or null
-   */
+  
   private void accessOutMessages(String s) {
     synchronized (listLock) {
       if (s == null)
@@ -105,9 +100,7 @@ public class ClientConnection extends Thread {
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Thread#start()
-   */
+  
   @Override
   public synchronized void run() {
     sock = null;
@@ -174,9 +167,7 @@ public class ClientConnection extends Thread {
     }
     String s = new String(b);
     boolean hasLeftOver = false;
-    if (!s.endsWith("\r\n")) {
-      //TODO hasLeftOver = true;
-    }
+    
     String[] ss = s.split("\r\n");
     if (ss.length == 0)
       return;
@@ -237,9 +228,7 @@ public class ClientConnection extends Thread {
     if (s.length() > 1 && s.charAt(0) == 10) // I have seen two '5's runon with just a lf between them,
       s = s.substring(1); // not a crlf. Check for that here.
     int cookie = this.cookieMonster.fIBSCookie(s);
-    //if (this.fibsAttributes.isStdoutNetworkMessages())
-    //if (true)
-    //System.out.println("Handle: " + cookie + "'" + s + "'");
+    
     if (this.pushbackString != null) {
       s = s.substring(0, s.length()-this.pushbackString.length());
     }

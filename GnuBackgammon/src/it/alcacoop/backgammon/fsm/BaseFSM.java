@@ -61,6 +61,7 @@ public class BaseFSM implements Context {
 
   public enum Events {
     NOOP,
+    FIBS_BOARD,
     ACCEPT_DOUBLE,
     ACCEPT_RESIGN,
     GET_RESIGN_VALUE,

@@ -390,13 +390,16 @@ public class Board extends Group {
       Move m = moves.pop();
      
       if (m!=null) {
-        playedMoves.push(m);
-        m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
+        if (MatchState.matchType!=2) {//TODO: WATCH MODE
+          playedMoves.push(m);
+          m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
+        }
         Checker c = getChecker(MatchState.fMove, m.from);
         c.moveToDelayed(m.to, 0.2f);
         lastMoved = c;
       }  
     } catch (Exception e) {
+      System.out.println("EXCEPTION: "+e);
       if (fsm == GnuBackgammon.fsm) //SAME FSM FROM MOVING START...
         fsm.processEvent(Events.NO_MORE_MOVES, null);
     }
@@ -413,7 +416,8 @@ public class Board extends Group {
         //CHECKER HITTED
         Checker ch = getChecker(c, p);
         ch.moveTo(24);
-        playedMoves.lastElement().hitted = true;
+        if (MatchState.matchType!=2)
+          playedMoves.lastElement().hitted = true;
         return true;
       }
     }
@@ -639,6 +643,11 @@ public class Board extends Group {
     //SHOW ALWAYS BIGGER DICE ON LEFT
     if (d1>d2) dices.show(d1, d2, false);
     else dices.show(d2, d1, false);
+  }
+  
+  public void animateDices(int d1, int d2) {
+    dices.clear();
+    dices.animate(d1, d2, false);
   }
   
   public void showArrow() {

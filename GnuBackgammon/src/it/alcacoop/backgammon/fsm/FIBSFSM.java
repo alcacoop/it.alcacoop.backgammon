@@ -35,10 +35,11 @@ package it.alcacoop.backgammon.fsm;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
+import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 
 public class FIBSFSM extends BaseFSM implements Context {
@@ -50,210 +51,56 @@ public class FIBSFSM extends BaseFSM implements Context {
 
   public enum States implements State {
 
-    CPU_TURN {
+    WATCH_TURN {
+      @Override
+      public void enterState(Context ctx) {
+        ctx.board().showArrow();
+        super.enterState(ctx);
+      }
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-        
-        case SET_GAME_TURN:
-          AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-          break;
           
-        case SET_BOARD:
-          AICalls.AskForResignation();
-          break;
+          case FIBS_BOARD:
+            FibsBoard b = (FibsBoard)params;
+            if (b.dices[0]!=0)
+              ctx.board().animateDices(b.dices[0], b.dices[1]);
+              //AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
+            break;
           
-        case ASK_FOR_RESIGNATION:
-          if((Integer)params > 0) {
-            MatchState.resignValue = (Integer)params;
-            String s = "Your opponent resigned a game";
-            if ((Integer)params==2) s = "Your opponent resigned a gammon game";
-            if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
-            ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
-          } else { //ASKFORDOUBLING OR ROLL..
-            if(MatchState.fCubeUse == 0) { //NO CUBE USE
-              ctx.board().rollDices();
+          case EVALUATE_BEST_MOVE:
+            System.out.println("PERFORMING MOVES...");
+            int moves[] = (int[])params;
+            if(moves[0] == -1) {
+              //ctx.state(DIALOG_HANDLER);
+              UIDialog.getFlashDialog(
+                Events.NO_MORE_MOVES, 
+                "Your opponent has no legal moves",
+                0.82f,
+                ctx.board().getStage());
             } else {
-              if (
-                  ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
-                  ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==1)) //AVAILABLE CUBE
-                 ) {
-                if (MatchState.nMatchTo-MatchState.anScore[1]>1)
-                  AICalls.AskForDoubling();
-                else //DEAD CUBE!!
-                  ctx.board().rollDices();
-              } else {
-                ctx.board().rollDices();
-              }
+              ctx.board().setMoves(moves);
             }
-          }
-          break;
-          
-        case ASK_FOR_DOUBLING:
-          if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
-            ctx.state(DIALOG_HANDLER);
-            UIDialog.getYesNoDialog(
-              Events.DOUBLING_RESPONSE, 
-              "CPU is asking for double. Accept?", 0.82f, 
-              ctx.board().getStage());
-          } else {
-            ctx.board().rollDices();
-          }
-          break;
-          
-        case DICES_ROLLED:
-          int dices[] = (int[])params;
-          ctx.board().thinking(true);
-          AICalls.EvaluateBestMove(dices);
-          break;
-          
-        case EVALUATE_BEST_MOVE:
-          ctx.board().thinking(false);
-          int moves[] = (int[])params;
-          if(moves[0] == -1) {
-            ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, 
-              "Your opponent has no legal moves",
-              0.82f,
-              ctx.board().getStage());
-          } else {
-            moves = (int[])params;
-            ctx.board().setMoves(moves);
-          }
-          break;
-          
-        case PERFORMED_MOVE:
-          ctx.board().updatePInfo();
-          ctx.board().performNextMove();
-          break;
-          
-        case NO_MORE_MOVES:
-          ctx.state(States.CHECK_WIN);
-          break;
-          
-        default:
-          return false;
-        }
-        return true;
-      }
-    },
-
-
-    HUMAN_TURN {
-      @Override
-      public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
-        switch (evt) {
-        
-        case SET_GAME_TURN:
-          ctx.board().dices.clear();
-          if (MatchState.fCubeUse==0) {
-            ctx.board().rollDices();
-          } else {
-            if (
-                ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
-                ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==MatchState.fMove)) //AVAILABLE CUBE
-               ) {
-              ctx.board().addActor(ctx.board().rollBtn);
-              ctx.board().addActor(ctx.board().doubleBtn);
-            } else {
-              ctx.board().rollDices();
-            }
-          }
-          break;
-          
-        case DICES_ROLLED:
-          ctx.board().removeActor(ctx.board().rollBtn);
-          if(MatchState.fCubeUse == 1)
-            ctx.board().removeActor(ctx.board().doubleBtn);
-          int dices[] = (int[])params;
-          AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
-          break;
-          
-        case GENERATE_MOVES:
-          int moves[][] = (int[][])params;
-          
-          if(moves != null) {
-            ctx.board().availableMoves.setMoves((int[][])params);
-          } else { //player (human) has no more moves
-            ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, 
-              "No legal moves available",
-              0.82f,
-              ctx.board().getStage());
-          }
-          break;
-          
-        case POINT_TOUCHED:
-          if (GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap").equals("Auto")) {
-            int orig = (Integer)params;
-            if ((orig==-1)||(ctx.board()._board[MatchState.fMove][orig]==0))
-              break;
-            int dest = ctx.board().getAutoDestination(orig);
-            if (dest!=-2) {
-              int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
-              
-              int idx = ((FIBSFSM)GnuBackgammon.fsm).hnmove;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2] = orig;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
-              ((FIBSFSM)GnuBackgammon.fsm).hnmove++;
-              
-              ctx.board().availableMoves.dropDice(orig-dest);
-              ctx.state(HUMAN_CHECKER_MOVING);
-              ctx.board().humanMove(m);
-            }
-          } else {
-            if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
-              int origin = ctx.board().selected.boardX;
-              int dest = (Integer)params;
-              int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
-              
-              int idx = ((FIBSFSM)GnuBackgammon.fsm).hnmove;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx] = origin;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx+1] = dest;
-              ((FIBSFSM)GnuBackgammon.fsm).hnmove++;
-              
-              ctx.state(HUMAN_CHECKER_MOVING);
-              ctx.board().humanMove(m);
-              ctx.board().availableMoves.dropDice(origin-dest);
-            } else { //SELECT NEW CHECKER
-              if ((Integer)params!=-1)
-                ctx.board().selectChecker((Integer)params);
-            }
-          }
-          break;
-          
-        case DICE_CLICKED:
-          ctx.board().dices.clear();
-          ctx.state(CHECK_WIN);
-          break;
-          
-        default:
-          return false;
-        }
-        return true;
-      }
-    },
-    
-    HUMAN_CHECKER_MOVING { //HERE ALL TOUCH EVENTS ARE IGNORED!
-      @Override
-      public boolean processEvent(Context ctx, Events evt, Object params) {
-        switch (evt) {
-        
-          case PERFORMED_MOVE:
-            ctx.board().updatePInfo();
-            ctx.state(HUMAN_TURN);
             break;
             
+          case PERFORMED_MOVE:
+            ctx.board().updatePInfo();
+            ctx.board().performNextMove();
+            break;
+            
+          case NO_MORE_MOVES:
+            ctx.state(States.CHECK_WIN);
+            ctx.board().dices.clear();
+            break;          
+
           default:
             return false;
         }
         return true;
       }
     },
-
+    
+        
     CHECK_WIN {
       public void enterState(Context ctx) {
         for (int i=0;i<8;i++)
@@ -263,15 +110,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         if (ctx.board().gameFinished()) {
           ctx.state(CHECK_END_MATCH);
         } else {
-          if (MatchState.fMove==1)
-            ctx.state(States.HUMAN_TURN);
-          else {
-            if (MatchState.matchType == 0)
-              ctx.state(States.CPU_TURN);
-            else
-              ctx.state(States.HUMAN_TURN);
-          }
-            
+          ctx.state(States.WATCH_TURN);
           ctx.board().switchTurn();
         }
       }
@@ -334,9 +173,9 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         MatchState.UpdateMSCubeInfo(1, -1);
-        ctx.board().initBoard();
-        ctx.board().updatePInfo();
         processEvent(ctx, Events.NOOP, null);
+        GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
+        GnuBackgammon.Instance.prefs.flush();
       }
 
       @Override
@@ -344,169 +183,43 @@ public class FIBSFSM extends BaseFSM implements Context {
         switch (evt) {
         
         case NOOP: 
-          GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
-          GnuBackgammon.Instance.prefs.flush();
-          ctx.board().rollDices();
           break;
         
-        case DICES_ROLLED:
-          int dices[] ={0,0};
-          if (dices[0]==dices[1]) {
-            while (dices[0]==dices[1]) {
-              GnubgAPI.RollDice(dices);
-            }
-          }
-          processEvent(ctx, Events.ROLL_DICE, dices);
-          break;
+        case FIBS_BOARD:
+          FibsBoard b = (FibsBoard)params;
           
-        case ROLL_DICE:
-          dices = (int[])params;
-          if (dices[0]>dices[1]) {//START HUMAN
+          for (int i=0;i<25;i++) {
+            MatchState.board[4][i] = b.board[0][i];
+            MatchState.board[5][i] = b.board[1][i];
+          }
+          ctx.board().initBoard(2);
+          GameScreen gs = (GameScreen)GnuBackgammon.Instance.currentScreen;
+          gs.pInfo[1].setName(b.p1); //PRIMO NOME => NERO
+          gs.pInfo[0].setName(b.p2);
+          ctx.board().updatePInfo();
+
+          AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+          
+          if (b.turn == b.color) {
             MatchState.SetGameTurn(0, 0);
-          } else if (dices[0]<dices[1]) {//START CPU
+          } else {
             MatchState.SetGameTurn(1, 1);
           }
-          ctx.board().showArrow();
-          ctx.board().rollDices(dices[0], dices[1]);
-          break;
           
-        case SET_GAME_TURN:
-          if (MatchState.fMove == 0)
-            AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-          else 
-            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-          break;
-          
-        case SET_BOARD:
-          if ((MatchState.fMove == 0)||(MatchState.matchType==1)) {
-            ctx.state(HUMAN_TURN);
-            int d[] = ctx.board().dices.get();
-            AICalls.GenerateMoves(ctx.board(), d[0], d[1]);
-          } else {
-            ctx.state(CPU_TURN);
-            ctx.board().thinking(true);
-            AICalls.EvaluateBestMove(ctx.board().dices.get());
-          }
+          if (b.dices[0]!=0)
+            ctx.board().animateDices(b.dices[0], b.dices[1]);
+          ctx.state(WATCH_TURN);
           break;
           
         default:
           return false;
         }
-        return false;
+        return true;
       }
     },
 
     
     
-    DIALOG_HANDLER {
-      @Override
-      public boolean processEvent(Context ctx, Events evt, Object params) {
-        switch (evt) {
-        
-          case DOUBLING_RESPONSE: //RISPOSTA A CPU DOUBLING REQUEST
-            if((Boolean)params) { //DOUBLING ACCEPTED
-              MatchState.UpdateMSCubeInfo(MatchState.nCube*2, 0);
-              ctx.board().doubleCube();
-              ctx.state(CPU_TURN);
-              ctx.board().rollDices();
-            } else { //DOUBLING NOT ACCEPTED
-              ctx.state(CHECK_END_MATCH);
-            }
-            break;
-          
-          case DOUBLE_REQUEST: //DOUBLE BUTTON CLICKED!
-            if(MatchState.matchType == 0) { //CPU VS HUMAN
-              ctx.board().removeActor(ctx.board().doubleBtn);
-              GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-              ctx.board().thinking(true);
-              AICalls.AcceptDouble();
-            } else { //SHOW DOUBLE DIALOG!
-              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", 0.82f, ctx.board().getStage());
-            }
-            break;
-            
-          case HUMAN_DOUBLE_RESPONSE: //HUMAN DOUBLE RESPONSE (TWO PLAYERS MODE)
-            boolean res = (Boolean)params;
-            if (res) { //HUMAN OPPONENT ACCEPTED DOUBLE
-              MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
-              ctx.board().doubleCube();
-              ctx.state(HUMAN_TURN);
-            } else { //HUMAN OPPONENT DIDN'T ACCEPT IT
-              ctx.state(CHECK_END_MATCH);
-            }
-            break;
-            
-          case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
-            ctx.board().thinking(false);
-            if(((Integer)params == 1)||(MatchState.nMatchTo-MatchState.anScore[0]==1)) { //CPU ACCEPTED MY DOUBLE || OPPONENT IS WINNING (DEAD CUBE!!) 
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", 0.82f, ctx.board().getStage());
-            } else { //CPU DIDN'T ACCEPT MY DOUBLE
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", 0.82f, ctx.board().getStage());
-            }
-            break;
-            
-          case CPU_DOUBLE_ACCEPTED: //CPU ACCEPTED DOUBLE
-            ctx.state(States.HUMAN_TURN);
-            MatchState.UpdateMSCubeInfo(MatchState.nCube*2, MatchState.fMove==0?1:0);
-            ctx.board().doubleCube();
-            break;
-          
-          case CPU_RESIGNED: //CPU RESIGN GAME
-            ctx.board().switchTurn();
-            ctx.state(CHECK_END_MATCH);
-            break;
-            
-          case CPU_DOUBLE_NOT_ACCEPTED: //CPU DIDN'T ACCEPT DOUBLE
-            ctx.state(CHECK_END_MATCH);
-            break;
-          
-          case NO_MORE_MOVES: //NO LEGAL MOVES AVAILABLE
-            GnuBackgammon.fsm.state(States.CHECK_WIN);
-            break;
-            
-          case ACCEPT_RESIGN: //ASK TO HUMAN IF ACCEPT CALCULATED RESIGN
-            int ret = (Integer)params;
-            if (ret == 0) {
-              if (MatchState.fMove == 1)
-                GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-              else
-                GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-              
-              MatchState.resignValue++;
-              AICalls.AcceptResign(MatchState.resignValue);
-            } else {
-              String s = "Really resign the game?";
-              if (ret == 2) s = "Really resign a gammon game?";
-              if (ret == 3) s = "Really resign a backgammon game?";
-              UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
-            }
-            break;
-            
-          case HUMAN_RESIGNED: //HUMAN RESIGN GAME
-            if ((Boolean)params) {
-              ctx.board().switchTurn();
-              GnuBackgammon.fsm.state(States.CHECK_END_MATCH);
-            } else {
-              MatchState.resignValue = 0;
-              ctx.state(HUMAN_TURN);
-            }
-            break;
-            
-          case ABANDON_MATCH: //QUIT MATCH
-            if ((Boolean)params) { //ABANDON
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
-            } else  { //CANCEL
-              GnuBackgammon.fsm.back();
-            }
-            break;
-            
-          default: return false;
-        }
-        
-        
-        return true;
-      }
-    },
     
     
     STOPPED {
@@ -528,7 +241,8 @@ public class FIBSFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    System.out.println("FIBSFSM");
+    GnuBackgammon.Instance.board.initBoard(2);
+    GnuBackgammon.Instance.board.dices.clear();
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
   }

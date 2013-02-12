@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
   public Board board;
   private Table table;
   
-  private PlayerInfo pInfo[];
+  public PlayerInfo pInfo[];
   private GameMenuPopup menuPopup;
   private ImageButton menu;
   private TextureRegionDrawable wheel;
@@ -98,8 +98,8 @@ public class GameScreen implements Screen {
           if ((MatchState.matchType>0) || (MatchState.fMove==0)) { //CPU IS PLAYING
             if (MatchState.matchType==1)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            else
-              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            //else
+              //GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
             if (MatchState.matchType==0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
             else
@@ -252,8 +252,6 @@ public class GameScreen implements Screen {
     if (!rolled) {
       if (MatchState.matchType==1)
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
-      else if (MatchState.matchType==2)
-        GnuBackgammon.fsm.state(FIBSFSM.States.HUMAN_TURN);
       MatchState.SetGameTurn(0, 0);
     } else {
       GnubgAPI.SetGameTurn(0, 0);
@@ -267,9 +265,7 @@ public class GameScreen implements Screen {
       board.rollDices(d[0], d[1]);
       board.rollDices(d[0], d[1]);
       
-      if (MatchState.matchType==2)
-        GnuBackgammon.fsm.state(FIBSFSM.States.HUMAN_TURN);
-      else
+      if (MatchState.matchType==1)
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
       AICalls.GenerateMoves(board, d[0], d[1]);
     }
