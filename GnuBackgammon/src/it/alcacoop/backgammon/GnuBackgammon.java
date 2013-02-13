@@ -108,10 +108,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static String fname;
   
   /* NEW CODE */
-  static Interpreter bsh;
-  static JConsole mScriptConsole;
-  static BeanShellEditor mScriptEditor;
-  static CommandDispatcherImpl commandDispatcher;
+  private static Interpreter bsh;
+  private static JConsole mScriptConsole;
+  private static BeanShellEditor mScriptEditor;
+  public static CommandDispatcherImpl commandDispatcher;
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;

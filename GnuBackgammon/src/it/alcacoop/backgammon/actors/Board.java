@@ -35,6 +35,7 @@ package it.alcacoop.backgammon.actors;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
@@ -61,6 +62,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
 
 import java.util.Stack;
 
@@ -166,11 +168,14 @@ public class Board extends Group {
       public void clicked(InputEvent event, float x, float y) {
         Board.this.rollBtn.remove();
         Board.this.doubleBtn.remove();
-        if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
-          Board.this.rollDices();
-        } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-          UIDialog.getDicesDialog(Board.this.getStage(), false);
-        }
+        if (MatchState.matchType!=2)
+		  if (GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) {
+          	Board.this.rollDices();
+          } else {
+            UIDialog.getDicesDialog(Board.this.getStage(), false);
+          }
+        else
+          GnuBackgammon.commandDispatcher.dispatch(Command.SEND_ROLL);
       }
     });
     rollBtn.setWidth(boardbg.getWidth()/5);
@@ -390,10 +395,9 @@ public class Board extends Group {
       Move m = moves.pop();
      
       if (m!=null) {
-        if (MatchState.matchType!=2) {//TODO: WATCH MODE
-          playedMoves.push(m);
-          m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
-        }
+        System.out.println("HERE: "+availableMoves.getSize());
+        playedMoves.push(m);
+        m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
         Checker c = getChecker(MatchState.fMove, m.from);
         c.moveToDelayed(m.to, 0.2f);
         lastMoved = c;
@@ -514,7 +518,10 @@ public class Board extends Group {
     if (playedMoves.size()>0) {
       playedMoves.pop().undo();
       updatePInfo();
-      ((GameFSM)GnuBackgammon.fsm).hnmove--;
+      if (MatchState.matchType<2)
+        ((GameFSM)GnuBackgammon.fsm).hnmove--;
+      else
+        ((FIBSFSM)GnuBackgammon.fsm).hnmove--;
     }
   }
   
@@ -649,9 +656,13 @@ public class Board extends Group {
     dices.clear();
     dices.animate(d1, d2, false);
   }
+  public void animateDices(int d1, int d2, boolean evt) {
+    dices.clear();
+    dices.animate(d1, d2, true);
+  }
   
   public void showArrow() {
-    if (GnuBackgammon.Instance.appearancePrefs.getString("NPOINTS","Yes").equals("No")) {
+    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
       larrow.setVisible(false);
       rarrow.setVisible(false);
       showNumbers();
@@ -680,7 +691,7 @@ public class Board extends Group {
   }
   
   public void showNumbers() {
-    if (GnuBackgammon.Instance.appearancePrefs.getString("NPOINTS","Yes").equals("No")) {
+    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
       for (int i=0;i<24;i++) 
         ns[i].remove();
       return;

@@ -56,6 +56,7 @@ public class AvailableMoves {
 
   public void setMoves(int _moves[][]) {
     int _dices[] = b.dices.get();
+    System.out.println("HERE DICES: "+_dices.length);
     moves.clear();
     dices.clear();
 
@@ -244,5 +245,9 @@ public class AvailableMoves {
   public void restoreMoves(ArrayList<int[]> rm) {
     for (int i=0;i<rm.size();i++)
       moves.add(rm.get(i));
+  }
+  
+  public int getSize() {
+    return moves.size();
   }
 }

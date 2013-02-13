@@ -188,7 +188,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
-        parseRolls(s);
         break;
         
       case FIBS_PlayerMoves:
@@ -197,12 +196,10 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case FIBS_FirstRoll:
         System.out.println("FIRST ROLL: "+s);
-        //parseFirstRoll(s);
         break;
         
       case FIBS_CantMove:
-        int m[] = {-1,-1,-1,-1,-1,-1,-1,-1};
-        GnuBackgammon.fsm.processEvent(Events.EVALUATE_BEST_MOVE, m);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_NOMOVES, null);
         break;
       
       case FIBS_MakesFirstMove:
@@ -300,19 +297,13 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         parseGameMessage(s);
         break;
       case FIBS_YouDouble:
-        parseGameMessage(s);
-        //TODO
         break;
       case FIBS_YouAcceptDouble:
-        parseGameMessage(s);
-        //TODO
         break;
       case FIBS_RollOrDouble:
         this.commandDispatcher.dispatch(CommandDispatcher.Command.ROLL_OR_DOUBLE);
         break;
       case FIBS_YouRoll:
-        parseGameMessage(s);
-        this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, "2");
         break;
       case FIBS_YourTurnToMove: // First roll of the game, always 2 moves
         this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, "2");
@@ -510,41 +501,11 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     ss[0] += ".";
     ss[1] += ".";
     this.commandDispatcher.writeGameMessageln(ss[0] + ss[1]);
-    //TODO this.mainDialog.showResignInDialog(ss);
-    // this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, ss[2]);
   }
 
   private void parseMatchOverMessage(String s, int cookie) {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.MATCH_OVER, ss[0], ss[6]);
-    //String opponentName = "dmt";//TODO this.mainDialog.getBoard().getPlayerName()[1];
-    //int[] scores = {0,0}; //TODO this.mainDialog.getBoard().getMatchScore();
-    /*
-       if (this.mainDialog.getBoard().isYouPlaying()) {
-       this.finishedMatch = new FinishedMatch();
-       this.finishedMatch.setMatchPoints(Integer.parseInt(ss[3]));
-       this.finishedMatch.setYourScore(scores[0]);
-       this.finishedMatch.setOpponentScore(scores[1]);
-       Date endDate = new Date();
-       this.finishedMatch.setDate(endDate);
-       this.finishedMatch.setDuration((int)((endDate.getTime()-this.matchStartTime.getTime())/1000));
-       this.matchStartTime = null;
-       this.mainDialog.getBoard().removeSavedMatch(opponentName);
-       Player op = this.mainDialog.getDB().getPlayer(opponentName);
-       if (op == null) {
-       op = this.mainDialog.getPlayerTableModel().getPlayer(opponentName);
-       this.mainDialog.getDB().store(op);
-       }
-
-       op.setSavedMatch(null); // remove the icon from the player list
-       this.finishedMatch.setOpponentId(op.getId());
-       this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_CHANGED, op);
-
-       this.mainDialog.getChatPane().setupComboBoxCommand(ChatPane.Command.Tell);
-       this.mainDialog.getChatPane().maybeAddPlayer(opponentName);
-
-       }
-       */
   }
 
   private void parseDoublesOnOff(boolean onoff) {
@@ -577,12 +538,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   private void parseResumeMatchTurn(String s) {
-    //TODO String t = s.substring(6, s.length()-1);
-    /*
-       if (this.mainDialog.getBoard().getName().equals(t))
-       this.matchResumingYourTurn = true;
-       */ 
-    //TODO
   }
 
   private void parseResumeMatchLength(String s) {
@@ -607,8 +562,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   public void connectionAborted() {
     this.commandDispatcher.dispatch(CommandDispatcher.Command.DISCONNECT_FROM_NETWORK);
   }
+
+  
+  
   
   public void parseBoard(String s) {
+    System.out.println("BOARD RECEIVED...");
     FibsBoard b = new FibsBoard(s);
     GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD, b);
   }
@@ -622,18 +581,22 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     String tmp[] = s.split(" ");
     String _tmp[];
     if (tmp[2].contains("-")) {//FIBS STYLE
+      System.out.println("TRATTINI!!!");
       _tmp = new String[(tmp.length-2)*2+2];
-      System.out.println("LENGTH: "+_tmp.length);
       _tmp[0] = "X";
       _tmp[1] = "X";
       for (int i=0;i<tmp.length-2;i++) {
-        String ms[] = tmp[2+i].split("-");
-        _tmp[2*i+2] = ms[0];
-        _tmp[2*i+3] = ms[1];
+        if (tmp[2+i].contains("-")){
+          String ms[] = tmp[2+i].split("-");
+          
+          _tmp[2*i+2] = ms[0];
+          _tmp[2*i+3] = ms[1];
+        }
       }
       tmp = _tmp;
     }
-    System.out.println("\nPARSE MOVE LENGTH: "+tmp.length);
+    
+    
     int nmoves = ((tmp.length-2)/2);
     int moves[] = {-1,-1,-1,-1,-1,-1,-1,-1};
     for (int i=0;i<nmoves;i++) {
@@ -648,8 +611,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         moves[i*2+1] = Integer.parseInt(tmp[2+2*i+1]);
       }
     }
-      
-    System.out.println("MOVED "+nmoves+" CHECKERS!\n");
     
     //NORMALIZE MOVES TO GNUBG CONVENTION...
     if (moves[0]<moves[1]) {
@@ -662,18 +623,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     }
     
     System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);  
-    GnuBackgammon.fsm.processEvent(Events.EVALUATE_BEST_MOVE, moves);
-  }
-  
-
-  public void parseRolls(String s) {
-    System.out.println("PLAYER ROLLS!!!!");
-    String tmp[] = s.split(" ");
-    int dices[] = {0,0};
-    
-    dices[0] = Integer.parseInt(tmp[2].charAt(0)+"");
-    dices[1] = Integer.parseInt(tmp[4].charAt(0)+"");
-    System.out.println("ROLLED: "+dices[0]+":"+dices[1]);
-    GnuBackgammon.fsm.processEvent(Events.DICES_ROLLED, dices);
+    GnuBackgammon.fsm.processEvent(Events.FIBS_MOVES, moves);
   }
 }
