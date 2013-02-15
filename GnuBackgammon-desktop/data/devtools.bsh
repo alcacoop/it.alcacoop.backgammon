@@ -1,0 +1,206 @@
+import javax.swing.*;
+import bsh.Interpreter;
+import bsh.BshClassManager;
+import bsh.ClassPathException;
+import bsh.util.JConsole;
+import bsh.util.NameCompletionTable;
+
+import javax.swing.JFrame;
+import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
+
+System.out.println("PRIMA");
+  /*
+  JFrame j = new JFrame();
+  j.setSize(400, 600);
+  j.setVisible(true);
+  j.show();       
+  */
+
+
+
+System.out.println("0");
+// Access to read classpath is protected 
+/*
+try {
+    System.out.println("1");
+    this.nct = new NameCompletionTable();
+    nct.add( bsh.getNameSpace() );
+    System.out.println("2");
+    try {
+        this.bcm = this.caller.namespace.getClassManager();
+        if ( bcm != null ) {
+            classNamesSource = bcm.getClassPath();
+            nct.add( classNamesSource );
+        }
+    } catch ( ClassPathException e ) {
+        System.out.println(e);
+        //error("classpath exception in name compl:"+e);
+    }
+    devconsole.setNameCompletion( nct );
+    // end setup name completion
+} catch ( SecurityException e ) { 
+  System.out.println(e);
+}
+*/
+
+System.out.println("DOPO");
+
+DEBUG = null;
+jf = null;
+opened_filepath = null;
+
+doNewFile() {
+    opened_filepath = null;
+    deveditor.setText("");
+}
+
+doOpenFile() {
+    fc = new JFileChooser();
+    fc.setCurrentDirectory(pathToFile("./data"));
+    returnVal = fc.showOpenDialog(jf);
+    filepath = fc.getSelectedFile().getAbsolutePath();
+    content = game.platform.readFile(filepath);
+    deveditor.setText(content);
+    opened_filepath = filepath;
+}
+
+doSaveFile() {
+    if (opened_filepath != null) {
+        game.platform.writeFile(opened_filepath, deveditor.getText());
+    } else {
+        doSaveFileAs();
+    }
+}
+
+doSaveFileAs() {
+    fc = new JFileChooser();
+    fc.setCurrentDirectory(pathToFile("./data"));
+    returnVal = fc.showSaveDialog(jf);
+    filepath = fc.getSelectedFile().getAbsolutePath();
+    game.platform.writeFile(filepath, deveditor.getText());
+        opened_filepath = filepath;
+}
+
+doEvalSelection() {
+    try {
+        devconsole.println("");
+        eval(deveditor.getSelectedText()+";\n");
+    } catch(e) {
+        devconsole.error(e);
+    }
+}
+
+doEvalFile() {
+    try {
+        devconsole.println("");
+        eval(deveditor.getText()+";\n");
+    } catch(e) {
+        devconsole.error(e);
+    }
+}
+
+createDevToolsWindow() {
+  actionPerformed(e) {
+    cmd = e.getActionCommand();
+    if(cmd.equals("Open")) {
+      doOpenFile();
+    } else if(cmd.equals("Save")) {
+      doSaveFile();
+    } else if(cmd.equals("Save As")) {
+      doSaveFileAs();
+    } else if(cmd.equals("New")) {
+      doNewFile();
+    } else if(cmd.equals("Class Browser")) {
+      classBrowser();
+    } else if(cmd.equals("Eval Selected Text")) {
+      doEvalSelection();
+    } else if(cmd.equals("Eval File")) {
+      doEvalFile();
+    }
+  }
+
+  menuBar = new JMenuBar();
+
+  menu = new JMenu("File");
+  menuBar.add(menu);
+  //a group of JMenuItems
+  menuItem = new JMenuItem("Open",
+      KeyEvent.VK_O);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);    
+  menuItem = new JMenuItem("Save",
+      KeyEvent.VK_S);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);    
+
+  menuItem = new JMenuItem("Save As",
+      KeyEvent.VK_A);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);    
+
+  // TOOLS
+  menu = new JMenu("Tools");
+  menuBar.add(menu);
+  //a group of JMenuItems
+  menuItem = new JMenuItem("Class Browser",
+      KeyEvent.VK_B);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);
+
+  menuItem = new JMenuItem("Eval Selected Text",
+      KeyEvent.VK_E);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);
+
+  menuItem = new JMenuItem("Eval File",
+      KeyEvent.VK_B);
+  menuItem.setAccelerator(KeyStroke.
+      getKeyStroke(
+        KeyEvent.VK_E, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+  menuItem.addActionListener(this);
+  menu.add(menuItem);
+
+  jf = new JFrame();
+  jf.setJMenuBar(menuBar);
+  jf.setLayout(new java.awt.BorderLayout());
+  jscroll = new JScrollPane(deveditor);
+  //Create a split pane with the two scroll panes in it.
+  splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+      jscroll, devconsole);
+  splitPane.setOneTouchExpandable(true);
+  splitPane.setDividerLocation(400);
+
+  //Provide minimum sizes for the two components in the split pane
+  Dimension minimumSize = new Dimension(100, 50);
+  jscroll.setMinimumSize(minimumSize);
+  deveditor.setMinimumSize(minimumSize);
+  devconsole.setMinimumSize(minimumSize);
+  jf.getContentPane().add(splitPane, java.awt.BorderLayout.CENTER);
+  jf.setSize(400, 600);
+  jf.setVisible(true);
+  jf.show();       
+
+}
+
+createDevToolsWindow();
+
+send(a) {
+  disp.dispatch(Command.SEND_COMMAND, a);
+}
+
+
