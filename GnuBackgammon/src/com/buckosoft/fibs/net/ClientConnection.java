@@ -41,7 +41,8 @@ public class ClientConnection extends Thread {
   private Boolean listLock = new Boolean(false);
   private String leftover = null;
   private String pushbackString = null;
-
+  
+  
   public ClientConnection() {
     cookieMonster = new CookieMonster();
     cookieMonster.setClientConnection(this);

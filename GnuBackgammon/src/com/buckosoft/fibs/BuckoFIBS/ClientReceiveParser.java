@@ -10,7 +10,9 @@ package com.buckosoft.fibs.BuckoFIBS;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.FibsBoard;
+import it.alcacoop.backgammon.logic.MatchState;
 
+import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
 import com.buckosoft.fibs.domain.Player;
 import com.buckosoft.fibs.net.ClientAdapter;
 import com.buckosoft.fibs.net.ClientConnection;
@@ -57,7 +59,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       return;
     }
     
-    System.out.println("--->MSG: "+s);
+    //System.out.println("--->MSG: "+s);
     
     switch (cookie) {
       // These do nothing here.
@@ -175,7 +177,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_YouWinMatch:
       case FIBS_PlayerWinsMatch:
         parseMatchOverMessage(s, cookie);
-        parseGameMessage(s);
         break;
       case FIBS_ReadyTrue:
       case FIBS_ReadyFalse:
@@ -188,6 +189,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
+        parseRoll(s);
         break;
         
       case FIBS_PlayerMoves:
@@ -199,7 +201,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
         
       case FIBS_CantMove:
-        GnuBackgammon.fsm.processEvent(Events.FIBS_NOMOVES, null);
+        parseNoMoves();
         break;
       
       case FIBS_MakesFirstMove:
@@ -304,6 +306,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.ROLL_OR_DOUBLE);
         break;
       case FIBS_YouRoll:
+        parseRoll(s);
         break;
       case FIBS_YourTurnToMove: // First roll of the game, always 2 moves
         this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, "2");
@@ -331,11 +334,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         System.out.println("Unknown message from FIBS: '" + s + "'");
         break;
       default:
-        String t = "Cookie? " + cookie + " '" + s + "'";
-        System.out.println(t);
-        if (cookie == FIBS_Unknown) {
-          System.out.println(t);
-        }
         break;
     }
   }
@@ -414,7 +412,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   private void showErrorMessage(String s) {
-    System.out.println(s);
+    System.out.println("ERRORE: "+s);
   }
 
   private void disconnectFromServer() {
@@ -464,6 +462,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         ss[0], 
         ss[3].equals("resume") ? ss[3] : ss[5]);
     lastInviter = ss[0];
+    commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+ss[0]);
   }
 
   private void parseInviteWarning(String s) {
@@ -501,11 +500,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     ss[0] += ".";
     ss[1] += ".";
     this.commandDispatcher.writeGameMessageln(ss[0] + ss[1]);
-  }
-
-  private void parseMatchOverMessage(String s, int cookie) {
-    String[] ss = s.split(" ");
-    this.commandDispatcher.dispatch(CommandDispatcher.Command.MATCH_OVER, ss[0], ss[6]);
   }
 
   private void parseDoublesOnOff(boolean onoff) {
@@ -564,65 +558,67 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   
+
+  public void parseNoMoves() {
+    GnuBackgammon.fbt.post(Events.FIBS_NOMOVES, null);
+  }
   
   
   public void parseBoard(String s) {
     System.out.println("BOARD RECEIVED...");
     FibsBoard b = new FibsBoard(s);
-    GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD, b);
+    GnuBackgammon.fbt.post(Events.FIBS_BOARD, b);
   }
   
   
-  
   public void parseMove(String s) {
-    if (s.charAt(s.length()-1)=='.')
-      s = s.replace(s.substring(s.length()-1), "");
+    s = s.replaceAll("-", " ");
+    s = s.replaceAll("\\.", "");
     
     String tmp[] = s.split(" ");
-    String _tmp[];
-    if (tmp[2].contains("-")) {//FIBS STYLE
-      System.out.println("TRATTINI!!!");
-      _tmp = new String[(tmp.length-2)*2+2];
-      _tmp[0] = "X";
-      _tmp[1] = "X";
-      for (int i=0;i<tmp.length-2;i++) {
-        if (tmp[2+i].contains("-")){
-          String ms[] = tmp[2+i].split("-");
-          
-          _tmp[2*i+2] = ms[0];
-          _tmp[2*i+3] = ms[1];
-        }
-      }
-      tmp = _tmp;
+    for (int k=2;k<tmp.length;k++) {
+      if (tmp[k].contains("b")) 
+        if (MatchState.FibsDirection==-1) tmp[k] = "0";
+        else tmp[k] = "25";
+      if (tmp[k].contains("o"))
+        if (MatchState.FibsDirection==-1) tmp[k] = "25";
+        else tmp[k] = "0";
     }
     
-    
-    int nmoves = ((tmp.length-2)/2);
     int moves[] = {-1,-1,-1,-1,-1,-1,-1,-1};
-    for (int i=0;i<nmoves;i++) {
-      if (tmp[2+2*i].contains("b")) {//BAR
-        if (Integer.parseInt(tmp[2+2*i+1])>10) tmp[2+2*i]="25";
-        else tmp[2+2*i]="0";
-      } else if (tmp[2+2*i+1].contains("o")) { //BOFF
-        if (Integer.parseInt(tmp[2+2*i])<10) tmp[2+2*i+1]="0";
-        else tmp[2+2*i+1]="25";
-      } else {
-        moves[i*2] = Integer.parseInt(tmp[2+2*i]);
-        moves[i*2+1] = Integer.parseInt(tmp[2+2*i+1]);
-      }
-    }
+    for (int i=0;i<tmp.length-2;i++)
+      moves[i] = Integer.parseInt(tmp[2+i]);
+      
+    System.out.println("\n\n-------MOVE-------- "+s);
+    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);
     
     //NORMALIZE MOVES TO GNUBG CONVENTION...
-    if (moves[0]<moves[1]) {
-      for (int i=0;i<8;i++) {
+    if (MatchState.FibsDirection==-1) { //LUI MUOVE DA 1 A 24
+      for (int i=0;i<8;i++)
         if (moves[i]!=-1) moves[i]=24-moves[i];
-      }
-    } else {  
+    } else {
       for (int i=0;i<8;i++)
         if (moves[i]!=-1) moves[i]=moves[i]-1;
     }
     
-    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);  
-    GnuBackgammon.fsm.processEvent(Events.FIBS_MOVES, moves);
+    
+    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]+"\n\n");
+    GnuBackgammon.fbt.post(Events.FIBS_MOVES, moves);
+  }
+
+  
+  private void parseRoll(String s) {
+    s = s.replace(".","");
+    String t[] = s.split(" ");
+    int d[] = {0,0};
+    d[0] = Integer.parseInt(t[2]);
+    d[1] = Integer.parseInt(t[4]);
+    GnuBackgammon.fbt.post(Events.FIBS_ROLLS, d);
+  }
+  
+  private void parseMatchOverMessage(String s, int cookie) {
+    String[] ss = s.split(" ");
+    this.commandDispatcher.dispatch(CommandDispatcher.Command.MATCH_OVER, ss[0], ss[6]);
+    GnuBackgammon.fsm.processEvent(Events.FIBS_MATCHOVER, s);
   }
 }

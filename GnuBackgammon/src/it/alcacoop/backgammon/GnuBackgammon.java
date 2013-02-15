@@ -50,6 +50,7 @@ import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
+import it.alcacoop.backgammon.logic.FibsQueue;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import bsh.Interpreter;
@@ -113,6 +114,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private static BeanShellEditor mScriptEditor;
   public static CommandDispatcherImpl commandDispatcher;
   
+  public static FibsQueue fbt;
+  
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
   }
@@ -145,10 +148,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     setBsh("bsh", bsh);
     //runBsh("libs/devtools.bsh");
     runBsh(Gdx.files.internal("data/devtools.bsh").path());
-    
     new Thread(bsh).start();
     //INIT CONNECTION AND LOGIN
     commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+
+    fbt = new FibsQueue();
+    setBsh("fbt", fbt);
     
     
     
@@ -197,7 +202,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     
     //setScreen(new SplashScreen());
-    setScreen(welcomeScreen);
+    //setScreen(welcomeScreen);
+    setFSM("MENU_FSM");
   }
 
   public String getResName() {

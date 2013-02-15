@@ -31,82 +31,85 @@
  ##################################################################
 */
 
-package it.alcacoop.backgammon;
+package it.alcacoop.backgammon.logic;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.NativeFunctions;
-import it.alcacoop.backgammon.utils.MatchRecorder;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.SharedLibraryLoader;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import java.util.LinkedList;
 
 
+public class FibsQueue {
 
-public class Main implements NativeFunctions {
-  private static Main instance;
-  private static String data_dir;
-  
-  
-  public static void main(String[] args) {
-    LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-    cfg.title = "GnuBackgammon";
-    cfg.width = 800;
-    cfg.height = 480;
-    //cfg.width = 360;
-    //cfg.height = 240;
-    instance = new Main();
-    new LwjglApplication(new GnuBackgammon(instance), cfg);
+    private static MessageQueue queue;
     
-    new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
-    String s = System.getProperty("user.dir");
-    data_dir = s;
-    s+="/libs/";
-    GnubgAPI.InitializeEnvironment(s);
-  }
-
-  @Override
-  public void showAds(boolean show) {
-  }
-  
-  protected Object handler = new Object() {
-  };
-
-
-  @Override
-  public void openURL(String url) {
-  }
-
-  @Override
-  public String getDataDir() {
-    return data_dir;
-  }
-
-  @Override
-  public void shareMatch(MatchRecorder rec) {
-    DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
-    Date date = new Date();
-    String d = dateFormat.format(date);
-    
-    String path = Gdx.files.external("data/gnubg-sgf/match-"+d+".sgf").path();
-    
-    FileHandle fh = Gdx.files.absolute(path);
-    Writer writer = fh.writer(false);
-    try {
-      writer.write(rec.saveSGF());
-      writer.flush();
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+    private class Evt {
+      public Events e;
+      public Object o;
+      public Evt(Events _e, Object _o) {
+        e = _e;
+        o = _o;
+      }
     }
     
     
-  }
+    private class MessageQueue {
+      private LinkedList<Evt> list;
+      public MessageQueue() {
+        list = new LinkedList<Evt>();
+      }
+      public synchronized Evt pop() {
+        try {
+          while(list.isEmpty())
+            wait();
+
+        } catch(InterruptedException ex) {}
+        return list.poll();
+      }
+      public synchronized void push(Evt e) {
+        list.add(e);
+        notify();
+      }
+      public synchronized boolean empty(){
+        if (list.size()==0) return true;
+        else return false;
+      }
+    }
+    
+    
+    
+    private class Dispatcher extends Thread {
+      private MessageQueue q;
+      public Dispatcher(MessageQueue _q) {
+        q = _q;
+      }
+      @Override
+      public void run() {
+        Evt e = q.pop();
+        System.out.println("DELAYED DISPATCH...");
+        GnuBackgammon.fsm.processEvent(e.e, e.o);
+      }
+    }
+    
+    
+    public FibsQueue() {
+      queue = new MessageQueue();
+    }
+    
+    
+    public void pull() {
+      if (queue.empty()) { //CODA MESSAGGI VUOTA.. HO BISOGNO DI UN THREAD CHE ASPETTI..
+        System.out.println("THREAD CREATION...");
+        Dispatcher d = new Dispatcher(queue);
+        d.start();
+      } else { //ELEMENTO DISPONIBILE.. DISPATCH IMMEDIATO
+        System.out.println("IMMEDIATE DISPATCH...");
+        Evt e = queue.pop();
+        GnuBackgammon.fsm.processEvent(e.e, e.o);
+      }
+    }
+    
+    public void post(Events e, Object o) {
+      queue.push(new Evt(e,o));
+    }
+
 }

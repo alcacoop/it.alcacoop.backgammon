@@ -64,6 +64,8 @@ public class BaseFSM implements Context {
     FIBS_BOARD,
     FIBS_MOVES,
     FIBS_NOMOVES,
+    FIBS_ROLLS,
+    FIBS_MATCHOVER,
     ACCEPT_DOUBLE,
     ACCEPT_RESIGN,
     GET_RESIGN_VALUE,
@@ -134,7 +136,7 @@ public class BaseFSM implements Context {
   }
 
   public boolean processEvent(Events evt, Object params) {
-    System.out.println("EVENT: "+evt+" ON: "+currentState);
+    //System.out.println("EVENT: "+evt+" ON: "+currentState);
     boolean res = state().processEvent(this, evt, params);
     return res;
   }
@@ -149,7 +151,7 @@ public class BaseFSM implements Context {
   }
 
   public void state(State state) {
-    System.out.println("CHANGING STATE FROM: "+currentState+" TO: "+state);
+    //System.out.println("CHANGING STATE FROM: "+currentState+" TO: "+state);
     if(currentState != null)
       currentState.exitState(this);
     previousState = currentState;
