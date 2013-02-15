@@ -315,13 +315,12 @@ public class FIBSFSM extends BaseFSM implements Context {
           gs.pInfo[0].setName(b.p2);
           ctx.board().updatePInfo();
           AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+          MatchState.FibsDirection = b.direction;
 
           if (b.turn == b.color) {
             MatchState.SetGameTurn(0, 0);
-            MatchState.FibsDirection = b.direction;
           } else {
             MatchState.SetGameTurn(1, 1);
-            MatchState.FibsDirection = -1*b.direction;
           }
           
           if (b.color==b.turn)
