@@ -57,12 +57,6 @@ public class FIBSFSM extends BaseFSM implements Context {
 
     REMOTE_TURN {
       @Override
-      public void enterState(Context ctx) {
-        if (GnuBackgammon.fsm.previousState!=OPENING_ROLL)
-          GnuBackgammon.fbt.pull();
-        GnuBackgammon.fbt.pull();
-      }
-      @Override
       public void exitState(Context ctx) {
         GnuBackgammon.Instance.board.dices.clear();
       }
@@ -71,14 +65,17 @@ public class FIBSFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
         case FIBS_BOARD:
+          FibsBoard b = (FibsBoard)params;
+          if (b.dices[0]==0) { // NOY YET ROLLED.. 
+            GnuBackgammon.fbt.pull();
+          } else {
+            AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
+            ctx.board().animateDices(b.dices[0], b.dices[1], true);
+          }
           break;
-        case FIBS_ROLLS:
-          int d[] = (int[])params;
-          AICalls.GenerateMoves(ctx.board(), d[0], d[1]);
-          ctx.board().animateDices(d[0], d[1], true);
-          break;
+        
         case DICES_ROLLED:
-          GnuBackgammon.fbt.pull();
+          GnuBackgammon.fbt.pull(); //I'M WAITING FIBS_MOVES OR FIBS_NOMOVES
           break;
           
         case FIBS_MOVES:
@@ -104,9 +101,8 @@ public class FIBSFSM extends BaseFSM implements Context {
               ctx.board().getStage());
           break;
           
-        case NO_MORE_MOVES:
+        case NO_MORE_MOVES: //END TURN
           ctx.state(States.SWITCH_TURN);
-          GnuBackgammon.fbt.pull();
           break;
         
         case FIBS_MATCHOVER:
@@ -141,7 +137,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           ((FIBSFSM)GnuBackgammon.fsm).direction = b.direction;
           System.out.println("\n\n**** VALORE DEI DADI:"+b.dices[0]+":"+b.dices[1]+"\n\n");
           if (b.dices[0]==0) {
-            GnuBackgammon.fbt.pull();
             ctx.board().addActor(ctx.board().rollBtn);
           } else {
             ctx.board().rollBtn.remove();
@@ -150,9 +145,12 @@ public class FIBSFSM extends BaseFSM implements Context {
           }
           break;
           
-        case FIBS_ROLLS:
-          break;
+        case ROLL_DICE: //RICHIESTA REMOTA ROLL
+          GnuBackgammon.fbt.pull();
+          GnuBackgammon.commandDispatcher.dispatch(Command.SEND_ROLL);
           
+          break;
+        
         case DICES_ROLLED:
           System.out.println("FSM - DICESROLLED");
           ctx.board().rollBtn.remove();
@@ -167,9 +165,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
           
-          System.out.println("MOVES LENGTH: "+moves.length);
-
-          if(moves.length>0) {
+          if ((moves!=null)&&(moves.length>0)) {
             ctx.board().availableMoves.setMoves((int[][])params);
           } else  {
             //ctx.state(DIALOG_HANDLER);
@@ -220,6 +216,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           }
           break;
 
+        case NO_MORE_MOVES:
         case DICE_CLICKED:
           ctx.board().dices.clear();
           ctx.state(SWITCH_TURN);
@@ -228,6 +225,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         case FIBS_MATCHOVER:
           ctx.state(MATCH_OVER);
           break;
+          
           
         default:
           return false;

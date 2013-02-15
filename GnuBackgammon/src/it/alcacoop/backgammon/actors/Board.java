@@ -175,7 +175,7 @@ public class Board extends Group {
             UIDialog.getDicesDialog(Board.this.getStage(), false);
           }
         else
-          GnuBackgammon.commandDispatcher.dispatch(Command.SEND_ROLL);
+          GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, null);
       }
     });
     rollBtn.setWidth(boardbg.getWidth()/5);

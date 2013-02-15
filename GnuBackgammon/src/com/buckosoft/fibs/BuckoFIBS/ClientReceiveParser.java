@@ -613,7 +613,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     int d[] = {0,0};
     d[0] = Integer.parseInt(t[2]);
     d[1] = Integer.parseInt(t[4]);
-    GnuBackgammon.fbt.post(Events.FIBS_ROLLS, d);
+    //GnuBackgammon.fbt.post(Events.FIBS_ROLLS, d);
   }
   
   private void parseMatchOverMessage(String s, int cookie) {
