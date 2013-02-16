@@ -40,4 +40,5 @@ public interface NativeFunctions {
   public void openURL(String url);
   public String getDataDir(); 
   public void shareMatch(MatchRecorder rec);
+  public void setInstance(GnuBackgammon gb);
 }

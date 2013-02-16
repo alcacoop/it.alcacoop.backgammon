@@ -8,42 +8,6 @@ import bsh.util.NameCompletionTable;
 import javax.swing.JFrame;
 import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
 
-System.out.println("PRIMA");
-  /*
-  JFrame j = new JFrame();
-  j.setSize(400, 600);
-  j.setVisible(true);
-  j.show();       
-  */
-
-
-
-System.out.println("0");
-// Access to read classpath is protected 
-/*
-try {
-    System.out.println("1");
-    this.nct = new NameCompletionTable();
-    nct.add( bsh.getNameSpace() );
-    System.out.println("2");
-    try {
-        this.bcm = this.caller.namespace.getClassManager();
-        if ( bcm != null ) {
-            classNamesSource = bcm.getClassPath();
-            nct.add( classNamesSource );
-        }
-    } catch ( ClassPathException e ) {
-        System.out.println(e);
-        //error("classpath exception in name compl:"+e);
-    }
-    devconsole.setNameCompletion( nct );
-    // end setup name completion
-} catch ( SecurityException e ) { 
-  System.out.println(e);
-}
-*/
-
-System.out.println("DOPO");
 
 DEBUG = null;
 jf = null;

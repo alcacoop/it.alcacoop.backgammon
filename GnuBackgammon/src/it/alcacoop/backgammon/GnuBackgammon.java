@@ -155,7 +155,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fbt = new FibsQueue();
     setBsh("fbt", fbt);
     
-    
+    myRequestHandler.setInstance(this);
     
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
@@ -253,6 +253,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
         break;
     }
   }
+
 
   public void setFSM(String type) {
     if (fsm!=null) fsm.stop();

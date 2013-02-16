@@ -238,5 +238,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
       e.printStackTrace();
     }
   }
+
+  @Override
+  public void setInstance(GnuBackgammon gb) {
+    // TODO Auto-generated method stub
+    
+  }
   
 }

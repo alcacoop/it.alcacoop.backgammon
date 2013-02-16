@@ -33,6 +33,8 @@
 
 package it.alcacoop.backgammon;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -42,6 +44,9 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import bsh.Interpreter;
+import bsh.util.JConsole;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -53,6 +58,9 @@ import com.badlogic.gdx.utils.SharedLibraryLoader;
 public class Main implements NativeFunctions {
   private static Main instance;
   private static String data_dir;
+  private static Interpreter bsh;
+  private static JConsole mScriptConsole;
+  private static BeanShellEditor mScriptEditor;
   
   
   public static void main(String[] args) {
@@ -70,6 +78,15 @@ public class Main implements NativeFunctions {
     data_dir = s;
     s+="/libs/";
     GnubgAPI.InitializeEnvironment(s);
+
+    mScriptConsole = new JConsole();
+    bsh = new Interpreter(mScriptConsole);
+    mScriptEditor = new BeanShellEditor();
+    new Thread(bsh).start();
+    setBsh("devconsole", mScriptConsole);
+    setBsh("deveditor", mScriptEditor);
+    setBsh("bsh", bsh);
+    runBsh(Gdx.files.internal("libs/devtools.bsh").path());
   }
 
   @Override
@@ -106,7 +123,71 @@ public class Main implements NativeFunctions {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+  
+  
+  /* NEW CODE */
+  public static void evalBsh(String cmds) {
+    try {
+      bsh.eval(cmds);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
+
+  public static void runBsh(String filename) {
+    String bsh_text ="";
+    try {
+      bsh_text = getContent(filename);
+    } catch (IOException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+
     
-    
+    try {
+      bsh.eval(bsh_text);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
+
+  public static void setBsh(String where, Object what) {
+    try {
+      bsh.set(where,what);
+    }
+    catch (bsh.EvalError e) {
+      System.out.println("BSH ERROR: "+e.toString());
+    }
+  }
+
+  
+  public static String getContent(String fname) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(fname));
+    String text ="";
+    try {
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
+
+        while (line != null) {
+            sb.append(line);
+            sb.append("\n");
+            line = br.readLine();
+        }
+        text = sb.toString();
+        
+    } catch (Exception e) {
+    } finally {
+        br.close();
+    }
+    return text;
+  }
+
+  @Override
+  public void setInstance(GnuBackgammon gb) {
+    setBsh("disp", gb.Instance.commandDispatcher);
+    setBsh("fbt", gb.Instance.fbt);
   }
 }

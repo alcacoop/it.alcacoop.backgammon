@@ -560,14 +560,14 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
 
   public void parseNoMoves() {
-    GnuBackgammon.fbt.post(Events.FIBS_NOMOVES, null);
+    GnuBackgammon.Instance.fbt.post(Events.FIBS_NOMOVES, null);
   }
   
   
   public void parseBoard(String s) {
     System.out.println("BOARD RECEIVED...");
     FibsBoard b = new FibsBoard(s);
-    GnuBackgammon.fbt.post(Events.FIBS_BOARD, b);
+    GnuBackgammon.Instance.fbt.post(Events.FIBS_BOARD, b);
   }
   
   
@@ -603,7 +603,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     
     
     System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]+"\n\n");
-    GnuBackgammon.fbt.post(Events.FIBS_MOVES, moves);
+    GnuBackgammon.Instance.fbt.post(Events.FIBS_MOVES, moves);
   }
 
   
