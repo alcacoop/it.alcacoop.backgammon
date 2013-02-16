@@ -41,6 +41,7 @@ import java.util.LinkedList;
 public class FibsQueue {
 
     private static MessageQueue queue;
+    int nreq;
     
     private class Evt {
       public Events e;
@@ -69,40 +70,50 @@ public class FibsQueue {
         list.add(e);
         notify();
       }
-      public synchronized boolean empty(){
+      public synchronized boolean isEempty(){
         if (list.size()==0) return true;
         else return false;
       }
+      public synchronized void empty() {
+        if (!this.isEempty()) list.clear();
+      }
+      public synchronized int getSize() {
+        return list.size();
+      }
     }
-    
     
     
     private class Dispatcher extends Thread {
       private MessageQueue q;
-      public Dispatcher(MessageQueue _q) {
+      private FibsQueue i;
+      public Dispatcher(MessageQueue _q, FibsQueue _i) {
         q = _q;
+        i = _i;
+        i.incReq();
       }
       @Override
       public void run() {
         Evt e = q.pop();
-        System.out.println("DELAYED DISPATCH...");
-        GnuBackgammon.fsm.processEvent(e.e, e.o);
+        i.decReq();
+        if (e.e!=Events.NOOP) {
+          GnuBackgammon.fsm.processEvent(e.e, e.o);
+        } else { //RESET REQ
+          if (i.getReq()>0) queue.push(new Evt(Events.NOOP, null)); 
+        }
       }
     }
     
-    
     public FibsQueue() {
       queue = new MessageQueue();
+      nreq=0;
     }
     
     
     public void pull() {
-      if (queue.empty()) { //CODA MESSAGGI VUOTA.. HO BISOGNO DI UN THREAD CHE ASPETTI..
-        System.out.println("THREAD CREATION...");
-        Dispatcher d = new Dispatcher(queue);
+      if (queue.isEempty()) { //CODA MESSAGGI VUOTA.. HO BISOGNO DI UN THREAD CHE ASPETTI..
+        Dispatcher d = new Dispatcher(queue, this);
         d.start();
       } else { //ELEMENTO DISPONIBILE.. DISPATCH IMMEDIATO
-        System.out.println("IMMEDIATE DISPATCH...");
         Evt e = queue.pop();
         GnuBackgammon.fsm.processEvent(e.e, e.o);
       }
@@ -111,5 +122,21 @@ public class FibsQueue {
     public void post(Events e, Object o) {
       queue.push(new Evt(e,o));
     }
-
+    public synchronized int getReq() {
+      return nreq;
+    }
+    public synchronized void incReq() {
+      nreq++;
+    }
+    public synchronized void decReq() {
+      nreq--;
+    }
+    public void reset() {
+      queue.empty();
+      if (getReq()>0) queue.push(new Evt(Events.NOOP, null)); //RESET
+    }
+    public void debug() {
+      System.out.println("RICHIESTE IN CODA: "+nreq);
+      System.out.println("MESSAGGI IN CODA: "+queue.getSize());
+    }
 }

@@ -365,6 +365,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
+        GnuBackgammon.Instance.fbt.reset();
       }
     };
 
