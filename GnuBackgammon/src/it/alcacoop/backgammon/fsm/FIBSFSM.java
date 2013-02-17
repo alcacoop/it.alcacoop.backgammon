@@ -72,6 +72,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
             ctx.board().animateDices(b.dices[0], b.dices[1], true);
           }
+          GnuBackgammon.Instance.fibs.releaseBoard(b);
           break;
         
         case DICES_ROLLED:
@@ -143,6 +144,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             ctx.board().doubleBtn.remove();
             ctx.board().animateDices(b.dices[0], b.dices[1], true);
           }
+          GnuBackgammon.Instance.fibs.releaseBoard(b);
           break;
           
         case ROLL_DICE: //RICHIESTA REMOTA ROLL
@@ -330,7 +332,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           
           GnuBackgammon.Instance.fibs.post(Events.FIBS_BOARD, b);
           GnuBackgammon.Instance.fibs.pull();
-          
           break;
 
         default:

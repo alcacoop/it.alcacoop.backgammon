@@ -39,19 +39,32 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pool.Poolable;
+
 
 public class FibsNetHandler {
 
-    ExecutorService dispatchExecutor;
+    private ExecutorService dispatchExecutor;
     private static MessageQueue queue;
-    int nreq;
+    private int nreq;
+    private Pool<Evt> evtPool;
+    private Pool<FibsBoard> boardPool;
     
-    private class Evt {
+    private class Evt implements Poolable {
       public Events e;
       public Object o;
-      public Evt(Events _e, Object _o) {
+      public Evt() {
+        reset();
+      }
+      public void init(Events _e, Object _o) {
         e = _e;
         o = _o;
+      }
+      @Override
+      public void reset() {
+        e = Events.NOOP;
+        o = null;
       }
     }
     
@@ -101,8 +114,9 @@ public class FibsNetHandler {
         if (e.e!=Events.NOOP) {
           GnuBackgammon.fsm.processEvent(e.e, e.o);
         } else { //RESET REQ
-          if (i.getReq()>0) queue.push(new Evt(Events.NOOP, null)); 
+          if (i.getReq()>0) queue.push(evtPool.obtain()); 
         }
+        evtPool.free(e);
       }
     }
     
@@ -110,6 +124,17 @@ public class FibsNetHandler {
       queue = new MessageQueue();
       dispatchExecutor = Executors.newSingleThreadExecutor();
       nreq=0;
+      
+      evtPool = new Pool<Evt>(5, 5) {
+        protected Evt newObject() {
+          return new Evt();
+        };
+      };
+      boardPool = new Pool<FibsBoard>(5, 5) {
+        protected FibsBoard newObject() {
+          return new FibsBoard();
+        };
+      };
     }
     
     
@@ -119,14 +144,21 @@ public class FibsNetHandler {
       } else { //ELEMENTO DISPONIBILE.. DISPATCH IMMEDIATO
         Evt e = queue.pop();
         GnuBackgammon.fsm.processEvent(e.e, e.o);
+        evtPool.free(e);
       }
     }
     
-    public void post(Events e, Object o) {
-      queue.push(new Evt(e,o));
+    
+    public void post(Events _e, Object _o) {
+      System.out.println("POSTED OBJECT");
+      Evt e = evtPool.obtain();
+      e.init(_e, _o);
+      queue.push(e);
     }
     public void post() {
-      queue.push(new Evt(Events.CONTINUE, null));
+      Evt e = evtPool.obtain();
+      e.init(Events.CONTINUE, null);
+      queue.push(e);
     }
     public synchronized int getReq() {
       return nreq;
@@ -139,10 +171,19 @@ public class FibsNetHandler {
     }
     public void reset() {
       queue.empty();
-      if (getReq()>0) queue.push(new Evt(Events.NOOP, null)); //RESET
+      if (getReq()>0) queue.push(evtPool.obtain()); //RESET
     }
     public void debug() {
       System.out.println("RICHIESTE IN CODA: "+nreq);
       System.out.println("MESSAGGI IN CODA: "+queue.getSize());
+    }
+    
+    public void releaseBoard(FibsBoard b) {
+      boardPool.free(b);
+    }
+    public FibsBoard obtainBoard(String s) {
+      FibsBoard b = boardPool.obtain();
+      b.parseBoard(s);
+      return b;
     }
 }

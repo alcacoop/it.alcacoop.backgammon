@@ -562,7 +562,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
   public void parseBoard(String s) {
     System.out.println("BOARD RECEIVED...");
-    FibsBoard b = new FibsBoard(s);
+    FibsBoard b = GnuBackgammon.Instance.fibs.obtainBoard(s); 
     GnuBackgammon.Instance.fibs.post(Events.FIBS_BOARD, b);
   }
   

@@ -1,7 +1,9 @@
 package it.alcacoop.backgammon.logic;
 
+import com.badlogic.gdx.utils.Pool.Poolable;
 
-public class FibsBoard {
+
+public class FibsBoard implements Poolable {
   public int[][] board = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -12,7 +14,27 @@ public class FibsBoard {
   public int direction;
   public int dices[] = {0,0};
   
-  public FibsBoard(String s) {
+  public FibsBoard() {
+    reset();
+  }
+  
+  @Override
+  public void reset() {
+    p1 = "";
+    p2 = "";
+    color = 0;
+    turn = 0;
+    direction = 0;
+    dices[0] = 0;
+    dices[1] = 0;
+    for (int i=0;i<25;i++) {
+      board[0][i] = 0;
+      board[1][i] = 0;
+    }
+  }
+
+  
+  public void parseBoard(String s) {
 
     String tmp[] = s.split(":");
     
