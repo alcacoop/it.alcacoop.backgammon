@@ -209,8 +209,6 @@ public class ClientConnection extends Thread {
 
   private void writeMessage() {
     String s = outMessages.getFirst();
-    
-    
     try {
       if (os == null) {
         shuttingDown = true;
@@ -226,10 +224,10 @@ public class ClientConnection extends Thread {
   }
 
   private void handleMessage(String s) {
-    if (s.length() > 1 && s.charAt(0) == 13) // I have seen two '5's runon with just a cr between them,
-      s = s.substring(1); // not a crlf. Check for that here.
-    if (s.length() > 1 && s.charAt(0) == 10) // I have seen two '5's runon with just a lf between them,
-      s = s.substring(1); // not a crlf. Check for that here.
+    if (s.length() > 1 && s.charAt(0) == 13)
+      s = s.substring(1);
+    if (s.length() > 1 && s.charAt(0) == 10)
+      s = s.substring(1);
     int cookie = this.cookieMonster.fIBSCookie(s);
     
     if (this.pushbackString != null) {

@@ -3,7 +3,7 @@
  #                     GNU BACKGAMMON MOBILE                      #
  ##################################################################
  #                                                                #
- #  Authors: Domenico Martella - Davide Saurino                   #
+ #  Authors: Domenico Martella                                    #
  #  E-mail: info@alcacoop.it                                      #
  #  Date:   19/12/2012                                            #
  #                                                                #

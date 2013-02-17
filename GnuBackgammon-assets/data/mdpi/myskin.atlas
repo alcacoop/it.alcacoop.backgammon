@@ -19,9 +19,17 @@ popup-region
   orig: 53, 44
   offset: 0, 0
   index: -1
+textfield
+  rotate: false
+  xy: 110, 104
+  size: 54, 23
+  split: 13, 13, 11, 11
+  orig: 54, 23
+  offset: 0, 0
+  index: -1
 check-down
   rotate: false
-  xy: 110, 91
+  xy: 56, 9
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -29,7 +37,7 @@ check-down
   index: -1
 check1-down
   rotate: false
-  xy: 110, 91
+  xy: 56, 9
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -37,7 +45,7 @@ check1-down
   index: -1
 button2
   rotate: false
-  xy: 56, 9
+  xy: 110, 66
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -45,7 +53,7 @@ button2
   index: -1
 button
   rotate: false
-  xy: 110, 53
+  xy: 166, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -53,7 +61,7 @@ button
   index: -1
 button1
   rotate: false
-  xy: 110, 53
+  xy: 166, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -61,7 +69,7 @@ button1
   index: -1
 check-selected
   rotate: false
-  xy: 148, 91
+  xy: 204, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -69,7 +77,7 @@ check-selected
   index: -1
 check1-selected
   rotate: false
-  xy: 148, 91
+  xy: 204, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -77,7 +85,7 @@ check1-selected
   index: -1
 check
   rotate: false
-  xy: 148, 53
+  xy: 242, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -85,7 +93,7 @@ check
   index: -1
 check1
   rotate: false
-  xy: 148, 53
+  xy: 242, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -93,7 +101,7 @@ check1
   index: -1
 check3
   rotate: false
-  xy: 186, 91
+  xy: 280, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -101,7 +109,7 @@ check3
   index: -1
 button2-down
   rotate: false
-  xy: 186, 53
+  xy: 318, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -109,7 +117,7 @@ button2-down
   index: -1
 button-down
   rotate: false
-  xy: 224, 91
+  xy: 356, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -117,7 +125,7 @@ button-down
   index: -1
 button1-down
   rotate: false
-  xy: 224, 91
+  xy: 356, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -125,7 +133,7 @@ button1-down
   index: -1
 check3-down
   rotate: false
-  xy: 224, 53
+  xy: 394, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -133,7 +141,7 @@ check3-down
   index: -1
 button3
   rotate: false
-  xy: 262, 91
+  xy: 432, 91
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -141,7 +149,7 @@ button3
   index: -1
 check2-down
   rotate: false
-  xy: 262, 53
+  xy: 470, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -149,7 +157,7 @@ check2-down
   index: -1
 button3-down
   rotate: false
-  xy: 300, 91
+  xy: 110, 28
   size: 36, 36
   split: 7, 7, 6, 6
   orig: 36, 36
@@ -157,7 +165,7 @@ button3-down
   index: -1
 check2
   rotate: false
-  xy: 300, 53
+  xy: 148, 53
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -165,7 +173,7 @@ check2
   index: -1
 check2-selected
   rotate: false
-  xy: 338, 91
+  xy: 186, 53
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -173,7 +181,7 @@ check2-selected
   index: -1
 check3-selected
   rotate: false
-  xy: 338, 53
+  xy: 224, 53
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -188,8 +196,16 @@ slider
   index: -1
 scroll
   rotate: false
-  xy: 376, 105
+  xy: 102, 23
   size: 6, 22
   orig: 6, 22
+  offset: 0, 0
+  index: -1
+cursor
+  rotate: false
+  xy: 148, 39
+  size: 4, 12
+  split: 0, 4, 3, 3
+  orig: 4, 12
   offset: 0, 0
   index: -1
