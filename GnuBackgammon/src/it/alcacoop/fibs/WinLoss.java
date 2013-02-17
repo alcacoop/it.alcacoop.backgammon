@@ -6,7 +6,7 @@
  * Copyright 2010 - Dick Balaska - BuckoSoft, Corp.
  */
 
-package com.buckosoft.fibs.domain;
+package it.alcacoop.fibs;
 
 
 /** A class to manage wins/losses for a Player.

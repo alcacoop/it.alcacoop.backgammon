@@ -37,6 +37,9 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import java.util.LinkedList;
 
+/*XXX
+ * NEED REFACTORING VIA ThreadPoolExecutor 
+ */
 
 public class FibsQueue {
 

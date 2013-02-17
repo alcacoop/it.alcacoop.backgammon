@@ -6,7 +6,7 @@
  * Copyright� 2008 - Dick Balaska - BuckoSoft, Corp.
  */ 
  
-package com.buckosoft.fibs.domain;
+package it.alcacoop.fibs;
 
 
 /** Describe one FIBS player. <br>

@@ -6,17 +6,13 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */ 
  
-package com.buckosoft.fibs.BuckoFIBS;
+package it.alcacoop.fibs;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 
-import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
-import com.buckosoft.fibs.domain.Player;
-import com.buckosoft.fibs.net.ClientAdapter;
-import com.buckosoft.fibs.net.ClientConnection;
-import com.buckosoft.fibs.net.FIBSMessages;
 
 
 /** Parse and dispatch messages received from the network.

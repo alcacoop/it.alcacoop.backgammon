@@ -6,7 +6,7 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */
 
-package com.buckosoft.fibs.net;
+package it.alcacoop.fibs;
 
 /** Fetch what we need to connect to the server.
  * @author Dick Balaska

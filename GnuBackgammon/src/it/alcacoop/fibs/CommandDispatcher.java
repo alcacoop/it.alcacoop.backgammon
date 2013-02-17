@@ -5,7 +5,7 @@
  * BuckoFIBS - Backgammon by BuckoSoft
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */
-package com.buckosoft.fibs.BuckoFIBS;
+package it.alcacoop.fibs;
 
 
 /** Interface for dispatching commands through the BuckoFIBS system.

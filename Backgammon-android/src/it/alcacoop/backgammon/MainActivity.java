@@ -67,6 +67,7 @@ import com.google.ads.AdView;
 
 
 
+@SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
 public class MainActivity extends AndroidApplication implements NativeFunctions {
   
   private String data_dir;
@@ -240,7 +241,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   }
 
   @Override
-  public void setInstance(GnuBackgammon gb) {
+  public void injectBGInstance() {
     // TODO Auto-generated method stub
     
   }

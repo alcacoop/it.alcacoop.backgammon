@@ -6,13 +6,10 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */
 
-package com.buckosoft.fibs.BuckoFIBS;
+package it.alcacoop.fibs;
 
-import com.buckosoft.fibs.BuckoFIBS.ClientReceiveParser.Mode;
-import com.buckosoft.fibs.domain.Line;
-import com.buckosoft.fibs.domain.Player;
-import com.buckosoft.fibs.net.ClientConnection;
-import com.buckosoft.fibs.net.FIBSMessages;
+import it.alcacoop.fibs.ClientReceiveParser.Mode;
+
 
 /** Dispatch commands through the system.
  * @author Dick Balaska
@@ -181,8 +178,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     boolean b;
     switch (command) {
       case GAME_MOVE:
-        Line l = (Line)obj;
-        System.out.println("LINE: "+l.getLine());
         break;
       case PLAYER_CHANGED:
         onPlayerChanged((Player)obj);

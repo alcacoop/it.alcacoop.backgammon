@@ -6,7 +6,7 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */
  
-package com.buckosoft.fibs.net;
+package it.alcacoop.fibs;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,8 +107,8 @@ public class ClientConnection extends Thread {
     sock = null;
     String server = "localhost";
     //server = "fibs.com";
-    //server = "ti-ga.com";
-    server = "bishop";
+    server = "ti-ga.com";
+    //server = "bishop";
     int port = 4321;
     try {
       sock = new Socket(server, port);
@@ -194,8 +194,8 @@ public class ClientConnection extends Thread {
   /** Send the login message to FIBS.
   */
   public void sendLogin() {
-    String user = "pippo";
-    String pwd = "pippo";
+    String user = "dmartella";
+    String pwd = "a799c5l0";
     StringBuffer sb = new StringBuffer();
     sb.append("login ");
     sb.append("BackGammonMobile-0.1");

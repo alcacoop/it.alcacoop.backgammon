@@ -6,7 +6,7 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */
 
-package com.buckosoft.fibs.net;
+package it.alcacoop.fibs;
 
 import java.util.Iterator;
 import java.util.LinkedList;

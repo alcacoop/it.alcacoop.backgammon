@@ -6,7 +6,7 @@ import bsh.util.JConsole;
 import bsh.util.NameCompletionTable;
 
 import javax.swing.JFrame;
-import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 
 
 DEBUG = null;

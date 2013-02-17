@@ -34,7 +34,6 @@
 package it.alcacoop.backgammon.fsm;
 
 
-import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.layers.GameScreen;
@@ -42,6 +41,7 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 
 
 public class FIBSFSM extends BaseFSM implements Context {

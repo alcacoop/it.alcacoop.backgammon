@@ -6,7 +6,7 @@
  * Copyright© 2009,2010 - Dick Balaska - BuckoSoft, Corp.
  */ 
  
-package com.buckosoft.fibs.net;
+package it.alcacoop.fibs;
 
 /** Hook up the network to the application.
  * 
