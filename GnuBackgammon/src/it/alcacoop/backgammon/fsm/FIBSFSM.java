@@ -81,10 +81,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           
         case FIBS_MOVES:
           int moves[] = (int[])params;
-          System.out.println("\n\n***** ARRIVATE MOSSE: ");
-          for (int i=0;i<4;i++)
-            System.out.println(moves[2*i]+"/"+moves[2*i+1]);
-          System.out.println("**** FINE MOSSE\n\n");
           if (moves[0]!=-1) ctx.board().setMoves(moves);
           break;
 
@@ -113,7 +109,6 @@ public class FIBSFSM extends BaseFSM implements Context {
         default:
           return false;
         }
-        System.out.println("\n********** EVENTO: "+evt+" ***********\n");
         return true;
       }
     },
@@ -136,7 +131,6 @@ public class FIBSFSM extends BaseFSM implements Context {
         case FIBS_BOARD:
           FibsBoard b = (FibsBoard)params;
           ((FIBSFSM)GnuBackgammon.fsm).direction = b.direction;
-          System.out.println("\n\n**** VALORE DEI DADI:"+b.dices[0]+":"+b.dices[1]+"\n\n");
           if (b.dices[0]==0) {
             ctx.board().addActor(ctx.board().rollBtn);
           } else {
@@ -154,7 +148,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
         
         case DICES_ROLLED:
-          System.out.println("FSM - DICESROLLED");
           ctx.board().rollBtn.remove();
           ctx.board().doubleBtn.remove();
           
@@ -291,18 +284,13 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         MatchState.UpdateMSCubeInfo(1, -1);
-        processEvent(ctx, Events.NOOP, null);
         GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.prefs.flush();
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        System.out.println("CURRENT STATE: "+ctx.state());
         switch (evt) {
-
-        case NOOP: 
-          break;
 
         case FIBS_BOARD:
           FibsBoard b = (FibsBoard)params;

@@ -55,8 +55,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       return;
     }
     
-    //System.out.println("--->MSG: "+s);
-    
     switch (cookie) {
       // These do nothing here.
       case CLIP_MOTD_END:
@@ -561,7 +559,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
   
   public void parseBoard(String s) {
-    System.out.println("BOARD RECEIVED...");
     FibsBoard b = GnuBackgammon.Instance.fibs.obtainBoard(s); 
     GnuBackgammon.Instance.fibs.post(Events.FIBS_BOARD, b);
   }
@@ -585,9 +582,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     for (int i=0;i<tmp.length-2;i++)
       moves[i] = Integer.parseInt(tmp[2+i]);
       
-    System.out.println("\n\n-------MOVE-------- "+s);
-    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);
-    
     //NORMALIZE MOVES TO GNUBG CONVENTION...
     if (MatchState.FibsDirection==-1) { //LUI MUOVE DA 1 A 24
       for (int i=0;i<8;i++)
@@ -596,9 +590,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       for (int i=0;i<8;i++)
         if (moves[i]!=-1) moves[i]=moves[i]-1;
     }
-    
-    
-    System.out.println("MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]+"\n\n");
     GnuBackgammon.Instance.fibs.post(Events.FIBS_MOVES, moves);
   }
 

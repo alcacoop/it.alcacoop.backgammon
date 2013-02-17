@@ -150,7 +150,6 @@ public class FibsNetHandler {
     
     
     public void post(Events _e, Object _o) {
-      System.out.println("POSTED OBJECT");
       Evt e = evtPool.obtain();
       e.init(_e, _o);
       queue.push(e);

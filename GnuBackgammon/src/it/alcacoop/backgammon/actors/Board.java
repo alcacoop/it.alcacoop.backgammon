@@ -393,7 +393,6 @@ public class Board extends Group {
       Move m = moves.pop();
      
       if (m!=null) {
-        System.out.println("HERE: "+availableMoves.getSize());
         playedMoves.push(m);
         m.setRemovedMoves(availableMoves.removeMoves(m.from, m.to));
         Checker c = getChecker(MatchState.fMove, m.from);
@@ -401,7 +400,6 @@ public class Board extends Group {
         lastMoved = c;
       }  
     } catch (Exception e) {
-      System.out.println("EXCEPTION: "+e);
       if (fsm == GnuBackgammon.fsm) //SAME FSM FROM MOVING START...
         fsm.processEvent(Events.NO_MORE_MOVES, null);
     }

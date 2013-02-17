@@ -56,7 +56,6 @@ public class AvailableMoves {
 
   public void setMoves(int _moves[][]) {
     int _dices[] = b.dices.get();
-    System.out.println("HERE DICES: "+_dices.length);
     moves.clear();
     dices.clear();
 
