@@ -67,7 +67,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         case FIBS_BOARD:
           FibsBoard b = (FibsBoard)params;
           if (b.dices[0]==0) { // NOY YET ROLLED.. 
-            GnuBackgammon.Instance.fbt.pull();
+            GnuBackgammon.Instance.fibs.pull();
           } else {
             AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
             ctx.board().animateDices(b.dices[0], b.dices[1], true);
@@ -75,7 +75,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
         
         case DICES_ROLLED:
-          GnuBackgammon.Instance.fbt.pull(); //I'M WAITING FIBS_MOVES OR FIBS_NOMOVES
+          GnuBackgammon.Instance.fibs.pull(); //I'M WAITING FIBS_MOVES OR FIBS_NOMOVES
           break;
           
         case FIBS_MOVES:
@@ -146,7 +146,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
           
         case ROLL_DICE: //RICHIESTA REMOTA ROLL
-          GnuBackgammon.Instance.fbt.pull();
+          GnuBackgammon.Instance.fibs.pull();
           GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_ROLL);
           
           break;
@@ -280,7 +280,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         for (int i=0;i<8;i++)
           ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
         ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
-        GnuBackgammon.Instance.fbt.pull();
+        GnuBackgammon.Instance.fibs.pull();
       }
     },
 
@@ -328,8 +328,8 @@ public class FIBSFSM extends BaseFSM implements Context {
           else
             ctx.state(REMOTE_TURN);
           
-          GnuBackgammon.Instance.fbt.post(Events.FIBS_BOARD, b);
-          GnuBackgammon.Instance.fbt.pull();
+          GnuBackgammon.Instance.fibs.post(Events.FIBS_BOARD, b);
+          GnuBackgammon.Instance.fibs.pull();
           
           break;
 
@@ -365,7 +365,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.fbt.reset();
+        GnuBackgammon.Instance.fibs.reset();
       }
     };
 
@@ -386,7 +386,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     GnuBackgammon.Instance.board.initBoard(2);
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
-    GnuBackgammon.Instance.fbt.pull();
+    GnuBackgammon.Instance.fibs.pull();
   }
 
   public void stop() {

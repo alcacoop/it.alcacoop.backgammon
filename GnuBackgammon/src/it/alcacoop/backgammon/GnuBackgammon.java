@@ -46,7 +46,7 @@ import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
-import it.alcacoop.backgammon.logic.FibsQueue;
+import it.alcacoop.backgammon.logic.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import com.badlogic.gdx.ApplicationListener;
@@ -102,7 +102,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static String fname;
   
   public CommandDispatcherImpl commandDispatcher;
-  public FibsQueue fbt;
+  public FibsNetHandler fibs;
   
   public GnuBackgammon(NativeFunctions n) {
     myRequestHandler = n;
@@ -124,7 +124,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     snd = new SoundManager();
     rec = new MatchRecorder();
     
-    fbt = new FibsQueue();
+    fibs = new FibsNetHandler();
     commandDispatcher = new CommandDispatcherImpl();
     //INIT CONNECTION AND LOGIN
     commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);

@@ -41,7 +41,7 @@ import java.util.LinkedList;
  * NEED REFACTORING VIA ThreadPoolExecutor 
  */
 
-public class FibsQueue {
+public class FibsNetHandler {
 
     private static MessageQueue queue;
     int nreq;
@@ -88,8 +88,8 @@ public class FibsQueue {
     
     private class Dispatcher extends Thread {
       private MessageQueue q;
-      private FibsQueue i;
-      public Dispatcher(MessageQueue _q, FibsQueue _i) {
+      private FibsNetHandler i;
+      public Dispatcher(MessageQueue _q, FibsNetHandler _i) {
         q = _q;
         i = _i;
         i.incReq();
@@ -106,7 +106,7 @@ public class FibsQueue {
       }
     }
     
-    public FibsQueue() {
+    public FibsNetHandler() {
       queue = new MessageQueue();
       nreq=0;
     }

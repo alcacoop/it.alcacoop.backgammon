@@ -188,6 +188,6 @@ public class Main implements NativeFunctions {
   @Override
   public void injectBGInstance() {
     setBsh("disp", GnuBackgammon.Instance.commandDispatcher);
-    setBsh("fbt", GnuBackgammon.Instance.fbt);
+    setBsh("fibs", GnuBackgammon.Instance.fibs);
   }
 }
