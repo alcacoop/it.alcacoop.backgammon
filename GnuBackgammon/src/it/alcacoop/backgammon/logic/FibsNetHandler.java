@@ -36,13 +36,13 @@ package it.alcacoop.backgammon.logic;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-/*XXX
- * NEED REFACTORING VIA ThreadPoolExecutor 
- */
 
 public class FibsNetHandler {
 
+    ExecutorService dispatchExecutor;
     private static MessageQueue queue;
     int nreq;
     
@@ -86,7 +86,7 @@ public class FibsNetHandler {
     }
     
     
-    private class Dispatcher extends Thread {
+    private class Dispatcher implements Runnable {
       private MessageQueue q;
       private FibsNetHandler i;
       public Dispatcher(MessageQueue _q, FibsNetHandler _i) {
@@ -108,14 +108,14 @@ public class FibsNetHandler {
     
     public FibsNetHandler() {
       queue = new MessageQueue();
+      dispatchExecutor = Executors.newSingleThreadExecutor();
       nreq=0;
     }
     
     
     public void pull() {
       if (queue.isEempty()) { //CODA MESSAGGI VUOTA.. HO BISOGNO DI UN THREAD CHE ASPETTI..
-        Dispatcher d = new Dispatcher(queue, this);
-        d.start();
+        dispatchExecutor.execute(new Dispatcher(queue, this));
       } else { //ELEMENTO DISPONIBILE.. DISPATCH IMMEDIATO
         Evt e = queue.pop();
         GnuBackgammon.fsm.processEvent(e.e, e.o);
@@ -124,6 +124,9 @@ public class FibsNetHandler {
     
     public void post(Events e, Object o) {
       queue.push(new Evt(e,o));
+    }
+    public void post() {
+      queue.push(new Evt(Events.CONTINUE, null));
     }
     public synchronized int getReq() {
       return nreq;
