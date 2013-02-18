@@ -2,7 +2,5 @@
 <module>
     <entry-point class="it.alcacoop.gnubackgammon.client.GwtLauncher"/>
     <set-configuration-property name="gdx.assetpath" value="../GnuBackgammon-android/assets"/>
-    <inherits name="GnuBakgammon"/>
-    <inherits name="aurelienribon.tweenengine"/>
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>
 </module>
