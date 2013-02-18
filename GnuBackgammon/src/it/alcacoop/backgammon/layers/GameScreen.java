@@ -117,8 +117,8 @@ public class GameScreen implements Screen {
     board = GnuBackgammon.Instance.board;
     
     pInfo = new PlayerInfo[2];
-    pInfo[0] = new PlayerInfo("AI():", 1, stage.getWidth()/4.2f);
-    pInfo[1] = new PlayerInfo("PL1:", 0, stage.getWidth()/4.2f);      
+    pInfo[0] = new PlayerInfo("AI():", 1, stage.getWidth()/2.5f);
+    pInfo[1] = new PlayerInfo("PL1:", 0, stage.getWidth()/2.5f);      
     
     table = new Table();
     stage.addActor(table);
@@ -151,7 +151,7 @@ public class GameScreen implements Screen {
     table.clear();
     table.setFillParent(true);
     
-    float width = stage.getWidth()/4.2f;
+    //float width = stage.getWidth()/2.4f;
     
     String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
@@ -159,14 +159,18 @@ public class GameScreen implements Screen {
     i.setScale(0.8f);
     
     table.row().minHeight(44); //BANNER ON ldpi
-    table.add(i).expandX().left().padLeft(6+6*(2-GnuBackgammon.ss));
+    
+    table.add(i).left().padLeft(6+6*(2-GnuBackgammon.ss)).width(i.getWidth());
     
     Table t = new Table();
     t.add(pInfo[0]).left();
     t.row();
     t.add(pInfo[1]).left();
-    table.add(t).width(width).padTop(3+3*(2-GnuBackgammon.ss)).right().padRight(2+3*(2-GnuBackgammon.ss));
-    table.add(menu).fillY().width(width/2.5f).padRight(6+6*(2-GnuBackgammon.ss)).padTop(3+3*(2-GnuBackgammon.ss));
+    
+    table.add().expand().fill();
+    table.add(t).fillX().padTop(3+3*(2-GnuBackgammon.ss)).right().padRight((2+3*(2-GnuBackgammon.ss))*2.5f);
+    table.add(menu).fillY().width(stage.getWidth()/10).padRight(6+6*(2-GnuBackgammon.ss)).padTop(3+3*(2-GnuBackgammon.ss));
+   
     table.row();
     table.add(board).colspan(4).expand().fill();
   }
