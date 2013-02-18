@@ -46,6 +46,8 @@ import it.alcacoop.backgammon.NativeFunctions;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -55,10 +57,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.ads.AdRequest;
@@ -110,6 +114,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     
     // Create the layout
     RelativeLayout layout = new RelativeLayout(this);
+    
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -121,9 +126,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     adView.setVisibility(View.GONE);
     
     layout.addView(gameView);
-    RelativeLayout.LayoutParams adParams = 
-        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+    RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
+      RelativeLayout.LayoutParams.WRAP_CONTENT, 
+      RelativeLayout.LayoutParams.WRAP_CONTENT
+    );
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
@@ -242,8 +248,62 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
 
   @Override
   public void injectBGInstance() {
-    // TODO Auto-generated method stub
-    
   }
-  
+
+  @Override
+  public void addLifecycleListener(LifecycleListener listener) {}
+
+  @Override
+  public void removeLifecycleListener(LifecycleListener listener) {}
+
+  @Override
+  public void fibsSignin() {
+    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    LayoutInflater inflater = this.getLayoutInflater();
+
+    alert.setView(inflater.inflate(R.layout.dialog_signin, null)).
+      setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      }).
+      setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+          fibsRegistration();
+        }
+      }).
+      setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      });  
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        alert.show();
+      }
+    });
+  }
+
+  @Override
+  public void fibsRegistration() {
+    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    LayoutInflater inflater = this.getLayoutInflater();
+
+    alert.setView(inflater.inflate(R.layout.dialog_register, null)).
+      setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      }).
+      setPositiveButton("Create Account",  new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      });
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        alert.show();
+      }
+    });
+  }
 }
