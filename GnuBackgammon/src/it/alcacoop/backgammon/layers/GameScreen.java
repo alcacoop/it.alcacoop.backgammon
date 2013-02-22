@@ -254,7 +254,7 @@ public class GameScreen implements Screen {
     
     boolean rolled = (Boolean)gi.get("_rl");
     if (!rolled) {
-      if (MatchState.matchType==1)
+      if (MatchState.matchType<2)
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
       MatchState.SetGameTurn(0, 0);
     } else {
@@ -269,7 +269,7 @@ public class GameScreen implements Screen {
       board.rollDices(d[0], d[1]);
       board.rollDices(d[0], d[1]);
       
-      if (MatchState.matchType==1)
+      if (MatchState.matchType<2)
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
       AICalls.GenerateMoves(board, d[0], d[1]);
     }
