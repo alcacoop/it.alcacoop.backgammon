@@ -190,4 +190,12 @@ public class Main implements NativeFunctions {
     setBsh("disp", GnuBackgammon.Instance.commandDispatcher);
     setBsh("fibs", GnuBackgammon.Instance.fibs);
   }
+
+  @Override
+  public void fibsSignin() {
+  }
+
+  @Override
+  public void fibsRegistration() {
+  }
 }
