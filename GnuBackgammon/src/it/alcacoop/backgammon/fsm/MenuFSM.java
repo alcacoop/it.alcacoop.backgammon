@@ -77,9 +77,9 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.MATCH_OPTIONS);
           }
           if (params.toString().equals("FIBS")) {
-            //MatchState.matchType = 2;
+            MatchState.matchType = 2;
             //GnuBackgammon.Instance.setFSM("FIBS_FSM");
-            GnuBackgammon.Instance.goToScreen(8);
+            ctx.state(States.FIBS);
           }
           if (params.toString().equals("STATISTICS")) {
           }
@@ -111,6 +111,7 @@ public class MenuFSM extends BaseFSM implements Context {
       }
     },
 
+    
     GAME_OPTIONS {
       @Override
       public void enterState(Context ctx) {
@@ -129,6 +130,26 @@ public class MenuFSM extends BaseFSM implements Context {
       }
     },
 
+    
+    FIBS {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.goToScreen(8);
+        super.enterState(ctx);
+      }
+      
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt==Events.BUTTON_CLICKED) {
+          if (params.toString().equals("BACK")) {
+            ctx.state(States.MAIN_MENU);
+          }
+        }
+        return false;
+      }
+    },
+    
+    
     MATCH_OPTIONS {
       @Override
       public void enterState(Context ctx) {
