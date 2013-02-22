@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Backgammon Mobile</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="passwordconfirmation">password confirmation</string>
 </resources>
