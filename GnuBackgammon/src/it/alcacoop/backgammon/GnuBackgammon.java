@@ -50,6 +50,8 @@ import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.logic.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
+import it.alcacoop.fibs.CommandDispatcherImpl;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -60,8 +62,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.buckosoft.fibs.BuckoFIBS.CommandDispatcherImpl;
-import com.buckosoft.fibs.BuckoFIBS.CommandDispatcher.Command;
+
 
 
 public class GnuBackgammon extends Game implements ApplicationListener {
@@ -129,8 +130,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fibs = new FibsNetHandler();
     commandDispatcher = new CommandDispatcherImpl();
     //INIT CONNECTION AND LOGIN
-    commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
-	myRequestHandler.injectBGInstance();
+    //commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+    myRequestHandler.injectBGInstance();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
