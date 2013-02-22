@@ -34,7 +34,7 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -48,8 +48,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
 public class FibsLoginScreen implements Screen {
@@ -65,56 +67,51 @@ public class FibsLoginScreen implements Screen {
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
-    
     stage.addActor(bgImg);
-    
-    
+
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          UIDialog.getQuitDialog(stage);
+          GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }
         return super.keyDown(event, keycode);
       }
     });
     
-    TextButtonStyle tl = GnuBackgammon.skin.get("default", TextButtonStyle.class);
+    ClickListener cl = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+      };
+    };
     
+    TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
+    
+    float width = stage.getWidth()*0.6f;
+    float height = stage.getHeight()*0.8f;
+    
+        
     Table table = new Table();
+    Drawable d = GnuBackgammon.skin.getDrawable("default-window");
+    
+    table.setBackground(d);
     table.setFillParent(true);
-//    table.debug();
+    table.debug();
     
-    Label title = new Label("CONNECT TO SERVER", GnuBackgammon.skin);
-    table.add(title).colspan(4);
-    
-    table.row();
-    table.add().colspan(4).fill().center().height(stage.getHeight()*0.04f);
+    Label title = new Label("CONNECTED PLAYERS", GnuBackgammon.skin);
+    table.add(title);
     
     table.row();
-    table.add().fill();
-    table.add(new Label("Username:", GnuBackgammon.skin)).right();
-    TextField user = new TextField("", GnuBackgammon.skin); 
-    table.add(user).fill();
-    table.add().fill();
-    
-    table.row();
-    table.add().fill();
-    table.add(new Label("Password:", GnuBackgammon.skin)).right();
-    TextField pwd = new TextField("", GnuBackgammon.skin); 
-    table.add(pwd).fill();
-    table.add().fill();
-    
-    table.row();
-    table.add().colspan(4).fill().center().height(stage.getHeight()*0.04f);
-    
-    table.row();
-    table.add().colspan(4).fill().expand();
+    table.add().fill().expand();
 
+    TextButton back = new TextButton("BACK", GnuBackgammon.skin);
+    back.addListener(cl);
+    table.row();
+    table.add(back);
     
     g = new Group();
-    g.setWidth(stage.getWidth()*0.6f);
-    g.setHeight(stage.getHeight()*0.85f);
+    g.setWidth(width);
+    g.setHeight(height);
     g.addActor(table);
     
     g.setX((stage.getWidth()-g.getWidth())/2);
@@ -153,6 +150,8 @@ public class FibsLoginScreen implements Screen {
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
     g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    
+    GnuBackgammon.Instance.myRequestHandler.fibsSignin();
   }
 
   @Override

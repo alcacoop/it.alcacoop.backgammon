@@ -55,7 +55,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +74,6 @@ import com.google.ads.AdView;
 public class MainActivity extends AndroidApplication implements NativeFunctions {
   
   private String data_dir;
-  TextToSpeech tts;
   protected AdView adView;
   private final int SHOW_ADS = 1;
   private final int HIDE_ADS = 0;
