@@ -257,26 +257,24 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   @Override
   public void fibsSignin() {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    LayoutInflater inflater = this.getLayoutInflater();
-
-    alert.setView(inflater.inflate(R.layout.dialog_signin, null)).
-      setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int whichButton) {
-        }
-      }).
-      setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int whichButton) {
-          fibsRegistration();
-        }
-      }).
-      setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int whichButton) {
-        }
-      });  
-
+    final LayoutInflater inflater = this.getLayoutInflater();
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        alert.setView(inflater.inflate(R.layout.dialog_signin, null)).
+          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+          }).
+          setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+              fibsRegistration();
+            }
+          }).
+          setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+          });
         alert.show();
       }
     });
@@ -285,21 +283,19 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   @Override
   public void fibsRegistration() {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    LayoutInflater inflater = this.getLayoutInflater();
-
-    alert.setView(inflater.inflate(R.layout.dialog_register, null)).
-      setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int whichButton) {
-        }
-      }).
-      setPositiveButton("Create Account",  new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int whichButton) {
-        }
-      });
-
+    final LayoutInflater inflater = this.getLayoutInflater();
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        alert.setView(inflater.inflate(R.layout.dialog_register, null)).
+        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+          }
+        }).
+        setPositiveButton("Create Account",  new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+          }
+        });
         alert.show();
       }
     });
