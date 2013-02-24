@@ -48,7 +48,6 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -60,7 +59,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
-public class GnuBackgammon extends Game implements ApplicationListener {
+public class GnuBackgammon extends Game {
   
   private static GameScreen gameScreen;
   private static MatchOptionsScreen matchOptionsScreen;
@@ -109,7 +108,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
   
   @Override
-  
   public void create() {
     
     Instance = this;
@@ -164,11 +162,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     setScreen(new SplashScreen());
   }
 
-  
   public String getResName() {
     return resname[ss];
   }
-  
   
   public void goToScreen(int s) {
     switch (s) {
@@ -220,7 +216,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     }
   }
 
-
   public void setFSM(String type) {
     if (fsm!=null) fsm.stop();
     
@@ -233,5 +228,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     fsm.start();
   }
-  
+
+
 }
