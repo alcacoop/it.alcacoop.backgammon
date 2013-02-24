@@ -56,4 +56,8 @@ public enum AILevels {
     else if (us.equals("GRANDMASTER")) return AILevels.GRANDMASTER;
     else return AILevels.EXPERT; //DEFAULT VALUE
   }
+  
+  public static AILevels getAILevelFromOrdinal(int l) {
+    return AILevels.values()[l];
+  }
 }

@@ -213,7 +213,10 @@ public class GameScreen implements Screen {
     GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
     
     MatchState.SetMatchTo(""+gi.get("mi_length"));
-    MatchState.SetAILevel(AILevels.getAILevelFromString(""+gi.get("_df")));
+    
+    MatchState.SetAILevel(AILevels.getAILevelFromOrdinal((Integer)gi.get("_df")));
+    System.out.println("CL: "+MatchState.currentLevel);
+    
     MatchState.SetMatchScore((Integer)gi.get("mi_ws"), (Integer)gi.get("mi_bs"));
     MatchState.SetCrawford((Integer)gi.get("_cr"));
     MatchState.fCrafwordGame = (Boolean)gi.get("_cg");
@@ -222,6 +225,7 @@ public class GameScreen implements Screen {
     MatchState.UpdateMSCubeInfo(cubeValue, cubeOwner);
     MatchState.SetGameVariant(0);
 
+    System.out.println("NOW: "+MatchState.currentLevel.ordinal());
     pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
     MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
     pInfo[1].setName("PL1:");

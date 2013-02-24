@@ -87,7 +87,7 @@ public class MatchRecorder {
       gameInfo.put("_cu", MatchState.nMatchTo>1?MatchState.fCubeUse:0);
       gameInfo.put("_cr", MatchState.fCrawford);
       gameInfo.put("_cg", MatchState.fCrafwordGame);
-      gameInfo.put("_df", MatchState.currentLevel.ordinal()+1);
+      gameInfo.put("_df", MatchState.currentLevel.ordinal());
       gameInfo.put("_co", MatchState.fCubeOwner);
       gameInfo.put("_cv", MatchState.nCube);
       gameInfo.put("_bb", GnuBackgammon.Instance.board.getBoardAsString(0));
