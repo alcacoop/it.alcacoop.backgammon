@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -112,6 +113,7 @@ public class MatchOptionsScreen implements Screen {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if (UIDialog.dialogOpened) return false;
           savePrefs();
           GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }

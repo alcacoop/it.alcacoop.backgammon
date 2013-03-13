@@ -81,13 +81,13 @@ public class MainMenuScreen implements Screen {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if (UIDialog.dialogOpened) return false;
           UIDialog.getQuitDialog(stage);
         }
         return super.keyDown(event, keycode);
       }
     });
     
-    //Label titleLabel = new Label("GNU BACKGAMMON MOBILE", GnuBackgammon.skin);
     String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
