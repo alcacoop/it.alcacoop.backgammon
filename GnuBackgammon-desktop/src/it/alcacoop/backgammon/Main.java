@@ -198,4 +198,9 @@ public class Main implements NativeFunctions {
   @Override
   public void fibsRegistration() {
   }
+
+  @Override
+  public boolean isNetworkUp() {
+    return false;
+  }
 }

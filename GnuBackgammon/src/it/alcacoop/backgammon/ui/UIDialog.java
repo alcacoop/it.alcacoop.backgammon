@@ -111,7 +111,7 @@ public final class UIDialog extends Window {
               @Override
               public void run() {
                 instance.remove();
-                GnuBackgammon.Instance.myRequestHandler.showAds(true);
+                GnuBackgammon.Instance.nativeFunctions.showAds(true);
                 
                 if (leaveWindow) {
                   GnuBackgammon.fsm.processEvent(instance.evt, s);
@@ -173,7 +173,7 @@ public final class UIDialog extends Window {
     bExport.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.shareMatch(GnuBackgammon.Instance.rec);
+        GnuBackgammon.Instance.nativeFunctions.shareMatch(GnuBackgammon.Instance.rec);
         super.clicked(event, x, y);
       }
     });
@@ -538,7 +538,7 @@ public final class UIDialog extends Window {
     Label link1 = new Label(gnuBgLink, GnuBackgammon.skin);
     link1.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.openURL(gnuBgLink);
+        GnuBackgammon.Instance.nativeFunctions.openURL(gnuBgLink);
       };
     });
     t.row();
@@ -550,7 +550,7 @@ public final class UIDialog extends Window {
     Label link2 = new Label(gplLink, GnuBackgammon.skin);
     link2.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.openURL(gplLink);
+        GnuBackgammon.Instance.nativeFunctions.openURL(gplLink);
       };
     });
     t.row();
@@ -562,13 +562,13 @@ public final class UIDialog extends Window {
     Label link3 = new Label(githubLink1, GnuBackgammon.skin);
     link3.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink1);
+        GnuBackgammon.Instance.nativeFunctions.openURL(githubLink1);
       };
     });
     Label link4 = new Label(githubLink2, GnuBackgammon.skin);
     link4.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink2);
+        GnuBackgammon.Instance.nativeFunctions.openURL(githubLink2);
       };
     });
     t.row();
@@ -582,7 +582,7 @@ public final class UIDialog extends Window {
     Label link5 = new Label(wikipediaLink, GnuBackgammon.skin);
     link5.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.myRequestHandler.openURL(wikipediaLink);
+        GnuBackgammon.Instance.nativeFunctions.openURL(wikipediaLink);
       };
     });
     t.row();
@@ -705,7 +705,7 @@ public final class UIDialog extends Window {
     instance.addAction(MyActions.sequence(Actions.run(new Runnable() {
       @Override
       public void run() {
-        GnuBackgammon.Instance.myRequestHandler.showAds(false);
+        GnuBackgammon.Instance.nativeFunctions.showAds(false);
       }
     }), Actions.alpha(alpha, 0.3f)));
   }

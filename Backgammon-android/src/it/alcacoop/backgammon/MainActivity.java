@@ -47,9 +47,12 @@ import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -299,5 +302,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
         alert.show();
       }
     });
+  }
+
+  @Override
+  public boolean isNetworkUp() {
+    ConnectivityManager connectivityManager = 
+        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetworkInfo = 
+        connectivityManager.getActiveNetworkInfo();
+    return activeNetworkInfo != null;
   }
 }

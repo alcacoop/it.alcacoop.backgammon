@@ -77,9 +77,18 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.MATCH_OPTIONS);
           }
           if (params.toString().equals("FIBS")) {
-            MatchState.matchType = 2;
-            //GnuBackgammon.Instance.setFSM("FIBS_FSM");
-            ctx.state(States.FIBS);
+            if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
+              MatchState.matchType = 2;
+              //GnuBackgammon.Instance.setFSM("FIBS_FSM");
+              ctx.state(States.FIBS);
+            } else {
+              UIDialog.getFlashDialog(
+                Events.NOOP, 
+                "Network is down - Multiplayer not available",
+                0.9f,
+                ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage()
+              );
+            }
           }
           if (params.toString().equals("STATISTICS")) {
           }
@@ -88,9 +97,9 @@ public class MenuFSM extends BaseFSM implements Context {
           }
           if (params.toString().equals("RATE IT!")) {
             if (!GnuBackgammon.Instance.isGNU)
-              GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
+              GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
             else
-              GnuBackgammon.Instance.myRequestHandler.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
+              GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
           }
           if (params.toString().equals("APPEARANCE")) {
             ctx.state(States.APPEARANCE);

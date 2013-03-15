@@ -151,7 +151,7 @@ public class FibsLoginScreen implements Screen {
     g.setColor(1,1,1,0);
     g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
     
-    GnuBackgammon.Instance.myRequestHandler.fibsSignin();
+    GnuBackgammon.Instance.nativeFunctions.fibsSignin();
   }
 
   @Override

@@ -41,6 +41,8 @@ public interface NativeFunctions {
   public String getDataDir(); 
   public void shareMatch(MatchRecorder rec);
   public void injectBGInstance();
+  
   public void fibsSignin();
   public void fibsRegistration();
+  public boolean isNetworkUp();
 }

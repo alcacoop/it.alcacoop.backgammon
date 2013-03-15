@@ -98,7 +98,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public JSONProperties jp;
   public Preferences prefs, appearancePrefs;
   public SoundManager snd;
-  public NativeFunctions myRequestHandler;
+  public NativeFunctions nativeFunctions;
   public boolean isGNU = false;
   
   public MatchRecorder rec;
@@ -108,11 +108,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public FibsNetHandler fibs;
   
   public GnuBackgammon(NativeFunctions n) {
-    myRequestHandler = n;
+    nativeFunctions = n;
   }
   
   public GnuBackgammon(NativeFunctions n, boolean _isGNU) {
-    myRequestHandler = n;
+    nativeFunctions = n;
     this.isGNU = _isGNU;
   }
   
@@ -131,7 +131,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     commandDispatcher = new CommandDispatcherImpl();
     //INIT CONNECTION AND LOGIN
     //commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
-    myRequestHandler.injectBGInstance();
+    nativeFunctions.injectBGInstance();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
@@ -140,7 +140,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else ss = 0;
     resolution = resolutions[ss];
     
-    fname = myRequestHandler.getDataDir()+"/data/match.";
+    fname = nativeFunctions.getDataDir()+"/data/match.";
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
@@ -191,31 +191,31 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     switch (s) {
       case 0:
         currentScreen = welcomeScreen;
-        myRequestHandler.showAds(false);
+        nativeFunctions.showAds(false);
         setScreen(welcomeScreen);
         break;
         
       case 1:
         currentScreen = optionsScreen;
-        myRequestHandler.showAds(false);
+        nativeFunctions.showAds(false);
         setScreen(optionsScreen);
         break;
       
       case 2:
         currentScreen = menuScreen;
-        myRequestHandler.showAds(false);
+        nativeFunctions.showAds(false);
         setScreen(menuScreen);
         break;
       
       case 3:
         currentScreen = matchOptionsScreen;
-        myRequestHandler.showAds(false);
+        nativeFunctions.showAds(false);
         setScreen(matchOptionsScreen);
         break;
         
       case 4:
         currentScreen = gameScreen;
-        myRequestHandler.showAds(true);
+        nativeFunctions.showAds(true);
         setScreen(gameScreen);
         break;
         
