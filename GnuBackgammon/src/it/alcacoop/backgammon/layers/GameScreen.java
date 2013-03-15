@@ -95,16 +95,20 @@ public class GameScreen implements Screen {
         if(UIDialog.isOpened()) return false;
         
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          if ((MatchState.matchType>0) || (MatchState.fMove==0)) { //CPU IS PLAYING
-            if (MatchState.matchType==1)
+          
+          if (MatchState.fMove==0) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
+            if (MatchState.matchType!=2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
             //else
               //GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            
             if (MatchState.matchType==0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
             else
               UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
           }
+        
+        
         }
         
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
