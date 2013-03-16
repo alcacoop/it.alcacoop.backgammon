@@ -99,7 +99,7 @@ public class GameScreen implements Screen {
           if (MatchState.fMove==0) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
             if (MatchState.matchType!=2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            //else
+            //TODO else
               //GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
             
             if (MatchState.matchType==0)
@@ -107,8 +107,6 @@ public class GameScreen implements Screen {
             else
               UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
           }
-        
-        
         }
         
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {

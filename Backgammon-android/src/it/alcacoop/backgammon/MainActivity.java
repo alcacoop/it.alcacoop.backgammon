@@ -63,8 +63,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
-import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.ads.AdRequest;
@@ -83,22 +84,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
 
   protected Handler handler = new Handler()
   {
-      @SuppressLint("HandlerLeak")
-      @Override
-      public void handleMessage(Message msg) {
-          switch(msg.what) {
-              case SHOW_ADS:
-              {
-                  adView.setVisibility(View.VISIBLE);
-                  break;
-              }
-              case HIDE_ADS:
-              {
-                  adView.setVisibility(View.GONE);
-                  break;
-              }
-          }
+    @SuppressLint("HandlerLeak")
+    @Override
+    public void handleMessage(Message msg) {
+      switch(msg.what) {
+      case SHOW_ADS:
+        adView.setVisibility(View.VISIBLE);
+        break;
+      case HIDE_ADS:
+        adView.setVisibility(View.GONE);
+        break;
       }
+    }
   };
   
   @Override
@@ -118,7 +115,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
     View gameView = initializeForView(new GnuBackgammon(this), cfg);
@@ -251,34 +248,44 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   public void injectBGInstance() {
   }
 
-  @Override
-  public void addLifecycleListener(LifecycleListener listener) {}
-
-  @Override
-  public void removeLifecycleListener(LifecycleListener listener) {}
 
   @Override
   public void fibsSignin() {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
+
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        alert.setView(inflater.inflate(R.layout.dialog_signin, null)).
-          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-          }).
+        final View myView = inflater.inflate(R.layout.dialog_signin, null);;
+        alert.setView(myView).
+          setTitle("Login to server...").
+          setCancelable(false).
+          setNegativeButton("Cancel", null).
           setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               fibsRegistration();
             }
           }).
-          setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-          });
-        alert.show();
+          setPositiveButton("Login", null);
+        
+        final AlertDialog d = alert.create();
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+          @Override
+          public void onShow(DialogInterface arg0) {
+            Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                String username = ((EditText)myView.findViewById(R.id.username)).getText().toString();
+                String password = ((EditText)myView.findViewById(R.id.password)).getText().toString();
+                if (username.length()>0&&password.length()>0) d.dismiss();
+                Log.e("MINE", username+":"+password);
+              }
+            });
+          }
+        });
+        d.show();
       }
     });
   }
@@ -287,19 +294,34 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   public void fibsRegistration() {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
+    
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        alert.setView(inflater.inflate(R.layout.dialog_register, null)).
-        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-          }
-        }).
-        setPositiveButton("Create Account",  new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
+        final View myView = inflater.inflate(R.layout.dialog_register, null);
+        alert.setView(myView).
+          setCancelable(false).
+          setTitle("Create new account...").
+          setNegativeButton("Cancel", null).
+          setPositiveButton("Create", null);
+        
+        final AlertDialog d = alert.create();
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+          @Override
+          public void onShow(DialogInterface arg0) {
+            Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                String username = ((EditText)myView.findViewById(R.id.username)).getText().toString();
+                String password = ((EditText)myView.findViewById(R.id.password)).getText().toString();
+                String password2 = ((EditText)myView.findViewById(R.id.password2)).getText().toString();
+                Log.e("MINE", username+":"+password+":"+password2);        
+              }
+            });
           }
         });
-        alert.show();
+        d.show();
       }
     });
   }
@@ -307,9 +329,9 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   @Override
   public boolean isNetworkUp() {
     ConnectivityManager connectivityManager = 
-        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+      (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo activeNetworkInfo = 
-        connectivityManager.getActiveNetworkInfo();
+      connectivityManager.getActiveNetworkInfo();
     return activeNetworkInfo != null;
   }
 }
