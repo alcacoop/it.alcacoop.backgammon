@@ -35,6 +35,7 @@ package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.actions.MyActions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -54,13 +55,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
-public class FibsLoginScreen implements Screen {
+public class FibsScreen implements Screen {
 
   private Stage stage;
   private Group g;
   private Image bgImg;
   
-  public FibsLoginScreen(){
+  public FibsScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     
@@ -149,7 +150,7 @@ public class FibsLoginScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
-    g.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
     
     GnuBackgammon.Instance.nativeFunctions.fibsSignin();
   }
@@ -164,6 +165,7 @@ public class FibsLoginScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override
