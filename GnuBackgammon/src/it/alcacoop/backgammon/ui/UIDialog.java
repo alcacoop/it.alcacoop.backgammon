@@ -329,6 +329,7 @@ public final class UIDialog extends Window {
           @Override
           public void run() {
             instance.remove();
+            dialogOpened = false;
             GnuBackgammon.fsm.processEvent(instance.evt, true);
           }
         })
