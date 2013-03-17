@@ -109,6 +109,7 @@ public class ClientConnection extends Thread {
     //server = "fibs.com";
     server = "ti-ga.com";
     //server = "bishop";
+    //server = "192.168.1.151";
     int port = 4321;
     try {
       sock = new Socket(server, port);
@@ -192,17 +193,17 @@ public class ClientConnection extends Thread {
   }
 
   /** Send the login message to FIBS.
+   * @param password 
+   * @param username 
   */
-  public void sendLogin() {
-    String user = "dmartella";
-    String pwd = "a799c5l0";
+  public void sendLogin(String username, String password) {
     StringBuffer sb = new StringBuffer();
     sb.append("login ");
     sb.append("BackGammonMobile-0.1");
     sb.append(" 1008 ");
-    sb.append(user);
+    sb.append(username);
     sb.append(" ");
-    sb.append(pwd);
+    sb.append(password);
     sb.append(eol);
     this.sendMessage(sb.toString());
   }

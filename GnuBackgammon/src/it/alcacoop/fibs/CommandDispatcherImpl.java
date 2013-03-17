@@ -183,6 +183,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         onPlayerChanged((Player)obj);
         break;
       case REGISTER_NEW_USER:
+        //REGISTRATION
         onRegisterNewUser();
         break;
       case READY_TO_PLAY:
@@ -391,6 +392,10 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   public void ropChanged(boolean[] rop) {
     //TODO
     //this.properties.setROP(rop);
+  }
+  
+  public void sendLogin(String username, String password) {
+    clientConnection.sendLogin(username, password);
   }
 
 }

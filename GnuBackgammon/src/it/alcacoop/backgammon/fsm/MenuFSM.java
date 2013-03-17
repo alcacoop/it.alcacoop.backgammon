@@ -41,6 +41,7 @@ import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 
 
 // MENU FSM
@@ -143,19 +144,46 @@ public class MenuFSM extends BaseFSM implements Context {
     FIBS {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.goToScreen(8);
+        //GnuBackgammon.Instance.goToScreen(8);
+        GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
         super.enterState(ctx);
       }
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
-          if (params.toString().equals("BACK")) {
+        switch (evt) {
+          case BUTTON_CLICKED:
+            if (params.toString().equals("BACK")) {
+              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
+              ctx.state(States.MAIN_MENU);
+            }
+            break;
+          
+          case FIBS_CONNECTED:
+            GnuBackgammon.Instance.nativeFunctions.fibsSignin();
+            break;
+          
+          case FIBS_CANCEL:
+            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
-          }
+            break;
+            
+          case FIBS_LOGIN_ERROR:
+            UIDialog.getFlashDialog(Events.NOOP, "Authentication error: wrong username or password", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
+            ctx.state(States.MAIN_MENU);
+            break;
+            
+          case FIBS_LOGIN_OK:
+            GnuBackgammon.Instance.goToScreen(8);
+            break;
+          
+          default: 
+            return false;
         }
-        return false;
+        return true;
       }
+      
     },
     
     

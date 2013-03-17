@@ -23,6 +23,8 @@ import it.alcacoop.fibs.CommandDispatcher.Command;
  */
 public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
 
+  private int login_attempt = 0;
+  
   public enum Mode {
     Run,
     Register
@@ -81,7 +83,13 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case FIBS_LoginPrompt:
         System.out.println(s);
-        clientConnection.sendLogin();
+        if (login_attempt==0) {
+          login_attempt = 1;
+          GnuBackgammon.fsm.processEvent(Events.FIBS_CONNECTED, null);
+        } else {
+          GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_ERROR, null);
+          login_attempt = 0;
+        }
         break;
       case CLIP_LOGIN:
         parsePlayerLoggedIn(s);
@@ -103,6 +111,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case CLIP_WELCOME:
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
       case FIBS_YouAreWatching:
         System.out.println(s);

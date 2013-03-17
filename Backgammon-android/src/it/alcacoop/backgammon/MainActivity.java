@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.annotation.SuppressLint;
@@ -261,7 +262,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
         alert.setView(myView).
           setTitle("Login to server...").
           setCancelable(false).
-          setNegativeButton("Cancel", null).
+          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+            }
+          }).
           setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               fibsRegistration();
@@ -279,7 +285,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
               public void onClick(View v) {
                 String username = ((EditText)myView.findViewById(R.id.username)).getText().toString();
                 String password = ((EditText)myView.findViewById(R.id.password)).getText().toString();
-                if (username.length()>0&&password.length()>0) d.dismiss();
+                if (username.length()>0&&password.length()>0) {
+                  GnuBackgammon.Instance.commandDispatcher.sendLogin(username, password);
+                  d.dismiss();
+                }
                 Log.e("MINE", username+":"+password);
               }
             });
@@ -302,7 +311,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
         alert.setView(myView).
           setCancelable(false).
           setTitle("Create new account...").
-          setNegativeButton("Cancel", null).
+          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+            }
+          }).
           setPositiveButton("Create", null);
         
         final AlertDialog d = alert.create();
