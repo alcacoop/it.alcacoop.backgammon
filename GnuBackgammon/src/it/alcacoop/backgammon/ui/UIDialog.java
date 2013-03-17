@@ -43,7 +43,6 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.MatchState;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;

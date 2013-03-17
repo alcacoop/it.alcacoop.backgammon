@@ -42,6 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.layers.MainMenuScreen;
+import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import bsh.Interpreter;
@@ -193,6 +195,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void fibsSignin() {
+    UIDialog.getLoginDialog(1, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
   }
 
   @Override
@@ -201,6 +204,6 @@ public class Main implements NativeFunctions {
 
   @Override
   public boolean isNetworkUp() {
-    return false;
+    return true;
   }
 }
