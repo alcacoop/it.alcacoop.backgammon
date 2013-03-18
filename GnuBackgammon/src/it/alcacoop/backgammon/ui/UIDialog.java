@@ -43,6 +43,7 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.layers.MainMenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -51,6 +52,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -83,7 +85,7 @@ public final class UIDialog extends Window {
   private boolean dicesWindow = false;
   
   private GameOptionsTable opts;
-  
+    
   static {
     instance = new UIDialog();
   }
@@ -653,6 +655,152 @@ public final class UIDialog extends Window {
   public static boolean isOpened() {
     return instance.hasParent();
   }
+
+  public static void getLoginDialog(float alpha, Stage stage) {
+    instance.evt = Events.NOOP;
+    instance.quitWindow = false;
+    instance.leaveWindow = false;
+    instance.optionsWindow = true;
+    instance.remove();
+    
+    float width = stage.getWidth()*0.65f;
+    float height = stage.getHeight()*0.6f;
+
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.add(new Label("Logint to server..", GnuBackgammon.skin)).colspan(3);
+    
+    instance.row();
+    instance.add().colspan(3).expand().fill();
+    
+    instance.row();
+    instance.add(new Label("Username:", GnuBackgammon.skin));
+    final TextField username = new TextField("", GnuBackgammon.skin);
+    instance.add(username).colspan(2).fillX().expandX();
+    
+    instance.row();
+    instance.add(new Label("Password:", GnuBackgammon.skin));
+    final TextField password = new TextField("", GnuBackgammon.skin);
+    instance.add(password).colspan(2).fillX().expandX();
+    
+    instance.row();
+    instance.add().colspan(3).expand().fill();
+    
+    instance.row();
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
+    TextButton t1 = new TextButton("Cancel", tl);
+    TextButton t2 = new TextButton("Create", tl);
+    TextButton t3 = new TextButton("Login", tl);
+    instance.add(t1).fill().expand();
+    instance.add(t2).fill().expand();
+    instance.add(t3).fill().expand();
+    
+    
+    t1.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+        instance.remove();
+        super.clicked(event, x, y);
+      }
+    });
+    
+    t2.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        UIDialog.getCreateAccountDialog(1, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+        super.clicked(event, x, y);
+      }
+    });
+    
+    t3.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        String u = username.getText();
+        String p = password.getText();
+        if (u.length()>0&&p.length()>0) {
+          GnuBackgammon.Instance.commandDispatcher.sendLogin(u, p);
+          instance.remove();
+        }
+        super.clicked(event, x, y);
+      }
+    });
+    
+    stage.addActor(instance);
+    Gdx.graphics.setContinuousRendering(true);
+    instance.addAction(Actions.alpha(alpha, 0.3f));
+  }
+  
+  
+  
+  
+  public static void getCreateAccountDialog(float alpha, Stage stage) {
+    instance.evt = Events.NOOP;
+    instance.quitWindow = false;
+    instance.leaveWindow = false;
+    instance.optionsWindow = true;
+    instance.remove();
+    
+    float width = stage.getWidth()*0.65f;
+    float height = stage.getHeight()*0.6f;
+
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.add(new Label("Create Account..", GnuBackgammon.skin)).colspan(3);
+    
+    instance.row();
+    instance.add().colspan(3).expand().fill();
+    
+    instance.row();
+    instance.add(new Label("Username:", GnuBackgammon.skin));
+    final TextField username = new TextField("", GnuBackgammon.skin);
+    instance.add(username).colspan(2).fillX().expandX();
+    
+    instance.row();
+    instance.add(new Label("Password:", GnuBackgammon.skin));
+    final TextField password = new TextField("", GnuBackgammon.skin);
+    instance.add(password).colspan(2).fillX().expandX();
+    
+    instance.row();
+    instance.add(new Label("Password:", GnuBackgammon.skin));
+    final TextField password2 = new TextField("", GnuBackgammon.skin);
+    instance.add(password2).colspan(2).fillX().expandX();
+    
+    instance.row();
+    instance.add().colspan(3).expand().fill();
+    
+    instance.row();
+    TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
+    TextButton t1 = new TextButton("Cancel", tl);
+    TextButton t2 = new TextButton("Create", tl);
+    instance.add(t1).fill().expand();
+    instance.add().fill().expand();
+    instance.add(t2).fill().expand();
+    
+    t1.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+        instance.remove();
+        super.clicked(event, x, y);
+      }
+    });
+    
+    
+    stage.addActor(instance);
+    Gdx.graphics.setContinuousRendering(true);
+    instance.addAction(Actions.alpha(alpha, 0.3f));
+  }
+  
+  
   
   public static void setButtonsStyle(String b) {
     instance.bContinue.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));

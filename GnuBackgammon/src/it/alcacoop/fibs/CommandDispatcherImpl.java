@@ -151,6 +151,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   public void dispatch(Command command, String arg1, String arg2) {
     System.out.println("COMMAND: "+command+" ARG1: "+arg1+" ARG2: "+arg2);
     switch (command) {
+    
       case INVITED:
         onInvited(arg1, arg2);
         break;
@@ -181,10 +182,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         break;
       case PLAYER_CHANGED:
         onPlayerChanged((Player)obj);
-        break;
-      case REGISTER_NEW_USER:
-        //REGISTRATION
-        onRegisterNewUser();
         break;
       case READY_TO_PLAY:
         b = (Boolean)obj;
@@ -275,9 +272,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     startClientConnection(Mode.Run);
   }
 
-  private void onRegisterNewUser() {
-    startClientConnection(Mode.Register);
-  }
 
   public void startClientConnection(Mode mode) {
     if (this.clientConnection != null) {
@@ -300,6 +294,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     onNetworkDisconnect();
   }
 
+  //INIT ENVIRONMENT
   private void onNetworkConnected() {
     writeNetworkMessageln("set boardstyle 3");
     writeNetworkMessageln("set automove 0");
@@ -397,5 +392,8 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   public void sendLogin(String username, String password) {
     clientConnection.sendLogin(username, password);
   }
-
+  
+  public void createAccount() {
+    startClientConnection(Mode.Register);
+  }
 }

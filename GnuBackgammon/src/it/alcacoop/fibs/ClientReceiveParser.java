@@ -366,7 +366,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   private RegState regState = RegState.name;
 
   private void parseMessageRegister(String s, int fibsCookie) {
-    System.out.println(s);
+    System.out.println("MODE REGISTER: "+s);
     switch (fibsCookie) {
     
       case FIBS_LoginPrompt:
@@ -376,6 +376,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case FIBS_GiveUsername:
         if (regState == RegState.name) {
+          /*
           System.out.println("GIVE USERNAME!");
           String st = Math.round(Math.random()*1000000)+"";
           char c[] = {'a', 'b','c','d','e','f','g','h','i','j'};
@@ -383,32 +384,40 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
           for (int i=0;i<st.length();i++)
             sfx += c[Integer.parseInt(st.substring(i,i+1))];
           commandDispatcher.writeNetworkMessageln("name pluto_"+sfx);
+          */
+          commandDispatcher.writeNetworkMessageln("name "+GnuBackgammon.Instance.FibsUsername);
         } else {
+          //ERROR.. END CONNECTION
           commandDispatcher.writeNetworkMessageln("bye");
+          GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
+          //GnuBackgammon.fsm.processEvent(Events.FIBS_ERROR, null);
         }
         break;
         
       case FIBS_UseAnotherName:
         System.out.println("PRESENT!");
         commandDispatcher.writeNetworkMessageln("bye");
+        GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_PRESENT, null);
         regState = RegState.done;
         break;
         
       case FIBS_GivePassword:
-        commandDispatcher.writeNetworkMessageln("password1");
+        commandDispatcher.writeNetworkMessageln(GnuBackgammon.Instance.FibsPassword);
         break;
         
       case FIBS_RetypePassword:
-        commandDispatcher.writeNetworkMessageln("password1");
+        commandDispatcher.writeNetworkMessageln(GnuBackgammon.Instance.FibsPassword);
         break;
 
       case FIBS_YouAreRegistered:
         System.out.println("SUCCESS!");
+        GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
         regState = RegState.done;
         break;
       
       case FIBS_TooMuchAccounts:
         System.out.println("SPAM!");
+        GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_SPAM, null);
         regState = RegState.done;
         break;
     }
@@ -419,6 +428,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   private void disconnectFromServer() {
+    System.out.println("DISCONNECT FROM SERVER NOW!");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.SHUTTING_DOWN);
     this.clientConnection.resetFIBSCookieMonster();
   }

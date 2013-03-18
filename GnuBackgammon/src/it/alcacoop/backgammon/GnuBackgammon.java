@@ -106,6 +106,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;
+  public String FibsUsername; //ONLY FOR ACCOUNT CREATION
+  public String FibsPassword; //ONLY FOR ACCOUNT CREATION
+  
+  
   
   public GnuBackgammon(NativeFunctions n) {
     nativeFunctions = n;
@@ -177,9 +181,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
     
-    
     //setScreen(new SplashScreen());
-    //setScreen(welcomeScreen);
     setFSM("MENU_FSM");
   }
 

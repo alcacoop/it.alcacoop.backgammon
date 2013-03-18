@@ -107,9 +107,7 @@ public class ClientConnection extends Thread {
     sock = null;
     String server = "localhost";
     //server = "fibs.com";
-    server = "ti-ga.com";
-    //server = "bishop";
-    //server = "192.168.1.151";
+    //server = "ti-ga.com";
     int port = 4321;
     try {
       sock = new Socket(server, port);

@@ -285,7 +285,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
               public void onClick(View v) {
                 String username = ((EditText)myView.findViewById(R.id.username)).getText().toString();
                 String password = ((EditText)myView.findViewById(R.id.password)).getText().toString();
-                if (username.length()>0&&password.length()>0) {
+                if (username.length()>3&&password.length()>3) {
                   GnuBackgammon.Instance.commandDispatcher.sendLogin(username, password);
                   d.dismiss();
                 }
@@ -330,6 +330,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
                 String username = ((EditText)myView.findViewById(R.id.username)).getText().toString();
                 String password = ((EditText)myView.findViewById(R.id.password)).getText().toString();
                 String password2 = ((EditText)myView.findViewById(R.id.password2)).getText().toString();
+                if (username.length()>3&&password.length()>3&&password2.length()>3&&password.equals(password2)) {
+                  GnuBackgammon.Instance.FibsUsername = username;
+                  GnuBackgammon.Instance.FibsPassword = password;
+                  GnuBackgammon.Instance.commandDispatcher.createAccount();
+                }
                 Log.e("MINE", username+":"+password+":"+password2);        
               }
             });
