@@ -69,7 +69,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   private static GameScreen gameScreen;
   private static MatchOptionsScreen matchOptionsScreen;
-  private static MainMenuScreen menuScreen;
+  public  static MainMenuScreen menuScreen;
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
   private static AppearanceScreen appearanceScreen;
@@ -192,48 +192,48 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void goToScreen(int s) {
     switch (s) {
       case 0:
-        currentScreen = welcomeScreen;
         nativeFunctions.showAds(false);
         setScreen(welcomeScreen);
+        currentScreen = welcomeScreen;
         break;
         
       case 1:
-        currentScreen = optionsScreen;
         nativeFunctions.showAds(false);
         setScreen(optionsScreen);
+        currentScreen = optionsScreen;
         break;
       
       case 2:
-        currentScreen = menuScreen;
         nativeFunctions.showAds(false);
         setScreen(menuScreen);
+        currentScreen = menuScreen;
         break;
       
       case 3:
-        currentScreen = matchOptionsScreen;
         nativeFunctions.showAds(false);
         setScreen(matchOptionsScreen);
+        currentScreen = matchOptionsScreen;
         break;
         
       case 4:
-        currentScreen = gameScreen;
         nativeFunctions.showAds(true);
         setScreen(gameScreen);
+        currentScreen = gameScreen;
         break;
         
       case 6:
-        currentScreen = welcomeScreen;
         setScreen(welcomeScreen);
+        currentScreen = welcomeScreen;
         break;
         
       case 7:
-        currentScreen = appearanceScreen;
         setScreen(appearanceScreen);
+        currentScreen = appearanceScreen;
         break;
         
       case 8:
-        currentScreen = fibsScreen;
         setScreen(fibsScreen);
+        currentScreen = fibsScreen;
         break;
     }
   }

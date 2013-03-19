@@ -56,7 +56,8 @@ public class MenuFSM extends BaseFSM implements Context {
     MAIN_MENU {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.goToScreen(2);
+        if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.menuScreen)
+          GnuBackgammon.Instance.goToScreen(2);
       }
 
       @Override
