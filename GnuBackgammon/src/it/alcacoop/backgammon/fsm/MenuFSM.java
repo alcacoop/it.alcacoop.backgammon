@@ -56,7 +56,7 @@ public class MenuFSM extends BaseFSM implements Context {
     MAIN_MENU {
       @Override
       public void enterState(Context ctx) {
-        if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.menuScreen)
+        if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.Instance.menuScreen)
           GnuBackgammon.Instance.goToScreen(2);
       }
 
@@ -65,8 +65,8 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
-            if (!Gdx.files.absolute(GnuBackgammon.fname+"json").exists()) { //NO SAVED MATCH
-              Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
+            if (!Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists()) { //NO SAVED MATCH
+              Gdx.files.absolute(GnuBackgammon.Instance.fname+"sgf").delete();
               ctx.state(States.MATCH_OPTIONS);
             } else { //SAVED MATCH PRESENT!
               UIDialog.getYesNoDialog(
@@ -113,8 +113,8 @@ public class MenuFSM extends BaseFSM implements Context {
           if ((Boolean)params) {
             GnuBackgammon.Instance.setFSM("GAME_FSM");
           } else {
-            Gdx.files.absolute(GnuBackgammon.fname+"json").delete();
-            Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
+            Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").delete();
+            Gdx.files.absolute(GnuBackgammon.Instance.fname+"sgf").delete();
             ctx.state(States.MATCH_OPTIONS);
           }
           return true;

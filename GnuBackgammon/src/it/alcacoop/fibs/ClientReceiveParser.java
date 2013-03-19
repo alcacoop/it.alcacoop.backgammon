@@ -69,7 +69,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case CLIP_OWN_INFO:
         String[] data = s.split(" ");
-        GnuBackgammon.fibsScreen.FibsRating = data[15];
+        GnuBackgammon.Instance.fibsScreen.FibsRating = data[15];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.OWN_INFO, s);
         GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
@@ -119,8 +119,8 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case CLIP_WELCOME:
         data = s.split(" ");
-        GnuBackgammon.fibsScreen.Username = data[1];
-        GnuBackgammon.fibsScreen.LastLogin = data[2];
+        GnuBackgammon.Instance.fibsScreen.Username = data[1];
+        GnuBackgammon.Instance.fibsScreen.LastLogin = data[2];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
         break;
       case FIBS_YouAreWatching:

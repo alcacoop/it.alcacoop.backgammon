@@ -51,7 +51,6 @@ import it.alcacoop.backgammon.logic.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
-import it.alcacoop.fibs.CommandDispatcher.Command;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -67,20 +66,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GnuBackgammon extends Game implements ApplicationListener {
   
-  private static GameScreen gameScreen;
-  private static MatchOptionsScreen matchOptionsScreen;
-  public  static MainMenuScreen menuScreen;
-  private static OptionsScreen optionsScreen;
-  private static WelcomeScreen welcomeScreen;
-  private static AppearanceScreen appearanceScreen;
-  public static FibsScreen fibsScreen;
+  private GameScreen gameScreen;
+  private MatchOptionsScreen matchOptionsScreen;
+  public  MainMenuScreen menuScreen;
+  private OptionsScreen optionsScreen;
+  private WelcomeScreen welcomeScreen;
+  private AppearanceScreen appearanceScreen;
+  public FibsScreen fibsScreen;
+  
   private int resolutions[][] = {
     {1280,740},
     {800,480},
     {480,320}
   };
-  public static int ss;
-  private static String[] resname = {"hdpi", "mdpi", "ldpi"};
+  public int ss;
+  private String[] resname = {"hdpi", "mdpi", "ldpi"};
+  public int resolution[];
   
   private GameFSM gameFSM;
   private SimulationFSM simulationFSM;
@@ -90,9 +91,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static BitmapFont font;
   public static TextureAtlas atlas;
   public static Skin skin;
-  public static int resolution[];
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
+  
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
@@ -102,7 +103,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public boolean isGNU = false;
   
   public MatchRecorder rec;
-  public static String fname;
+  public String fname;
   
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;

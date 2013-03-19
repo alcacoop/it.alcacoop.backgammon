@@ -75,7 +75,7 @@ public class FibsScreen implements Screen {
     
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
+    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
     stage.addActor(bgImg);
 
     stage.addListener(new InputListener() {

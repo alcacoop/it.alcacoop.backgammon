@@ -696,10 +696,10 @@ public class Board extends Group {
       ns[i].setX(pos[i].x-ns[i].getWidth()/2);
     }
     float top, bottom;
-    if (GnuBackgammon.ss==0) { //HDPI
+    if (GnuBackgammon.Instance.ss==0) { //HDPI
       bottom = ns[23].getHeight()*0.65f; 
       top = getHeight()-ns[23].getHeight()*1.6f;
-    } else if (GnuBackgammon.ss==1) { //MDPI
+    } else if (GnuBackgammon.Instance.ss==1) { //MDPI
       bottom = ns[23].getHeight()*0.5f; 
       top = getHeight()-ns[23].getHeight()*1.4f;
     } else { //LDPI

@@ -54,7 +54,7 @@ public class SplashScreen implements Screen {
   
   public SplashScreen(){
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
+    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
     
     TextureRegion r = GnuBackgammon.atlas.findRegion("alca");
     

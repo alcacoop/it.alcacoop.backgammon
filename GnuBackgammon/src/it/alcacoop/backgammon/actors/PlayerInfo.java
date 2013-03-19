@@ -67,10 +67,10 @@ public class PlayerInfo extends Table {
     //float w = width*0.6f;
     row().height(0);
     add().height(0).width(width/1.8f);
-    add().height(0).padRight((4+(2-GnuBackgammon.ss)));
+    add().height(0).padRight((4+(2-GnuBackgammon.Instance.ss)));
     add().height(0).width(width/14);
-    add(i).padRight(2+(2-GnuBackgammon.ss)).height(0);
-    add().height(0).padRight((4+(2-GnuBackgammon.ss)));
+    add(i).padRight(2+(2-GnuBackgammon.Instance.ss)).height(0);
+    add().height(0).padRight((4+(2-GnuBackgammon.Instance.ss)));
     add().height(0).width(width/10);
     
     row();

@@ -83,7 +83,7 @@ public class GameScreen implements Screen {
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.resolution[0], GnuBackgammon.resolution[1], false);
+    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
     
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
@@ -162,7 +162,7 @@ public class GameScreen implements Screen {
     
     table.row().minHeight(44); //BANNER ON ldpi
     
-    table.add(i).left().padLeft(6+6*(2-GnuBackgammon.ss)).width(i.getWidth());
+    table.add(i).left().padLeft(6+6*(2-GnuBackgammon.Instance.ss)).width(i.getWidth());
     
     Table t = new Table();
     t.add(pInfo[0]).left();
@@ -170,8 +170,8 @@ public class GameScreen implements Screen {
     t.add(pInfo[1]).left();
     
     table.add().expand().fill();
-    table.add(t).fillX().padTop(3+3*(2-GnuBackgammon.ss)).right().padRight((2+3*(2-GnuBackgammon.ss))*2.5f);
-    table.add(menu).fillY().width(stage.getWidth()/10).padRight(6+6*(2-GnuBackgammon.ss)).padTop(3+3*(2-GnuBackgammon.ss));
+    table.add(t).fillX().padTop(3+3*(2-GnuBackgammon.Instance.ss)).right().padRight((2+3*(2-GnuBackgammon.Instance.ss))*2.5f);
+    table.add(menu).fillY().width(stage.getWidth()/10).padRight(6+6*(2-GnuBackgammon.Instance.ss)).padTop(3+3*(2-GnuBackgammon.Instance.ss));
    
     table.row();
     table.add(board).colspan(4).expand().fill();
@@ -210,7 +210,7 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     
-    if ((Gdx.files.absolute(GnuBackgammon.fname+"json").exists())&&(MatchState.matchType==0))
+    if ((Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists())&&(MatchState.matchType==0))
       restoreOldMatch();
     else
       initNewMatch();
@@ -220,7 +220,7 @@ public class GameScreen implements Screen {
 
   
   public void restoreOldMatch() {
-    GnuBackgammon.Instance.rec.loadFromFile(GnuBackgammon.fname+"json");
+    GnuBackgammon.Instance.rec.loadFromFile(GnuBackgammon.Instance.fname+"json");
     OrderedMap<String, Object> gi = GnuBackgammon.Instance.rec.getLastGameInfo();
     
     MatchState.SetCubeUse(((Float)gi.get("_cu")).intValue());
