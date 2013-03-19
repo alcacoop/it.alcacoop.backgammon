@@ -64,7 +64,7 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
-            if (!Gdx.files.absolute(GnuBackgammon.fname+"json").exists()) { //NO SAVED MATCHE
+            if (!Gdx.files.absolute(GnuBackgammon.fname+"json").exists()) { //NO SAVED MATCH
               Gdx.files.absolute(GnuBackgammon.fname+"sgf").delete();
               ctx.state(States.MATCH_OPTIONS);
             } else { //SAVED MATCH PRESENT!
@@ -191,6 +191,12 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.MAIN_MENU);
             break;
           */
+            
+          case FIBS_NETWORK_ERROR:  
+            UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
+            ctx.state(States.MAIN_MENU);
+            break;
           
           case FIBS_ACCOUNT_PRESENT:
             UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'"+GnuBackgammon.Instance.FibsUsername+"' is already used by someone else", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());

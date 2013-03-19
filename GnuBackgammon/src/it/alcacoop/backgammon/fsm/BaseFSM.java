@@ -73,6 +73,7 @@ public class BaseFSM implements Context {
     FIBS_DISCONNECT,
     FIBS_LOGIN_OK,
     FIBS_LOGIN_ERROR,
+    FIBS_NETWORK_ERROR,
     
     FIBS_BOARD,
     FIBS_MOVES,

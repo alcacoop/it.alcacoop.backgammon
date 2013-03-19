@@ -8,6 +8,9 @@
  
 package it.alcacoop.fibs;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -108,13 +111,16 @@ public class ClientConnection extends Thread {
     String server = "localhost";
     //server = "fibs.com";
     //server = "ti-ga.com";
+    server = "dmartella.homelinux.net";
     int port = 4321;
     try {
       sock = new Socket(server, port);
     } catch (UnknownHostException e) {
+      GnuBackgammon.fsm.processEvent(Events.FIBS_NETWORK_ERROR, null);
       e.printStackTrace();
       return;
     } catch (IOException e) {
+      GnuBackgammon.fsm.processEvent(Events.FIBS_NETWORK_ERROR, null);
       e.printStackTrace();
       return;
     }
