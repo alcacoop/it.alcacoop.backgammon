@@ -81,7 +81,7 @@ public class MainMenuScreen implements Screen {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          if (UIDialog.dialogOpened) return false;
+          if (UIDialog.isOpened()) return false;
           UIDialog.getQuitDialog(stage);
         }
         return super.keyDown(event, keycode);

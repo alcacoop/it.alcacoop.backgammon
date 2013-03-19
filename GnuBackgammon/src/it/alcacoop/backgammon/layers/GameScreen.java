@@ -89,7 +89,7 @@ public class GameScreen implements Screen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(UIDialog.dialogOpened) return false;
+        if(UIDialog.isOpened()) return false;
         
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           if ((MatchState.matchType==1) || (MatchState.fMove==0)) { //CPU IS PLAYING

@@ -74,9 +74,6 @@ public final class UIDialog extends Window {
   
   private GameOptionsTable opts;
   
-  public static boolean dialogOpened = false;
-  
-  
   static {
     instance = new UIDialog();
   }
@@ -169,7 +166,6 @@ public final class UIDialog extends Window {
   }
   
   private void hide(Runnable r) {
-    dialogOpened = false;
     addAction(Actions.sequence(
         Actions.fadeOut(0.3f),
         Actions.run(r)
@@ -180,7 +176,6 @@ public final class UIDialog extends Window {
     getYesNoDialog(evt, text, 1, stage);
   }
   public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -215,7 +210,6 @@ public final class UIDialog extends Window {
     getContinueDialog(evt, text, 1, stage);
   }
   public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -249,7 +243,6 @@ public final class UIDialog extends Window {
     getEndGameDialog(evt, text, text1, score1, score2, 1, stage);
   }
   public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -301,7 +294,6 @@ public final class UIDialog extends Window {
     getFlashDialog(evt, text, 1, stage);
   }
   public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -329,7 +321,6 @@ public final class UIDialog extends Window {
           @Override
           public void run() {
             instance.remove();
-            dialogOpened = false;
             GnuBackgammon.fsm.processEvent(instance.evt, true);
           }
         })
@@ -340,7 +331,6 @@ public final class UIDialog extends Window {
     getQuitDialog(1, stage);
   }
   public static void getQuitDialog(float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = true;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -372,7 +362,6 @@ public final class UIDialog extends Window {
 
   
   public static void getLeaveDialog(BaseFSM.Events evt, float alpha, Stage stage) {
-    dialogOpened = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = true;
@@ -416,7 +405,6 @@ public final class UIDialog extends Window {
     getHelpDialog(1, stage, cb);
   }
   public static void getHelpDialog(float alpha, Stage stage, Boolean cb) {
-    dialogOpened = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -474,7 +462,6 @@ public final class UIDialog extends Window {
     getOptionsDialog(1, stage);
   }
   public static void getOptionsDialog(float alpha, Stage stage) {
-    dialogOpened = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -496,6 +483,10 @@ public final class UIDialog extends Window {
     
     stage.addActor(instance);
     instance.addAction(Actions.alpha(alpha, 0.3f));
+  }
+  
+  public static boolean isOpened() {
+    return instance.hasParent();
   }
   
   public static void setButtonsStyle(String b) {
