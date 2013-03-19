@@ -8,6 +8,8 @@
 
 package it.alcacoop.fibs;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.fibs.ClientReceiveParser.Mode;
 
 
@@ -22,7 +24,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   private ClientConnection clientConnection;
   private ClientReceiveParser parser;
   private final static String eol = "\r\n";
-
+  
 
   /** Primary entry point to the command dispatcher
    * @param command The command to execute
@@ -91,7 +93,13 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     switch (command) {
       case SYSTEM_MESSAGE:
         break;
+      case PLAYER_CHANGED:
+        Player p = GnuBackgammon.Instance.fibsPlayersPool.obtain();
+        p.parsePlayer(arg1);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_CHANGED, p);
+        break;
       case PLAYER_GONE:
+        GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_LOGOUT, arg1);
         break;
       case SAVED_MATCH:
         onSavedMatch(arg1);
@@ -179,9 +187,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     boolean b;
     switch (command) {
       case GAME_MOVE:
-        break;
-      case PLAYER_CHANGED:
-        onPlayerChanged((Player)obj);
         break;
       case READY_TO_PLAY:
         b = (Boolean)obj;
@@ -314,10 +319,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       this.clientConnection.shutDown();
       this.clientConnection = null;
     }
-  }
-
-  private void onPlayerChanged(Player p) {
-    System.out.println("PLAYING: "+p.getName() + " " + p.isPlaying());
   }
 
   private void onInvite(String playerName, String length) {

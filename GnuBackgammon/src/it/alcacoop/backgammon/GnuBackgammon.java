@@ -51,6 +51,8 @@ import it.alcacoop.backgammon.logic.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
+import it.alcacoop.fibs.Player;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -61,6 +63,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Pool;
 
 
 
@@ -109,6 +112,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public FibsNetHandler fibs;
   public String FibsUsername; //ONLY FOR ACCOUNT CREATION
   public String FibsPassword; //ONLY FOR ACCOUNT CREATION
+  public Pool<Player> fibsPlayersPool;
   
   
   
@@ -122,11 +126,20 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
   
   @Override
+  
   public void create() {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
 
     Instance = this;
+    
+    fibsPlayersPool = new Pool<Player>(50){
+      @Override
+      protected Player newObject() {
+        return new Player();
+      }
+    };
+    
     prefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
     snd = new SoundManager();

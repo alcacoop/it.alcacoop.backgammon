@@ -8,6 +8,8 @@
  
 package it.alcacoop.fibs;
 
+import com.badlogic.gdx.utils.Pool.Poolable;
+
 
 /** Describe one FIBS player. <br>
  * Most of these fields don't have setters because this object is mostly filled out from FIBS.
@@ -17,7 +19,7 @@ package it.alcacoop.fibs;
  * @version $Revision: 1.5 $ <br> $Date: 2011/01/01 00:17:39 $
  * @see <a href="http://cvs.buckosoft.com/Projects/BuckoFIBS/BuckoFIBS/src/main/java/com/buckosoft/fibs/domain/Player.java">cvs Player.java</a>
  */
-public class Player implements Comparable<Player> {
+public class Player implements Comparable<Player>, Poolable {
   private int id = 0;
   private String name;
   private String opponent = "";
@@ -305,12 +307,26 @@ public class Player implements Comparable<Player> {
     return(this.name.compareToIgnoreCase(o.getName()));
   }
 
-  /** A class to manage wins/losses for a Player.
-   * We need to be able to deal with them as numbers and present them as a string.
-   * @author dick
-   * @since 2010/12/23
-   * @version $Revision: 1.5 $ <br> $Date: 2011/01/01 00:17:39 $
-   * @see <a href="http://cvs.buckosoft.com/Projects/BuckoFIBS/BuckoFIBS/src/com/buckosoft/fibs/domain/Player.java">cvs Player.java</a>
-   *
-   */
+  @Override
+  public void reset() {
+    id = 0;
+    name = "";
+    opponent = "";
+    watching = "";
+    ready = false;
+    away = false;
+    rating = 0;
+    experience = 0;
+    idleTime = 0;
+    loginTime = 0;
+    hostName = "";
+    client = "";
+    email = "";
+    winLoss = null;
+    bfFlag = 0;
+    bfStatus = "";
+    invited = false;
+    savedMatch = "";
+    missManners = "";
+  }
 }

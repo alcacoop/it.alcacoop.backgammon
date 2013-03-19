@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
+import it.alcacoop.fibs.Player;
 
 
 // MENU FSM
@@ -215,6 +216,19 @@ public class MenuFSM extends BaseFSM implements Context {
             MenuFSM.accountCreated = true;
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+            break;
+            
+          case FIBS_PLAYER_CHANGED:
+            Player p = (Player)params;
+            GnuBackgammon.Instance.fibsScreen.playerChanged(p);
+            //GESTISCI LA HASHMAP E RIDISEGNA TABLE
+            //EVENTUALE FREE SUL POOL SE IL PLAYER ESISTE IN HASH
+            break;
+            
+          case FIBS_PLAYER_LOGOUT:
+            String s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.playerGone(s);
+            //ELIMINA PLAYER DALLA HASHMAP E LIBERA p SUL POOL
             break;
             
           default: 

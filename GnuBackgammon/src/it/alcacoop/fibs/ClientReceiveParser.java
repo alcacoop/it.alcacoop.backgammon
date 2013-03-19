@@ -25,6 +25,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
 
   private int login_attempt = 0;
   
+  
   public enum Mode {
     Run,
     Register
@@ -69,12 +70,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case CLIP_OWN_INFO:
         String[] data = s.split(" ");
-        GnuBackgammon.Instance.fibsScreen.FibsRating = data[15];
+        GnuBackgammon.Instance.fibsScreen.fibsRating = data[15];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.OWN_INFO, s);
         GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
       case CLIP_WHO_INFO:
-        parseWhoInfo(s);
+        this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_CHANGED, s);
         break;
       case CLIP_WHO_END:
         handleWhoEnd();
@@ -119,8 +120,8 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case CLIP_WELCOME:
         data = s.split(" ");
-        GnuBackgammon.Instance.fibsScreen.Username = data[1];
-        GnuBackgammon.Instance.fibsScreen.LastLogin = data[2];
+        GnuBackgammon.Instance.fibsScreen.username = data[1];
+        GnuBackgammon.Instance.fibsScreen.lastLogin = data[2];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
         break;
       case FIBS_YouAreWatching:
@@ -431,14 +432,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     System.out.println("DISCONNECT FROM SERVER NOW!");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.SHUTTING_DOWN);
     this.clientConnection.resetFIBSCookieMonster();
-  }
-
-  private void parseWhoInfo(String s) {
-    Player p = new Player();
-    p.parsePlayer(s);
-    //TODO
-    this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_CHANGED, p);
-    System.out.println(s);
   }
 
   private void handleWhoEnd() {

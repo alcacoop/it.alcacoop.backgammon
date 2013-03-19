@@ -33,12 +33,14 @@
 
 package it.alcacoop.backgammon.layers;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.fibs.Player;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -63,13 +65,17 @@ public class FibsScreen implements Screen {
   private Group g;
   private Image bgImg;
   
-  public String Username;
-  public String LastLogin;
-  public String FibsRating;
+  public String username;
+  public String lastLogin;
+  public String fibsRating;
+  public TreeMap<String, Player> fibsPlayers;
+   
   
   private Label LUsername, LLastLogin, LFibsRating;
   
   public FibsScreen(){
+    fibsPlayers = new TreeMap<String, Player>();
+
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     
@@ -106,6 +112,7 @@ public class FibsScreen implements Screen {
     
         
     Table table = new Table();
+    
     Drawable d = GnuBackgammon.skin.getDrawable("default-window");
     
     table.setBackground(d);
@@ -119,16 +126,14 @@ public class FibsScreen implements Screen {
     table.add().fill().expand().colspan(3);
     
     table.row();
-    Label title = new Label("CONNECTED PLAYERS", GnuBackgammon.skin);
-    table.add(title).colspan(3);
-    
-    table.row();
     table.add().fill().expand().colspan(3);
 
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     table.row();
-    table.add(back);
+    table.add();
+    table.add(back).expand().fillX();
+    table.add();
     
     g = new Group();
     g.setWidth(width);
@@ -171,14 +176,38 @@ public class FibsScreen implements Screen {
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
     
-    LUsername.setText("Logged as: "+Username);
-    Date expiry = new Date(Long.parseLong(LastLogin)*1000);
+    LUsername.setText("Logged as: "+username);
+    Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
-    LFibsRating.setText("Rating: "+FibsRating);
+    LFibsRating.setText("Rating: "+fibsRating);
     
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+  }
+  
+  public void playerChanged(Player p) {
+    if (p.getName().equals(username)) return;
+    if (fibsPlayers.containsKey(p.getName())) 
+      GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(p.getName()));
+    fibsPlayers.put(p.getName(), p);
+    refreshPlayerList();
+  }
+  
+  public void playerGone(String p) {
+    if (p.equals(username)) return;
+    if (fibsPlayers.containsKey(p)) {
+      GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(p));
+      refreshPlayerList();
+    }
+  }
+  
+  public void refreshPlayerList() {
+    for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
+      String key = entry.getKey();
+      Player value = entry.getValue();
+      System.out.println("REFRESH PLAYER LIST: "+key + " => " + value);
+    }
   }
 
   @Override
