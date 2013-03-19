@@ -66,8 +66,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_UsersHeardYou:
       case FIBS_YouAlreadyRolled:
         break;
+        
       case CLIP_OWN_INFO:
+        String[] data = s.split(" ");
+        GnuBackgammon.fibsScreen.FibsRating = data[15];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.OWN_INFO, s);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
       case CLIP_WHO_INFO:
         parseWhoInfo(s);
@@ -91,12 +95,16 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
           login_attempt = 0;
         }
         break;
+        
       case CLIP_LOGIN:
+        //A PLAYER LOGGED IN
         parsePlayerLoggedIn(s);
         break;
       case CLIP_LOGOUT:
+      //A PLAYER LOGGED OUT
         parsePlayerLoggedOut(s);
         break;
+        
       case FIBS_OpponentLogsOut:
       case FIBS_OpponentLeftGame:
         parseAbortMatch(s);
@@ -110,8 +118,10 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         disconnectFromServer();
         break;
       case CLIP_WELCOME:
+        data = s.split(" ");
+        GnuBackgammon.fibsScreen.Username = data[1];
+        GnuBackgammon.fibsScreen.LastLogin = data[2];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
-        GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
       case FIBS_YouAreWatching:
         System.out.println(s);
@@ -376,21 +386,11 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case FIBS_GiveUsername:
         if (regState == RegState.name) {
-          /*
-          System.out.println("GIVE USERNAME!");
-          String st = Math.round(Math.random()*1000000)+"";
-          char c[] = {'a', 'b','c','d','e','f','g','h','i','j'};
-          String sfx = "";
-          for (int i=0;i<st.length();i++)
-            sfx += c[Integer.parseInt(st.substring(i,i+1))];
-          commandDispatcher.writeNetworkMessageln("name pluto_"+sfx);
-          */
           commandDispatcher.writeNetworkMessageln("name "+GnuBackgammon.Instance.FibsUsername);
         } else {
-          //ERROR.. END CONNECTION
+          //DONE.. END CONNECTION
           commandDispatcher.writeNetworkMessageln("bye");
           GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
-          //GnuBackgammon.fsm.processEvent(Events.FIBS_ERROR, null);
         }
         break;
         

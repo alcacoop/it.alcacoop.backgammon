@@ -73,7 +73,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
   private static AppearanceScreen appearanceScreen;
-  private static FibsScreen fibsScreen;
+  public static FibsScreen fibsScreen;
   private int resolutions[][] = {
     {1280,740},
     {800,480},

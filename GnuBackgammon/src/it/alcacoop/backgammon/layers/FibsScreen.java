@@ -33,6 +33,9 @@
 
 package it.alcacoop.backgammon.layers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
@@ -60,6 +63,12 @@ public class FibsScreen implements Screen {
   private Group g;
   private Image bgImg;
   
+  public String Username;
+  public String LastLogin;
+  public String FibsRating;
+  
+  private Label LUsername, LLastLogin, LFibsRating;
+  
   public FibsScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
@@ -84,11 +93,16 @@ public class FibsScreen implements Screen {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
+
     
-   //TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
+    LUsername = new Label("", GnuBackgammon.skin);
+    LLastLogin = new Label("", GnuBackgammon.skin);
+    LFibsRating = new Label("", GnuBackgammon.skin);
+    //TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
     
-    float width = stage.getWidth()*0.6f;
-    float height = stage.getHeight()*0.8f;
+    
+    float width = stage.getWidth()*0.95f;
+    float height = stage.getHeight()*0.95f;
     
         
     Table table = new Table();
@@ -98,11 +112,18 @@ public class FibsScreen implements Screen {
     table.setFillParent(true);
     table.debug();
     
-    Label title = new Label("CONNECTED PLAYERS", GnuBackgammon.skin);
-    table.add(title);
+    table.add(LUsername).expandX().left();
+    table.add(LLastLogin).expandX().center();
+    table.add(LFibsRating).expandX().right();
+    table.row();
+    table.add().fill().expand().colspan(3);
     
     table.row();
-    table.add().fill().expand();
+    Label title = new Label("CONNECTED PLAYERS", GnuBackgammon.skin);
+    table.add(title).colspan(3);
+    
+    table.row();
+    table.add().fill().expand().colspan(3);
 
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
@@ -149,9 +170,15 @@ public class FibsScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
-    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
     
-    GnuBackgammon.Instance.nativeFunctions.fibsSignin();
+    LUsername.setText("Logged as: "+Username);
+    Date expiry = new Date(Long.parseLong(LastLogin)*1000);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    String formattedDate = formatter.format(expiry);
+    LLastLogin.setText("Last login: "+formattedDate);
+    LFibsRating.setText("Rating: "+FibsRating);
+    
+    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override
