@@ -85,7 +85,8 @@ public final class UIDialog extends Window {
   private boolean dicesWindow = false;
   
   private GameOptionsTable opts;
-    
+  
+  
   static {
     instance = new UIDialog();
   }
@@ -651,8 +652,8 @@ public final class UIDialog extends Window {
     stage.addActor(instance);
     instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
-  
-  public static boolean isOpened() {
+
+    public static boolean isOpened() {
     return instance.hasParent();
   }
 
