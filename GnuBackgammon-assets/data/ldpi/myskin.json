@@ -21,10 +21,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
   toggle-B3: { down: check3-down, up: check3, checked: check3-selected, font: default-font, fontColor: white },
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider}
+	default: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
+	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider, background: list}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-	default: { font: default-font, fontColor: white }
+	default: { font: default-font, fontColor: white },
+	odd: { font: default-font, fontColor: white, background: odd},
+	even: { font: default-font, fontColor: white, background: even}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: { titleFont: default-font, background: default-window, titleFontColor: white }

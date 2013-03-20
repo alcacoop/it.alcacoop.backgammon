@@ -220,93 +220,114 @@ wheel
   orig: 22, 22
   offset: 0, 0
   index: -1
+playing
+  rotate: false
+  xy: 121, 9
+  size: 27, 16
+  orig: 27, 16
+  offset: 0, 0
+  index: -1
+busy
+  rotate: false
+  xy: 995, 1007
+  size: 27, 16
+  orig: 27, 16
+  offset: 0, 0
+  index: -1
+ready
+  rotate: false
+  xy: 965, 706
+  size: 27, 16
+  orig: 27, 16
+  offset: 0, 0
+  index: -1
 CS3-B
   rotate: false
-  xy: 121, 5
+  xy: 700, 9
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 995, 1003
+  xy: 995, 985
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 965, 702
+  xy: 965, 684
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 700, 9
+  xy: 722, 9
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 700, 9
+  xy: 722, 9
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 143, 5
+  xy: 995, 963
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 995, 981
+  xy: 965, 662
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 965, 680
+  xy: 995, 941
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 722, 9
+  xy: 965, 640
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 cb-small
   rotate: false
-  xy: 165, 13
+  xy: 150, 13
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 cw-small
   rotate: false
-  xy: 995, 967
+  xy: 744, 17
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 rarrow
   rotate: false
-  xy: 965, 670
+  xy: 758, 30
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 179, 17
+  xy: 995, 931
   size: 15, 8
   orig: 15, 8
   offset: 0, 0

@@ -213,6 +213,27 @@ d3
   orig: 44, 44
   offset: 0, 0
   index: -1
+playing
+  rotate: false
+  xy: 1493, 1624
+  size: 48, 28
+  orig: 48, 28
+  offset: 0, 0
+  index: -1
+busy
+  rotate: false
+  xy: 1102, 1156
+  size: 48, 28
+  orig: 48, 28
+  offset: 0, 0
+  index: -1
+ready
+  rotate: false
+  xy: 888, 891
+  size: 48, 28
+  orig: 48, 28
+  offset: 0, 0
+  index: -1
 CS3-B
   rotate: false
   xy: 1929, 1852
@@ -222,63 +243,63 @@ CS3-B
   index: -1
 CS3-W
   rotate: false
-  xy: 1493, 1622
+  xy: 1884, 1679
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 1884, 1679
+  xy: 175, 85
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 1102, 1154
+  xy: 323, 285
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 1102, 1154
+  xy: 323, 285
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 888, 889
+  xy: 375, 337
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 175, 85
+  xy: 497, 407
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 323, 285
+  xy: 47, 15
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 375, 337
+  xy: 1427, 1534
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 wheel
   rotate: false
-  xy: 497, 409
+  xy: 1036, 1068
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

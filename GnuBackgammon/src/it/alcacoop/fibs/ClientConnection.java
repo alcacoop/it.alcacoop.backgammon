@@ -109,9 +109,9 @@ public class ClientConnection extends Thread {
   public synchronized void run() {
     sock = null;
     String server = "localhost";
-    //server = "fibs.com";
+    server = "fibs.com";
     //server = "ti-ga.com";
-    server = "dmartella.homelinux.net";
+    //server = "dmartella.homelinux.net";
     int port = 4321;
     try {
       sock = new Socket(server, port);

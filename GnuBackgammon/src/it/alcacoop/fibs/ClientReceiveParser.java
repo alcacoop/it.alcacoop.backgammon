@@ -11,7 +11,6 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
-import it.alcacoop.fibs.CommandDispatcher.Command;
 
 
 
@@ -78,7 +77,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_CHANGED, s);
         break;
       case CLIP_WHO_END:
-        handleWhoEnd();
         break;
       case FIBS_SavedMatchPlaying:
       case FIBS_SavedMatchReady:
@@ -434,9 +432,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     this.clientConnection.resetFIBSCookieMonster();
   }
 
-  private void handleWhoEnd() {
-  }
-
   private void parsePlayerLoggedOut(String s) {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_GONE, ss[1]);
@@ -468,7 +463,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         ss[0], 
         ss[3].equals("resume") ? ss[3] : ss[5]);
     lastInviter = ss[0];
-    commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+ss[0]);
+    //commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+ss[0]);
   }
 
   private void parseInviteWarning(String s) {
