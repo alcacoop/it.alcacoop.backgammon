@@ -3,7 +3,7 @@
  #                     GNU BACKGAMMON MOBILE                      #
  ##################################################################
  #                                                                #
- #  Authors: Domenico Martella - Davide Saurino                   #
+ #  Authors: Domenico Martella                                    #
  #  E-mail: info@alcacoop.it                                      #
  #  Date:   19/12/2012                                            #
  #                                                                #
@@ -36,12 +36,15 @@ package it.alcacoop.backgammon.layers;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.Player;
+
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -72,19 +75,18 @@ public class FibsScreen implements Screen {
   public String username = "";
   public String lastLogin;
   public String fibsRating;
-  public TreeMap<String, Player> fibsPlayers;
-   
   
   public Map<String, Player> fibsPlayers;
   
   private Label LUsername, LLastLogin;
   
   private Table playerTable;
-  private ScrollPane container;
+  private ScrollPane onlineList, invitationList;
   private float timeout, height, width;
   private LabelStyle evenLs;
   private TextureRegion readyRegion, busyRegion, playingRegion;
   private Drawable evenbg;
+  private ClickListener rowClicked;
   
   
   public FibsScreen(){
@@ -122,6 +124,27 @@ public class FibsScreen implements Screen {
       };
     };
 
+    rowClicked = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        String s = ((Label)event.getListenerActor()).getText().toString();
+        String arg[] = s.split(" ");
+        String u = arg[1].toLowerCase();
+        Player p = null;
+        if (fibsPlayers.containsKey(u))
+          p = fibsPlayers.get(u);
+        
+        if (p.isPlaying())
+          UIDialog.getFlashDialog(Events.NOOP, p.getName()+" is playing.. You can't invite him", 0.85f, stage);
+        else if (!p.isReady())
+          UIDialog.getFlashDialog(Events.NOOP, p.getName()+" is busy.. You can't invite him", 0.85f, stage);
+        else {
+          //SENDING INVITE..
+        }
+          
+        //GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+      };
+    };
+    
     
     LUsername = new Label("", GnuBackgammon.skin);
     LLastLogin = new Label("", GnuBackgammon.skin);
@@ -132,26 +155,39 @@ public class FibsScreen implements Screen {
     width = stage.getWidth()*0.95f;
     height = stage.getHeight()*0.95f;
     ScrollPaneStyle sps = GnuBackgammon.skin.get("lists", ScrollPaneStyle.class);
-    container = new ScrollPane(playerTable, sps);
-    container.setFadeScrollBars(false);
-    container.setForceOverscroll(false, false);
-    container.setOverscroll(false, false);
+    onlineList = new ScrollPane(playerTable, sps);
+    onlineList.setFadeScrollBars(false);
+    onlineList.setForceOverscroll(false, false);
+    onlineList.setOverscroll(false, false);
+    
+    invitationList = new ScrollPane(new Table(), sps);
+    invitationList.setFadeScrollBars(false);
+    invitationList.setForceOverscroll(false, false);
+    invitationList.setOverscroll(false, false);
         
     Table table = new Table();
     //table.debug();
-    //Drawable d = GnuBackgammon.skin.getDrawable("default-window");
+    Drawable d = GnuBackgammon.skin.getDrawable("default-window");
     //table.setBackground(d);
     table.setFillParent(true);
-    table.debug();
     
-    table.add(LUsername).expandX().left();
-    table.add(LLastLogin).expandX().right();
+    Table title = new Table();
+    title.setBackground(d);
+    title.add(LUsername).expandX().left();
+    title.add(LLastLogin).expandX().right();
+    
+    table.add(title).colspan(2).expand().fill();
     
     table.row();
     table.add().fill().expand().colspan(2);
     
     table.row();
-    table.add(container).fill().left().colspan(2).height(height*0.7f).width(width*0.6f);
+    table.add(new Label("ONLINE USERS",GnuBackgammon.skin)).expand().center();
+    table.add(new Label("INVITATIONS",GnuBackgammon.skin)).expand().center();
+    
+    table.row();
+    table.add(onlineList).fill().left().height(height*0.6f).width(width*0.59f);
+    table.add(invitationList).fill().right().height(height*0.6f).width(width*0.39f);
     
     table.row();
     table.add().fill().expand().colspan(2);
@@ -159,7 +195,9 @@ public class FibsScreen implements Screen {
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
     table.row();
-    table.add(back).expand().colspan(2).height(height*0.11f);
+    Table bt = new Table();
+    bt.add(back).width(width*0.3f).fill().expand();
+    table.add(bt).colspan(2).height(height*0.11f);
     
     g = new Group();
     g.setWidth(width);
@@ -214,7 +252,7 @@ public class FibsScreen implements Screen {
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
     
-    g.addAction(MYActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
+    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
       @Override
       public void run() {
         refreshPlayerList();
@@ -227,7 +265,7 @@ public class FibsScreen implements Screen {
     if (p.getName()==null) return;
     if (p.getName().equals("")) return;
     if (p.getName().toLowerCase().equals(username.toLowerCase())) return;
-   
+    
     String u = p.getName().toLowerCase();
     if (fibsPlayers.containsKey(u)) 
       GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
@@ -265,21 +303,21 @@ public class FibsScreen implements Screen {
         if (n%2==0) t.setBackground(evenbg);
         t.add(status).fill();
         
-        playerTable.row();
+        Label user;
+        if (n%2==0) user = new Label(" "+value.getName()+" ("+value.getRating()+")", evenLs);
+        else user = new Label(" "+value.getName()+" ("+value.getRating()+")", GnuBackgammon.skin);
         
-        if (n%2==0) {
-          playerTable.add(new Label(" "+value.getName()+" ("+value.getRating()+")", evenLs)).left().width(twidth*0.7f).height(height*0.11f);
-          playerTable.add(t).expandX().fillX().height(height*0.11f);
-        } else {
-          playerTable.add(new Label(" "+value.getName()+" ("+value.getRating()+")", GnuBackgammon.skin)).left().width(twidth*0.7f).height(height*0.11f);
-          playerTable.add(t).height(height*0.11f);
-        }
+        user.addListener(rowClicked);
+        
+        playerTable.row();
+        playerTable.add(user).left().width(twidth*0.7f).height(height*0.11f);
+        playerTable.add(t).expandX().fillX().height(height*0.11f);
       }
       
       playerTable.row();
       playerTable.add().expand().fill().colspan(2);
     }
-    container.setWidget(playerTable);
+    onlineList.setWidget(playerTable);
 	Gdx.graphics.setContinuousRendering(false);	
   }
 
