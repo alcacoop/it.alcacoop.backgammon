@@ -494,6 +494,7 @@ public final class UIDialog extends Window {
     instance.bYes.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bNo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bCancel.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bExport.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
   }
 }
