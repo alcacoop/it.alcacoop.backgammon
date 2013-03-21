@@ -182,6 +182,7 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
             
           case FIBS_LOGIN_OK:
+            GnuBackgammon.Instance.fibsScreen.ready = true;
             GnuBackgammon.Instance.goToScreen(8);
             break;
           

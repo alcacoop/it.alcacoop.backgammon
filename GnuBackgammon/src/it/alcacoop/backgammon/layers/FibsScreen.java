@@ -68,6 +68,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class FibsScreen implements Screen {
@@ -92,7 +93,9 @@ public class FibsScreen implements Screen {
   private TextureRegion readyRegion, busyRegion, playingRegion, iSended, iReceived;
   private Drawable evenbg;
   private ClickListener rowClicked, inviteClicked;
+  private Image status;
   public String lastInvite;
+  public boolean ready;
   private Timer timer;
   
   
@@ -108,6 +111,8 @@ public class FibsScreen implements Screen {
     playingRegion = GnuBackgammon.atlas.findRegion("playing");
     iSended = GnuBackgammon.atlas.findRegion("isended");
     iReceived = GnuBackgammon.atlas.findRegion("ireceived");
+    
+    status = new Image(readyRegion);
     
     timeout = 0;
     
@@ -191,9 +196,25 @@ public class FibsScreen implements Screen {
     //table.setBackground(d);
     table.setFillParent(true);
     
+    
+    ClickListener toggleStatus = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "toggle ready");
+        ready = !ready;
+        TextureRegionDrawable d;
+        if (ready ) d = new TextureRegionDrawable(readyRegion);
+        else  d = new TextureRegionDrawable(busyRegion);
+        status.setDrawable(d);
+      };
+    };
+    status.addListener(toggleStatus);
+    LUsername.addListener(toggleStatus);
+    
+    
     Table title = new Table();
     title.setBackground(d);
-    title.add(LUsername).expandX().left();
+    title.add(status).left();
+    title.add(LUsername).left();
     title.add(LLastLogin).expandX().right();
     
     table.add(title).colspan(2).expand().fill();
@@ -267,8 +288,9 @@ public class FibsScreen implements Screen {
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
     
-    invitationList.clear();
+    fibsInvitations.clear();
     fibsPlayers.clear();
+    refreshPlayerList();
     GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "who");
     
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
@@ -311,9 +333,7 @@ public class FibsScreen implements Screen {
   }
   
   public void onInviation(String s) {
-    if (!fibsInvitations.containsKey(s)) { //NUOVO INVITO
-      fibsInvitations.put(s, 1); //1=INVITE IN
-    }
+    fibsInvitations.put(s, 1); //1=INVITE IN
   }
   
   public void onJoin() {
@@ -346,13 +366,13 @@ public class FibsScreen implements Screen {
         else type = new Image(iSended);
         Table t = new Table();
         if (n%2==0) t.setBackground(evenbg);
-        t.add(type).fill();
+        t.add(type).expandX();
         
         if (value==1) user.addListener(inviteClicked);
         
         invitationTable.row();
-        invitationTable.add(user).left().width(twidth2*0.7f).height(height*0.11f);
-        invitationTable.add(t).expandX().fillX().height(height*0.11f);
+        invitationTable.add(user).left().width(twidth2*0.7f).height(height*0.12f);
+        invitationTable.add(t).expandX().fillX().height(height*0.12f);
       }
       invitationTable.row();
       invitationTable.add().expand().fill().colspan(2);
@@ -363,14 +383,14 @@ public class FibsScreen implements Screen {
       for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
         n++;
         Player value = entry.getValue();
-        Image status;
-        if (value.isPlaying())  status =new Image(playingRegion);
-        else if (!value.isReady()) status = new Image(busyRegion);
-        else status = new Image(readyRegion);
-
+        Image pstatus;
+        if (value.isPlaying())  pstatus =new Image(playingRegion);
+        else if (!value.isReady()) pstatus = new Image(busyRegion);
+        else pstatus = new Image(readyRegion);
+        
         Table t = new Table();
         if (n%2==0) t.setBackground(evenbg);
-        t.add(status).fill();
+        t.add(pstatus).expandX();
         
         Label user;
         if (n%2==0) user = new Label(" "+value.getName()+" ("+value.getRating()+")", evenLs);
@@ -379,8 +399,8 @@ public class FibsScreen implements Screen {
         user.addListener(rowClicked);
         
         playerTable.row();
-        playerTable.add(user).left().width(twidth*0.7f).height(height*0.11f);
-        playerTable.add(t).expandX().fillX().height(height*0.11f);
+        playerTable.add(user).left().width(twidth*0.7f).height(height*0.12f);
+        playerTable.add(t).expandX().fillX().height(height*0.12f);
       }
       
       playerTable.row();
