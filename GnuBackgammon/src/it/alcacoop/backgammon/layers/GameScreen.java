@@ -99,8 +99,8 @@ public class GameScreen implements Screen {
           if (MatchState.fMove==0) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
             if (MatchState.matchType!=2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            //TODO else
-              //GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            else
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
             
             if (MatchState.matchType==0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());

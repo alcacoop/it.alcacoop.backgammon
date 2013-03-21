@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.logic.AICalls;
@@ -110,7 +111,7 @@ public final class GameMenuPopup extends Table {
           public void run() {
             if (resign.isDisabled()) return;
             if (MatchState.matchType==2)
-              ;//GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
             else
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
             
@@ -131,9 +132,10 @@ public final class GameMenuPopup extends Table {
       public void run() {
         if (abandon.isDisabled()) return;
         if (MatchState.matchType==2)
-          ;//GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+          GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
         else
           GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+        
         if (MatchState.matchType==0)
           UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
         else
