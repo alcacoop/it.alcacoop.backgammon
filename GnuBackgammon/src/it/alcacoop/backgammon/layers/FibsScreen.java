@@ -316,7 +316,9 @@ public class FibsScreen implements Screen {
     if (p==null) return;
     if (p.getName()==null) return;
     if (p.getName().equals("")) return;
-    if (p.getName().toLowerCase().equals(username.toLowerCase())) return;
+    if (p.getName().toLowerCase().equals(username.toLowerCase())) {
+      LUsername.setText(p.getName()+" ("+p.getRating()+")");
+    }
     
     String u = p.getName().toLowerCase();
     if (fibsPlayers.containsKey(u)) 
