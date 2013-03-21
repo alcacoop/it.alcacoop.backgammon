@@ -215,23 +215,23 @@ d3
   index: -1
 playing
   rotate: false
-  xy: 1493, 1624
-  size: 48, 28
-  orig: 48, 28
+  xy: 1493, 1626
+  size: 45, 26
+  orig: 45, 26
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 1102, 1156
-  size: 48, 28
-  orig: 48, 28
+  xy: 1102, 1158
+  size: 45, 26
+  orig: 45, 26
   offset: 0, 0
   index: -1
 ready
   rotate: false
-  xy: 888, 891
-  size: 48, 28
-  orig: 48, 28
+  xy: 888, 893
+  size: 45, 26
+  orig: 45, 26
   offset: 0, 0
   index: -1
 CS3-B
@@ -302,6 +302,20 @@ wheel
   xy: 1036, 1068
   size: 28, 28
   orig: 28, 28
+  offset: 0, 0
+  index: -1
+isended
+  rotate: false
+  xy: 1974, 1921
+  size: 29, 26
+  orig: 29, 26
+  offset: 0, 0
+  index: -1
+ireceived
+  rotate: false
+  xy: 714, 725
+  size: 29, 26
+  orig: 29, 26
   offset: 0, 0
   index: -1
 rarrow

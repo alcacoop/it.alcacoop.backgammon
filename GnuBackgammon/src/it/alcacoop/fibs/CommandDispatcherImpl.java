@@ -10,7 +10,6 @@ package it.alcacoop.fibs;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.fibs.ClientReceiveParser.Mode;
 
@@ -309,13 +308,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   private void onNetworkConnected() {
     //INITIALIZE ENVIRONMENT
     writeNetworkMessageln("set boardstyle 3");
-    writeNetworkMessageln("set autoboard 1");
-    writeNetworkMessageln("set automove 0");
-    writeNetworkMessageln("set autodouble 0");
-    writeNetworkMessageln("set greedy 0");
-    writeNetworkMessageln("set away 0");
-    writeNetworkMessageln("set ready 1");
-    writeNetworkMessageln("set moves 1");
     System.out.println("NOW WE ARE CONFIGURED!!");
     //writeNetworkMessageln("who");
   }

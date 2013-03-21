@@ -276,6 +276,20 @@ CS1-B
   orig: 46, 46
   offset: 0, 0
   index: -1
+isended
+  rotate: false
+  xy: 1105, 275
+  size: 40, 36
+  orig: 40, 36
+  offset: 0, 0
+  index: -1
+ireceived
+  rotate: false
+  xy: 1517, 591
+  size: 40, 36
+  orig: 40, 36
+  offset: 0, 0
+  index: -1
 wheel
   rotate: false
   xy: 1607, 927
@@ -306,7 +320,7 @@ cb-small
   index: -1
 cw-small
   rotate: false
-  xy: 1105, 287
+  xy: 1295, 477
   size: 24, 24
   orig: 24, 24
   offset: 0, 0

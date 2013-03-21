@@ -147,7 +147,6 @@ public class MenuFSM extends BaseFSM implements Context {
     FIBS {
       @Override
       public void enterState(Context ctx) {
-        //GnuBackgammon.Instance.goToScreen(8);
         GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
         super.enterState(ctx);
       }
@@ -159,10 +158,6 @@ public class MenuFSM extends BaseFSM implements Context {
             if (params.toString().equals("BACK")) {
               GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "BYE");
               ctx.state(States.MAIN_MENU);
-            }
-            if (params.toString().equals("YES")) {
-            }
-            if (params.toString().equals("NO")) {
             }
             break;
           
@@ -225,14 +220,11 @@ public class MenuFSM extends BaseFSM implements Context {
           case FIBS_PLAYER_CHANGED:
             Player p = (Player)params;
             GnuBackgammon.Instance.fibsScreen.playerChanged(p);
-            //GESTISCI LA HASHMAP E RIDISEGNA TABLE
-            //EVENTUALE FREE SUL POOL SE IL PLAYER ESISTE IN HASH
             break;
             
           case FIBS_PLAYER_LOGOUT:
             String s = (String)params;
             GnuBackgammon.Instance.fibsScreen.playerGone(s);
-            //ELIMINA PLAYER DALLA HASHMAP E LIBERA p SUL POOL
             break;
             
           case FIBS_INVITE_RECEIVED:

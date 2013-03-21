@@ -40,7 +40,6 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
-import java.rmi.server.UID;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -55,7 +54,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -91,7 +89,7 @@ public class FibsScreen implements Screen {
   private ScrollPane onlineList, invitationList;
   private float timeout, height, width;
   private LabelStyle evenLs;
-  private TextureRegion readyRegion, busyRegion, playingRegion;
+  private TextureRegion readyRegion, busyRegion, playingRegion, iSended, iReceived;
   private Drawable evenbg;
   private ClickListener rowClicked, inviteClicked;
   public String lastInvite;
@@ -108,6 +106,8 @@ public class FibsScreen implements Screen {
     readyRegion = GnuBackgammon.atlas.findRegion("ready");
     busyRegion = GnuBackgammon.atlas.findRegion("busy");
     playingRegion = GnuBackgammon.atlas.findRegion("playing");
+    iSended = GnuBackgammon.atlas.findRegion("isended");
+    iReceived = GnuBackgammon.atlas.findRegion("ireceived");
     
     timeout = 0;
     
@@ -341,11 +341,18 @@ public class FibsScreen implements Screen {
         if (n%2==0) user = new Label(" "+key, evenLs);
         else user = new Label(" "+key, GnuBackgammon.skin);
         
+        Image type;
+        if (value == 1)  type =new Image(iReceived);
+        else type = new Image(iSended);
+        Table t = new Table();
+        if (n%2==0) t.setBackground(evenbg);
+        t.add(type).fill();
+        
         if (value==1) user.addListener(inviteClicked);
         
         invitationTable.row();
         invitationTable.add(user).left().width(twidth2*0.7f).height(height*0.11f);
-        invitationTable.add(new Label(""+value, GnuBackgammon.skin)).expandX().fillX().height(height*0.11f);
+        invitationTable.add(t).expandX().fillX().height(height*0.11f);
       }
       invitationTable.row();
       invitationTable.add().expand().fill().colspan(2);

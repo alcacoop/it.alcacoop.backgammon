@@ -304,30 +304,44 @@ CS1-B
   orig: 20, 20
   offset: 0, 0
   index: -1
-cb-small
+isended
   rotate: false
-  xy: 150, 13
-  size: 12, 12
-  orig: 12, 12
+  xy: 150, 9
+  size: 18, 16
+  orig: 18, 16
   offset: 0, 0
   index: -1
-cw-small
+ireceived
+  rotate: false
+  xy: 995, 923
+  size: 18, 16
+  orig: 18, 16
+  offset: 0, 0
+  index: -1
+cb-small
   rotate: false
   xy: 744, 17
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
+cw-small
+  rotate: false
+  xy: 758, 26
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
 rarrow
   rotate: false
-  xy: 758, 30
+  xy: 965, 630
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 995, 931
+  xy: 170, 17
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
