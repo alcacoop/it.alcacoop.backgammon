@@ -286,6 +286,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         MatchState.UpdateMSCubeInfo(1, -1);
         GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.prefs.flush();
+        GnuBackgammon.Instance.fibs.pull();
       }
 
       @Override
@@ -375,7 +376,6 @@ public class FIBSFSM extends BaseFSM implements Context {
     GnuBackgammon.Instance.board.initBoard(2);
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
-    GnuBackgammon.Instance.fibs.pull();
   }
 
   public void stop() {

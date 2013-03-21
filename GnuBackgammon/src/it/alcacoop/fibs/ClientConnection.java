@@ -110,7 +110,7 @@ public class ClientConnection extends Thread {
     sock = null;
     String server = "localhost";
     server = "fibs.com";
-    //server = "ti-ga.com";
+    server = "ti-ga.com";
     //server = "dmartella.homelinux.net";
     int port = 4321;
     try {

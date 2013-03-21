@@ -463,6 +463,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         ss[0], 
         ss[3].equals("resume") ? ss[3] : ss[5]);
     lastInviter = ss[0];
+    GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_RECEIVED, ss[0]);
     //commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+ss[0]);
   }
 

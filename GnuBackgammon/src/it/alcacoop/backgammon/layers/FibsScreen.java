@@ -37,12 +37,17 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
+import java.rmi.server.UID;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
@@ -50,6 +55,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -76,22 +82,27 @@ public class FibsScreen implements Screen {
   public String lastLogin;
   public String fibsRating;
   
-  public Map<String, Player> fibsPlayers;
+  public Map<String, Player> fibsPlayers; 
+  public Map<String, Integer> fibsInvitations;
   
   private Label LUsername, LLastLogin;
   
-  private Table playerTable;
+  private Table playerTable, invitationTable;
   private ScrollPane onlineList, invitationList;
   private float timeout, height, width;
   private LabelStyle evenLs;
   private TextureRegion readyRegion, busyRegion, playingRegion;
   private Drawable evenbg;
-  private ClickListener rowClicked;
+  private ClickListener rowClicked, inviteClicked;
+  public String lastInvite;
+  private Timer timer;
   
   
   public FibsScreen(){
     fibsPlayers = Collections.synchronizedMap(new TreeMap<String, Player>());
+    fibsInvitations = Collections.synchronizedMap(new HashMap<String, Integer>());
     playerTable = new Table();
+    invitationTable = new Table();
     evenbg = GnuBackgammon.skin.getDrawable("even");
 
     readyRegion = GnuBackgammon.atlas.findRegion("ready");
@@ -124,6 +135,14 @@ public class FibsScreen implements Screen {
       };
     };
 
+    inviteClicked = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        String s = ((Label)event.getListenerActor()).getText().toString();
+        GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+s);
+      };
+    };
+    
+    
     rowClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         String s = ((Label)event.getListenerActor()).getText().toString();
@@ -134,14 +153,15 @@ public class FibsScreen implements Screen {
           p = fibsPlayers.get(u);
         
         if (p.isPlaying())
-          UIDialog.getFlashDialog(Events.NOOP, p.getName()+" is playing.. You can't invite him", 0.85f, stage);
+          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is playing.. You can't invite him", stage);
         else if (!p.isReady())
-          UIDialog.getFlashDialog(Events.NOOP, p.getName()+" is busy.. You can't invite him", 0.85f, stage);
+          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is busy.. You can't invite him", stage);
         else {
-          //SENDING INVITE..
+          lastInvite = p.getName();
+          UIDialog.getYesNoDialog(Events.FIBS_INVITE_SENDED, "Really invite \""+p.getName()+"\" to new 1 point match?", stage);
+          //fibsInvitations.put(p.getName(), -1);
+          //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, p.getName(), "1");
         }
-          
-        //GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
     
@@ -160,7 +180,7 @@ public class FibsScreen implements Screen {
     onlineList.setForceOverscroll(false, false);
     onlineList.setOverscroll(false, false);
     
-    invitationList = new ScrollPane(new Table(), sps);
+    invitationList = new ScrollPane(invitationTable, sps);
     invitationList.setFadeScrollBars(false);
     invitationList.setForceOverscroll(false, false);
     invitationList.setOverscroll(false, false);
@@ -222,11 +242,6 @@ public class FibsScreen implements Screen {
     stage.act(delta);
     stage.draw();
     timeout += delta;
-    if (timeout>1) {
-      refreshPlayerList();
-      timeout = 0;
-    }
-    
     Table.drawDebug(stage);
   }
 
@@ -252,12 +267,26 @@ public class FibsScreen implements Screen {
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
     
+    invitationList.clear();
+    fibsPlayers.clear();
+    GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "who");
+    
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
       @Override
       public void run() {
         refreshPlayerList();
       }
     })));
+
+    timer = new Timer(true);
+    TimerTask task = new TimerTask() {
+      @Override
+      public void run() {
+        refreshPlayerList();
+        System.out.println("TIMER!");
+      }
+    };
+    timer.schedule(task, 1000, 1500);
   }
   
   public void playerChanged(Player p) {
@@ -281,15 +310,48 @@ public class FibsScreen implements Screen {
     }
   }
   
+  public void onInviation(String s) {
+    if (!fibsInvitations.containsKey(s)) { //NUOVO INVITO
+      fibsInvitations.put(s, 1); //1=INVITE IN
+    }
+  }
+  
+  public void onJoin() {
+    GnuBackgammon.Instance.setFSM("FIBS_FSM");
+  }
+  
   private void refreshPlayerList() {
-	Gdx.graphics.setContinuousRendering(true);	
     System.out.println("REFRESH PLAYER LIST");
     //float width = stage.getWidth()*0.95f*0.6f;
     playerTable.remove();
     playerTable.reset();
+    invitationTable.remove();
+    invitationTable.reset();
+    
     float twidth = width*0.6f;
+    float twidth2 = width*0.4f;
     int n = 0;
     
+    synchronized (fibsInvitations) {
+      for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
+        n++;
+        String key = entry.getKey();
+        int value = entry.getValue();
+        Label user;
+        if (n%2==0) user = new Label(" "+key, evenLs);
+        else user = new Label(" "+key, GnuBackgammon.skin);
+        
+        if (value==1) user.addListener(inviteClicked);
+        
+        invitationTable.row();
+        invitationTable.add(user).left().width(twidth2*0.7f).height(height*0.11f);
+        invitationTable.add(new Label(""+value, GnuBackgammon.skin)).expandX().fillX().height(height*0.11f);
+      }
+      invitationTable.row();
+      invitationTable.add().expand().fill().colspan(2);
+    }
+    
+    n=0;
     synchronized (fibsPlayers) {
       for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
         n++;
@@ -318,11 +380,14 @@ public class FibsScreen implements Screen {
       playerTable.add().expand().fill().colspan(2);
     }
     onlineList.setWidget(playerTable);
-	Gdx.graphics.setContinuousRendering(false);	
+    invitationList.setWidget(invitationTable);
+
+    Gdx.graphics.requestRendering();
   }
 
   @Override
   public void hide() {
+    timer.cancel();
   }
 
   @Override

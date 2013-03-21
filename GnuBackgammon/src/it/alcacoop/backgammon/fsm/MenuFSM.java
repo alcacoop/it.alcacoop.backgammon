@@ -160,6 +160,10 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "BYE");
               ctx.state(States.MAIN_MENU);
             }
+            if (params.toString().equals("YES")) {
+            }
+            if (params.toString().equals("NO")) {
+            }
             break;
           
           case FIBS_CONNECTED:
@@ -229,6 +233,25 @@ public class MenuFSM extends BaseFSM implements Context {
             String s = (String)params;
             GnuBackgammon.Instance.fibsScreen.playerGone(s);
             //ELIMINA PLAYER DALLA HASHMAP E LIBERA p SUL POOL
+            break;
+            
+          case FIBS_INVITE_RECEIVED:
+            s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.onInviation(s);
+            break;
+            
+          case FIBS_INVITE_SENDED:
+            if ((Boolean)params) {
+              String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
+              GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u, -1);
+              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, u, "1");
+              //GnuBackgammon.Instance.setFSM("FIBS_FSM");
+            }
+            break;
+            
+          case FIBS_JOIN_RECEIVED:
+            s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.onJoin();
             break;
             
           default: 
