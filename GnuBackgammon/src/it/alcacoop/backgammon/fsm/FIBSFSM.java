@@ -346,7 +346,8 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.STOPPED) {
-          GnuBackgammon.Instance.setFSM("MENU_FSM");
+          ctx.state(FIBS_MENU);
+          GnuBackgammon.Instance.goToScreen(8);
         }
         return super.processEvent(ctx, evt, params);
       }
@@ -447,12 +448,6 @@ public class FIBSFSM extends BaseFSM implements Context {
     GnuBackgammon.Instance.fibsScreen.resetStatus();
     GnuBackgammon.Instance.goToScreen(8);
     state(States.FIBS_MENU);
-    /*
-    GnuBackgammon.Instance.board.dices.clear();
-    GnuBackgammon.Instance.board.initBoard(2);
-    GnuBackgammon.Instance.goToScreen(4);
-    hnmove = 0;
-    */
   }
 
   public void stop() {
