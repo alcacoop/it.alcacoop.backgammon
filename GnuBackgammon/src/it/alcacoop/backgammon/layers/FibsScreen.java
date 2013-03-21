@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.layers;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.backgammon.fsm.FIBSFSM.States;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
@@ -411,8 +412,13 @@ public class FibsScreen implements Screen {
     }
     onlineList.setWidget(playerTable);
     invitationList.setWidget(invitationTable);
-
-    Gdx.graphics.requestRendering();
+	Gdx.graphics.requestRendering();
+  }
+  
+  public void resetStatus() {
+    ready = true;
+    TextureRegionDrawable d = new TextureRegionDrawable(readyRegion);
+    status.setDrawable(d);    
   }
 
   @Override
