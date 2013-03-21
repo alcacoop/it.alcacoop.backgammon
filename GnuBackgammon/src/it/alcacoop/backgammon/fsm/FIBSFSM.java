@@ -304,7 +304,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           }
           ctx.board().initBoard(2);
           GameScreen gs = (GameScreen)GnuBackgammon.Instance.currentScreen;
-          gs.pInfo[1].setName(b.p1); //PRIMO NOME => NERO
+          gs.pInfo[1].setName(GnuBackgammon.Instance.fibsScreen.username); //PRIMO NOME => NERO
           gs.pInfo[0].setName(b.p2);
           ctx.board().updatePInfo();
           AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
