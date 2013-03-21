@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
+import it.alcacoop.fibs.Player;
 
 
 public class FIBSFSM extends BaseFSM implements Context {
@@ -283,6 +284,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
         MatchState.UpdateMSCubeInfo(1, -1);
         GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.prefs.flush();
@@ -351,6 +353,76 @@ public class FIBSFSM extends BaseFSM implements Context {
     },
 
 
+    DIALOG_HANDLER {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+        case ABANDON_MATCH: //QUIT MATCH
+          if ((Boolean)params) { //ABANDON
+            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "leave");
+            ctx.state(FIBS_MENU);
+            GnuBackgammon.Instance.goToScreen(8);
+          } else  { //CANCEL
+            GnuBackgammon.fsm.back();
+          }
+          break;
+          
+        default:
+            return false;
+        }
+        return true;
+      }
+    },
+    
+    
+    FIBS_MENU {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case BUTTON_CLICKED:
+            if (params.toString().equals("BACK")) {
+              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "BYE");
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
+            }
+            break;
+
+          case FIBS_PLAYER_CHANGED:
+            System.out.println("HERE!!!");            
+            Player p = (Player)params;
+            GnuBackgammon.Instance.fibsScreen.playerChanged(p);
+            break;
+            
+          case FIBS_PLAYER_LOGOUT:
+            String s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.playerGone(s);
+            break;
+            
+          case FIBS_INVITE_RECEIVED:
+            s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.onInviation(s);
+            break;
+            
+          case FIBS_INVITE_SENDED:
+            if ((Boolean)params) {
+              String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
+              GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u, -1);
+              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, u, "1");
+            }
+            break;
+            
+          case FIBS_JOIN_RECEIVED:
+            s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.initGame();
+            break;
+            
+          default:
+            return false;
+        }
+        return true;
+      }
+    },
+    
+    
 
     STOPPED {
       @Override
@@ -372,10 +444,15 @@ public class FIBSFSM extends BaseFSM implements Context {
   }
 
   public void start() {
+    GnuBackgammon.Instance.fibsScreen.resetStatus();
+    GnuBackgammon.Instance.goToScreen(8);
+    state(States.FIBS_MENU);
+    /*
     GnuBackgammon.Instance.board.dices.clear();
     GnuBackgammon.Instance.board.initBoard(2);
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
+    */
   }
 
   public void stop() {

@@ -10,7 +10,7 @@ package it.alcacoop.fibs;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.MenuFSM;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.fibs.ClientReceiveParser.Mode;
 
 
@@ -42,7 +42,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       case START_GAME:
         System.out.println("START GAME NOW!!!");
         //GnuBackgammon.Instance.setFSM("FIBS_FSM");
-        GnuBackgammon.Instance.fibsScreen.onJoin();
+        GnuBackgammon.Instance.fibsScreen.initGame();
         break;
       case SHUTTING_DOWN:
         onShutdown();
@@ -99,11 +99,11 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       case PLAYER_CHANGED:
         Player p = GnuBackgammon.Instance.fibsPlayersPool.obtain();
         p.parsePlayer(arg1);
-        if (GnuBackgammon.fsm instanceof MenuFSM)
+        if (GnuBackgammon.fsm instanceof FIBSFSM)
           GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_CHANGED, p);
         break;
       case PLAYER_GONE:
-        if (GnuBackgammon.fsm instanceof MenuFSM)
+        if (GnuBackgammon.fsm instanceof FIBSFSM)
           GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_LOGOUT, arg1);
         break;
       case SAVED_MATCH:

@@ -336,8 +336,11 @@ public class FibsScreen implements Screen {
     fibsInvitations.put(s, 1); //1=INVITE IN
   }
   
-  public void onJoin() {
-    GnuBackgammon.Instance.setFSM("FIBS_FSM");
+  public void initGame() {
+    GnuBackgammon.Instance.board.dices.clear();
+    GnuBackgammon.Instance.board.initBoard(2);
+    GnuBackgammon.Instance.goToScreen(4);
+    GnuBackgammon.fsm.state(States.OPENING_ROLL);
   }
   
   private void refreshPlayerList() {

@@ -42,7 +42,6 @@ import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
-import it.alcacoop.fibs.Player;
 
 
 // MENU FSM
@@ -144,6 +143,7 @@ public class MenuFSM extends BaseFSM implements Context {
     },
 
     
+    
     FIBS {
       @Override
       public void enterState(Context ctx) {
@@ -154,12 +154,6 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-          case BUTTON_CLICKED:
-            if (params.toString().equals("BACK")) {
-              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "BYE");
-              ctx.state(States.MAIN_MENU);
-            }
-            break;
           
           case FIBS_CONNECTED:
             if (MenuFSM.accountCreated) {
@@ -182,8 +176,7 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
             
           case FIBS_LOGIN_OK:
-            GnuBackgammon.Instance.fibsScreen.ready = true;
-            GnuBackgammon.Instance.goToScreen(8);
+            GnuBackgammon.Instance.setFSM("FIBS_FSM");
             break;
           
           /*
@@ -216,35 +209,6 @@ public class MenuFSM extends BaseFSM implements Context {
             MenuFSM.accountCreated = true;
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
-            break;
-            
-          case FIBS_PLAYER_CHANGED:
-            Player p = (Player)params;
-            GnuBackgammon.Instance.fibsScreen.playerChanged(p);
-            break;
-            
-          case FIBS_PLAYER_LOGOUT:
-            String s = (String)params;
-            GnuBackgammon.Instance.fibsScreen.playerGone(s);
-            break;
-            
-          case FIBS_INVITE_RECEIVED:
-            s = (String)params;
-            GnuBackgammon.Instance.fibsScreen.onInviation(s);
-            break;
-            
-          case FIBS_INVITE_SENDED:
-            if ((Boolean)params) {
-              String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
-              GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u, -1);
-              GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, u, "1");
-              //GnuBackgammon.Instance.setFSM("FIBS_FSM");
-            }
-            break;
-            
-          case FIBS_JOIN_RECEIVED:
-            s = (String)params;
-            GnuBackgammon.Instance.fibsScreen.onJoin();
             break;
             
           default: 
