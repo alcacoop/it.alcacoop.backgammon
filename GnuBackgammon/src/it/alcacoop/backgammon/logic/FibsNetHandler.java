@@ -102,21 +102,43 @@ public class FibsNetHandler {
     private class Dispatcher implements Runnable {
       private MessageQueue q;
       private FibsNetHandler i;
-      public Dispatcher(MessageQueue _q, FibsNetHandler _i) {
+      private Events[] evts;
+      private boolean found;
+      public Dispatcher(MessageQueue _q, FibsNetHandler _i, Events[] _evts) {
+        evts = _evts;
         q = _q;
         i = _i;
+        found = false;
         i.incReq();
       }
       @Override
       public void run() {
-        Evt e = q.pop();
         i.decReq();
-        if (e.e!=Events.NOOP) {
-          GnuBackgammon.fsm.processEvent(e.e, e.o);
-        } else { //RESET REQ
-          if (i.getReq()>0) queue.push(evtPool.obtain()); 
+        while (!found) {
+          Evt e = q.pop();
+          if (e.e!=Events.NOOP) {
+            if (evts.length==0) {
+              //System.out.println("===> ritorno primo evento disponibile");
+              GnuBackgammon.fsm.processEvent(e.e, e.o);
+              found = true;
+              evtPool.free(e);
+            } else {
+              for (Events s : evts) {
+                if (s==e.e) {
+                  //System.out.println("===> ritorno evento richiesto");
+                  GnuBackgammon.fsm.processEvent(e.e, e.o);
+                  found = true;
+                } else {
+                  //System.out.println("===> scarto evento non richiesto");
+                }
+                evtPool.free(e);
+              }
+            }
+          } else {
+            if (i.getReq()>0) queue.push(evtPool.obtain());
+            evtPool.free(e);
+          }
         }
-        evtPool.free(e);
       }
     }
     
@@ -137,24 +159,18 @@ public class FibsNetHandler {
       };
     }
     
-    
-    public void pull() {
-      if (queue.isEempty()) { //CODA MESSAGGI VUOTA.. HO BISOGNO DI UN THREAD CHE ASPETTI..
-        dispatchExecutor.execute(new Dispatcher(queue, this));
-      } else { //ELEMENTO DISPONIBILE.. DISPATCH IMMEDIATO
-        Evt e = queue.pop();
-        GnuBackgammon.fsm.processEvent(e.e, e.o);
-        evtPool.free(e);
-      }
+
+    public void pull(Events... evts) {
+      dispatchExecutor.execute(new Dispatcher(queue, this, evts));
     }
     
-    
     public void post(Events _e, Object _o) {
+      //GnuBackgammon.fsm.processEvent(_e, _o);
       Evt e = evtPool.obtain();
       e.init(_e, _o);
       queue.push(e);
     }
-    public void post() {
+    public void post() { //DEBUG PURPOSE..
       Evt e = evtPool.obtain();
       e.init(Events.CONTINUE, null);
       queue.push(e);
@@ -175,6 +191,11 @@ public class FibsNetHandler {
     public void debug() {
       System.out.println("RICHIESTE IN CODA: "+nreq);
       System.out.println("MESSAGGI IN CODA: "+queue.getSize());
+      synchronized (queue) {
+        for (int i=0;i<queue.getSize();i++) {
+          System.out.println("  "+queue.list.get(i).e);
+        }
+      }
     }
     
     public void releaseBoard(FibsBoard b) {
