@@ -64,20 +64,13 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-        case FIBS_BOARD:
-          FibsBoard b = (FibsBoard)params;
-          if (b.turn==MatchState.FibsColor) {
-            System.out.println("PROBLEMA MOLTO SERIO ON REMOTE TURN!");
-          }
-          if (b.dices[0]!=0) { // NOY YET ROLLED.. 
-            int d1 = Math.max(b.dices[0], b.dices[1]);
-            int d2 = Math.min(b.dices[0], b.dices[1]);
-            AICalls.GenerateMoves(ctx.board(), d1, d2);
-            ctx.board().animateDices(d1, d2, true);
-          } else {
-            GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
-          }
-          GnuBackgammon.Instance.fibs.releaseBoard(b);
+          
+        case FIBS_ROLLS:
+          int[] dices = (int[])params;
+          int d1 = Math.max(dices[0], dices[1]);
+          int d2 = Math.min(dices[0], dices[1]);
+          AICalls.GenerateMoves(ctx.board(), d1, d2);
+          ctx.board().animateDices(d1, d2, true);
           break;
           
         case DICES_ROLLED:
@@ -106,10 +99,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           ctx.state(States.SWITCH_TURN);
           break;
         
-        case FIBS_MATCHOVER:
-          ctx.state(MATCH_OVER);
-          break;
-          
         default:
           return false;
         }
@@ -125,23 +114,15 @@ public class FIBSFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
         switch (evt) {
         
-        case FIBS_BOARD:
-          FibsBoard b = (FibsBoard)params;
-          if (b.turn!=MatchState.FibsColor) {
-            System.out.println("PROBLEMA MOLTO SERIO ON LOCAL TURN!");
-          }
-          if (b.dices[0]!=0) { 
-            int d1 = Math.max(b.dices[0], b.dices[1]);
-            int d2 = Math.min(b.dices[0], b.dices[1]);
-            ctx.board().animateDices(d1, d2, true);
-          } else { // NOY YET ROLLED..
-            GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
-          }
-          GnuBackgammon.Instance.fibs.releaseBoard(b);
+        case FIBS_ROLLS:
+          int[] dices = (int[])params;
+          int d1 = Math.max(dices[0], dices[1]);
+          int d2 = Math.min(dices[0], dices[1]);
+          ctx.board().animateDices(d1, d2, true);
           break;
           
         case DICES_ROLLED:
-          int dices[] = (int[])params;
+          dices = (int[])params;
           AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
           break;
           
@@ -228,12 +209,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           ctx.state(SWITCH_TURN);
           break;
 
-          
-        case FIBS_MATCHOVER:
-          ctx.state(MATCH_OVER);
-          break;
-          
-          
         default:
           return false;
         }
@@ -269,40 +244,46 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt == Events.FIBS_BOARD) {
-          if (MatchState.fTurn==1) {
-            ctx.state(States.LOCAL_TURN);
-          } else {
-            ctx.state(States.REMOTE_TURN);          
-          }
-          ctx.board().switchTurn();
-          for (int i=0;i<8;i++)
-            ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
-          ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
-          
-          System.out.println("======== FIBS BOARD ON SWITCHING TURN... ========");
           FibsBoard b = (FibsBoard)params;
           
-          for (int i=0; i<2; i++) {
-            System.out.print("E: ");
-            for (int j=0; j<25; j++) {
-              System.out.print(b.board[i][j]+" ");
+          if (b.dices[0]==0||b.dices[1]==0) {
+            GnuBackgammon.Instance.fibs.releaseBoard(b);
+            GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
+          } else {
+
+            if (MatchState.fTurn==1) {
+              ctx.state(States.LOCAL_TURN);
+            } else {
+              ctx.state(States.REMOTE_TURN);          
             }
-            System.out.println(" ");
-            System.out.print("I: ");
-            for (int j=0; j<25; j++) {
-              System.out.print(ctx.board()._board[i][j]+" ");
+            ctx.board().switchTurn();
+            for (int i=0;i<8;i++)
+              ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
+            ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
+
+            System.out.println("======== FIBS BOARD ON SWITCHING TURN... ========");
+
+            for (int i=0; i<2; i++) {
+              System.out.print("E: ");
+              for (int j=0; j<25; j++) {
+                System.out.print(b.board[i][j]+" ");
+              }
+              System.out.println(" ");
+              System.out.print("I: ");
+              for (int j=0; j<25; j++) {
+                System.out.print(ctx.board()._board[i][j]+" ");
+              }
+              System.out.println(" ");
+              System.out.println(" ");
             }
-            System.out.println(" ");
-            System.out.println(" ");
+
+            ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
+            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            GnuBackgammon.Instance.fibs.debug();
+            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
+            GnuBackgammon.Instance.fibs.releaseBoard(b);
+            System.out.println("======== =============================== ========");
           }
-          
-          ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
-          AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-          //GnuBackgammon.Instance.fibs.releaseBoard(b);
-          GnuBackgammon.Instance.fibs.debug();
-          //GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
-          GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD, b);
-          System.out.println("======== =============================== ========");          
         }
         return true;
       }
@@ -326,8 +307,13 @@ public class FIBSFSM extends BaseFSM implements Context {
         switch (evt) {
         
           case FIBS_BOARD:
-            System.out.println("====> FIBS_BOARD ON REMOTE TURN!!!");
             FibsBoard b = (FibsBoard)params;
+            if (b.dices[0]==0||b.dices[1]==0) {
+              GnuBackgammon.Instance.fibs.releaseBoard(b);
+              GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
+              break;
+            }
+            
             for (int i=0;i<25;i++) {
               MatchState.board[4][i] = b.board[0][i];
               MatchState.board[5][i] = b.board[1][i];
@@ -352,10 +338,8 @@ public class FIBSFSM extends BaseFSM implements Context {
               ctx.state(REMOTE_TURN);
               AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
             }
-            //TIRO I DADI...
-            int d1 = Math.max(b.dices[0], b.dices[1]);
-            int d2 = Math.min(b.dices[0], b.dices[1]);
-            ctx.board().animateDices(d1, d2, true);
+            
+            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
             break;
         
           default:
@@ -495,5 +479,19 @@ public class FIBSFSM extends BaseFSM implements Context {
   public Board board() {
     return board;
   }
-
+  
+  
+  @Override
+  public boolean processEvent(Events evt, Object params) {
+    if (evt==Events.FIBS_MATCHOVER) {
+      try {
+        Thread.sleep(1500);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      state(States.MATCH_OVER);
+    }
+    return super.processEvent(evt, params);
+  }
 }
