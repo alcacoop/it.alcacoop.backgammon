@@ -7,6 +7,9 @@
  */ 
  
 package it.alcacoop.fibs;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.FibsBoard;
@@ -81,11 +84,11 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_SavedMatchPlaying:
       case FIBS_SavedMatchReady:
       case FIBS_SavedMatch:
-        System.out.println(s);
+        //System.out.println(s);
         this.commandDispatcher.dispatch(CommandDispatcher.Command.SAVED_MATCH, s);
         break;
       case FIBS_LoginPrompt:
-        System.out.println(s);
+        //System.out.println(s);
         if (login_attempt==0) {
           login_attempt = 1;
           GnuBackgammon.fsm.processEvent(Events.FIBS_CONNECTED, null);
@@ -109,11 +112,11 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         parseAbortMatch(s);
         break;
       case FIBS_Goodbye:
-        System.out.println("BYE BYE");
+        //System.out.println("BYE BYE");
         disconnectFromServer();
         break;
       case FIBS_Timeout:
-        System.out.println(s);
+        //System.out.println(s);
         disconnectFromServer();
         break;
       case CLIP_WELCOME:
@@ -123,7 +126,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
         break;
       case FIBS_YouAreWatching:
-        System.out.println(s);
+        //System.out.println(s);
         this.commandDispatcher.dispatch(CommandDispatcher.Command.WATCHING);
         break;
       case CLIP_SAYS:
@@ -171,19 +174,17 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case FIBS_ResumeMatchAck0:
       case FIBS_ResumeMatchAck5:
-        parseGameMessage(s);
         startNewGame();
+        GnuBackgammon.Instance.fibs.post(Events.FIBS_RESUMEGAME, null);
         break;
       case FIBS_Turn:
-        parseGameMessage(s);
         parseResumeMatchTurn(s);
         break;
       case FIBS_MatchLength:
-        parseGameMessage(s);
         parseResumeMatchLength(s);
         break;
       case FIBS_Board:
-        System.out.println(s);
+        //System.out.println(s);
         parseBoard(s);
         break;
       case FIBS_YouWinMatch:
@@ -209,7 +210,15 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
         
       case FIBS_FirstRoll:
-        System.out.println("FIRST ROLL: "+s);
+        int[] dices = {0,0};
+        Pattern p = Pattern.compile("[1-6]+");
+        Matcher m = p.matcher(s); 
+        m.find();
+        dices[0] = Integer.parseInt(m.group());
+        m.find();
+        dices[1] = Integer.parseInt(m.group());
+        if (dices[0]!=dices[1])
+          GnuBackgammon.Instance.fibs.post(Events.FIBS_FIRSTROLL, dices);
         break;
         
       case FIBS_CantMove:
@@ -239,16 +248,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_YouGiveUp:
       case FIBS_YouReject:
       case FIBS_MustMove:
-        parseGameMessage(s);
         break;
       case FIBS_PlayerAcceptsDouble:
-        parseGameMessage(s);
         break;
       case FIBS_YouCantMove:
-        parseGameMessage(s);
         break;
       case FIBS_BearingOff:
-        parseGameMessage(s);
         break;
 
       case FIBS_PlayersStartingMatch:
@@ -285,30 +290,27 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_EchoJunk:
       case FIBS_WaitForLastInvitation:
       case FIBS_WaitForAcceptResign:
-        System.out.println(s);
+        //System.out.println(s);
         break;
       case FIBS_DidntInvite:
       case FIBS_NotWatchingPlaying:
       case FIBS_NoSavedGames:
-        System.out.println(s);
+        //System.out.println(s);
         break;
       case FIBS_NewMatchAck10:
-        System.out.println(s);
+        //System.out.println(s);
         break;
       case FIBS_WARNINGSavedMatch:
         parseInviteWarning(s);
         break;
       case FIBS_DoubleTrue:
         parseDoublesOnOff(true);
-        parseGameMessage(s);
         break;
       case FIBS_DoubleFalse:
         parseDoublesOnOff(false);
-        parseGameMessage(s);
         break;
       case FIBS_Doubles:
         parseDoubles(s);
-        parseGameMessage(s);
         break;
       case FIBS_YouDouble:
         break;
@@ -328,7 +330,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
       case FIBS_PleaseMove:
         parsePleaseMove(s);
-        parseGameMessage(s);
         break;
       case FIBS_PlayerWantsToResign:
         parsePlayerWantsToResign(s);
@@ -340,7 +341,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_GamesWillBeSaved:
       case FIBS_UnknownCommand:
       case FIBS_GameWasSaved:
-        System.out.println(s);
+        //System.out.println(s);
         break;
       case FIBS_Unknown:
         System.out.println("Unknown message from FIBS: '" + s + "'");
@@ -359,7 +360,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.FIBS_BOARD, s);
         break;
       default:
-        System.out.println("Replay? " + cookie + " '" + s + "'");
+        //System.out.println("Replay? " + cookie + " '" + s + "'");
         break;
     }
   }
@@ -375,7 +376,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   private RegState regState = RegState.name;
 
   private void parseMessageRegister(String s, int fibsCookie) {
-    System.out.println("MODE REGISTER: "+s);
     switch (fibsCookie) {
     
       case FIBS_LoginPrompt:
@@ -394,7 +394,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
         
       case FIBS_UseAnotherName:
-        System.out.println("PRESENT!");
+        //System.out.println("PRESENT!");
         commandDispatcher.writeNetworkMessageln("bye");
         GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_PRESENT, null);
         regState = RegState.done;
@@ -409,13 +409,13 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
 
       case FIBS_YouAreRegistered:
-        System.out.println("SUCCESS!");
+        //System.out.println("SUCCESS!");
         GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
         regState = RegState.done;
         break;
       
       case FIBS_TooMuchAccounts:
-        System.out.println("SPAM!");
+        //System.out.println("SPAM!");
         GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_SPAM, null);
         regState = RegState.done;
         break;
@@ -435,11 +435,11 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   private void parsePlayerLoggedOut(String s) {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_GONE, ss[1]);
-    System.out.println(ss[2] + " " + ss[3] + " " + ss[4]);
+    //System.out.println(ss[2] + " " + ss[3] + " " + ss[4]);
   }
 
   private void parseAbortMatch(String s) {
-    System.out.println(s);
+    //System.out.println(s);
     this.commandDispatcher.writeNetworkMessageln("show saved");
   }
 
@@ -449,12 +449,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
    */
   private void parsePlayerLoggedIn(String s) {
     String[] ss = s.split(" ");
-    System.out.println("LOGGED IN");
+    //System.out.println("LOGGED IN");
     System.out.println(ss[2] + " " + ss[3] + " " + ss[4]);
   }
 
   private void parseOtherMatchMessage(String s) {
-    System.out.println(s);
+    //System.out.println(s);
   }
 
   private void parseInvite(String s) {
@@ -463,8 +463,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         ss[0], 
         ss[3].equals("resume") ? ss[3] : ss[5]);
     lastInviter = ss[0];
-    GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_RECEIVED, ss[0]);
-    //commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+ss[0]);
   }
 
   private void parseInviteWarning(String s) {
@@ -476,7 +474,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   private void parseYouInvited(String s) {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.YOU_INVITED, ss[3]);
-    System.out.println(s);
+    //System.out.println(s);
   }
 
   private void parseDoubles(String s) {
@@ -485,10 +483,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
 
   private void startNewGame() {
     this.commandDispatcher.dispatch(CommandDispatcher.Command.START_GAME);
-  }
-
-  private void parseGameMessage(String s) {
-    this.commandDispatcher.writeGameMessageln(s);
   }
 
   private void parsePleaseMove(String s) {
@@ -530,7 +524,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   private void parseWavesMessage(String s) {
-    System.out.println(s);
+    //System.out.println(s);
   }
 
   private void parseResumeMatchTurn(String s) {
@@ -562,7 +556,8 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
 
   public void parseNoMoves() {
-    GnuBackgammon.Instance.fibs.post(Events.FIBS_NOMOVES, null);
+    int[] m = {-1,-1,-1,-1,-1,-1,-1,-1};
+    GnuBackgammon.Instance.fibs.post(Events.FIBS_MOVES, m);
   }
   
   
@@ -603,12 +598,15 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
 
   
   private void parseRoll(String s) {
-    s = s.replace(".","");
-    String t[] = s.split(" ");
-    int d[] = {0,0};
-    d[0] = Integer.parseInt(t[2]);
-    d[1] = Integer.parseInt(t[4]);
-    //GnuBackgammon.fbt.post(Events.FIBS_ROLLS, d);
+    int[] dices = {0,0};
+    Pattern p = Pattern.compile("[1-6]+");
+    Matcher m = p.matcher(s); 
+    m.find();
+    dices[0] = Integer.parseInt(m.group());
+    m.find();
+    dices[1] = Integer.parseInt(m.group());
+    System.out.println("===> ROLL: "+dices[0]+"/"+dices[1]);
+    //GnuBackgammon.Instance.fibs.post(Events.FIBS_ROLLS, dices);
   }
   
   private void parseMatchOverMessage(String s, int cookie) {

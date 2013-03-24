@@ -66,9 +66,12 @@ public class MatchState {
   public static boolean fCrafwordGame = false;
   public static int resignValue = 0;
   public static int FibsDirection = 0;
+  public static int FibsColor = 0;
   
   public static String pl0;
   public static String pl1;
+
+  
   
   
   public static void SwitchTurn() {

@@ -81,9 +81,11 @@ public class BaseFSM implements Context {
     FIBS_JOIN_RECEIVED,
     FIBS_JOIN_SENDED,
     
+    FIBS_FIRSTROLL,
+    FIBS_RESUMEGAME,
+    
     FIBS_BOARD,
     FIBS_MOVES,
-    FIBS_NOMOVES,
     FIBS_ROLLS,
     FIBS_MATCHOVER,
     

@@ -292,14 +292,21 @@ public class Board extends Group {
         doublingCube.setVisible(false);
     }
     
+    initBoard(MatchState.board[MatchState.bgv*2], MatchState.board[MatchState.bgv*2+1]);
+
+    MatchState.UpdateMSCubeInfo(1, -1);
+  }
+
+  
+  public void initBoard(int[] b1, int[] b2) {
     int i0 = 0;
     int i1 = 0;
 
     for (int i=0; i<=24; i++) {
-      _board[0][i] = MatchState.board[MatchState.bgv*2][i];
-      i0+=MatchState.board[MatchState.bgv*2][i]; //TOT CHECKERS ON BOARD
-      _board[1][i] = MatchState.board[MatchState.bgv*2+1][i];
-      i1+=MatchState.board[MatchState.bgv*2+1][i]; //TOT CHECKERS ON BOARD
+      _board[0][i] = b1[i];
+      i0+=b1[i]; //TOT CHECKERS ON BOARD
+      _board[1][i] = b2[i];
+      i1+=b2[i]; //TOT CHECKERS ON BOARD
     }
     bearedOff[0] = 0;
     bearedOff[1] = 0;
@@ -335,10 +342,7 @@ public class Board extends Group {
       bearedOff[1]++;
       nchecker++;
     }
-
-    MatchState.UpdateMSCubeInfo(1, -1);
   }
-
   
   public Checker getChecker(int color, int x) {
     Checker _c = null;

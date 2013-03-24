@@ -31,7 +31,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param command The command to execute
    */
   public void dispatch(Command command) {
-    System.out.println("COMMAND: "+command);
+    //System.out.println("COMMAND: "+command);
     switch (command) {
       case DISCONNECT_FROM_NETWORK:
         onNetworkDisconnect();
@@ -92,7 +92,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param arg1 A string that the dispatched function wants
    */
   public void dispatch(Command command, String arg1) {
-    System.out.println("COMMAND: "+command+" ARG1: "+arg1);
+    //System.out.println("COMMAND: "+command+" ARG1: "+arg1);
     switch (command) {
       case SYSTEM_MESSAGE:
         break;
@@ -128,10 +128,8 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         this.onYouInvited(arg1);
         break;
       case OWN_INFO:
-        parseOwnInfo(arg1);
         break;
       case FIBS_BOARD:
-        parseFibsBoard(arg1);
         break;
       case DOUBLE:
         break;
@@ -162,7 +160,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param arg2 Another string that the dispatched function wants
    */
   public void dispatch(Command command, String arg1, String arg2) {
-    System.out.println("COMMAND: "+command+" ARG1: "+arg1+" ARG2: "+arg2);
+    //System.out.println("COMMAND: "+command+" ARG1: "+arg1+" ARG2: "+arg2);
     switch (command) {
     
       case INVITED:
@@ -188,7 +186,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param obj An Object that the dispatched function wants
    */
   public void dispatch(Command command, Object obj) {
-    System.out.println("COMMAND: "+command+" OBJ: "+obj);
+    //System.out.println("COMMAND: "+command+" OBJ: "+obj);
     boolean b;
     switch (command) {
       case GAME_MOVE:
@@ -363,6 +361,13 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   private void onInvited(String playerName, String matchLength) {
     //RICHIAMATO QUANDO MI ARRIVA UN INVITO
     System.out.println("INVITED: "+playerName+" TO: "+matchLength);
+    if (matchLength.toLowerCase().equals("resume")) //TODO!!
+      //send("tell "+playerName+" Sorry.. at the moment my client doesn't support resuming match!");
+      GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_RECEIVED, playerName);
+    else if (Integer.parseInt(matchLength)>1)
+      send("tell "+playerName+" Sorry.. at the moment my client support only 1-point matches!");
+    else
+      GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_RECEIVED, playerName);
   }
 
   private void onInviteWarning(String playerName, String warning) {
@@ -375,15 +380,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   }
 
   private void onYourMove(int diceToMove) {
-  }
-
-  private void parseFibsBoard(String board) {
-    System.out.println("FIBSBOARD: "+board);
-    //this.mainDialog.getBoard().parseFibsBoard(board);
-  }
-
-  private void parseOwnInfo(String s) {
-    System.out.println("OWNINFO: "+s);
   }
 
 
@@ -399,5 +395,9 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   
   public void createAccount() {
     startClientConnection(Mode.Register);
+  }
+  
+  public void send(String s) {
+    dispatch(Command.SEND_COMMAND, s);
   }
 }

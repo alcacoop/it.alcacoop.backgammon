@@ -144,7 +144,7 @@ public class FibsScreen implements Screen {
     inviteClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         String s = ((Label)event.getListenerActor()).getText().toString();
-        GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "join "+s);
+        GnuBackgammon.Instance.commandDispatcher.send("join "+s);
       };
     };
     
@@ -200,7 +200,7 @@ public class FibsScreen implements Screen {
     
     ClickListener toggleStatus = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "toggle ready");
+        GnuBackgammon.Instance.commandDispatcher.send("toggle ready");
         ready = !ready;
         TextureRegionDrawable d;
         if (ready ) d = new TextureRegionDrawable(readyRegion);
@@ -292,7 +292,7 @@ public class FibsScreen implements Screen {
     fibsInvitations.clear();
     fibsPlayers.clear();
     refreshPlayerList();
-    GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_COMMAND, "who");
+    GnuBackgammon.Instance.commandDispatcher.send("who");
     
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
       @Override
@@ -343,7 +343,6 @@ public class FibsScreen implements Screen {
     GnuBackgammon.Instance.board.dices.clear();
     GnuBackgammon.Instance.board.initBoard(2);
     GnuBackgammon.Instance.goToScreen(4);
-    GnuBackgammon.fsm.state(States.OPENING_ROLL);
   }
   
   private void refreshPlayerList() {
