@@ -318,8 +318,8 @@ public class FibsScreen implements Screen {
     if (p.getName().equals("")) return;
     if (p.getName().toLowerCase().equals(username.toLowerCase())) {
       LUsername.setText(p.getName()+" ("+p.getRating()+")");
+      return;
     }
-    
     String u = p.getName().toLowerCase();
     if (fibsPlayers.containsKey(u)) 
       GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
