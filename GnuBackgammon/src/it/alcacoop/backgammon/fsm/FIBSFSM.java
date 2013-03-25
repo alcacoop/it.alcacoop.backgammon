@@ -81,7 +81,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           
         case FIBS_MOVES:
           int moves[] = (int[])params;
-          System.out.println("===> FIBS_MOVES: "+moves[0]+"/"+moves[1]+" "+moves[2]+"/"+moves[3]+" "+moves[4]+"/"+moves[5]+" "+moves[6]+"/"+moves[7]);
           if (moves[0]!=-1) 
             ctx.board().setMoves(moves);
           else
@@ -194,11 +193,8 @@ public class FIBSFSM extends BaseFSM implements Context {
         case DICE_CLICKED:
           ctx.board().dices.clear();
           String m = "";
-          String o = "";
           for (int i=0; i<4; i++) {
             if (((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i]==-1) break;
-            o+=" "+((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i];
-            o+=" "+((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i+1];
             m+=" ";
             if (MatchState.FibsDirection==-1) {
               m+=(((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i]+1)+" ";
@@ -208,8 +204,6 @@ public class FIBSFSM extends BaseFSM implements Context {
               m+=(24-((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i+1]);
             }
           }
-          System.out.println(">>>>>>>>>>>> INTERNAL MOVE: "+o);
-          System.out.println(">>>>>>>>>>>> SENDED MOVE: "+m);
           GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_MOVE, m);
           ctx.state(SWITCH_TURN);
           break;
@@ -255,8 +249,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.fibs.releaseBoard(b);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
           } else {
-
-            if (MatchState.fTurn==1) {
+            if (b.turn == MatchState.FibsColor) {//ERA QUESTO IL BUG!!
               ctx.state(States.LOCAL_TURN);
             } else {
               ctx.state(States.REMOTE_TURN);          
@@ -465,7 +458,6 @@ public class FIBSFSM extends BaseFSM implements Context {
         return true;
       }
     },
-    
     
 
     STOPPED {

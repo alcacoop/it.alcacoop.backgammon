@@ -35,9 +35,11 @@ package it.alcacoop.backgammon.logic;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import java.util.LinkedList;
+
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -46,7 +48,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 public class FibsNetHandler {
 
     private ExecutorService dispatchExecutor;
-    private static MessageQueue queue;
+    private static LinkedBlockingQueue<Evt> queue;
     private int nreq;
     private Pool<Evt> evtPool;
     private Pool<FibsBoard> boardPool;
@@ -63,48 +65,19 @@ public class FibsNetHandler {
       }
       @Override
       public void reset() {
-        e = Events.NOOP;
+        e = null;
         o = null;
       }
     }
-    
-    private class MessageQueue {
-      private LinkedList<Evt> list;
-      public MessageQueue() {
-        list = new LinkedList<Evt>();
-      }
-      public synchronized Evt pop() {
-        try {
-          while(list.isEmpty())
-            wait();
-
-        } catch(InterruptedException ex) {}
-        return list.poll();
-      }
-      public synchronized void push(Evt e) {
-        list.add(e);
-        notify();
-      }
-      public synchronized boolean isEempty(){
-        if (list.size()==0) return true;
-        else return false;
-      }
-      public synchronized void empty() {
-        if (!this.isEempty()) list.clear();
-      }
-      public synchronized int getSize() {
-        return list.size();
-      }
-    }
-    
+        
     
     private class Dispatcher implements Runnable {
-      private MessageQueue q;
+      private LinkedBlockingQueue<Evt> q;
       private FibsNetHandler i;
-      private Events[] evts;
+      private Events evt;
       private boolean found;
-      public Dispatcher(MessageQueue _q, FibsNetHandler _i, Events[] _evts) {
-        evts = _evts;
+      public Dispatcher(LinkedBlockingQueue<Evt> _q, FibsNetHandler _i, Events _evt) {
+        evt = _evt;
         q = _q;
         i = _i;
         found = false;
@@ -113,25 +86,23 @@ public class FibsNetHandler {
       @Override
       public void run() {
         i.decReq();
+        Evt e = null;
         while (!found) {
-          Evt e = q.pop();
-          if (e.e!=Events.NOOP) {
-            if (evts.length==0) {
+          try {
+            e = q.take();
+          } catch (InterruptedException e1) {
+            e1.printStackTrace();
+          }
+          if ((evt == null)&&(e.e!=null)) { //PASSO IL PRIMO DISPONIBILE
+            GnuBackgammon.fsm.processEvent(e.e, e.o);
+            found = true;
+            evtPool.free(e);
+          } else {
+            System.out.println("SCARTO: "+e.e);
+            if (evt==e.e) {
               GnuBackgammon.fsm.processEvent(e.e, e.o);
               found = true;
-              evtPool.free(e);
-            } else {
-              for (Events s : evts) {
-                if (s==e.e) {
-                  GnuBackgammon.fsm.processEvent(e.e, e.o);
-                  found = true;
-                } else {
-                }
-                evtPool.free(e);
-              }
             }
-          } else {
-            found = true;
             evtPool.free(e);
           }
         }
@@ -141,7 +112,7 @@ public class FibsNetHandler {
     
     
     public FibsNetHandler() {
-      queue = new MessageQueue();
+      queue = new LinkedBlockingQueue<Evt>();
       dispatchExecutor = Executors.newSingleThreadExecutor();
       nreq=0;
       
@@ -158,19 +129,36 @@ public class FibsNetHandler {
     }
     
 
-    public void pull(Events... evts) {
-      dispatchExecutor.execute(new Dispatcher(queue, this, evts));
+    public void pull(Events evt) {
+      dispatchExecutor.submit(new Dispatcher(queue, this, evt));
     }
     
     public void post(Events _e, Object _o) {
-      Evt e = evtPool.obtain();
-      e.init(_e, _o);
-      queue.push(e);
+      if (_e==null) return;
+      synchronized (queue) {
+        Evt e = evtPool.obtain();
+        e.init(_e, _o);
+        try {
+          queue.put(e);
+          System.out.println("ACCODAMENTO MESSAGGIO: "+e.e);
+          debug();
+        } catch (InterruptedException e1) {
+          e1.printStackTrace();
+        }        
+      }
     }
     public void post() { //DEBUG PURPOSE..
-      Evt e = evtPool.obtain();
-      e.init(Events.CONTINUE, null);
-      queue.push(e);
+      synchronized (queue) {
+        Evt e = evtPool.obtain();
+        e.init(Events.CONTINUE, null);
+        try {
+          queue.put(e);
+          System.out.println("ACCODAMENTO MESSAGGIO: "+e.e);
+          debug();
+        } catch (InterruptedException e1) {
+          e1.printStackTrace();
+        }
+      }
     }
     public synchronized int getReq() {
       return nreq;
@@ -182,17 +170,22 @@ public class FibsNetHandler {
       nreq--;
     }
     public void reset() {
-      queue.empty();
-      for (int i=0; i<getReq(); i++)
-        queue.push(evtPool.obtain());
+      synchronized (queue) {
+        queue.clear();
+        dispatchExecutor.shutdownNow();
+        nreq = 0;
+        dispatchExecutor = Executors.newSingleThreadExecutor();
+      }
     }
     public void debug() {
-      System.out.println("RICHIESTE IN CODA: "+nreq);
-      System.out.println("MESSAGGI IN CODA: "+queue.getSize());
       synchronized (queue) {
-        for (int i=0;i<queue.getSize();i++) {
-          System.out.println("  "+queue.list.get(i).e);
-        }
+        System.out.println("RICHIESTE IN CODA: "+nreq);
+        System.out.println("MESSAGGI IN CODA: "+queue.size());
+        Iterator<Evt> itr = queue.iterator();
+        while(itr.hasNext()) {
+          Evt element = itr.next();
+          System.out.println("  "+element.e);
+       }
       }
     }
     
