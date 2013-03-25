@@ -334,6 +334,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
                   GnuBackgammon.Instance.FibsUsername = username;
                   GnuBackgammon.Instance.FibsPassword = password;
                   GnuBackgammon.Instance.commandDispatcher.createAccount();
+                  d.dismiss();
                 }
                 Log.e("MINE", username+":"+password+":"+password2);        
               }
