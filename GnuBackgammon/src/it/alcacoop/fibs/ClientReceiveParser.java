@@ -99,24 +99,25 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         break;
         
       case CLIP_LOGIN:
-        //A PLAYER LOGGED IN
         parsePlayerLoggedIn(s);
         break;
       case CLIP_LOGOUT:
-      //A PLAYER LOGGED OUT
         parsePlayerLoggedOut(s);
         break;
-        
+      
+      case FIBS_YouTerminated:
+        break;
       case FIBS_OpponentLogsOut:
       case FIBS_OpponentLeftGame:
-        parseAbortMatch(s);
+        if (s.charAt(0)!='.') {
+          GnuBackgammon.fsm.processEvent(Events.FIBS_ABANDON_GAME, null);
+        }
         break;
       case FIBS_Goodbye:
-        //System.out.println("BYE BYE");
+        System.out.println("BYE BYE");
         disconnectFromServer();
         break;
       case FIBS_Timeout:
-        //System.out.println(s);
         disconnectFromServer();
         break;
       case CLIP_WELCOME:
@@ -126,7 +127,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.NETWORK_CONNECTED);
         break;
       case FIBS_YouAreWatching:
-        //System.out.println(s);
         this.commandDispatcher.dispatch(CommandDispatcher.Command.WATCHING);
         break;
       case CLIP_SAYS:
@@ -344,7 +344,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         //System.out.println(s);
         break;
       case FIBS_Unknown:
-        System.out.println("Unknown message from FIBS: '" + s + "'");
+        //System.out.println("Unknown message from FIBS: '" + s + "'");
         break;
       default:
         break;
@@ -436,11 +436,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_GONE, ss[1]);
     //System.out.println(ss[2] + " " + ss[3] + " " + ss[4]);
-  }
-
-  private void parseAbortMatch(String s) {
-    //System.out.println(s);
-    this.commandDispatcher.writeNetworkMessageln("show saved");
   }
 
   /** Just log the player to the messages list.

@@ -51,7 +51,8 @@ public class FIBSFSM extends BaseFSM implements Context {
   public State currentState;
   private int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   public int hnmove = 0;
-  public static boolean terminated = false; 
+  private static boolean terminated = false;
+  private static String opponent;
   
   
   public enum States implements State {
@@ -265,6 +266,7 @@ public class FIBSFSM extends BaseFSM implements Context {
               ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
             ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
 
+            /*
             System.out.println("======== FIBS BOARD ON SWITCHING TURN... ========");
 
             for (int i=0; i<2; i++) {
@@ -280,6 +282,7 @@ public class FIBSFSM extends BaseFSM implements Context {
               System.out.println(" ");
               System.out.println(" ");
             }
+            */
 
             ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
             boolean differ = false;
@@ -293,11 +296,12 @@ public class FIBSFSM extends BaseFSM implements Context {
               System.out.println("===> NEEDED RESYNC!");
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             }
-            GnuBackgammon.Instance.fibs.debug();
+            
+            //GnuBackgammon.Instance.fibs.debug();
             GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
             
             GnuBackgammon.Instance.fibs.releaseBoard(b);
-            System.out.println("======== =============================== ========");
+            //System.out.println("======== =============================== ========");
           }
         }
         return true;
@@ -413,6 +417,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     FIBS_MENU {
       @Override
       public void enterState(Context ctx) {
+        FIBSFSM.opponent = "";
         GnuBackgammon.Instance.fibs.reset();
         super.enterState(ctx);
       }
@@ -499,16 +504,23 @@ public class FIBSFSM extends BaseFSM implements Context {
   
   @Override
   public boolean processEvent(Events evt, Object params) {
-    switch (evt) { //GESIONTE EVENTI FUORI FLUSSO (ASINCRONI)
-      case FIBS_MATCHOVER:
+      
+    if (evt==Events.FIBS_ABANDON_GAME) {
+      System.out.println("HERE WE ARE!");
+      state(States.MATCH_OVER);
+      UIDialog.getFlashDialog(
+        Events.STOPPED, 
+        "Your opponent abandoned the game..",
+        0.82f,
+        this.board().getStage());
+    }
+      
+    if (evt==Events.FIBS_MATCHOVER) {
         FIBSFSM.terminated = true;
         if (MatchState.fTurn == 0)
           state(States.MATCH_OVER);
-        break;
-        
-      default:
-        return super.processEvent(evt, params);    
     }
-    return true;
+        
+    return super.processEvent(evt, params);
   }
 }
