@@ -51,6 +51,7 @@ public class FIBSFSM extends BaseFSM implements Context {
   public State currentState;
   private int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   public int hnmove = 0;
+  public static boolean terminated = false; 
   
   
   public enum States implements State {
@@ -96,7 +97,10 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case NO_MORE_MOVES: //END TURN
-          ctx.state(States.SWITCH_TURN);
+          if (FIBSFSM.terminated)
+            ctx.state(States.MATCH_OVER);
+          else
+            ctx.state(States.SWITCH_TURN);
           break;
         
         default:
@@ -278,9 +282,20 @@ public class FIBSFSM extends BaseFSM implements Context {
             }
 
             ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
-            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            boolean differ = false;
+            for (int i=0;i<2;i++)
+              for (int j=0;j<25;j++)
+                if (ctx.board()._board[i][j]!=b.board[i][j]) {
+                  differ = true;
+                  break;
+                }
+            if (differ) {
+              System.out.println("===> NEEDED RESYNC!");
+              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            }
             GnuBackgammon.Instance.fibs.debug();
             GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
+            
             GnuBackgammon.Instance.fibs.releaseBoard(b);
             System.out.println("======== =============================== ========");
           }
@@ -300,6 +315,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.prefs.flush();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD); //WAITING FOR BOARD..
+        FIBSFSM.terminated = false;
       }
 
       @Override
@@ -483,15 +499,16 @@ public class FIBSFSM extends BaseFSM implements Context {
   
   @Override
   public boolean processEvent(Events evt, Object params) {
-    if (evt==Events.FIBS_MATCHOVER) {
-      try {
-        Thread.sleep(1500);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      state(States.MATCH_OVER);
+    switch (evt) { //GESIONTE EVENTI FUORI FLUSSO (ASINCRONI)
+      case FIBS_MATCHOVER:
+        FIBSFSM.terminated = true;
+        if (MatchState.fTurn == 0)
+          state(States.MATCH_OVER);
+        break;
+        
+      default:
+        return super.processEvent(evt, params);    
     }
-    return super.processEvent(evt, params);
+    return true;
   }
 }
