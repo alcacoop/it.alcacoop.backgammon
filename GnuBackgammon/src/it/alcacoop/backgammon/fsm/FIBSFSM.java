@@ -98,7 +98,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case NO_MORE_MOVES: //END TURN
-          if (FIBSFSM.terminated)
+          if (terminated)
             ctx.state(States.MATCH_OVER);
           else
             ctx.state(States.SWITCH_TURN);
@@ -319,7 +319,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.prefs.flush();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD); //WAITING FOR BOARD..
-        FIBSFSM.terminated = false;
+        terminated = false;
       }
 
       @Override
@@ -417,7 +417,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     FIBS_MENU {
       @Override
       public void enterState(Context ctx) {
-        FIBSFSM.opponent = "";
+        opponent = "";
         GnuBackgammon.Instance.fibs.reset();
         super.enterState(ctx);
       }
@@ -454,8 +454,8 @@ public class FIBSFSM extends BaseFSM implements Context {
             }
             break;
             
-          case FIBS_JOIN_RECEIVED:
-            s = (String)params;
+          case FIBS_START_GAME:
+            opponent = (String)params;
             GnuBackgammon.Instance.fibsScreen.initGame();
             break;
             
@@ -505,8 +505,19 @@ public class FIBSFSM extends BaseFSM implements Context {
   @Override
   public boolean processEvent(Events evt, Object params) {
       
+    if (evt==Events.FIBS_PLAYER_LOGOUT) {
+      String s = (String)params;
+      if (s.equals(opponent)) {
+        state(States.MATCH_OVER);
+        UIDialog.getFlashDialog(
+          Events.STOPPED, 
+          "Your opponent dropped server connection..",
+          0.82f,
+          this.board().getStage());
+      }
+    }
+    
     if (evt==Events.FIBS_ABANDON_GAME) {
-      System.out.println("HERE WE ARE!");
       state(States.MATCH_OVER);
       UIDialog.getFlashDialog(
         Events.STOPPED, 
@@ -516,7 +527,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     }
       
     if (evt==Events.FIBS_MATCHOVER) {
-        FIBSFSM.terminated = true;
+        terminated = true;
         if (MatchState.fTurn == 0)
           state(States.MATCH_OVER);
     }

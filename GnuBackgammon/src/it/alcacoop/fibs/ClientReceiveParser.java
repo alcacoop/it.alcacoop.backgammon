@@ -170,11 +170,13 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         showErrorMessage(s);
         break;
       case FIBS_StartingNewGame:
-        startNewGame();
+        s = s.replace(".", "");
+        String[] d = s.split(" ");
+        startNewGame(d[d.length-1]);
         break;
       case FIBS_ResumeMatchAck0:
       case FIBS_ResumeMatchAck5:
-        startNewGame();
+        startNewGame("");
         GnuBackgammon.Instance.fibs.post(Events.FIBS_RESUMEGAME, null);
         break;
       case FIBS_Turn:
@@ -199,7 +201,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         handleAcceptRejectDouble();
         break;
       case FIBS_JoinNextGame: 
-        this.commandDispatcher.writeNetworkMessageln("join");
+        //this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
         parseRoll(s);
@@ -476,8 +478,8 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     this.commandDispatcher.writeNetworkMessageln("board");
   }
 
-  private void startNewGame() {
-    this.commandDispatcher.dispatch(CommandDispatcher.Command.START_GAME);
+  private void startNewGame(String d) {
+    this.commandDispatcher.dispatch(CommandDispatcher.Command.START_GAME, d);
   }
 
   private void parsePleaseMove(String s) {

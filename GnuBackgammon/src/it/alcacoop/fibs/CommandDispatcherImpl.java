@@ -39,11 +39,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       case CONNECT_TO_SERVER:
         onConnectToServer();
         break;
-      case START_GAME:
-        System.out.println("START GAME NOW!!!");
-        //GnuBackgammon.Instance.setFSM("FIBS_FSM");
-        GnuBackgammon.Instance.fibsScreen.initGame();
-        break;
       case SHUTTING_DOWN:
         onShutdown();
         break;
@@ -94,6 +89,11 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   public void dispatch(Command command, String arg1) {
     //System.out.println("COMMAND: "+command+" ARG1: "+arg1);
     switch (command) {
+      case START_GAME:
+        System.out.println("START GAME NOW!!!");
+        GnuBackgammon.fsm.processEvent(Events.FIBS_START_GAME, arg1);
+        break;
+        
       case SYSTEM_MESSAGE:
         break;
       case PLAYER_CHANGED:
