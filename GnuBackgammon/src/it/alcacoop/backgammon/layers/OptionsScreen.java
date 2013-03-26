@@ -39,9 +39,8 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.ui.GameOptionsTable;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -91,10 +90,6 @@ public class OptionsScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-    Gdx.gl.glClearColor(0, 0, 1, 1);
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }
