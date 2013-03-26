@@ -164,15 +164,16 @@ public class FIBSFSM extends BaseFSM implements Context {
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
             }
-          } else {
+          } else { //TAP MODE
+            
             if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
               int origin = ctx.board().selected.boardX;
               int dest = (Integer)params;
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
 
               int idx = ((FIBSFSM)GnuBackgammon.fsm).hnmove;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx] = origin;
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx+1] = dest;
+              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2] = origin;
+              ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
               ((FIBSFSM)GnuBackgammon.fsm).hnmove++;
 
               ctx.state(HUMAN_CHECKER_MOVING);
