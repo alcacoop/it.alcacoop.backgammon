@@ -61,7 +61,6 @@ public class Main implements NativeFunctions {
     cfg.width = 800;
     cfg.height = 480;
     instance = new Main();
-    
     new LwjglApplication(new GnuBackgammon(instance), cfg);
     
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
@@ -105,7 +104,6 @@ public class Main implements NativeFunctions {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
     
   }
 }

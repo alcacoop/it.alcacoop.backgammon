@@ -34,9 +34,12 @@
 package it.alcacoop.backgammon.ui;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.logic.MatchState;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,6 +48,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -74,6 +79,7 @@ public final class UIDialog extends Window {
   
   private GameOptionsTable opts;
   
+  
   static {
     instance = new UIDialog();
   }
@@ -91,25 +97,32 @@ public final class UIDialog extends Window {
         } else {
           s = ((TextButton)event.getTarget()).getText().toString().toUpperCase();
         }
-        hide(new Runnable(){
-          @Override
-          public void run() {
-            instance.remove();
-            if (leaveWindow) {
-              GnuBackgammon.fsm.processEvent(instance.evt, s);
-              return;
-            }
-            
-            boolean ret = s.equals("YES")||s.equals("OK");
-            
-            if ((instance.quitWindow)&&(ret)) {
-              Gdx.app.exit();
-            } else {
-              GnuBackgammon.fsm.processEvent(instance.evt, ret);
-              if (instance.optionsWindow) opts.savePrefs();
-            }
-          }
-        });
+        
+        instance.addAction(MyActions.sequence(
+            Actions.fadeOut(0.3f),
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                instance.remove();
+                
+                if (leaveWindow) {
+                  GnuBackgammon.fsm.processEvent(instance.evt, s);
+                  return;
+                }
+                
+                boolean ret = s.equals("YES")||s.equals("OK");
+                
+                if ((instance.quitWindow)&&(ret)) {
+                  Gdx.app.exit();
+                } else {
+                  GnuBackgammon.fsm.processEvent(instance.evt, ret);
+                  if (instance.optionsWindow) opts.savePrefs();
+                }
+                Gdx.graphics.setContinuousRendering(false);
+                Gdx.graphics.requestRendering();
+              }
+            })
+        ));
       };
     };
     
@@ -165,12 +178,14 @@ public final class UIDialog extends Window {
     label.setText(t);
   }
   
+  /*
   private void hide(Runnable r) {
-    addAction(Actions.sequence(
-        Actions.fadeOut(0.3f),
-        Actions.run(r)
+    addAction(MyActions.sequence(
+      Actions.fadeOut(0.3f),
+      Actions.run(r)
     ));
   }
+  */
   
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
     getYesNoDialog(evt, text, 1, stage);
@@ -203,7 +218,7 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
   
   public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
@@ -286,7 +301,7 @@ public final class UIDialog extends Window {
     instance.add(t1).colspan(4).fill().padBottom(width/25);
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
   
   
@@ -313,7 +328,7 @@ public final class UIDialog extends Window {
     instance.add(instance.label).expand().align(Align.center);
     
     stage.addActor(instance);
-    instance.addAction(Actions.sequence(
+    instance.addAction(MyActions.sequence(
         Actions.alpha(alpha, 0.3f),
         Actions.delay(1.5f),
         Actions.fadeOut(0.3f),
@@ -357,7 +372,7 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
 
   
@@ -398,7 +413,7 @@ public final class UIDialog extends Window {
     
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.sequence(Actions.alpha(alpha, 0.3f)));
   }
   
   public static void getHelpDialog(Stage stage, Boolean cb) {
@@ -454,7 +469,7 @@ public final class UIDialog extends Window {
     instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
   
   
@@ -482,13 +497,12 @@ public final class UIDialog extends Window {
     instance.add(instance.opts).expand().fill();
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
-  
+
   public static boolean isOpened() {
     return instance.hasParent();
   }
-  
   public static void setButtonsStyle(String b) {
     instance.bContinue.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bYes.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));

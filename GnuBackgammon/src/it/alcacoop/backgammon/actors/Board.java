@@ -594,6 +594,10 @@ public class Board extends Group {
   
   public void thinking(boolean v) {
     thinking.setVisible(v);
+    Gdx.graphics.requestRendering();
+    if (v) Gdx.graphics.setContinuousRendering(true);
+    else if (v) Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
   }
   
   public int gameScore(int loser) {

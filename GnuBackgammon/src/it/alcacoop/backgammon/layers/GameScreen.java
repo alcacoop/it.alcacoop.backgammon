@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.PlayerInfo;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
@@ -44,6 +45,7 @@ import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -100,6 +102,7 @@ public class GameScreen implements Screen {
               UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
           }
         }
+        
         if(Gdx.input.isKeyPressed(Keys.MENU)||Gdx.input.isKeyPressed(Keys.M)) {
           menuPopup.toggle();
         }
@@ -189,6 +192,8 @@ public class GameScreen implements Screen {
   
   @Override
   public void show() {
+    bgImg.setWidth(stage.getWidth());
+    bgImg.setHeight(stage.getHeight());
     loadTextures();
     initTable();
 
@@ -261,7 +266,7 @@ public class GameScreen implements Screen {
     
     GameMenuPopup.setDisabledButtons();
     board.setCube(cubeValue, cubeOwner);
-    table.addAction(Actions.sequence(
+    table.addAction(MyActions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f)
     ));
@@ -274,7 +279,7 @@ public class GameScreen implements Screen {
       MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
       pInfo[1].setName("PL1:");
       MatchState.pl1 = "PL1";
-    } else {
+    } else { //two players or fibs
       pInfo[0].setName("PL1:");
       MatchState.pl0 = "PL1";
       pInfo[1].setName("PL2:");
@@ -284,7 +289,7 @@ public class GameScreen implements Screen {
     pInfo[0].update();
     pInfo[1].update();
 
-    table.addAction(Actions.sequence(
+    table.addAction(MyActions.sequence(
       Actions.delay(0.1f),
       Actions.moveTo(0, 0, 0.3f),
       Actions.run(new Runnable() {

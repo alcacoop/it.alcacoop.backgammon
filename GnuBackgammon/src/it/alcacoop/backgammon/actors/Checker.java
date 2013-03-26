@@ -34,8 +34,12 @@
 package it.alcacoop.backgammon.actors;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.backgammon.actions.MySequenceAction;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -43,7 +47,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -57,7 +60,7 @@ public class Checker extends Group {
   private Board board;
   private Label label;
   private Image img, imgh;
-  private ParallelAction act;
+  private MySequenceAction act;
   private MoveToAction mv;
   private BaseFSM fsm;
   private final TextureRegionDrawable dr;
@@ -120,7 +123,7 @@ public class Checker extends Group {
     }
     else {
       mv = Actions.moveTo(_p.x, _p.y, t);
-      act = Actions.sequence(mv, Actions.run(new Runnable() {
+      act = MyActions.sequence(mv, Actions.run(new Runnable() {
         @Override
         public void run() {
           GnuBackgammon.fsm.processEvent(Events.CHECKER_RESETTED, null);
@@ -164,7 +167,7 @@ public class Checker extends Group {
     setPosition(x);
     
     final Checker c = this;
-    act = Actions.sequence(
+    act = MyActions.sequence(
         Actions.delay(delay),
         Actions.run(new Runnable() {
           @Override
@@ -220,6 +223,10 @@ public class Checker extends Group {
   public void highlight(boolean b) {
     if (b) GnuBackgammon.Instance.snd.playMoveStart();
     imgh.setVisible(b);
+    Gdx.graphics.requestRendering();
+    if (b) Gdx.graphics.setContinuousRendering(true);
+    else Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
   }
   
   @Override

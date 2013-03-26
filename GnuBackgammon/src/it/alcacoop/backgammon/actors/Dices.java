@@ -38,11 +38,13 @@ import java.util.Iterator;
 import java.util.Random;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.MatchState;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -179,11 +181,11 @@ public class Dices extends Group {
           firstBigger = !firstBigger;
           if (last.size()==2) {
             if (last.get(0).getX()==leftX) {
-              last.get(1).addAction(Actions.moveTo(leftX, last.get(1).getY(), 0.2f));  //setX(leftX);
-              last.get(0).addAction(Actions.moveTo(rightX, last.get(1).getY(), 0.2f)); //setX(rightX);
+              last.get(1).addAction(MyActions.moveTo(leftX, last.get(1).getY(), 0.2f));  //setX(leftX);
+              last.get(0).addAction(MyActions.moveTo(rightX, last.get(1).getY(), 0.2f)); //setX(rightX);
             } else {
-              last.get(1).addAction(Actions.moveTo(rightX, last.get(1).getY(), 0.2f));  //setX(leftX);
-              last.get(0).addAction(Actions.moveTo(leftX, last.get(1).getY(), 0.2f)); //setX(rightX)
+              last.get(1).addAction(MyActions.moveTo(rightX, last.get(1).getY(), 0.2f));  //setX(leftX);
+              last.get(0).addAction(MyActions.moveTo(leftX, last.get(1).getY(), 0.2f)); //setX(rightX)
             }
           }
         }
@@ -199,7 +201,7 @@ public class Dices extends Group {
     }
   }
 
-  
+
   public void clear() {
     firstBigger = true;
     Iterator<_dice> itr = last.iterator();
@@ -212,21 +214,27 @@ public class Dices extends Group {
     ans[1].hide();
   }
   
-  
   public void animate(final int d1, final int d2) {
+    animate(d1, d2, true);
+  }
+  public void animate(final int d1, final int d2, final boolean evt) {
     fsm = GnuBackgammon.fsm;
     animating = true;
     ans[0].show();
     ans[1].show();
     
-    addAction(Actions.sequence(
+    Gdx.graphics.setContinuousRendering(true);
+    addAction(MyActions.sequence(
         Actions.delay(animDuration*(GnuBackgammon.Instance.prefs.getString("SPEED", "Fast").equals("Fast")?1:2)),
         Actions.run(new Runnable() {
           @Override
           public void run() {
             ans[0].hide();
             ans[1].hide();
-            show(d1, d2);
+            if (fsm == GnuBackgammon.fsm)
+              show(d1, d2, evt);
+            Gdx.graphics.setContinuousRendering(false);
+            Gdx.graphics.requestRendering();
           }
         })
     ));

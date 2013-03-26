@@ -34,11 +34,13 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -195,6 +197,8 @@ public class AboutScreen implements Screen {
 
   @Override
   public void render(float delta) {
+    Gdx.gl.glClearColor(1, 1, 1, 1);
+    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }
@@ -214,7 +218,7 @@ public class AboutScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
-    table.addAction(Actions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
   @Override

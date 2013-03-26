@@ -34,9 +34,11 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -74,6 +76,8 @@ public class SplashScreen implements Screen {
 
   @Override
   public void render(float delta) {
+    Gdx.gl.glClearColor(1, 1, 1, 1);
+    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }
@@ -86,11 +90,10 @@ public class SplashScreen implements Screen {
   
   @Override
   public void show() {
-    
     Action r1 = Actions.run(new Runnable() {
       @Override
       public void run() {
-        gnu.addAction(Actions.sequence(
+        gnu.addAction(MyActions.sequence(
             Actions.delay(0.5f),
             Actions.fadeIn(0.8f),
             Actions.delay(1.5f),
@@ -111,7 +114,7 @@ public class SplashScreen implements Screen {
       }
     });
     
-    alca.addAction(Actions.sequence(
+    alca.addAction(MyActions.sequence(
         Actions.delay(0.1f),
         Actions.fadeIn(0.8f),
         Actions.delay(1.5f),

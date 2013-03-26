@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon.ui;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -59,19 +60,11 @@ public final class GameMenuPopup extends Table {
   private static TextButton abandon;
   private TextButton options;
   private Actor a;
-  private Runnable noop;
-  
   private boolean visible;
   
   
   
   public GameMenuPopup(Stage stage) {
-    noop = new Runnable(){
-      @Override
-      public void run() {
-      }
-    };
-        
     setWidth(stage.getWidth());
     setHeight(stage.getHeight()/(6.3f-GnuBackgammon.ss));
     setX(0);
@@ -84,7 +77,7 @@ public final class GameMenuPopup extends Table {
     a.addListener(new InputListener(){
       @Override
       public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-        hide(noop);
+        hide();
         return true;
       }
     });
@@ -179,19 +172,22 @@ public final class GameMenuPopup extends Table {
   
   private void show() {
     visible = true;
-    addAction(Actions.moveTo(0, 0, 0.1f));
+    addAction(MyActions.moveTo(0, 0, 0.1f));
   }
-  
+  private void hide() {
+    visible = false;
+    addAction(MyActions.moveTo(0, -getHeight(), 0.1f));
+  }
   private void hide(Runnable r) {
     visible = false;
-    addAction(Actions.sequence(
+    addAction(MyActions.sequence(
       Actions.moveTo(0, -getHeight(), 0.1f),
       Actions.run(r)
     ));
   }
   
   public void toggle() {
-    if (visible) hide(noop);
+    if (visible) hide();
     else {
       GnuBackgammon.Instance.board.points.reset();
       if (GnuBackgammon.Instance.board.selected!=null) 

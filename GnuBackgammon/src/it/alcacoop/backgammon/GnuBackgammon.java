@@ -109,7 +109,9 @@ public class GnuBackgammon extends Game {
   
   @Override
   public void create() {
-    
+    Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+
     Instance = this;
     prefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
@@ -162,9 +164,11 @@ public class GnuBackgammon extends Game {
     setScreen(new SplashScreen());
   }
 
+  
   public String getResName() {
     return resname[ss];
   }
+  
   
   public void goToScreen(int s) {
     switch (s) {
@@ -215,6 +219,7 @@ public class GnuBackgammon extends Game {
         break;
     }
   }
+
 
   public void setFSM(String type) {
     if (fsm!=null) fsm.stop();

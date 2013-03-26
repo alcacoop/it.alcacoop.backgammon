@@ -563,6 +563,13 @@ public class GameFSM extends BaseFSM implements Context {
         
         return true;
       }
+      
+      @Override
+      public void exitState(Context ctx) {
+        Gdx.graphics.setContinuousRendering(false);
+        Gdx.graphics.requestRendering();
+        super.exitState(ctx);
+      }
     },
     
     
