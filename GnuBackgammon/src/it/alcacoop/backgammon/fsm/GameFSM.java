@@ -223,8 +223,8 @@ public class GameFSM extends BaseFSM implements Context {
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
               
               int idx = ((GameFSM)GnuBackgammon.fsm).hnmove;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx] = origin;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx+1] = dest;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2] = origin;
+              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
               ((GameFSM)GnuBackgammon.fsm).hnmove++;
               
               ctx.state(HUMAN_CHECKER_MOVING);
