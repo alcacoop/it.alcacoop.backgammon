@@ -390,6 +390,8 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   }
   
   public void sendLogin(String username, String password) {
+    GnuBackgammon.Instance.FibsUsername = username; 
+    GnuBackgammon.Instance.FibsPassword = password;
     clientConnection.sendLogin(username, password);
   }
   

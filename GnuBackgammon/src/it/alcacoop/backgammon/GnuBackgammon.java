@@ -106,6 +106,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public NativeFunctions nativeFunctions;
   public boolean isGNU = false;
   
+  public Preferences fibsPrefs;
+  
   public MatchRecorder rec;
   public String fname;
   
@@ -150,10 +152,10 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     snd = new SoundManager();
     rec = new MatchRecorder();
     
+    fibsPrefs = Gdx.app.getPreferences("FibsPreferences");
+    
     fibs = new FibsNetHandler();
     commandDispatcher = new CommandDispatcherImpl();
-    //INIT CONNECTION AND LOGIN
-    //commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
     nativeFunctions.injectBGInstance();
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS

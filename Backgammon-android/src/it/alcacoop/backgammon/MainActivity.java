@@ -258,7 +258,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        final View myView = inflater.inflate(R.layout.dialog_signin, null);;
+        final View myView = inflater.inflate(R.layout.dialog_signin, null);
         alert.setView(myView).
           setTitle("Login to server...").
           setCancelable(false).
@@ -279,6 +279,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
+            ((EditText)myView.findViewById(R.id.username)).setText(GnuBackgammon.Instance.fibsPrefs.getString("username"));
+            ((EditText)myView.findViewById(R.id.password)).setText(GnuBackgammon.Instance.fibsPrefs.getString("password"));
             Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
             b.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -289,7 +291,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
                   GnuBackgammon.Instance.commandDispatcher.sendLogin(username, password);
                   d.dismiss();
                 }
-                Log.e("MINE", username+":"+password);
               }
             });
           }
@@ -336,7 +337,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
                   GnuBackgammon.Instance.commandDispatcher.createAccount();
                   d.dismiss();
                 }
-                Log.e("MINE", username+":"+password+":"+password2);        
               }
             });
           }

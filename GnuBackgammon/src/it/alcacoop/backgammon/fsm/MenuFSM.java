@@ -170,23 +170,21 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
             
           case FIBS_LOGIN_ERROR:
+            GnuBackgammon.Instance.fibsPrefs.putString("username", "");
+            GnuBackgammon.Instance.fibsPrefs.putString("password", "");
+            GnuBackgammon.Instance.fibsPrefs.flush();
             UIDialog.getFlashDialog(Events.NOOP, "Authentication error...\nUser not known or wrong password", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
             break;
             
           case FIBS_LOGIN_OK:
+            GnuBackgammon.Instance.fibsPrefs.putString("username", GnuBackgammon.Instance.FibsUsername);
+            GnuBackgammon.Instance.fibsPrefs.putString("password", GnuBackgammon.Instance.FibsPassword);
+            GnuBackgammon.Instance.fibsPrefs.flush();
             GnuBackgammon.Instance.setFSM("FIBS_FSM");
             break;
           
-          /*
-          case FIBS_ERROR:  
-            UIDialog.getFlashDialog(Events.NOOP, "Sorry.. an error occurred", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
-            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
-            ctx.state(States.MAIN_MENU);
-            break;
-          */
-            
           case FIBS_NETWORK_ERROR:  
             UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);

@@ -680,12 +680,12 @@ public final class UIDialog extends Window {
     
     instance.row();
     instance.add(new Label("Username:", GnuBackgammon.skin));
-    final TextField username = new TextField("", GnuBackgammon.skin);
+    final TextField username = new TextField(GnuBackgammon.Instance.fibsPrefs.getString("username"), GnuBackgammon.skin);
     instance.add(username).colspan(2).fillX().expandX();
     
     instance.row();
     instance.add(new Label("Password:", GnuBackgammon.skin));
-    final TextField password = new TextField("", GnuBackgammon.skin);
+    final TextField password = new TextField(GnuBackgammon.Instance.fibsPrefs.getString("password"), GnuBackgammon.skin);
     instance.add(password).colspan(2).fillX().expandX();
     
     instance.row();
@@ -731,8 +731,8 @@ public final class UIDialog extends Window {
       }
     });
     
-    stage.addActor(instance);
     Gdx.graphics.setContinuousRendering(true);
+    stage.addActor(instance);
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
