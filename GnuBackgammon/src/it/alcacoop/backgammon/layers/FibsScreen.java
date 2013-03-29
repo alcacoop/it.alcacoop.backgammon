@@ -34,11 +34,9 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.actions.MyActions;
-import it.alcacoop.backgammon.fsm.FIBSFSM.States;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
 import java.text.SimpleDateFormat;
@@ -89,7 +87,7 @@ public class FibsScreen implements Screen {
   
   private Table playerTable, invitationTable;
   private ScrollPane onlineList, invitationList;
-  private float timeout, height, width;
+  private float height, width;
   private LabelStyle evenLs;
   private TextureRegion readyRegion, busyRegion, playingRegion, iSended, iReceived;
   private Drawable evenbg;
@@ -114,8 +112,6 @@ public class FibsScreen implements Screen {
     iReceived = GnuBackgammon.atlas.findRegion("ireceived");
     
     status = new Image(readyRegion);
-    
-    timeout = 0;
     
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
@@ -263,7 +259,6 @@ public class FibsScreen implements Screen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
-    timeout += delta;
     Table.drawDebug(stage);
   }
 
