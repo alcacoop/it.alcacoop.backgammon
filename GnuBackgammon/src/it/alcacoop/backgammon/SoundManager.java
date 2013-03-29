@@ -52,17 +52,17 @@ public class SoundManager {
   }
   
   public void playRoll() {
-    if (GnuBackgammon.Instance.prefs.getString("SOUND", "Yes").equals("Yes"))
+    if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       roll.play();
   }
 
   public void playMoveStart() {
-    if (GnuBackgammon.Instance.prefs.getString("SOUND", "Yes").equals("Yes"))
+    if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       moving_start.play();
   }
   
   public void playMoveStop() {
-    if (GnuBackgammon.Instance.prefs.getString("SOUND", "Yes").equals("Yes"))
+    if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       moving_stop.play();
   }
 }

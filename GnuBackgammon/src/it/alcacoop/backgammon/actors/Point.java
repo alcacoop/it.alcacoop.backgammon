@@ -79,7 +79,7 @@ public class Point extends Group {
   
   
   public void highlight() {
-    if (GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes").equals("Yes"))
+    if (GnuBackgammon.Instance.optionPrefs.getString("LMOVES", "Yes").equals("Yes"))
       img.setColor(color);
     isTarget = true;
   }

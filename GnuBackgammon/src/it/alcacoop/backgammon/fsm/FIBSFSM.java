@@ -147,7 +147,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case POINT_TOUCHED:
-          if (GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap").equals("Auto")) {
+          if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
             int orig = (Integer)params;
             if ((orig==-1)||(ctx.board()._board[MatchState.fMove][orig]==0))
               break;
@@ -310,8 +310,8 @@ public class FIBSFSM extends BaseFSM implements Context {
         ctx.board().doubleBtn.remove();
         ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
         MatchState.UpdateMSCubeInfo(1, -1);
-        GnuBackgammon.Instance.prefs.putString("SHOWHELP", "No");
-        GnuBackgammon.Instance.prefs.flush();
+        GnuBackgammon.Instance.optionPrefs.putString("SHOWHELP", "No");
+        GnuBackgammon.Instance.optionPrefs.flush();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD); //WAITING FOR BOARD..
         terminated = false;
       }

@@ -100,7 +100,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public Board board;
   public Screen currentScreen;
   public JSONProperties jp;
-  public Preferences prefs, appearancePrefs;
+  public Preferences optionPrefs, appearancePrefs;
+  
   public SoundManager snd;
   public NativeFunctions nativeFunctions;
   public boolean isGNU = false;
@@ -143,8 +144,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       }
     };
     
-    prefs = Gdx.app.getPreferences("GameOptions");
+    optionPrefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
+
     snd = new SoundManager();
     rec = new MatchRecorder();
     

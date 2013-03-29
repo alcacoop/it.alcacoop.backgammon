@@ -36,7 +36,6 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -126,6 +125,7 @@ public class GameOptionsTable extends Table {
     float width = l.getWidth()*0.8f;
     float height = l.getHeight()*1.8f;
     
+    
     if (decoration) {
       add(new Label("GAME OPTIONS", GnuBackgammon.skin)).expand().colspan(5);
       row();
@@ -142,6 +142,7 @@ public class GameOptionsTable extends Table {
     add(sn2).width(width).fillY().height(height);
     add().fill().height(height).expandX();
     
+    
     row().height(height*1.3f);
     add().fill().height(height*1.3f).expandX();
     add(l).right().spaceRight(6);
@@ -149,12 +150,14 @@ public class GameOptionsTable extends Table {
     add(sp2).height(height).width(width);
     add().fill().height(height).expandX();
     
+    
     row().height(height*1.3f);
     add().fill().height(height*1.3f).expandX();
     add(new Label("Move Logic:", GnuBackgammon.skin)).right().spaceRight(6);
     add(am1).height(height).width(width).spaceRight(6);
     add(am2).height(height).width(width);
     add().fill().height(height).expandX();
+
     
     row().height(height*1.3f);
     add().fill().height(height*1.3f).expandX();
@@ -201,35 +204,37 @@ public class GameOptionsTable extends Table {
   } 
   
   
+  
   public void initFromPrefs() {
-    String sound = GnuBackgammon.Instance.prefs.getString("SOUND", "Yes");
+    String sound = GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes");
     this.sound.setChecked(sound);
-    String speed = GnuBackgammon.Instance.prefs.getString("SPEED", "Fast");
+    String speed = GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast");
     this.speed.setChecked(speed);
-    String automoves = GnuBackgammon.Instance.prefs.getString("AMOVES", "Tap");
+    String automoves = GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap");
     this.automoves.setChecked(automoves);
+    
     if (automoves.equals("Tap")) setDisabledLmoves(false);
     if (automoves.equals("Auto")) setDisabledLmoves(true);
-    String lmoves = GnuBackgammon.Instance.prefs.getString("LMOVES", "Yes");
+    
+    String lmoves = GnuBackgammon.Instance.optionPrefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
-    String manualdices = GnuBackgammon.Instance.prefs.getString("MDICES", "No");
+    String manualdices = GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No");
     this.mdices.setChecked(manualdices);
   }
-
   
   public void savePrefs() {
     String sound = ((TextButton)this.sound.getChecked()).getText().toString(); 
-    GnuBackgammon.Instance.prefs.putString("SOUND", sound);
+    GnuBackgammon.Instance.optionPrefs.putString("SOUND", sound);
     String speed = ((TextButton)this.speed.getChecked()).getText().toString(); 
-    GnuBackgammon.Instance.prefs.putString("SPEED", speed);
+    GnuBackgammon.Instance.optionPrefs.putString("SPEED", speed);
     String amoves = ((TextButton)this.automoves.getChecked()).getText().toString(); 
-    GnuBackgammon.Instance.prefs.putString("AMOVES", amoves);
+    GnuBackgammon.Instance.optionPrefs.putString("AMOVES", amoves);
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString(); 
-    GnuBackgammon.Instance.prefs.putString("LMOVES", lmoves);
+    GnuBackgammon.Instance.optionPrefs.putString("LMOVES", lmoves);
     String manualdices = ((TextButton)this.mdices.getChecked()).getText().toString(); 
-    GnuBackgammon.Instance.prefs.putString("MDICES", manualdices);
+    GnuBackgammon.Instance.optionPrefs.putString("MDICES", manualdices);
     
-    GnuBackgammon.Instance.prefs.flush();
+    GnuBackgammon.Instance.optionPrefs.flush();
   }
 
   
