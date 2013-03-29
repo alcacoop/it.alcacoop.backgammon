@@ -124,9 +124,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     nativeFunctions = n;
     this.isGNU = _isGNU;
   }
+
+  public void isCR() {
+    System.out.println("CR: "+Gdx.graphics.isContinuousRendering());
+  }
   
   @Override
-  
   public void create() {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
