@@ -34,7 +34,6 @@
 package it.alcacoop.backgammon.fsm;
 
 
-import com.badlogic.gdx.Gdx;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
@@ -43,6 +42,11 @@ import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.badlogic.gdx.Gdx;
+
 
 // MENU FSM
 public class MenuFSM extends BaseFSM implements Context {
@@ -50,6 +54,7 @@ public class MenuFSM extends BaseFSM implements Context {
   private Board board;
   public State currentState;
   private static boolean accountCreated = false;
+  private static Timer timer;
 
   public enum States implements State {
 
@@ -82,7 +87,6 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("FIBS")) {
             if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
               MatchState.matchType = 2;
-              //GnuBackgammon.Instance.setFSM("FIBS_FSM");
               ctx.state(States.FIBS);
             } else {
               UIDialog.getFlashDialog(
@@ -147,6 +151,15 @@ public class MenuFSM extends BaseFSM implements Context {
     FIBS {
       @Override
       public void enterState(Context ctx) {
+        ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(true);
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+          @Override
+          public void run() {
+            GnuBackgammon.fsm.processEvent(Events.FIBS_ERROR, null);
+          }
+        };
+        timer.schedule(task, 5000);
         GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
         super.enterState(ctx);
       }
@@ -156,6 +169,8 @@ public class MenuFSM extends BaseFSM implements Context {
         switch (evt) {
           
           case FIBS_CONNECTED:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
+            timer.cancel();
             if (MenuFSM.accountCreated) {
               GnuBackgammon.Instance.commandDispatcher.sendLogin(GnuBackgammon.Instance.FibsUsername, GnuBackgammon.Instance.FibsPassword);
               MenuFSM.accountCreated = false;
@@ -164,12 +179,21 @@ public class MenuFSM extends BaseFSM implements Context {
             }
             break;
           
+          case FIBS_ERROR:
+            ctx.state(MAIN_MENU);
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
+            GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
+            UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+            break;
+            
           case FIBS_CANCEL:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
             break;
             
           case FIBS_LOGIN_ERROR:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             GnuBackgammon.Instance.fibsPrefs.putString("username", "");
             GnuBackgammon.Instance.fibsPrefs.putString("password", "");
             GnuBackgammon.Instance.fibsPrefs.flush();
@@ -179,6 +203,7 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
             
           case FIBS_LOGIN_OK:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             GnuBackgammon.Instance.fibsPrefs.putString("username", GnuBackgammon.Instance.FibsUsername);
             GnuBackgammon.Instance.fibsPrefs.putString("password", GnuBackgammon.Instance.FibsPassword);
             GnuBackgammon.Instance.fibsPrefs.flush();
@@ -186,24 +211,28 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
           
           case FIBS_NETWORK_ERROR:  
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
             break;
           
           case FIBS_ACCOUNT_PRESENT:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'"+GnuBackgammon.Instance.FibsUsername+"' is already used by someone else", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
             break;
             
           case FIBS_ACCOUNT_SPAM:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             UIDialog.getFlashDialog(Events.NOOP, "Too much account created from your IP..\nAre you a spammer?", 0.90f, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.MAIN_MENU);
             break;  
             
           case FIBS_ACCOUNT_OK:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
             MenuFSM.accountCreated = true;
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);

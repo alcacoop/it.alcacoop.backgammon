@@ -49,6 +49,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -60,6 +61,7 @@ public class MainMenuScreen implements Screen {
   private Stage stage;
   private Group g;
   private Image bgImg;
+  private Label connecting;
   
   public MainMenuScreen(){
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
@@ -170,6 +172,12 @@ public class MainMenuScreen implements Screen {
     g.setY((stage.getHeight()-g.getHeight())/2);
     
     stage.addActor(g);
+    connecting = new Label("Connecting to server...", GnuBackgammon.skin);
+    connecting.setVisible(false);
+    connecting.setX((stage.getWidth()-connecting.getWidth())/2);
+    connecting.setY(connecting.getHeight());
+    connecting.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.5f, 0.4f), Actions.alpha(1,  0.4f))));
+    stage.addActor(connecting);
   }
   
   public Stage getStage() {
@@ -177,6 +185,12 @@ public class MainMenuScreen implements Screen {
   }
 
 
+  public void setConnecting(boolean b) {
+    connecting.setVisible(b);
+    if (b) Gdx.graphics.setContinuousRendering(true);
+    else Gdx.graphics.setContinuousRendering(false);
+  }
+  
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(1, 1, 1, 1);
