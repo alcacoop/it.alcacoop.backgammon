@@ -420,8 +420,7 @@ public class Board extends Group {
         //CHECKER HITTED
         Checker ch = getChecker(c, p);
         ch.moveTo(24);
-        if (MatchState.matchType!=2)
-          playedMoves.lastElement().hitted = true;
+        playedMoves.lastElement().hitted = true;
         return true;
       }
     }
