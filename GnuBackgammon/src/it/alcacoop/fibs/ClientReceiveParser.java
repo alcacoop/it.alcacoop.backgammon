@@ -204,7 +204,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         //this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
-        parseRoll(s);
+        //parseRoll(s);
         break;
         
       case FIBS_PlayerMoves:
@@ -322,7 +322,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.ROLL_OR_DOUBLE);
         break;
       case FIBS_YouRoll:
-        parseRoll(s);
+        //parseRoll(s);
         break;
       case FIBS_YourTurnToMove: // First roll of the game, always 2 moves
         this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, "2");
@@ -594,6 +594,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   
+  /*
   private void parseRoll(String s) {
     int[] dices = {0,0};
     Pattern p = Pattern.compile("[1-6]+");
@@ -602,9 +603,10 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     dices[0] = Integer.parseInt(m.group());
     m.find();
     dices[1] = Integer.parseInt(m.group());
-    System.out.println("===> ROLL: "+dices[0]+"/"+dices[1]);
+    //System.out.println("===> ROLL: "+dices[0]+"/"+dices[1]);
     //GnuBackgammon.Instance.fibs.post(Events.FIBS_ROLLS, dices);
   }
+  */
   
   private void parseMatchOverMessage(String s, int cookie) {
     String[] ss = s.split(" ");

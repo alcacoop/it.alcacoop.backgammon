@@ -90,15 +90,12 @@ public class FibsNetHandler {
         while (!found) {
           try {
             e = q.take();
-          } catch (InterruptedException e1) {
-            e1.printStackTrace();
-          }
+          } catch (InterruptedException e1) {}
           if ((evt == null)&&(e.e!=null)) { //PASSO IL PRIMO DISPONIBILE
             GnuBackgammon.fsm.processEvent(e.e, e.o);
             found = true;
             evtPool.free(e);
           } else {
-            System.out.println("SCARTO: "+e.e);
             if (evt==e.e) {
               GnuBackgammon.fsm.processEvent(e.e, e.o);
               found = true;
@@ -140,8 +137,6 @@ public class FibsNetHandler {
         e.init(_e, _o);
         try {
           queue.put(e);
-          System.out.println("ACCODAMENTO MESSAGGIO: "+e.e);
-          debug();
         } catch (InterruptedException e1) {
           e1.printStackTrace();
         }        
@@ -153,7 +148,6 @@ public class FibsNetHandler {
         e.init(Events.CONTINUE, null);
         try {
           queue.put(e);
-          System.out.println("ACCODAMENTO MESSAGGIO: "+e.e);
           debug();
         } catch (InterruptedException e1) {
           e1.printStackTrace();

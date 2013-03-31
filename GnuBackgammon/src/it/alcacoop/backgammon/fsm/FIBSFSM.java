@@ -260,24 +260,6 @@ public class FIBSFSM extends BaseFSM implements Context {
               ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
             ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
 
-            /*
-            System.out.println("======== FIBS BOARD ON SWITCHING TURN... ========");
-
-            for (int i=0; i<2; i++) {
-              System.out.print("E: ");
-              for (int j=0; j<25; j++) {
-                System.out.print(b.board[i][j]+" ");
-              }
-              System.out.println(" ");
-              System.out.print("I: ");
-              for (int j=0; j<25; j++) {
-                System.out.print(ctx.board()._board[i][j]+" ");
-              }
-              System.out.println(" ");
-              System.out.println(" ");
-            }
-            */
-
             ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
             boolean differ = false;
             for (int i=0;i<2;i++)
@@ -290,12 +272,8 @@ public class FIBSFSM extends BaseFSM implements Context {
               System.out.println("===> NEEDED RESYNC!");
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             }
-            
-            //GnuBackgammon.Instance.fibs.debug();
             GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
-            
             GnuBackgammon.Instance.fibs.releaseBoard(b);
-            //System.out.println("======== =============================== ========");
           }
         }
         return true;
