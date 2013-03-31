@@ -130,10 +130,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.WATCHING);
         break;
       case CLIP_SAYS:
+        /*
         if (s.startsWith("12 RepBotNG ")) {
           //this.mainDialog.getPlayerReportPane().receiveLine(s, cookie);
           return;
         }
+        */
         parseChatMessage(s, cookie);
         break;
       case CLIP_WHISPERS:
@@ -514,6 +516,9 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     String name = s.substring(3, i);
     String text = s.substring(i+1);
     this.commandDispatcher.writeChatMessageln(name, cookie, text);
+    if (s.endsWith("Sorry, not now. Thanks for the invitation.")) {
+      GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_DECLINED, name);
+    }
   }
 
   private void parseYouChatMessage(String s, int cookie) {

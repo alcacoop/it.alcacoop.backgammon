@@ -139,8 +139,12 @@ public class FibsScreen implements Screen {
 
     inviteClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        String s = ((Label)event.getListenerActor()).getText().toString();
-        GnuBackgammon.Instance.commandDispatcher.send("join "+s);
+        String s = ((Label)event.getListenerActor()).getText().toString().trim();
+        System.out.println("invite from: "+s+" - "+fibsInvitations.get(s));
+        if ((fibsInvitations.containsKey(s))&&((int)fibsInvitations.get(s)>0)) {
+          lastInvite = s;
+          UIDialog.getInviteClickedDialog(s, 1, stage);
+        }
       };
     };
     
@@ -171,7 +175,6 @@ public class FibsScreen implements Screen {
     LUsername = new Label("", GnuBackgammon.skin);
     LLastLogin = new Label("", GnuBackgammon.skin);
     
-    //TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
     evenLs = GnuBackgammon.skin.get("even", LabelStyle.class);
     
     width = stage.getWidth()*0.95f;
@@ -188,9 +191,7 @@ public class FibsScreen implements Screen {
     invitationList.setOverscroll(false, false);
         
     Table table = new Table();
-    //table.debug();
     Drawable d = GnuBackgammon.skin.getDrawable("default-window");
-    //table.setBackground(d);
     table.setFillParent(true);
     
     
@@ -301,7 +302,6 @@ public class FibsScreen implements Screen {
       @Override
       public void run() {
         refreshPlayerList();
-        System.out.println("TIMER!");
       }
     };
     timer.schedule(task, 1000, 1500);
@@ -330,9 +330,6 @@ public class FibsScreen implements Screen {
     }
   }
   
-  public void onInviation(String s) {
-    fibsInvitations.put(s, 1); //1=INVITE IN
-  }
   
   public void initGame() {
     GnuBackgammon.Instance.board.dices.clear();
@@ -340,9 +337,7 @@ public class FibsScreen implements Screen {
     GnuBackgammon.Instance.goToScreen(4);
   }
   
-  private void refreshPlayerList() {
-    System.out.println("REFRESH PLAYER LIST");
-    //float width = stage.getWidth()*0.95f*0.6f;
+  public void refreshPlayerList() {
     playerTable.remove();
     playerTable.reset();
     invitationTable.remove();
@@ -432,6 +427,5 @@ public class FibsScreen implements Screen {
   }
 
   @Override
-  public void dispose() {
-  }
+  public void dispose() {}
 }

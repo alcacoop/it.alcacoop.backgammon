@@ -68,6 +68,8 @@ public final class UIDialog extends Window {
   private TextButton bNo;
   private TextButton bCancel;
   private TextButton bExport;
+  private TextButton bAccept;
+  private TextButton bReject;
   
   private Label label;
   private Label diceLabel;
@@ -179,7 +181,40 @@ public final class UIDialog extends Window {
         super.clicked(event, x, y);
       }
     });
-
+    bAccept = new TextButton("Accept", tl);
+    bAccept.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        instance.addAction(MyActions.sequence(
+          Actions.fadeOut(0.3f),
+          Actions.run(new Runnable() {
+            @Override
+            public void run() {
+              GnuBackgammon.Instance.commandDispatcher.send("join "+GnuBackgammon.Instance.fibsScreen.lastInvite);
+              instance.remove();
+            }
+          })));
+      }
+    });
+    bReject = new TextButton("Reject", tl);
+    bReject.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        instance.addAction(MyActions.sequence(
+            Actions.fadeOut(0.3f),
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                instance.remove();
+                String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
+                GnuBackgammon.Instance.commandDispatcher.send("tell "+u+" Sorry, not now. Thanks for the invitation.");
+                GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
+                GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
+              }
+            })));
+      }
+    });
+    
     background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
     
@@ -801,6 +836,36 @@ public final class UIDialog extends Window {
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
+  public static void getInviteClickedDialog(String username, float alpha, Stage stage) {
+    instance.quitWindow = false;
+    instance.optionsWindow = false;
+    instance.leaveWindow = false;
+    instance.remove();
+    instance.setText("User \""+username+"\" invited you...");
+    
+    float height = stage.getHeight()*0.4f;
+    float width = stage.getWidth()*0.6f;
+    
+    instance.clear();
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    instance.row().padTop(width/25);
+    instance.add(instance.label).colspan(5).expand().align(Align.center);
+    
+    instance.row().pad(width/25);
+    instance.add();
+    instance.add(instance.bReject).fill().expand().height(height*0.25f).width(width/4);
+    instance.add();
+    instance.add(instance.bAccept).fill().expand().height(height*0.25f).width(width/4);
+    instance.add();
+    
+    stage.addActor(instance);
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
+  }
+  
   
   
   public static void setButtonsStyle(String b) {
@@ -809,6 +874,8 @@ public final class UIDialog extends Window {
     instance.bNo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bCancel.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bExport.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bAccept.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    instance.bReject.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
   }
   public static void getDicesDialog(Stage stage, Boolean cb) {

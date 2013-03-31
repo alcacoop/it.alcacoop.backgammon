@@ -78,6 +78,7 @@ public class BaseFSM implements Context {
     FIBS_PLAYER_LOGOUT,
     FIBS_INVITE_RECEIVED,
     FIBS_INVITE_SENDED,
+    FIBS_INVITE_DECLINED,
     FIBS_START_GAME,
     FIBS_ABANDON_GAME,
     
