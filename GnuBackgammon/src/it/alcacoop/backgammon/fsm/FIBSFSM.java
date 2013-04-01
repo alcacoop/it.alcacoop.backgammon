@@ -400,6 +400,15 @@ public class FIBSFSM extends BaseFSM implements Context {
             if (params.toString().equals("BACK")) {
               GnuBackgammon.Instance.commandDispatcher.send("BYE");
               GnuBackgammon.Instance.setFSM("MENU_FSM");
+              GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
+              GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
+            }
+            break;
+            
+          case FIBS_WHO_END:
+            if (GnuBackgammon.Instance.fibsScreen.showWho) {
+              GnuBackgammon.Instance.fibsScreen.showWho = false;
+              GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
             }
             break;
 
@@ -413,15 +422,22 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.fibsScreen.playerGone(s);
             break;
             
+          case FIBS_PLAYER_LOGIN:
+            s = (String)params;
+            GnuBackgammon.Instance.fibsScreen.playerLogged(s);
+            break;
+            
           case FIBS_INVITE_RECEIVED:
             s = (String)params;
             GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(s.trim(), 1); //1=INVITE IN
+            GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
+            GnuBackgammon.Instance.snd.playInvite();
             break;
             
           case FIBS_INVITE_SENDED:
             if ((Boolean)params) {
               String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
-              GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u.trim(), -1);
+              //GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u.trim(), -1);
               GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, u, "1");
             }
             break;
@@ -430,8 +446,8 @@ public class FIBSFSM extends BaseFSM implements Context {
             String u = (String)params;
             if (GnuBackgammon.Instance.fibsScreen.fibsInvitations.containsKey(u)) {
               GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
-              GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
               UIDialog.getFlashDialog(Events.NOOP, "User \""+u+"\" declined your invitation", 0.9f, GnuBackgammon.Instance.fibsScreen.getStage());
+              GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
             }
             break;
             
@@ -468,7 +484,6 @@ public class FIBSFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    GnuBackgammon.Instance.fibsScreen.resetStatus();
     GnuBackgammon.Instance.goToScreen(8);
     state(States.FIBS_MENU);
   }

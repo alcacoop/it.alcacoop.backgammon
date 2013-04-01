@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -72,7 +73,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         
       case CLIP_OWN_INFO:
         String[] data = s.split(" ");
-        GnuBackgammon.Instance.fibsScreen.fibsRating = data[15];
         this.commandDispatcher.dispatch(CommandDispatcher.Command.OWN_INFO, s);
         GnuBackgammon.fsm.processEvent(Events.FIBS_LOGIN_OK, null);
         break;
@@ -80,6 +80,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.PLAYER_CHANGED, s);
         break;
       case CLIP_WHO_END:
+        GnuBackgammon.fsm.processEvent(Events.FIBS_WHO_END, null);
         break;
       case FIBS_SavedMatchPlaying:
       case FIBS_SavedMatchReady:
@@ -448,8 +449,8 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
    */
   private void parsePlayerLoggedIn(String s) {
     String[] ss = s.split(" ");
-    //System.out.println("LOGGED IN");
-    System.out.println(ss[2] + " " + ss[3] + " " + ss[4]);
+    if (GnuBackgammon.fsm instanceof FIBSFSM)
+      GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_LOGIN, ss[2]);
   }
 
   private void parseOtherMatchMessage(String s) {

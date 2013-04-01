@@ -44,8 +44,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
@@ -67,7 +65,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class FibsScreen implements Screen {
@@ -78,40 +75,32 @@ public class FibsScreen implements Screen {
   
   public String username = "";
   public String lastLogin;
-  public String fibsRating;
   
   public Map<String, Player> fibsPlayers; 
   public Map<String, Integer> fibsInvitations;
-  
-  private Label LUsername, LLastLogin;
-  
-  private Table playerTable, invitationTable;
+
+  //private Table playerTable, invitationTable;
+  private Label LLastLogin;
+  private Player me;
   private ScrollPane onlineList, invitationList;
   private float height, width;
   private LabelStyle evenLs;
-  private TextureRegion readyRegion, busyRegion, playingRegion, iSended, iReceived;
+  private TextureRegion iSended, iReceived;
   private Drawable evenbg;
   private ClickListener rowClicked, inviteClicked;
-  private Image status;
   public String lastInvite;
-  public boolean ready;
-  private Timer timer;
+  public boolean showWho = false;
   
   
-  public FibsScreen(){
+  public FibsScreen() {
+    me = new Player();
+    me.parsePlayer(username+" - - 1 0 1500 1 0 1 1 - - -");
+    
     fibsPlayers = Collections.synchronizedMap(new TreeMap<String, Player>());
     fibsInvitations = Collections.synchronizedMap(new HashMap<String, Integer>());
-    playerTable = new Table();
-    invitationTable = new Table();
     evenbg = GnuBackgammon.skin.getDrawable("even");
-
-    readyRegion = GnuBackgammon.atlas.findRegion("ready");
-    busyRegion = GnuBackgammon.atlas.findRegion("busy");
-    playingRegion = GnuBackgammon.atlas.findRegion("playing");
     iSended = GnuBackgammon.atlas.findRegion("isended");
     iReceived = GnuBackgammon.atlas.findRegion("ireceived");
-    
-    status = new Image(readyRegion);
     
     TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
@@ -172,20 +161,20 @@ public class FibsScreen implements Screen {
     };
     
     
-    LUsername = new Label("", GnuBackgammon.skin);
     LLastLogin = new Label("", GnuBackgammon.skin);
-    
+
     evenLs = GnuBackgammon.skin.get("even", LabelStyle.class);
     
     width = stage.getWidth()*0.95f;
     height = stage.getHeight()*0.95f;
+    
     ScrollPaneStyle sps = GnuBackgammon.skin.get("lists", ScrollPaneStyle.class);
-    onlineList = new ScrollPane(playerTable, sps);
+    onlineList = new ScrollPane(new Table(), sps);
     onlineList.setFadeScrollBars(false);
     onlineList.setForceOverscroll(false, false);
     onlineList.setOverscroll(false, false);
     
-    invitationList = new ScrollPane(invitationTable, sps);
+    invitationList = new ScrollPane(new Table(), sps);
     invitationList.setFadeScrollBars(false);
     invitationList.setForceOverscroll(false, false);
     invitationList.setOverscroll(false, false);
@@ -198,21 +187,19 @@ public class FibsScreen implements Screen {
     ClickListener toggleStatus = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.commandDispatcher.send("toggle ready");
-        ready = !ready;
-        TextureRegionDrawable d;
-        if (ready ) d = new TextureRegionDrawable(readyRegion);
-        else  d = new TextureRegionDrawable(busyRegion);
-        status.setDrawable(d);
+        me.toggleReady();
+        GnuBackgammon.Instance.commandDispatcher.send("who "+username);
       };
     };
-    status.addListener(toggleStatus);
-    LUsername.addListener(toggleStatus);
+
+    me.getStatusImage().addListener(toggleStatus);
+    me.getLabel().addListener(toggleStatus);
     
     
     Table title = new Table();
     title.setBackground(d);
-    title.add(status).left();
-    title.add(LUsername).left();
+    title.add(me.getStatusImage()).left();
+    title.add(me.getLabel()).left();
     title.add(LLastLogin).expandX().right();
     
     table.add(title).colspan(2).expand().fill();
@@ -260,7 +247,6 @@ public class FibsScreen implements Screen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
-    Table.drawDebug(stage);
   }
 
 
@@ -279,54 +265,61 @@ public class FibsScreen implements Screen {
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
     
-    LUsername.setText(username+ " ("+fibsRating+")");
     Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
-    
-    fibsInvitations.clear();
+    //Gdx.graphics.setContinuousRendering(true);
     fibsPlayers.clear();
-    refreshPlayerList();
-    GnuBackgammon.Instance.commandDispatcher.send("who");
-    
-    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f), Actions.run(new Runnable() {
+    g.addAction(MyActions.sequence(Actions.fadeIn(0.6f),Actions.run(new Runnable() {
       @Override
       public void run() {
-        refreshPlayerList();
+        showWho = true;
+        GnuBackgammon.Instance.commandDispatcher.send("who");
       }
     })));
-
-    timer = new Timer(true);
-    TimerTask task = new TimerTask() {
-      @Override
-      public void run() {
-        refreshPlayerList();
-      }
-    };
-    timer.schedule(task, 1000, 1500);
   }
   
-  public void playerChanged(Player p) {
+  public synchronized void playerChanged(Player p) {
     if (p==null) return;
     if (p.getName()==null) return;
     if (p.getName().equals("")) return;
     if (p.getName().toLowerCase().equals(username.toLowerCase())) {
-      LUsername.setText(p.getName()+" ("+p.getRating()+")");
+      me.parsePlayer(p.fibsPlayer);
       return;
     }
     String u = p.getName().toLowerCase();
-    if (fibsPlayers.containsKey(u)) 
-      GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
-    fibsPlayers.put(u, p);
+    if (fibsPlayers.containsKey(u)) {
+      fibsPlayers.get(u).parsePlayer(p.fibsPlayer);
+      GnuBackgammon.Instance.fibsPlayersPool.free(p);
+      Gdx.graphics.requestRendering();
+    } else {
+      //PROBLEMA QUI...
+      fibsPlayers.put(u, p);
+    }
   }
   
-  public void playerGone(String p) {
+  
+  public synchronized void playerGone(String p) {
     String u = p.toLowerCase();
     if (u.equals(username.toLowerCase())) return;
     if (u.equals("")) return;
     if (fibsPlayers.containsKey(u)) {
       GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
+      refreshPlayerList();
+    }
+  }
+  
+  
+  public synchronized void playerLogged(String p) {
+    String u = p.toLowerCase();
+    if (u.equals("")) return;
+    if (!fibsPlayers.containsKey(u)) {
+      Player pl = GnuBackgammon.Instance.fibsPlayersPool.obtain();
+      pl.parsePlayer(u+" - - 1 0 1500 1 0 1 1 - - -");
+      fibsPlayers.put(u, pl);
+      refreshPlayerList();
+      GnuBackgammon.Instance.commandDispatcher.send("who "+u);
     }
   }
   
@@ -337,84 +330,77 @@ public class FibsScreen implements Screen {
     GnuBackgammon.Instance.goToScreen(4);
   }
   
-  public void refreshPlayerList() {
-    playerTable.remove();
-    playerTable.reset();
-    invitationTable.remove();
-    invitationTable.reset();
-    
-    float twidth = width*0.6f;
+  
+  public synchronized void refreshInvitationList() {
+    System.out.println("REFRESH INVITATION LIST");
     float twidth2 = width*0.4f;
     int n = 0;
-    
-    synchronized (fibsInvitations) {
-      for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
-        n++;
-        String key = entry.getKey();
-        int value = entry.getValue();
-        Label user;
-        if (n%2==0) user = new Label(" "+key, evenLs);
-        else user = new Label(" "+key, GnuBackgammon.skin);
-        
-        Image type;
-        if (value == 1)  type =new Image(iReceived);
-        else type = new Image(iSended);
-        Table t = new Table();
-        if (n%2==0) t.setBackground(evenbg);
-        t.add(type).expandX();
-        
-        if (value==1) user.addListener(inviteClicked);
-        
-        invitationTable.row();
-        invitationTable.add(user).left().width(twidth2*0.7f).height(height*0.12f);
-        invitationTable.add(t).expandX().fillX().height(height*0.12f);
-      }
-      invitationTable.row();
-      invitationTable.add().expand().fill().colspan(2);
+
+    Table it = new Table();
+    for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
+      n++;
+      String key = entry.getKey();
+      int value = entry.getValue();
+      Label user;
+      if (n%2==0) user = new Label(" "+key, evenLs);
+      else user = new Label(" "+key, GnuBackgammon.skin);
+
+      Image type;
+      if (value == 1)  type =new Image(iReceived);
+      else type = new Image(iSended);
+      Table t = new Table();
+      if (n%2==0) t.setBackground(evenbg);
+      t.add(type).expandX();
+
+      if (value==1) user.addListener(inviteClicked);
+
+      it.row();
+      it.add(user).left().width(twidth2*0.7f).height(height*0.12f);
+      it.add(t).expandX().fillX().height(height*0.12f);
     }
-    
-    n=0;
-    synchronized (fibsPlayers) {
-      for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
-        n++;
-        Player value = entry.getValue();
-        Image pstatus;
-        if (value.isPlaying())  pstatus =new Image(playingRegion);
-        else if (!value.isReady()) pstatus = new Image(busyRegion);
-        else pstatus = new Image(readyRegion);
-        
-        Table t = new Table();
-        if (n%2==0) t.setBackground(evenbg);
-        t.add(pstatus).expandX();
-        
-        Label user;
-        if (n%2==0) user = new Label(" "+value.getName()+" ("+value.getRating()+")", evenLs);
-        else user = new Label(" "+value.getName()+" ("+value.getRating()+")", GnuBackgammon.skin);
-        
-        user.addListener(rowClicked);
-        
-        playerTable.row();
-        playerTable.add(user).left().width(twidth*0.7f).height(height*0.12f);
-        playerTable.add(t).expandX().fillX().height(height*0.12f);
-      }
-      
-      playerTable.row();
-      playerTable.add().expand().fill().colspan(2);
-    }
-    onlineList.setWidget(playerTable);
-    invitationList.setWidget(invitationTable);
-	Gdx.graphics.requestRendering();
-  }
-  
-  public void resetStatus() {
-    ready = true;
-    TextureRegionDrawable d = new TextureRegionDrawable(readyRegion);
-    status.setDrawable(d);    
+    it.row();
+    it.add().expand().fill().colspan(2);
+    invitationList.setWidget(it);
+    Gdx.graphics.requestRendering();
   }
 
+  
+  
+  public synchronized void refreshPlayerList() {
+    System.out.println("REFRESH PLAYER LIST");
+    float twidth = width*0.6f;
+    int n=0;
+
+    //playerTable.clear();
+    Table pt = new Table();
+    for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
+      n++;
+      Player value = entry.getValue();
+      Label l = value.getLabel();
+      l.addListener(rowClicked);
+
+      Table t = new Table();
+      if (n%2==0) t.setBackground(evenbg);
+
+      t.add(l).left().width(twidth*0.75f).height(height*0.12f).fillX();
+      t.add().expandX();
+      t.add(value.getStatusImage()).right().fillX();
+
+      pt.row();
+      pt.add(t).fillX().expandX();
+    }
+
+    pt.row();
+    pt.add().expand().fill().colspan(2);
+    onlineList.setWidget(pt);
+    
+    Gdx.graphics.requestRendering();
+  }
+  
   @Override
   public void hide() {
-    timer.cancel();
+    invitationList.setWidget(new Table());
+    onlineList.setWidget(new Table());
   }
 
   @Override

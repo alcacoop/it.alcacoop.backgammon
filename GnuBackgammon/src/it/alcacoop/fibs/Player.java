@@ -8,6 +8,12 @@
  
 package it.alcacoop.fibs;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 
@@ -42,10 +48,25 @@ public class Player implements Comparable<Player>, Poolable {
 
   private String savedMatch;
   private String missManners;
+  
+  public String fibsPlayer;
+  
+  private TextureRegionDrawable readyDrawable, busyDrawable, playingDrawable;
+  private Label label;
+  private Image status;
+  
+  
 
   /** Create a default/empty Player
   */
-  public Player() {}
+  public Player() {
+    readyDrawable = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("ready"));
+    busyDrawable = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("busy"));
+    playingDrawable = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("playing"));
+    label = new Label("", GnuBackgammon.skin);
+    status = new Image();
+    status.setDrawable(readyDrawable);
+  }
 
   /** Convienence constructor to set the player's name.
    * @param playerName The name of this new player.
@@ -62,6 +83,14 @@ public class Player implements Comparable<Player>, Poolable {
     return id;
   }
 
+  
+  public Image getStatusImage() {
+    return status;
+  }
+  
+  public Label getLabel() {
+    return label;
+  }
   /** Set the local player id.
    * This is a key to our local database, and is not a FIBS number at all.
    * @param id the id to set
@@ -274,6 +303,7 @@ public class Player implements Comparable<Player>, Poolable {
    * @return success
    */
   public boolean parsePlayer(String s) {
+    fibsPlayer = s;
     String[] ss = s.split(" ");
     if (ss.length != 13) {
       System.out.println("Error parsing player");
@@ -296,7 +326,21 @@ public class Player implements Comparable<Player>, Poolable {
     hostName = ss[10];
     client = ss[11];
     email = ss[12];
+    
+    if (isPlaying())  status.setDrawable(playingDrawable);
+    else if (!isReady()) status.setDrawable(busyDrawable);
+    else status.setDrawable(readyDrawable);
+    
+    LabelStyle ls = label.getStyle();
+    label.setText(" "+name+" ("+rating+")");
+    label.setStyle(ls);
+    
     return(true);
+  }
+  
+  public void toggleReady() {
+    if (isReady()) status.setDrawable(busyDrawable);
+    else status.setDrawable(readyDrawable);
   }
 
   /** String compare the name of this player with that one.
@@ -328,5 +372,7 @@ public class Player implements Comparable<Player>, Poolable {
     invited = false;
     savedMatch = "";
     missManners = "";
+    label.setText("");
+    status.setDrawable(readyDrawable);
   }
 }

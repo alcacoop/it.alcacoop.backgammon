@@ -190,8 +190,13 @@ public final class UIDialog extends Window {
           Actions.run(new Runnable() {
             @Override
             public void run() {
+              String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
+              GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
+              GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
               GnuBackgammon.Instance.commandDispatcher.send("join "+GnuBackgammon.Instance.fibsScreen.lastInvite);
               instance.remove();
+              Gdx.graphics.setContinuousRendering(false);
+              Gdx.graphics.requestRendering();
             }
           })));
       }
@@ -209,7 +214,9 @@ public final class UIDialog extends Window {
                 String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
                 GnuBackgammon.Instance.commandDispatcher.send("tell "+u+" Sorry, not now. Thanks for the invitation.");
                 GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
-                GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
+                GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
+                Gdx.graphics.setContinuousRendering(false);
+                Gdx.graphics.requestRendering();
               }
             })));
       }

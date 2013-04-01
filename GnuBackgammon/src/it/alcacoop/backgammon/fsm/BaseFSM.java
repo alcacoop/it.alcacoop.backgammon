@@ -67,6 +67,7 @@ public class BaseFSM implements Context {
     FIBS_ACCOUNT_OK,
     FIBS_ACCOUNT_PRESENT,
     FIBS_ACCOUNT_SPAM,
+    FIBS_WHO_END,
     
     FIBS_CANCEL,
     FIBS_CONNECTED,
@@ -76,6 +77,7 @@ public class BaseFSM implements Context {
     FIBS_NETWORK_ERROR,
     FIBS_PLAYER_CHANGED,
     FIBS_PLAYER_LOGOUT,
+    FIBS_PLAYER_LOGIN,
     FIBS_INVITE_RECEIVED,
     FIBS_INVITE_SENDED,
     FIBS_INVITE_DECLINED,
