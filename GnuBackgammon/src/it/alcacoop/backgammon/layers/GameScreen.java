@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.layers;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.actors.Board;
+import it.alcacoop.backgammon.actors.ChatBox;
 import it.alcacoop.backgammon.actors.PlayerInfo;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
@@ -78,8 +79,9 @@ public class GameScreen implements Screen {
   private ImageButton menu;
   private TextureRegionDrawable wheel;
 
+  public ChatBox chatBox;
   
-  public GameScreen(){
+  public GameScreen() {
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
@@ -146,6 +148,8 @@ public class GameScreen implements Screen {
     });
     
     stage.addActor(menuPopup);
+    chatBox = new ChatBox(stage);
+    stage.addActor(chatBox);
   }
 
   
@@ -216,6 +220,8 @@ public class GameScreen implements Screen {
       initNewMatch();
     
     table.setY(stage.getHeight());
+    if (MatchState.matchType==2) chatBox.setVisible(true);
+    else chatBox.setVisible(false);
   }
 
   

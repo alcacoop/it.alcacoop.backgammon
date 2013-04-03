@@ -88,10 +88,7 @@ public class ClientConnection extends Thread {
         sock.close();
       }
       sock = null;
-    } catch (SocketException sex) { 
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    } catch (Exception sex) {} 
   }
 
   
@@ -110,7 +107,7 @@ public class ClientConnection extends Thread {
     sock = null;
     String server = "localhost";
     //server = "fibs.com";
-    //server = "ti-ga.com";
+    server = "ti-ga.com";
     server = "dmartella.homelinux.net";
     int port = 4321;
     try {

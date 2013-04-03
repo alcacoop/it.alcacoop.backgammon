@@ -22,7 +22,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
-	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider, background: list}
+	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider, background: list},
+	chat: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider, background: chatbox}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white },

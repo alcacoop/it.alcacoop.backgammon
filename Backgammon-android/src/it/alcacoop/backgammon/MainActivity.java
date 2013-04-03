@@ -33,6 +33,10 @@
 
 package it.alcacoop.backgammon;
 
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.utils.MatchRecorder;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,11 +45,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.NativeFunctions;
-import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.utils.MatchRecorder;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -64,9 +64,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.ads.AdRequest;
@@ -82,7 +84,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   protected AdView adView;
   private final int SHOW_ADS = 1;
   private final int HIDE_ADS = 0;
+  private View chatBox;
+  private boolean chatVisible = false;
 
+  
   protected Handler handler = new Handler()
   {
     @SuppressLint("HandlerLeak")
@@ -99,6 +104,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     }
   };
   
+  @SuppressLint("NewApi")
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -110,33 +116,41 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     
     copyAssetsIfNotExists();
     GnubgAPI.InitializeEnvironment(data_dir);
-    
-    // Create the layout
-    RelativeLayout layout = new RelativeLayout(this);
-    
+        
     requestWindowFeature(Window.FEATURE_NO_TITLE);
-    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-      WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
+    RelativeLayout layout = new RelativeLayout(this);
     View gameView = initializeForView(new GnuBackgammon(this), cfg);
     adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
     adView.loadAd(new AdRequest());
     adView.setVisibility(View.GONE);
-    
-    layout.addView(gameView);
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
       RelativeLayout.LayoutParams.WRAP_CONTENT, 
       RelativeLayout.LayoutParams.WRAP_CONTENT
     );
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
+    layout.addView(gameView);
     layout.addView(adView, adParams);
+    
+    
+    LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    chatBox = inflater.inflate(R.layout.chat_box, null);
+    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+        RelativeLayout.LayoutParams.MATCH_PARENT, 
+        RelativeLayout.LayoutParams.WRAP_CONTENT
+      );
+    chatBox.setVisibility(View.GONE);
+    
+    layout.addView(chatBox, params);
+    
     setContentView(layout);
+    
+    
   }
-  
-  
+
   //Load library
   static {
     System.loadLibrary("glib-2.0");
@@ -353,5 +367,37 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     NetworkInfo activeNetworkInfo = 
       connectivityManager.getActiveNetworkInfo();
     return activeNetworkInfo != null;
+  }
+
+  @Override
+  public void toggleChatBox() {
+    if (chatVisible)
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          EditText chat = (EditText) findViewById(R.id.message);
+          InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+          imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
+          chatBox.setVisibility(View.GONE);
+        }
+      });
+      
+    else
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          chatBox.setVisibility(View.VISIBLE);
+        }
+      });
+    chatVisible = !chatVisible;
+  }
+  
+  public void clearMessage(View v) {
+    EditText chat = (EditText) findViewById(R.id.message);
+    chat.setText("");
+  }
+  
+  public void sendMessage(View v) {
+    EditText chat = (EditText) findViewById(R.id.message);
   }
 }

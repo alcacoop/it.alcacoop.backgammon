@@ -207,4 +207,10 @@ public class Main implements NativeFunctions {
   public boolean isNetworkUp() {
     return true;
   }
+
+  @Override
+  public void toggleChatBox() {
+    // TODO Auto-generated method stub
+    
+  }
 }

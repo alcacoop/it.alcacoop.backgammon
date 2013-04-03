@@ -45,4 +45,5 @@ public interface NativeFunctions {
   public void fibsSignin();
   public void fibsRegistration();
   public boolean isNetworkUp();
+  public void toggleChatBox();
 }
