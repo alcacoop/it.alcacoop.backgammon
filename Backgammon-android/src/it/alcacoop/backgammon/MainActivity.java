@@ -62,6 +62,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -135,7 +136,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     layout.addView(gameView);
     layout.addView(adView, adParams);
     
-    
     LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     chatBox = inflater.inflate(R.layout.chat_box, null);
     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -143,11 +143,27 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
         RelativeLayout.LayoutParams.WRAP_CONTENT
       );
     chatBox.setVisibility(View.GONE);
-    
     layout.addView(chatBox, params);
     
     setContentView(layout);
     
+    /* CHATBOX DIMS */
+    View s1 = findViewById(R.id.space1);
+    View s2 = findViewById(R.id.space2);
+    View s3 = findViewById(R.id.chat_content);
+    ViewGroup.LayoutParams pars = s1.getLayoutParams();
+    params.width = Math.round(GnuBackgammon.Instance.chatWidth*0.15f)+7;
+    s1.setLayoutParams(pars);
+    pars = s2.getLayoutParams();
+    pars.width = Math.round(GnuBackgammon.Instance.chatWidth*0.15f)+7;
+    s2.setLayoutParams(params);
+    pars = s3.getLayoutParams();
+    pars.width = Math.round(GnuBackgammon.Instance.chatWidth*0.7f)-14;
+    s3.setLayoutParams(params);
+    GnuBackgammon.Instance.chatHeight = pars.height;
+    /* CHATBOX DIMS */
+    
+    chatBox.requestLayout();
     
   }
 
@@ -398,6 +414,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   }
   
   public void sendMessage(View v) {
-    EditText chat = (EditText) findViewById(R.id.message);
+    //EditText chat = (EditText) findViewById(R.id.message);
   }
 }

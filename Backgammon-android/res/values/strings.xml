@@ -4,4 +4,6 @@
     <string name="username">username</string>
     <string name="password">password</string>
     <string name="passwordconfirmation">password confirmation</string>
+    <string name="send">SEND</string>
+    <string name="clear">X</string>
 </resources>

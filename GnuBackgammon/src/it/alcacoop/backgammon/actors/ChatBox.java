@@ -38,7 +38,7 @@ public class ChatBox extends ScrollPane {
     ScrollPaneStyle sps = GnuBackgammon.skin.get("chat", ScrollPaneStyle.class);
     setStyle(sps);
     setWidth(stage.getWidth()*0.7f);
-    setHeight(stage.getHeight()*0.55f);
+    setHeight(stage.getHeight()*0.65f);
     setX((stage.getWidth()-getWidth())/2);
     setY(stage.getHeight()-getHeight()*0.25f);
     //setColor(0.13f, 0.35f, 0.1f, 0.8f);

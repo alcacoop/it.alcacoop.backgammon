@@ -76,6 +76,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private WelcomeScreen welcomeScreen;
   private AppearanceScreen appearanceScreen;
   public FibsScreen fibsScreen;
+  public int chatWidth;
+  public int chatHeight;
   
   private int resolutions[][] = {
     {1280,740},
@@ -160,6 +162,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
+    chatWidth = pWidth;
     if (pWidth<=480) ss = 2;
     else if (pWidth<=800) ss = 1;
     else ss = 0;
