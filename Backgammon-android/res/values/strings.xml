@@ -6,4 +6,5 @@
     <string name="passwordconfirmation">password confirmation</string>
     <string name="send">SEND</string>
     <string name="clear">X</string>
+    <string name="chat_message">Chat message...</string>
 </resources>

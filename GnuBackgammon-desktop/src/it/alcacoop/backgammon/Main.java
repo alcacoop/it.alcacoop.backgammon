@@ -210,7 +210,5 @@ public class Main implements NativeFunctions {
 
   @Override
   public void toggleChatBox() {
-    // TODO Auto-generated method stub
-    
   }
 }

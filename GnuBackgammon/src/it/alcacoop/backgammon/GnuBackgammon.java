@@ -76,8 +76,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private WelcomeScreen welcomeScreen;
   private AppearanceScreen appearanceScreen;
   public FibsScreen fibsScreen;
-  public int chatWidth;
-  public int chatHeight;
+  public static int chatHeight = 20;
   
   private int resolutions[][] = {
     {1280,740},
@@ -115,8 +114,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;
-  public String FibsUsername; //ONLY FOR ACCOUNT CREATION
-  public String FibsPassword; //ONLY FOR ACCOUNT CREATION
+  public String FibsUsername;
+  public String FibsPassword;
+  public String FibsOpponent;
   public Pool<Player> fibsPlayersPool;
   
   
@@ -162,7 +162,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
-    chatWidth = pWidth;
     if (pWidth<=480) ss = 2;
     else if (pWidth<=800) ss = 1;
     else ss = 0;
@@ -277,4 +276,12 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fsm.start();
   }
 
+  
+  public void appendChatMessage(String msg, boolean direction) {
+    commandDispatcher.send("tell "+FibsOpponent+" "+msg);
+    appendChatMessage(FibsUsername, msg, direction);
+  }
+  public void appendChatMessage(String username, String msg, boolean direction) {
+    gameScreen.chatBox.appendMessage(username, msg, direction);
+  }
 }

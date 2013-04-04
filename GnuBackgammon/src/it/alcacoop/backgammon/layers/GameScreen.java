@@ -220,8 +220,12 @@ public class GameScreen implements Screen {
       initNewMatch();
     
     table.setY(stage.getHeight());
-    if (MatchState.matchType==2) chatBox.setVisible(true);
-    else chatBox.setVisible(false);
+    if (MatchState.matchType==2) {
+      chatBox.reset();
+      chatBox.setVisible(true);
+    } else {
+      chatBox.setVisible(false);
+    }
   }
 
   

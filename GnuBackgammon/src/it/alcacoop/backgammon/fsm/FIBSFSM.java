@@ -317,6 +317,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GameScreen gs = (GameScreen)GnuBackgammon.Instance.currentScreen;
             gs.pInfo[1].setName(GnuBackgammon.Instance.fibsScreen.username); //PRIMO NOME => NERO
             gs.pInfo[0].setName(b.p2);
+            GnuBackgammon.Instance.FibsOpponent = b.p2; 
             ctx.board().updatePInfo();
             AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
             MatchState.FibsDirection = b.direction;
@@ -346,6 +347,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
+        GnuBackgammon.Instance.FibsOpponent = "";
         UIDialog.getFlashDialog(
             Events.STOPPED, 
             "Match terminated",

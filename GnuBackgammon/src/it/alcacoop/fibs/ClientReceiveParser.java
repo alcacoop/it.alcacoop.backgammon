@@ -520,6 +520,9 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     if (s.endsWith("Sorry, not now. Thanks for the invitation.")) {
       GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_DECLINED, name);
     }
+    
+    if (name.equals(GnuBackgammon.Instance.FibsOpponent))
+      GnuBackgammon.Instance.appendChatMessage(name, text, false);
   }
 
   private void parseYouChatMessage(String s, int cookie) {

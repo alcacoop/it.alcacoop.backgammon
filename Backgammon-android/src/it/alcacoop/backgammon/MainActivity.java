@@ -52,6 +52,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -59,7 +60,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +127,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
 
     RelativeLayout layout = new RelativeLayout(this);
     View gameView = initializeForView(new GnuBackgammon(this), cfg);
+    
     adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
     adView.loadAd(new AdRequest());
     adView.setVisibility(View.GONE);
@@ -148,23 +152,24 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     setContentView(layout);
     
     /* CHATBOX DIMS */
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    int width = size.x;
     View s1 = findViewById(R.id.space1);
     View s2 = findViewById(R.id.space2);
     View s3 = findViewById(R.id.chat_content);
     ViewGroup.LayoutParams pars = s1.getLayoutParams();
-    params.width = Math.round(GnuBackgammon.Instance.chatWidth*0.15f)+7;
+    pars.width = Math.round(width*0.15f)+7;
     s1.setLayoutParams(pars);
     pars = s2.getLayoutParams();
-    pars.width = Math.round(GnuBackgammon.Instance.chatWidth*0.15f)+7;
-    s2.setLayoutParams(params);
+    pars.width = Math.round(width*0.15f)+7;
+    s2.setLayoutParams(pars);
     pars = s3.getLayoutParams();
-    pars.width = Math.round(GnuBackgammon.Instance.chatWidth*0.7f)-14;
-    s3.setLayoutParams(params);
-    GnuBackgammon.Instance.chatHeight = pars.height;
+    GnuBackgammon.chatHeight = pars.height;
+    pars.width = Math.round(width*0.7f)-14;
+    s3.setLayoutParams(pars);
     /* CHATBOX DIMS */
-    
-    chatBox.requestLayout();
-    
   }
 
   //Load library
@@ -414,6 +419,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   }
   
   public void sendMessage(View v) {
-    //EditText chat = (EditText) findViewById(R.id.message);
+    EditText chat = (EditText) findViewById(R.id.message);
+    Editable msg = chat.getText();
+    if (msg.toString().length()>0) {
+      chat.setText("");
+      GnuBackgammon.Instance.appendChatMessage(msg.toString(), true);
+    }
   }
 }
