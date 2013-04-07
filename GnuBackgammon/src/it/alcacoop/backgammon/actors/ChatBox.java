@@ -92,9 +92,9 @@ public class ChatBox extends Group {
     if (!user.equals(lastSender)) {
       Label name = new Label(user+": ", ls);
       name.setAlignment(Align.right, Align.center);
-      tchat.add(name).width(stage.getWidth()*0.18f).right().top().fillX();
+      tchat.add(name).width(stage.getWidth()*0.16f).right().top().fillX();
     } else {
-      tchat.add().width(stage.getWidth()*0.18f).right().top().fillX();
+      tchat.add().width(stage.getWidth()*0.16f).right().top().fillX();
     }
     lastSender = user;
     Label m = new Label(msg, ls);
