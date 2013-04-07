@@ -457,6 +457,8 @@ public class FIBSFSM extends BaseFSM implements Context {
             
           case FIBS_START_GAME:
             opponent = (String)params;
+            GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(opponent);
+            GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
             GnuBackgammon.Instance.fibsScreen.initGame();
             break;
             
