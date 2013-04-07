@@ -110,6 +110,12 @@ public final class UIDialog extends Window {
         }
         
         instance.addAction(MyActions.sequence(
+            Actions.run(new Runnable() {
+              @Override
+              public void run() {
+                //WORKAROUND: ON FIBS_MULTIPLAYER SOME DIALOG LOCK EXECUTION..
+              }
+            }),
             Actions.fadeOut(0.3f),
             Actions.run(new Runnable() {
               @Override
@@ -379,7 +385,7 @@ public final class UIDialog extends Window {
     instance.add(t1).colspan(4).fill().padBottom(width/25);
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.sequence(Actions.alpha(alpha, 0.3f)));
   }
   
   
@@ -651,7 +657,7 @@ public final class UIDialog extends Window {
     instance.clear();
     instance.row().padTop(width/25);
     instance.add(sc).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
-
+    
     instance.row().pad(width/25);
     instance.add();
     instance.add(instance.bContinue).fill().expand().height(height*0.15f).width(width/4);

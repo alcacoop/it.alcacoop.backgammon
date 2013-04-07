@@ -618,7 +618,6 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    System.out.println("GAMEFSM");
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
   }
