@@ -225,9 +225,17 @@ cursor
   orig: 4, 12
   offset: 0, 0
   index: -1
+separator
+  rotate: false
+  xy: 56, 1
+  size: 1, 6
+  split: 0, 0, 0, 6
+  orig: 1, 6
+  offset: 0, 0
+  index: -1
 even
   rotate: false
-  xy: 56, 3
+  xy: 94, 17
   size: 4, 4
   split: 0, 0, 0, 0
   orig: 4, 4
@@ -235,7 +243,7 @@ even
   index: -1
 odd
   rotate: false
-  xy: 94, 17
+  xy: 102, 41
   size: 4, 4
   split: 0, 0, 0, 0
   orig: 4, 4

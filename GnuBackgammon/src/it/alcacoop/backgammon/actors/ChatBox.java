@@ -8,11 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class ChatBox extends Group {
@@ -87,16 +87,20 @@ public class ChatBox extends Group {
     else
       ls = GnuBackgammon.skin.get("black", LabelStyle.class);
     scroll.setWidget(null);
-    tchat.row();
+    
     
     if (!user.equals(lastSender)) {
-      Label name = new Label(user+": ", ls);
-      name.setAlignment(Align.right, Align.center);
-      tchat.add(name).width(stage.getWidth()*0.16f).right().top().fillX();
-    } else {
-      tchat.add().width(stage.getWidth()*0.16f).right().top().fillX();
-    }
-    lastSender = user;
+      if (!lastSender.equals("----")) {
+        tchat.row();
+        tchat.add(new Image(GnuBackgammon.skin.getDrawable("separator"))).colspan(2).fillX().height(6).expandX();
+      }
+      tchat.row();
+      tchat.add(new Label(user+" says: ", ls)).colspan(2).fillX();
+      lastSender = user;
+    } 
+    
+    tchat.row();    
+    tchat.add().width(stage.getWidth()*0.05f).right().top().fillX();
     Label m = new Label(msg, ls);
     m.setWrap(true);
     tchat.add(m).left().expandX().fill().bottom();
