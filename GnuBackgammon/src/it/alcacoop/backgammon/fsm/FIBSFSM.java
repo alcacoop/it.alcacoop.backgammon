@@ -440,7 +440,8 @@ public class FIBSFSM extends BaseFSM implements Context {
           case FIBS_INVITE_SENDED:
             if ((Boolean)params) {
               String u = GnuBackgammon.Instance.fibsScreen.lastInvite;
-              //GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u.trim(), -1);
+              GnuBackgammon.Instance.fibsScreen.fibsInvitations.put(u.trim(), -1);
+              GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
               GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, u, "1");
             }
             break;

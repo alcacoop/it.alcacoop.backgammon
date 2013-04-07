@@ -305,8 +305,10 @@ public class FibsScreen implements Screen {
     if (u.equals(username.toLowerCase())) return;
     if (u.equals("")) return;
     if (fibsPlayers.containsKey(u)) {
+      fibsInvitations.remove(u);
       GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
       refreshPlayerList();
+      refreshInvitationList();
     }
   }
   
