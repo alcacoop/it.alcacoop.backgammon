@@ -37,7 +37,6 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.Gdx;
@@ -49,9 +48,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;

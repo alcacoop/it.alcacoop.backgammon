@@ -63,6 +63,7 @@ public class BaseFSM implements Context {
     NOOP,
     ACCEPT_DOUBLE,
     ACCEPT_RESIGN,
+    GET_RESIGN_VALUE,
     ASK_FOR_DOUBLING,
     ASK_FOR_RESIGNATION,
     EVALUATE_BEST_MOVE,

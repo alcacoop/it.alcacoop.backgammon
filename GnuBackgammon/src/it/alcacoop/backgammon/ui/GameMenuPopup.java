@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.logic.AICalls;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -109,7 +110,11 @@ public final class GameMenuPopup extends Table {
           public void run() {
             if (resign.isDisabled()) return;
             GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
-            GnuBackgammon.fsm.processEvent(Events.ACCEPT_RESIGN, 0);
+            
+            if (MatchState.fTurn==0)
+              AICalls.GetResignValue(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
+            else
+              AICalls.GetResignValue(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
         }});
         
       }

@@ -74,7 +74,7 @@ public class AICalls {
         Gdx.app.postRunnable(new Runnable() {
           @Override
           public void run() {
-            if ((fsm == GnuBackgammon.fsm)&&(MatchState.matchType<2))
+            if (fsm == GnuBackgammon.fsm)
               GnuBackgammon.fsm.processEvent(GameFSM.Events.SET_BOARD, 1);
           }
         });
@@ -82,6 +82,31 @@ public class AICalls {
     });
   }
 
+  
+  public static void GetResignValue(final int b1[], final int b2[]) {
+    dispatchExecutor.submit(new Runnable() {
+      BaseFSM fsm = GnuBackgammon.fsm;
+      @Override
+      public void run() {
+        if (fsm != GnuBackgammon.fsm) return;
+        GnubgAPI.SetBoard(b1, b2);
+        int resign = 1;
+        while (GnubgAPI.AcceptResign(resign)!=resign) 
+          resign++;
+
+        final int r = resign;
+        
+        Gdx.app.postRunnable(new Runnable() {
+          @Override
+          public void run() {
+            if (fsm == GnuBackgammon.fsm)
+              GnuBackgammon.fsm.processEvent(GameFSM.Events.GET_RESIGN_VALUE, r);
+          }
+        });
+      }
+    });
+  }
+  
   
   public static void AcceptResign(final int r) {
     dispatchExecutor.submit(new Runnable() {
@@ -227,7 +252,7 @@ public class AICalls {
         Gdx.app.postRunnable(new Runnable() {
           @Override
           public void run() {
-            if ((fsm == GnuBackgammon.fsm)&&(MatchState.matchType<2))
+            if (fsm == GnuBackgammon.fsm)
               GnuBackgammon.fsm.processEvent(GameFSM.Events.SET_GAME_TURN, 1);
           }
         });        

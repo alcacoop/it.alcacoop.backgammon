@@ -67,12 +67,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ASK_FOR_RESIGNATION:
           if((Integer)params > 0) {
-            MatchState.resignValue = (Integer)params;
-            String s = "Your opponent resigned a game";
-            if ((Integer)params==2) s = "Your opponent resigned a gammon game";
-            if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
-            ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
+            AICalls.GetResignValue(ctx.board()._board[0], ctx.board()._board[1]);
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
               ctx.board().rollDices();
@@ -90,6 +85,15 @@ public class GameFSM extends BaseFSM implements Context {
               }
             }
           }
+          break;
+          
+        case GET_RESIGN_VALUE:
+          MatchState.resignValue = (Integer)params;
+          String s = "Your opponent resigned a game";
+          if ((Integer)params==2) s = "Your opponent resigned a gammon game";
+          if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
+          ctx.state(DIALOG_HANDLER);
+          UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           break;
           
         case ASK_FOR_DOUBLING:
@@ -503,22 +507,13 @@ public class GameFSM extends BaseFSM implements Context {
             GnuBackgammon.fsm.state(States.CHECK_WIN);
             break;
             
-          case ACCEPT_RESIGN: //ASK TO HUMAN IF ACCEPT CALCULATED RESIGN
+          case GET_RESIGN_VALUE:
             int ret = (Integer)params;
-            if (ret == 0) {
-              if (MatchState.fMove == 1)
-                GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-              else
-                GnubgAPI.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-              
-              MatchState.resignValue++;
-              AICalls.AcceptResign(MatchState.resignValue);
-            } else {
-              String s = "Really resign the game?";
-              if (ret == 2) s = "Really resign a gammon game?";
-              if (ret == 3) s = "Really resign a backgammon game?";
-              UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
-            }
+            MatchState.resignValue = ret;
+            String s = "Really resign the game?";
+            if (ret == 2) s = "Really resign a gammon game?";
+            if (ret == 3) s = "Really resign a backgammon game?";
+            UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
             break;
             
           case HUMAN_RESIGNED: //HUMAN RESIGN GAME
