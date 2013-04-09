@@ -348,7 +348,7 @@ public class FibsScreen implements Screen {
   
   public synchronized void refreshInvitationList() {
     System.out.println("REFRESH INVITATION LIST");
-    float twidth2 = width*0.4f;
+    float twidth2 = width*0.35f;
     int n = 0;
 
     Table it = new Table();
@@ -357,14 +357,14 @@ public class FibsScreen implements Screen {
       String key = entry.getKey();
       int value = entry.getValue();
       Label user;
-      if (n%2==0) user = new Label(" "+key, evenLs);
+      if (n%2!=0) user = new Label(" "+key, evenLs);
       else user = new Label(" "+key, GnuBackgammon.skin);
 
       Image type;
       if (value == 1)  type =new Image(iReceived);
       else type = new Image(iSended);
       Table t = new Table();
-      if (n%2==0) t.setBackground(evenbg);
+      if (n%2!=0) t.setBackground(evenbg);
       t.add(type).expandX();
 
       if (value==1) user.addListener(inviteClicked);
@@ -383,7 +383,7 @@ public class FibsScreen implements Screen {
   
   public synchronized void refreshPlayerList() {
     System.out.println("REFRESH PLAYER LIST");
-    float twidth = width*0.6f;
+    float twidth = width*0.5f;
     int n=0;
 
     //playerTable.clear();
@@ -395,18 +395,17 @@ public class FibsScreen implements Screen {
       l.addListener(rowClicked);
 
       Table t = new Table();
-      if (n%2==0) t.setBackground(evenbg);
+      if (n%2!=0) t.setBackground(evenbg);
 
-      t.add(l).left().width(twidth*0.75f).height(height*0.12f).fillX();
+      t.add(l).left().width(twidth*0.86f).height(height*0.12f).fillX();
       t.add().expandX();
-      t.add(value.getStatusImage()).right().fillX();
+      t.add(value.getStatusImage()).left();
+      t.add().expandX();
 
       pt.row();
       pt.add(t).fillX().expandX();
     }
 
-    pt.row();
-    pt.add().expand().fill().colspan(2);
     onlineList.setWidget(pt);
     
     Gdx.graphics.requestRendering();
