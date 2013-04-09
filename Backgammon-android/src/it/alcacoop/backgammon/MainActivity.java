@@ -63,6 +63,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -82,7 +85,7 @@ import com.google.ads.AdView;
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions {
+public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener {
   
   private String data_dir;
   protected AdView adView;
@@ -169,6 +172,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
     GnuBackgammon.chatHeight = pars.height;
     pars.width = Math.round(width*0.7f)-14;
     s3.setLayoutParams(pars);
+    EditText target = (EditText) findViewById(R.id.message);
+    target.setOnEditorActionListener(this);
     /* CHATBOX DIMS */
   }
 
@@ -420,10 +425,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions 
   
   public void sendMessage(View v) {
     EditText chat = (EditText) findViewById(R.id.message);
+    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
     Editable msg = chat.getText();
     if (msg.toString().length()>0) {
       chat.setText("");
       GnuBackgammon.Instance.appendChatMessage(msg.toString(), true);
     }
+  }
+
+  @Override
+  public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+    sendMessage(null);
+    return false;
   }
 }
