@@ -5,7 +5,7 @@ com.badlogic.gdx.graphics.Color: {
 	white: { a: 1, b: 1, g: 1, r: 1 },
 	red: { a: 1, b: 0, g: 0, r: 1 },
 	black: { a: 1, b: 0, g: 0, r: 0 },
-	gray: { a: 1, b: 0.3, g: 0.3, r: 0.3 },
+	gray: { a: 1, b: 0.5, g: 0.5, r: 0.5 },
 	brown: { a: 1, b: 0.24, g: 0.42, r: 0.54 },
 },
 
@@ -23,7 +23,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
-	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider, background: list},
+	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
 	chat: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider}
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {

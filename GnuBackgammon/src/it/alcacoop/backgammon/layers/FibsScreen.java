@@ -63,6 +63,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
@@ -79,7 +80,6 @@ public class FibsScreen implements Screen {
   public Map<String, Player> fibsPlayers; 
   public Map<String, Integer> fibsInvitations;
 
-  //private Table playerTable, invitationTable;
   private Label LLastLogin;
   private Player me;
   private ScrollPane onlineList, invitationList;
@@ -205,15 +205,28 @@ public class FibsScreen implements Screen {
     table.add(title).colspan(2).expand().fill();
     
     table.row();
-    table.add().fill().expand().colspan(2);
+    table.add().colspan(2).expand().fill();
+    
+    Label l1 = new Label("ONLINE USERS",GnuBackgammon.skin);
+    l1.setAlignment(Align.top);
+    
+    Table t1 = new Table();
+    t1.setBackground(GnuBackgammon.skin.getDrawable("list"));
+    t1.add(l1).center().height(height*0.075f);
+    t1.row();
+    t1.add(onlineList).fill().left().height(height*0.48f).width(width*0.52f);
+    
+    Label l2 = new Label("INVITATIONS",GnuBackgammon.skin);
+    l2.setAlignment(Align.top);
+    Table t2 = new Table();
+    t2.setBackground(GnuBackgammon.skin.getDrawable("list"));
+    t2.add(l2).center().height(height*0.075f);
+    t2.row();
+    t2.add(invitationList).fill().left().height(height*0.48f).width(width*0.32f);
     
     table.row();
-    table.add(new Label("ONLINE USERS",GnuBackgammon.skin)).expand().center();
-    table.add(new Label("INVITATIONS",GnuBackgammon.skin)).expand().center();
-    
-    table.row();
-    table.add(onlineList).fill().left().height(height*0.6f).width(width*0.59f);
-    table.add(invitationList).fill().right().height(height*0.6f).width(width*0.39f);
+    table.add(t1);
+    table.add(t2);
     
     table.row();
     table.add().fill().expand().colspan(2);
