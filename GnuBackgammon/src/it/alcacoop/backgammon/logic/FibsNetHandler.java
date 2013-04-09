@@ -141,6 +141,8 @@ public class FibsNetHandler {
           e1.printStackTrace();
         }        
       }
+      System.out.println("\nEVT "+_e+" ARRIVED!");
+      debug();
     }
     public void post() { //DEBUG PURPOSE..
       synchronized (queue) {
@@ -164,10 +166,11 @@ public class FibsNetHandler {
       nreq--;
     }
     public void reset() {
+      System.out.println("\nRESET QUEUE..");
       synchronized (queue) {
-        queue.clear();
         dispatchExecutor.shutdownNow();
         nreq = 0;
+        queue.clear();
         dispatchExecutor = Executors.newSingleThreadExecutor();
       }
     }

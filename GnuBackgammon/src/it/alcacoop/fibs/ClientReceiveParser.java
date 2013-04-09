@@ -7,14 +7,14 @@
  */ 
  
 package it.alcacoop.fibs;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -295,7 +295,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       case FIBS_EchoJunk:
       case FIBS_WaitForLastInvitation:
       case FIBS_WaitForAcceptResign:
-        //System.out.println(s);
         break;
       case FIBS_DidntInvite:
       case FIBS_NotWatchingPlaying:
@@ -337,7 +336,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         parsePleaseMove(s);
         break;
       case FIBS_PlayerWantsToResign:
-        parsePlayerWantsToResign(s);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_RESIGN_REQUEST, null);
         break;
       case FIBS_ATTENTION:
       case FIBS_ShuttingDown:
@@ -488,14 +487,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   private void parsePleaseMove(String s) {
     String[] ss = s.split(" ");
     this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, ss[2]);
-  }
-
-  private void parsePlayerWantsToResign(String s) {
-    String[] ss = s.split("\\.");
-    ss[2] = "";
-    ss[0] += ".";
-    ss[1] += ".";
-    this.commandDispatcher.writeGameMessageln(ss[0] + ss[1]);
   }
 
   private void parseDoublesOnOff(boolean onoff) {

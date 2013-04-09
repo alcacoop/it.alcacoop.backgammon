@@ -173,6 +173,13 @@ public final class GameMenuPopup extends Table {
       undo.setColor(1,1,1,0.4f);
       resign.setColor(1,1,1,0.4f);
       abandon.setColor(1,1,1,0.4f);
+    } else if ((MatchState.matchType==2) && (MatchState.fMove==1)) { //REMOTE TURN 
+      undo.setDisabled(true);
+      resign.setDisabled(true);
+      abandon.setDisabled(false);
+      undo.setColor(1,1,1,0.4f);
+      resign.setColor(1,1,1,0.4f);
+      abandon.setColor(1,1,1,1);
     } else {
       undo.setDisabled(false);
       resign.setDisabled(false);

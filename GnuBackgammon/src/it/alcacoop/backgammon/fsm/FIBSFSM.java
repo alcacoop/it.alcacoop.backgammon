@@ -44,7 +44,6 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
-
 public class FIBSFSM extends BaseFSM implements Context {
 
   private Board board;
@@ -53,16 +52,11 @@ public class FIBSFSM extends BaseFSM implements Context {
   public int hnmove = 0;
   private static boolean terminated = false;
   private static String opponent;
-  
+  private static int d1, d2;
   
   public enum States implements State {
 
     REMOTE_TURN {
-      @Override
-      public void exitState(Context ctx) {
-        GnuBackgammon.Instance.board.dices.clear();
-      }
-      
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
@@ -97,6 +91,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case NO_MORE_MOVES: //END TURN
+          GnuBackgammon.Instance.board.dices.clear();
           if (terminated)
             ctx.state(States.MATCH_OVER);
           else
@@ -116,12 +111,30 @@ public class FIBSFSM extends BaseFSM implements Context {
       
       @Override
       public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
+
         switch (evt) {
+        /*
+        case FIBS_ROLLS:
+          int[] dices = (int[])params;
+          FIBSFSM.d1 = Math.max(dices[0], dices[1]);
+          FIBSFSM.d2 = Math.min(dices[0], dices[1]);
+          if (GnuBackgammon.fsm.previousState == OPENING_ROLL) {
+            ctx.board().animateDices(d1, d2, true);
+          } else {
+            ctx.board().addActor(ctx.board().rollBtn);
+            ctx.board().rollBtn.setVisible(true);
+          }
+          break;  
+          
+        case ROLL_DICE:
+          ctx.board().animateDices(FIBSFSM.d1, FIBSFSM.d2, true);
+          break;
+        */  
         
         case FIBS_ROLLS:
           int[] dices = (int[])params;
-          int d1 = Math.max(dices[0], dices[1]);
-          int d2 = Math.min(dices[0], dices[1]);
+          FIBSFSM.d1 = Math.max(dices[0], dices[1]);
+          FIBSFSM.d2 = Math.min(dices[0], dices[1]);
           ctx.board().animateDices(d1, d2, true);
           break;
           
@@ -348,16 +361,26 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
-        UIDialog.getFlashDialog(
+        if (MatchState.resignValue==4) {
+          terminated = true;
+          UIDialog.getFlashDialog(
+              Events.STOPPED, 
+              "Your opponent resigned the game",
+              0.82f,
+              ctx.board().getStage());
+        } else {
+          UIDialog.getFlashDialog(
             Events.STOPPED, 
             "Match terminated",
             0.82f,
             ctx.board().getStage());
+        }
       }
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.STOPPED) {
+          MatchState.resignValue = 0;
           ctx.state(FIBS_MENU);
           GnuBackgammon.Instance.goToScreen(8);
         }
@@ -381,6 +404,27 @@ public class FIBSFSM extends BaseFSM implements Context {
           }
           break;
           
+        case GET_RESIGN_VALUE:
+          int ret = (Integer)params;
+          String s = "Really resign the game?";
+          if (ret == 2) s = "Really resign a gammon game?";
+          if (ret == 3) s = "Really resign a backgammon game?";
+          UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
+          break;
+          
+        case HUMAN_RESIGNED:
+          if ((Boolean)params) {
+            String t = "";
+            if (MatchState.resignValue == 1) t="n";
+            else if (MatchState.resignValue == 2) t="g";
+            else t = "b";
+            GnuBackgammon.Instance.commandDispatcher.send("resign "+t);
+          } else {
+            MatchState.resignValue = 0;
+            GnuBackgammon.fsm.back();
+          }
+          break;
+          
         default:
             return false;
         }
@@ -392,8 +436,8 @@ public class FIBSFSM extends BaseFSM implements Context {
     FIBS_MENU {
       @Override
       public void enterState(Context ctx) {
-        opponent = "";
         GnuBackgammon.Instance.fibs.reset();
+        opponent = "";
         super.enterState(ctx);
       }
       @Override
@@ -458,7 +502,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           case FIBS_START_GAME:
             opponent = (String)params;
             GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(opponent);
-            GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
             GnuBackgammon.Instance.fibsScreen.initGame();
             break;
             
@@ -473,7 +516,6 @@ public class FIBSFSM extends BaseFSM implements Context {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.fibs.reset();
       }
     };
 
@@ -527,11 +569,16 @@ public class FIBSFSM extends BaseFSM implements Context {
         0.82f,
         this.board().getStage());
     }
+    
+    if (evt==Events.FIBS_RESIGN_REQUEST) {
+      MatchState.resignValue = 4;
+      terminated = true;
+      GnuBackgammon.Instance.commandDispatcher.send("accept"); //FIBS WILL SEND MATCHOVER MSG
+    }
       
     if (evt==Events.FIBS_MATCHOVER) {
-        terminated = true;
-        if (MatchState.fTurn == 0)
-          state(States.MATCH_OVER);
+      terminated = true;
+      state(States.MATCH_OVER);
     }
         
     return super.processEvent(evt, params);

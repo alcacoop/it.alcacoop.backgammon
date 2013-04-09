@@ -83,6 +83,7 @@ public class BaseFSM implements Context {
     FIBS_INVITE_DECLINED,
     FIBS_START_GAME,
     FIBS_ABANDON_GAME,
+    FIBS_RESIGN_REQUEST,
     
     FIBS_FIRSTROLL,
     FIBS_RESUMEGAME,
