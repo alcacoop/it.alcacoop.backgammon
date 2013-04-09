@@ -97,7 +97,6 @@ public class GameScreen implements Screen {
         if(UIDialog.isOpened()) return false;
         
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          
           if (MatchState.fMove==0) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
             if (MatchState.matchType!=2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);

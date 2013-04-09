@@ -119,7 +119,20 @@ public class ChatBox extends Group {
     if (visible) {
       visible = !visible;
       GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
-      setY(stage.getHeight()-getHeight()*0.10f);
+      setY(stage.getHeight()-position);
+    }
+  }
+  
+  public void softHide() {
+    if (visible) {
+      Runnable r = new Runnable() {
+        @Override
+        public void run() {
+          visible = !visible;
+          GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
+        }
+      };
+      addAction(MyActions.sequence(Actions.run(r), Actions.moveTo(getX(), stage.getHeight()-position, 0.18f)));
     }
   }
   

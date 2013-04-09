@@ -61,7 +61,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -93,6 +92,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private final int HIDE_ADS = 0;
   private View chatBox;
   private boolean chatVisible = false;
+  private View gameView;
 
   
   protected Handler handler = new Handler()
@@ -129,7 +129,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
     RelativeLayout layout = new RelativeLayout(this);
-    View gameView = initializeForView(new GnuBackgammon(this), cfg);
+    gameView = initializeForView(new GnuBackgammon(this), cfg);
     
     adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
     adView.loadAd(new AdRequest());
@@ -202,13 +202,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     try {
       files = assetManager.list("gnubg");
     } catch (IOException e) {
-      Log.e("tag", "Failed to get asset file list.", e);
     }
     for(String filename : files) {
       InputStream in = null;
       OutputStream out = null;
       try {
-        Log.e("MINE", filename);
         in = assetManager.open("gnubg/"+filename);
         out = new FileOutputStream(data_dir + filename);
         copyFile(in, out);
@@ -218,7 +216,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         out.close();
         out = null;
       } catch(IOException e) {
-        Log.e("tag", "Failed to copy asset file: " + filename, e);
       }       
     }
   }
@@ -432,11 +429,28 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       chat.setText("");
       GnuBackgammon.Instance.appendChatMessage(msg.toString(), true);
     }
+    adjustFocus();
   }
 
   @Override
   public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
     sendMessage(null);
     return false;
+  }
+
+  public void adjustFocus() {
+    gameView.setFocusableInTouchMode(true);
+    gameView.requestFocus();
+  }
+  
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+      if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+        if (getCurrentFocus()==findViewById(R.id.message)) {
+          adjustFocus();
+          GnuBackgammon.Instance.hideChatBox();
+        }
+      }
+      return super.onKeyDown(keyCode, event);
   }
 }
