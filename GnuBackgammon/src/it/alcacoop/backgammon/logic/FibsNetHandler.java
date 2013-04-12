@@ -141,8 +141,8 @@ public class FibsNetHandler {
           e1.printStackTrace();
         }        
       }
-      System.out.println("\nEVT "+_e+" ARRIVED!");
-      debug();
+//      System.out.println("\nEVT "+_e+" ARRIVED!");
+//      debug();
     }
     public void post() { //DEBUG PURPOSE..
       synchronized (queue) {
@@ -150,7 +150,7 @@ public class FibsNetHandler {
         e.init(Events.CONTINUE, null);
         try {
           queue.put(e);
-          debug();
+//          debug();
         } catch (InterruptedException e1) {
           e1.printStackTrace();
         }
@@ -166,7 +166,7 @@ public class FibsNetHandler {
       nreq--;
     }
     public void reset() {
-      System.out.println("\nRESET QUEUE..");
+//      System.out.println("\nRESET QUEUE..");
       synchronized (queue) {
         dispatchExecutor.shutdownNow();
         nreq = 0;

@@ -52,6 +52,9 @@ public class FIBSFSM extends BaseFSM implements Context {
   public int hnmove = 0;
   private static boolean terminated = false;
   private static int d1, d2;
+  private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
+  private static boolean isBufferedMoves = false;
+  
   
   public enum States implements State {
 
@@ -372,8 +375,21 @@ public class FIBSFSM extends BaseFSM implements Context {
 
     DIALOG_HANDLER {
       @Override
+      public void enterState(Context ctx) {
+        FIBSFSM.isBufferedMoves = false;
+        super.enterState(ctx);
+      }
+      
+      @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
+        
+        case FIBS_MOVES:
+          System.out.println("FIBS MOVES!!!");
+          FIBSFSM.bufferedMoves = (int[])params;
+          FIBSFSM.isBufferedMoves = true;
+          break;
+        
         case ABANDON_MATCH: //QUIT MATCH
           if ((Boolean)params) { //ABANDON
             ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hardHide();
@@ -382,6 +398,10 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.goToScreen(8);
           } else  { //CANCEL
             GnuBackgammon.fsm.back();
+            if (FIBSFSM.isBufferedMoves) {
+              FIBSFSM.isBufferedMoves = false;
+              GnuBackgammon.fsm.processEvent(Events.FIBS_MOVES, FIBSFSM.bufferedMoves);
+            }
           }
           break;
           
