@@ -18,11 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class ChatBox extends Group {
   private Stage stage; 
   private boolean visible = false;
+  private boolean animating = false;
   private ScrollPane scroll;
   private Table tchat;
   private float position;
   float height, cheight;
   String lastSender = "----";
+  private Runnable r1, r2;
   
 
   public ChatBox(Stage _stage) {
@@ -31,6 +33,21 @@ public class ChatBox extends Group {
     height = stage.getHeight()*0.72f;
     cheight = GnuBackgammon.chatHeight;
     position = (height-cheight)*0.20f + 10;
+    
+    r1 = new Runnable() {
+      @Override
+      public void run() {
+        GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
+        visible=!visible;
+      }
+    };
+    
+    r2 = new Runnable() {
+      @Override
+      public void run() {
+        animating = false;
+      }
+    };
     
     tchat = new Table();
     tchat.bottom();
@@ -61,24 +78,39 @@ public class ChatBox extends Group {
     addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        Runnable r = new Runnable() {
-          @Override
-          public void run() {
-            visible = !visible;
-            GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
-          }
-        };
-        
-        if (!visible) {
-          addAction(MyActions.sequence(Actions.moveTo(getX(), stage.getHeight()-getHeight(), 0.18f), Actions.run(r)));
-        } else {
-          addAction(MyActions.sequence(Actions.run(r), Actions.moveTo(getX(), stage.getHeight()-position, 0.18f)));
-        }
+        toggle();
       }
     });
     addActor(t);
   }
+  
+  public void toggle() {
+    if (!visible)
+      show();
+    else
+      hide();
+  }
 
+  
+  public void show() {
+    if (animating) return;
+    animating = true;
+    if (!visible)
+      addAction(MyActions.sequence(Actions.moveTo(getX(), stage.getHeight()-getHeight(), 0.18f), Actions.run(r1), Actions.run(r2)));
+    else
+      animating = false;
+  }
+  
+  public void hide() {
+    if (animating) return;
+    animating = true;
+    if (visible)
+      addAction(MyActions.sequence(Actions.run(r1), Actions.moveTo(getX(), stage.getHeight()-position, 0.18f), Actions.run(r2)));
+    else
+      animating = false;
+  }
+  
+  
   public void appendMessage(String user, String msg, boolean direction) {
     
     LabelStyle ls;
@@ -115,7 +147,7 @@ public class ChatBox extends Group {
     Gdx.graphics.requestRendering();
   }
   
-  public void hide() {
+  public void hardHide() {
     if (visible) {
       visible = !visible;
       GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
@@ -123,18 +155,6 @@ public class ChatBox extends Group {
     }
   }
   
-  public void softHide() {
-    if (visible) {
-      Runnable r = new Runnable() {
-        @Override
-        public void run() {
-          visible = !visible;
-          GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
-        }
-      };
-      addAction(MyActions.sequence(Actions.run(r), Actions.moveTo(getX(), stage.getHeight()-position, 0.18f)));
-    }
-  }
   
   public void reset() {
     tchat = new Table();

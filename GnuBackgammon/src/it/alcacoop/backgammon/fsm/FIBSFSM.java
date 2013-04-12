@@ -395,7 +395,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         switch (evt) {
         case ABANDON_MATCH: //QUIT MATCH
           if ((Boolean)params) { //ABANDON
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hide();
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hardHide();
             GnuBackgammon.Instance.commandDispatcher.send("leave");
             ctx.state(FIBS_MENU);
             GnuBackgammon.Instance.goToScreen(8);
@@ -561,7 +561,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     }
     
     if (evt==Events.FIBS_ABANDON_GAME) {
-      ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hide();
+      ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hardHide();
       state(States.MATCH_OVER);
       UIDialog.getFlashDialog(
         Events.STOPPED, 

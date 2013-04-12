@@ -45,14 +45,17 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
+import it.alcacoop.backgammon.ui.SwipeDetector;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -210,7 +213,9 @@ public class GameScreen implements Screen {
     loadTextures();
     initTable();
 
-    Gdx.input.setInputProcessor(stage);
+    GestureDetector gd = new GestureDetector(new SwipeDetector());
+    InputMultiplexer im = new InputMultiplexer(gd, stage); // Order matters here!
+    Gdx.input.setInputProcessor(im);
     Gdx.input.setCatchBackKey(true);
     
     if ((Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists())&&(MatchState.matchType==0))
