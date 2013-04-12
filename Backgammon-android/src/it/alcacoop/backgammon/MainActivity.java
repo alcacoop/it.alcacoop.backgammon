@@ -111,6 +111,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     }
   };
   
+  @SuppressWarnings("deprecation")
   @SuppressLint("NewApi")
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -157,7 +158,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     /* CHATBOX DIMS */
     Display display = getWindowManager().getDefaultDisplay();
     Point size = new Point();
-    display.getSize(size);
+    try {
+        display.getSize(size);
+    } catch (java.lang.NoSuchMethodError ignore) { // Older device
+        size.x = display.getWidth();
+        size.y = display.getHeight();
+    }
     int width = size.x;
     View s1 = findViewById(R.id.space1);
     View s2 = findViewById(R.id.space2);
