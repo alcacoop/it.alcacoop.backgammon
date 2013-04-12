@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.ChatBox;
 import it.alcacoop.backgammon.actors.PlayerInfo;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
