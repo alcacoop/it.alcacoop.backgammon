@@ -314,8 +314,8 @@ public class AppearanceScreen implements Screen {
     table.add(new Label("APPEARANCE", GnuBackgammon.skin)).colspan(6);
     
     table.row();
-    table.add(back).fill().expand().colspan(6);
-
+    table.add().fill().expand().colspan(6);    
+    
     table.row();
     table.add().fill().expand();
     table.add(new Label("Board:", GnuBackgammon.skin)).right().padRight(7);
