@@ -507,13 +507,15 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
       return;
     String name = s.substring(3, i);
     String text = s.substring(i+1);
-    this.commandDispatcher.writeChatMessageln(name, cookie, text);
+    
     if (s.endsWith("Sorry, not now. Thanks for the invitation.")) {
       GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_DECLINED, name);
     }
     
-    if (name.equals(GnuBackgammon.Instance.FibsOpponent))
+    if (name.equals(GnuBackgammon.Instance.FibsOpponent)) {
+      GnuBackgammon.Instance.snd.playMessage();
       GnuBackgammon.Instance.appendChatMessage(name, text, false);
+    }
   }
 
   private void parseYouChatMessage(String s, int cookie) {

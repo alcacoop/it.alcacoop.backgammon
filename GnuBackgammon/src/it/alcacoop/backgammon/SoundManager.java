@@ -45,12 +45,14 @@ public class SoundManager {
   Sound moving_stop;
   Sound click;
   Sound invite;
+  Sound newmessage;
 
   public SoundManager() {
     roll = Gdx.audio.newSound(Gdx.files.internal("data/sounds/roll.wav"));
     moving_start = Gdx.audio.newSound(Gdx.files.internal("data/sounds/move1.wav"));
     moving_stop = Gdx.audio.newSound(Gdx.files.internal("data/sounds/move2.wav"));
     invite = Gdx.audio.newSound(Gdx.files.internal("data/sounds/invite.wav"));
+    newmessage = Gdx.audio.newSound(Gdx.files.internal("data/sounds/newmessage.wav"));
   }
   
   public void playRoll() {
@@ -71,5 +73,10 @@ public class SoundManager {
   public void playInvite() {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       invite.play();
+  }
+  
+  public void playMessage() {
+    if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
+      newmessage.play();
   }
 }
