@@ -471,6 +471,116 @@ public final class UIDialog extends Window {
   }
   
   
+  public static void getAboutDialog(Stage stage, Boolean cb) {
+    getAboutDialog(1, stage, cb);
+  }
+  public static void getAboutDialog(float alpha, Stage stage, Boolean cb) {
+    instance.evt = Events.NOOP;
+    instance.quitWindow = false;
+    instance.leaveWindow = false;
+    instance.optionsWindow = false;
+    instance.remove();
+    
+    final String gnuBgLink = "http://www.gnubg.org";
+    final String gplLink = "http://www.gnu.org/licenses/gpl.html";
+    final String githubLink1 = "https://github.com/alcacoop/it.alcacoop.gnubackgammon";
+    final String githubLink2 = "https://github.com/alcacoop/libgnubg-android";
+    final String wikipediaLink = "http://en.wikipedia.org/wiki/Backgammon#Rules";
+    
+    Table t = new Table();
+    t.add(new Label("ABOUT BACKGAMMON MOBILE", GnuBackgammon.skin)).expand();
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("Backgammon Mobile is based on GNUBackgammon (gnubg)", GnuBackgammon.skin));
+    Label link1 = new Label(gnuBgLink, GnuBackgammon.skin);
+    link1.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(gnuBgLink);
+      };
+    });
+    t.row();
+    t.add(link1);
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("Its source code is released under a GPLv3 License", GnuBackgammon.skin));
+    Label link2 = new Label(gplLink, GnuBackgammon.skin);
+    link2.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(gplLink);
+      };
+    });
+    t.row();
+    t.add(link2);
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("and is available on GitHub at:", GnuBackgammon.skin));
+    Label link3 = new Label(githubLink1, GnuBackgammon.skin);
+    link3.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink1);
+      };
+    });
+    Label link4 = new Label(githubLink2, GnuBackgammon.skin);
+    link4.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(githubLink2);
+      };
+    });
+    t.row();
+    t.add(link3);
+    t.row();
+    t.add(link4);
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("You can find a detailed description of game rules on Wikipedia:", GnuBackgammon.skin));
+    Label link5 = new Label(wikipediaLink, GnuBackgammon.skin);
+    link5.addListener(new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.myRequestHandler.openURL(wikipediaLink);
+      };
+    });
+    t.row();
+    t.add(link5);
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("If you enjoy our game support us rating on the Play Store", GnuBackgammon.skin));
+    t.row();
+    t.add(new Label(" ", GnuBackgammon.skin)).fill().expand();
+    t.row();
+    t.add(new Label("Copyright 2012 - Alca Soc. Coop.", GnuBackgammon.skin));
+    
+    
+    ScrollPane sc = new ScrollPane(t,GnuBackgammon.skin);
+    sc.setFadeScrollBars(false);
+    sc.setOverscroll(false, false);
+    
+    float height = stage.getHeight()*0.85f;
+    float width = stage.getWidth()*0.95f;
+    
+    instance.clear();
+    instance.row().padTop(width/25);
+    instance.add(sc).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
+    
+    instance.row().pad(width/25);
+    instance.add();
+    instance.add(instance.bContinue).fill().expand().height(height*0.15f).width(width/4);
+    instance.add();
+    
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    stage.addActor(instance);
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
+  }
+  
+  
   public static void getOptionsDialog(Stage stage) {
     getOptionsDialog(1, stage);
   }

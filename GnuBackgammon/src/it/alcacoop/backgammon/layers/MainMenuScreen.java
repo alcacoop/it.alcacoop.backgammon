@@ -113,7 +113,13 @@ public class MainMenuScreen implements Screen {
       }
     });
     TextButton about = new TextButton("About", tl);
-    about.addListener(cl);
+    about.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        UIDialog.getAboutDialog(stage, false);
+      }
+    });
+    //about.addListener(cl);
     TextButton rate = new TextButton("Rate it!", tl);
     rate.addListener(cl);
 

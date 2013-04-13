@@ -90,9 +90,6 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("APPEARANCE")) {
             ctx.state(States.APPEARANCE);
           }
-          if (params.toString().equals("ABOUT")) {
-            ctx.state(States.ABOUT);
-          }
           return true;
           
         } else if (evt==Events.RESTORE_ANSWER) {
@@ -179,25 +176,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
       }
-    }, 
-
-    ABOUT {
-      @Override
-      public void enterState(Context ctx) {
-        GnuBackgammon.Instance.goToScreen(5);
-      }
-
-      @Override
-      public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
-          if (params.toString().equals("BACK")) {
-            ctx.state(States.MAIN_MENU);
-          }
-          return true;
-        }
-        return false;
-      }      
-    };
+    }; 
 
     //DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}

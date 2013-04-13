@@ -38,7 +38,6 @@ import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
-import it.alcacoop.backgammon.layers.AboutScreen;
 import it.alcacoop.backgammon.layers.AppearanceScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
@@ -66,7 +65,6 @@ public class GnuBackgammon extends Game {
   private static MainMenuScreen menuScreen;
   private static OptionsScreen optionsScreen;
   private static WelcomeScreen welcomeScreen;
-  private static AboutScreen aboutScreen;
   private static AppearanceScreen appearanceScreen;
   private int resolutions[][] = {
     {1280,740},
@@ -158,9 +156,8 @@ public class GnuBackgammon extends Game {
     menuScreen = new MainMenuScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
-    aboutScreen = new AboutScreen();
     appearanceScreen = new AppearanceScreen();
-    
+
     setScreen(new SplashScreen());
   }
 
@@ -200,12 +197,6 @@ public class GnuBackgammon extends Game {
         currentScreen = gameScreen;
         myRequestHandler.showAds(true);
         setScreen(gameScreen);
-        break;
-        
-      case 5:
-        currentScreen = aboutScreen;
-        myRequestHandler.showAds(false);
-        setScreen(aboutScreen);
         break;
         
       case 6:
