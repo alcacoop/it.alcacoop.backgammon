@@ -62,6 +62,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -345,8 +346,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void fibsRegistration() {
+    
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
+    final AlertDialog.Builder popupBuilder = new AlertDialog.Builder(this);
+    final TextView myMsg = new TextView(this);
     
     runOnUiThread(new Runnable() {
       @Override
@@ -384,7 +388,24 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
             });
           }
         });
-        d.show();
+        
+        
+        myMsg.setText("\nYou are creating new account...\n\n" +
+            "Available chars for username are: A-Z,a-z,_\n" +
+            "Available chars for password are: A-Z,a-z,0-9,_\n\n" +
+            "Note: username and password must be\n minimum 4-chars length\n");
+        myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+        popupBuilder.setCancelable(false)
+          .setView(myMsg)
+          .setTitle("Info")
+          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              d.show();
+            }
+          });
+        popupBuilder.show();
+        
       }
     });
   }
