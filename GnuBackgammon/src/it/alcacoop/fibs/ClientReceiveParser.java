@@ -393,7 +393,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         } else {
           //DONE.. END CONNECTION
           commandDispatcher.writeNetworkMessageln("bye");
-          GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
+          GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_CREATED, null);
         }
         break;
         
@@ -414,7 +414,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
 
       case FIBS_YouAreRegistered:
         //System.out.println("SUCCESS!");
-        GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_OK, null);
+        GnuBackgammon.fsm.processEvent(Events.FIBS_ACCOUNT_CREATED, null);
         regState = RegState.done;
         break;
       

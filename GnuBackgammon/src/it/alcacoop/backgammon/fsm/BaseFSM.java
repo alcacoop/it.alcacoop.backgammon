@@ -64,7 +64,7 @@ public class BaseFSM implements Context {
     
     FIBS_ERROR,
     
-    FIBS_ACCOUNT_OK,
+    FIBS_ACCOUNT_CREATED,
     FIBS_ACCOUNT_PRESENT,
     FIBS_ACCOUNT_SPAM,
     FIBS_WHO_END,

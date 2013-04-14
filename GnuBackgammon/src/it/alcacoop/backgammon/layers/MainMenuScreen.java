@@ -123,7 +123,6 @@ public class MainMenuScreen implements Screen {
         UIDialog.getAboutDialog(stage, false);
       }
     });
-    //about.addListener(cl);
     TextButton rate = new TextButton("Rate it!", tl);
     rate.addListener(cl);
 

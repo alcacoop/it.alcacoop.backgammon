@@ -231,8 +231,8 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.MAIN_MENU);
             break;  
             
-          case FIBS_ACCOUNT_OK:
-            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(false);
+          case FIBS_ACCOUNT_CREATED:
+            ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).setConnecting(true);
             MenuFSM.accountCreated = true;
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
