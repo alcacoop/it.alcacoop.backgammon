@@ -6,7 +6,7 @@
     <EditText
         android:id="@+id/username"
         android:inputType="textEmailAddress"
-        android:digits="_,qwertzuiopasdfghjklyxcvbnm"
+        android:digits="_,ABCDEFGHIJKLMNOPQRSTUVWXYZ,abcdefghijklmnopqrstuvwxyz"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -17,6 +17,7 @@
     <EditText
         android:id="@+id/password"
         android:inputType="textPassword"
+        android:digits="_,ABCDEFGHIJKLMNOPQRSTUVWXYZ,abcdefghijklmnopqrstuvwxyz,0123456789"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
