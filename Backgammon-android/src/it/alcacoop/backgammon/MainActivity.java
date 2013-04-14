@@ -75,6 +75,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -334,6 +335,17 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
                 if (username.length()>3&&password.length()>3) {
                   GnuBackgammon.Instance.commandDispatcher.sendLogin(username, password);
                   d.dismiss();
+                } else {
+                  Context context = getApplicationContext();
+                  CharSequence text = "";
+                  if (username.length()<=3) text = "Username must be at least 4-chars length";
+                  else if (password.length()<=3) text = "Password must be at least 4-chars length";
+                  else text = "Generic error, please retype username and password";
+                  
+                  int duration = Toast.LENGTH_SHORT;
+                  Toast toast = Toast.makeText(context, text, duration);
+                  toast.setGravity(Gravity.TOP, 0, 0);
+                  toast.show();
                 }
               }
             });
@@ -383,6 +395,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
                   GnuBackgammon.Instance.FibsPassword = password;
                   GnuBackgammon.Instance.commandDispatcher.createAccount();
                   d.dismiss();
+                } else {
+                  Context context = getApplicationContext();
+                  CharSequence text = "";
+                  if (username.length()<=3) text = "Username must be at least 4-chars length";
+                  else if (password.length()<=3) text = "Password must be at least 4-chars length";
+                  else if (!password.equals(password2)) text = "Provided passwords don't match";
+                  else text = "Generic error, please retype username and password";
+                  
+                  int duration = Toast.LENGTH_SHORT;
+                  Toast toast = Toast.makeText(context, text, duration);
+                  toast.setGravity(Gravity.TOP, 0, 0);
+                  toast.show();
                 }
               }
             });
