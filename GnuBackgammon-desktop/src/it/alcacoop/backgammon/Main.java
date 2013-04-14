@@ -122,9 +122,7 @@ public class Main implements NativeFunctions {
       writer.write(rec.saveSGF());
       writer.flush();
       writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    } catch (IOException e) {}
   }
   
   
@@ -133,36 +131,27 @@ public class Main implements NativeFunctions {
     try {
       bsh.eval(cmds);
     }
-    catch (bsh.EvalError e) {
-      System.out.println("BSH ERROR: "+e.toString());
-    }
+    catch (bsh.EvalError e) {}
   }
 
   public static void runBsh(String filename) {
     String bsh_text ="";
     try {
       bsh_text = getContent(filename);
-    } catch (IOException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
+    } catch (IOException e1) {}
 
     
     try {
       bsh.eval(bsh_text);
     }
-    catch (bsh.EvalError e) {
-      System.out.println("BSH ERROR: "+e.toString());
-    }
+    catch (bsh.EvalError e) {}
   }
 
   public static void setBsh(String where, Object what) {
     try {
       bsh.set(where,what);
     }
-    catch (bsh.EvalError e) {
-      System.out.println("BSH ERROR: "+e.toString());
-    }
+    catch (bsh.EvalError e) {}
   }
 
   
