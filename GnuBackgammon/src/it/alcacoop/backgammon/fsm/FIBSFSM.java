@@ -68,6 +68,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           int d1 = Math.max(dices[0], dices[1]);
           int d2 = Math.min(dices[0], dices[1]);
           AICalls.GenerateMoves(ctx.board(), d1, d2);
+          GnuBackgammon.Instance.snd.playRoll();
           ctx.board().animateDices(d1, d2, true);
           break;
           
@@ -119,6 +120,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           int[] dices = (int[])params;
           FIBSFSM.d1 = Math.max(dices[0], dices[1]);
           FIBSFSM.d2 = Math.min(dices[0], dices[1]);
+          GnuBackgammon.Instance.snd.playRoll();
           ctx.board().animateDices(d1, d2, true);
           break;
 
