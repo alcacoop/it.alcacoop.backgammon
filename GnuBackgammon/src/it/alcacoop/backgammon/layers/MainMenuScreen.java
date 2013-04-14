@@ -189,6 +189,7 @@ public class MainMenuScreen implements Screen {
     connecting.setVisible(b);
     if (b) Gdx.graphics.setContinuousRendering(true);
     else Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
   }
   
   @Override
