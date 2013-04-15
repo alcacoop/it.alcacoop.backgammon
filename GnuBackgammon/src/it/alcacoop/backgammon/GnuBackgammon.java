@@ -204,8 +204,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
     
-    //setScreen(new SplashScreen());
-    setFSM("MENU_FSM");
+    setScreen(new SplashScreen());
+    //setFSM("MENU_FSM");
   }
 
   public String getResName() {
