@@ -421,6 +421,7 @@ public class FibsScreen implements Screen {
 
   @Override
   public void pause() {
+    GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
   }
 
   @Override
