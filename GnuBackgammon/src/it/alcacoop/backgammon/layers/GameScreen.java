@@ -313,6 +313,7 @@ public class GameScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override

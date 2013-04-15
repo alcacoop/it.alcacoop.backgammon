@@ -258,6 +258,7 @@ public class MatchOptionsScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override

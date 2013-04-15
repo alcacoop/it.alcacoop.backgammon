@@ -296,6 +296,7 @@ public class AppearanceScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override
@@ -303,7 +304,6 @@ public class AppearanceScreen implements Screen {
   }
   
   public void initTable() {
-    //float height = stage.getWidth()/15;
     table.clear();
     
     table.setWidth(stage.getWidth()*0.9f);

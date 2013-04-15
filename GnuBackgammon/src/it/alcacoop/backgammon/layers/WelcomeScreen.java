@@ -141,6 +141,7 @@ public class WelcomeScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override

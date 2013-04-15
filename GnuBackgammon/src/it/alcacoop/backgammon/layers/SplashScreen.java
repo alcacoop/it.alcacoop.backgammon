@@ -134,6 +134,7 @@ public class SplashScreen implements Screen {
 
   @Override
   public void resume() {
+    Gdx.graphics.requestRendering();
   }
 
   @Override
