@@ -347,74 +347,76 @@ public class FibsScreen implements Screen {
   
   
   public synchronized void refreshInvitationList() {
-    System.out.println("REFRESH INVITATION LIST");
-    float twidth2 = width*0.35f;
-    int n = 0;
-
-    Table it = new Table();
-    for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
-      n++;
-      String key = entry.getKey();
-      int value = entry.getValue();
-      Label user;
-      if (n%2!=0) user = new Label(" "+key, evenLs);
-      else user = new Label(" "+key, GnuBackgammon.skin);
-
-      Image type;
-      if (value == 1)  type =new Image(iReceived);
-      else type = new Image(iSended);
-      Table t = new Table();
-      if (n%2!=0) t.setBackground(evenbg);
-      t.add(type).expandX();
-
-      if (value==1) user.addListener(inviteClicked);
-
-      it.row();
-      it.add(user).left().width(twidth2*0.7f).height(height*0.12f);
-      it.add(t).expandX().fillX().height(height*0.12f);
-    }
-    it.row();
-    it.add().expand().fill().colspan(2);
-    invitationList.setWidget(it);
-    Gdx.graphics.requestRendering();
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        float twidth2 = width*0.35f;
+        int n = 0;
+        Table it = new Table();
+        for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
+          n++;
+          String key = entry.getKey();
+          int value = entry.getValue();
+          Label user;
+          if (n%2!=0) user = new Label(" "+key, evenLs);
+          else user = new Label(" "+key, GnuBackgammon.skin);
+          Image type;
+          if (value == 1)  type =new Image(iReceived);
+          else type = new Image(iSended);
+          Table t = new Table();
+          if (n%2!=0) t.setBackground(evenbg);
+          t.add(type).expandX();
+          if (value==1) user.addListener(inviteClicked);
+          it.row();
+          it.add(user).left().width(twidth2*0.7f).height(height*0.12f);
+          it.add(t).expandX().fillX().height(height*0.12f);
+        }
+        it.row();
+        it.add().expand().fill().colspan(2);
+        invitationList.setWidget(it);
+        Gdx.graphics.requestRendering();        
+      }
+    });
   }
 
   
   
   public synchronized void refreshPlayerList() {
-    System.out.println("REFRESH PLAYER LIST");
-    float twidth = width*0.5f;
-    int n=0;
-
-    //playerTable.clear();
-    Table pt = new Table();
-    for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
-      n++;
-      Player value = entry.getValue();
-      Label l = value.getLabel();
-      l.addListener(rowClicked);
-
-      Table t = new Table();
-      if (n%2!=0) t.setBackground(evenbg);
-
-      t.add(l).left().width(twidth*0.86f).height(height*0.12f).fillX();
-      t.add().expandX();
-      t.add(value.getStatusImage()).left();
-      t.add().expandX();
-
-      pt.row();
-      pt.add(t).fillX().expandX();
-    }
-
-    onlineList.setWidget(pt);
-    
-    Gdx.graphics.requestRendering();
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        float twidth = width*0.5f;
+        int n=0;
+        Table pt = new Table();
+        for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
+          n++;
+          Player value = entry.getValue();
+          Label l = value.getLabel();
+          l.addListener(rowClicked);
+          Table t = new Table();
+          if (n%2!=0) t.setBackground(evenbg);
+          t.add(l).left().width(twidth*0.86f).height(height*0.12f).fillX();
+          t.add().expandX();
+          t.add(value.getStatusImage()).left();
+          t.add().expandX();
+          pt.row();
+          pt.add(t).fillX().expandX();
+        }
+        onlineList.setWidget(pt);
+        Gdx.graphics.requestRendering();
+      }
+    });
   }
   
   @Override
   public void hide() {
-    invitationList.setWidget(new Table());
-    onlineList.setWidget(new Table());
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        invitationList.setWidget(new Table());
+        onlineList.setWidget(new Table());
+      }
+    });
   }
 
   @Override

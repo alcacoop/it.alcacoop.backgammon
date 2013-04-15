@@ -92,38 +92,44 @@ public class ChatBox extends Table {
   }
   
   
-  public void appendMessage(String user, String msg, boolean direction) {
-    
-    LabelStyle ls;
-    if (direction)
-      ls = GnuBackgammon.skin.get("gray", LabelStyle.class);
-    else
-      ls = GnuBackgammon.skin.get("black", LabelStyle.class);
-    
-    if (!user.equals(lastSender)) {
-      if (!lastSender.equals("----")) {
-        tchat.row();
-        tchat.add(new Image(GnuBackgammon.skin.getDrawable("separator"))).colspan(2).fillX().height(6).expandX();
-      }
-      tchat.row();
-      tchat.add(new Label(user+" says: ", ls)).colspan(2).fillX();
-      lastSender = user;
-    } 
-    
-    tchat.row();    
-    tchat.add().width(stage.getWidth()*0.05f).right().top().fillX();
-    Label m = new Label(msg, ls);
-    m.setWrap(true);
-    tchat.add(m).left().expandX().fill().bottom();
-    scroll.setWidget(tchat);
-    scroll.addAction(MyActions.sequence(Actions.run(new Runnable() {
+  public void appendMessage(final String user, final String msg, final boolean direction) {
+
+    Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        scroll.setScrollPercentY(1);
+        // TODO Auto-generated method stub
+        LabelStyle ls;
+        if (direction)
+          ls = GnuBackgammon.skin.get("gray", LabelStyle.class);
+        else
+          ls = GnuBackgammon.skin.get("black", LabelStyle.class);
+        
+        if (!user.equals(lastSender)) {
+          if (!lastSender.equals("----")) {
+            tchat.row();
+            tchat.add(new Image(GnuBackgammon.skin.getDrawable("separator"))).colspan(2).fillX().height(6).expandX();
+          }
+          tchat.row();
+          tchat.add(new Label(user+" says: ", ls)).colspan(2).fillX();
+          lastSender = user;
+        } 
+        
+        tchat.row();    
+        tchat.add().width(stage.getWidth()*0.05f).right().top().fillX();
+        Label m = new Label(msg, ls);
+        m.setWrap(true);
+        tchat.add(m).left().expandX().fill().bottom();
+        scroll.setWidget(tchat);
+        scroll.addAction(MyActions.sequence(Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            scroll.setScrollPercentY(1);
+          }
+        }), Actions.delay(1f)));
+        
+        Gdx.graphics.requestRendering();        
       }
-    }), Actions.delay(1f)));
-    
-    Gdx.graphics.requestRendering();
+    });
   }
   
   public void hardHide() {
@@ -135,11 +141,16 @@ public class ChatBox extends Table {
   }
   
   public void reset() {
-    tchat = new Table();
-    lastSender = "----";
-    tchat.bottom();
-    setY(stage.getHeight()-position);
-    scroll.setWidget(tchat);
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        tchat = new Table();
+        lastSender = "----";
+        tchat.bottom();
+        setY(stage.getHeight()-position);
+        scroll.setWidget(tchat);
+      }
+    });
   }
   
   public boolean chatHit(float x, float y) {
