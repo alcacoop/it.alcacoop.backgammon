@@ -43,6 +43,7 @@ import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 public class FIBSFSM extends BaseFSM implements Context {
 
@@ -67,13 +68,15 @@ public class FIBSFSM extends BaseFSM implements Context {
           int[] dices = (int[])params;
           int d1 = Math.max(dices[0], dices[1]);
           int d2 = Math.min(dices[0], dices[1]);
-          AICalls.GenerateMoves(ctx.board(), d1, d2);
           GnuBackgammon.Instance.snd.playRoll();
           ctx.board().animateDices(d1, d2, true);
           break;
           
         case DICES_ROLLED:
-          GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);
+          int ds[] = (int[])params;
+          int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], ds[0], ds[1]);
+          ctx.board().availableMoves.setMoves(mv);
+          GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);          
           break;
           
         case FIBS_MOVES:
@@ -132,9 +135,8 @@ public class FIBSFSM extends BaseFSM implements Context {
 
         case GENERATE_MOVES:
           int moves[][] = (int[][])params;
-
           if ((moves!=null)&&(moves.length>0)) {
-            ctx.board().availableMoves.setMoves((int[][])params);
+            ctx.board().availableMoves.setMoves(moves);
           } else  {
             //ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
