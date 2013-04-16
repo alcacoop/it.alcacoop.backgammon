@@ -104,8 +104,9 @@ public class AppearanceScreen implements Screen {
   private final FixedButtonGroup board;
   private final FixedButtonGroup checkers;
   private final FixedButtonGroup direction;
+  private final FixedButtonGroup npoints;
   private Table table;
-  private TextButton back, d1, d2;
+  private TextButton back, d1, d2, np1, np2;
   private ImageButton b1, b2, b3, cs1, cs2, cs3;
   
   
@@ -141,8 +142,13 @@ public class AppearanceScreen implements Screen {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    
-    
+    ClickListener cl2 = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        savePrefs();
+        GnuBackgammon.Instance.board.showArrow();
+      };
+    };
+
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     
     ImageButtonStyle ibs = new ImageButtonStyle(
@@ -222,6 +228,14 @@ public class AppearanceScreen implements Screen {
     direction = new FixedButtonGroup();
     direction.add(d1);
     direction.add(d2);
+
+    npoints = new FixedButtonGroup();
+    np1 = new TextButton("Yes", ts);
+    np2 = new TextButton("No", ts);
+    npoints.add(np1);
+    npoints.add(np2);
+    np1.addListener(cl2);
+    np2.addListener(cl2); 
     
     back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
@@ -245,6 +259,9 @@ public class AppearanceScreen implements Screen {
     
     String sDirection = prefs.getString("DIRECTION", "AntiClockwise");
     direction.setChecked(sDirection);
+    
+    String points = prefs.getString("NPOINTS", "Yes");
+    npoints.setChecked(points);
   }
 
   
@@ -255,6 +272,8 @@ public class AppearanceScreen implements Screen {
     prefs.putString("CHECKERS", sCheckers);
     String sDirection = ((TextButton)direction.getChecked()).getText().toString();
     prefs.putString("DIRECTION", sDirection);
+    String points = ((TextButton)this.npoints.getChecked()).getText().toString(); 
+    prefs.putString("NPOINTS", points);
     prefs.flush();
   }
   
@@ -337,6 +356,13 @@ public class AppearanceScreen implements Screen {
     table.add(new Label("Direction:", GnuBackgammon.skin)).right().padRight(7);
     table.add(d1).width(b1.getWidth()).height(b1.getHeight()*0.5f);
     table.add(d2).width(b1.getWidth()).height(b1.getHeight()*0.5f);
+    table.add().fill().expand().colspan(2);
+
+    table.row();
+    table.add().fill().expand();
+    table.add(new Label("Numbered points:", GnuBackgammon.skin)).right().padRight(7);
+    table.add(np1).width(b1.getWidth()).height(b1.getHeight()*0.5f);
+    table.add(np2).width(b1.getWidth()).height(b1.getHeight()*0.5f);
     table.add().fill().expand().colspan(2);
     
     table.row();
