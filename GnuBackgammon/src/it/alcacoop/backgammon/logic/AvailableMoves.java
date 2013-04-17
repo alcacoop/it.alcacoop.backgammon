@@ -59,10 +59,11 @@ public class AvailableMoves {
     moves.clear();
     dices.clear();
 
-    for (int i=0;i<_moves.length;i++)
-      moves.add(_moves[i]);
-
-    evaluatePlayableDices(_dices);
+    if (_moves != null) {
+      for (int i=0;i<_moves.length;i++)
+        moves.add(_moves[i]);
+      evaluatePlayableDices(_dices);
+    }
   }
 
 
