@@ -149,6 +149,7 @@ public class ChatBox extends Table {
         tchat.bottom();
         setY(stage.getHeight()-position);
         scroll.setWidget(tchat);
+        setVisible(true);
       }
     });
   }
