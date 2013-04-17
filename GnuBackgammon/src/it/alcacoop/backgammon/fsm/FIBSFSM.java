@@ -166,7 +166,6 @@ public class FIBSFSM extends BaseFSM implements Context {
               ctx.board().humanMove(m);
             }
           } else { //TAP MODE
-
             if (ctx.board().points.get((Integer)params).isTarget) { //MOVE CHECKER
               int origin = ctx.board().selected.boardX;
               int dest = (Integer)params;
@@ -251,7 +250,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.fibs.releaseBoard(b);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
           } else {
-            if (b.turn == MatchState.FibsColor) {//ERA QUESTO IL BUG!!
+            if (b.turn == MatchState.FibsColor) {
               ctx.state(States.LOCAL_TURN);
             } else {
               ctx.state(States.REMOTE_TURN);          
@@ -261,7 +260,6 @@ public class FIBSFSM extends BaseFSM implements Context {
               ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
             ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
 
-            ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
             boolean differ = false;
             for (int i=0;i<2;i++)
               for (int j=0;j<25;j++)
@@ -271,8 +269,10 @@ public class FIBSFSM extends BaseFSM implements Context {
                 }
             if (differ) {
               System.out.println("===> NEEDED RESYNC!");
+              ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             }
+            
             GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
             GnuBackgammon.Instance.fibs.releaseBoard(b);
           }
