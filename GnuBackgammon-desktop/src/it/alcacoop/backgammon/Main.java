@@ -200,4 +200,8 @@ public class Main implements NativeFunctions {
   @Override
   public void toggleChatBox() {
   }
+
+  @Override
+  public void hideChatBox() {
+  }
 }

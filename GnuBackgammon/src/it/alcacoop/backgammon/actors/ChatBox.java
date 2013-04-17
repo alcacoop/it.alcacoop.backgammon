@@ -93,11 +93,9 @@ public class ChatBox extends Table {
   
   
   public void appendMessage(final String user, final String msg, final boolean direction) {
-
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        // TODO Auto-generated method stub
         LabelStyle ls;
         if (direction)
           ls = GnuBackgammon.skin.get("gray", LabelStyle.class);

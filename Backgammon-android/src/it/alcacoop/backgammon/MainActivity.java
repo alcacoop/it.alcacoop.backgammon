@@ -504,4 +504,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       }
       return super.onKeyDown(keyCode, event);
   }
+
+  @Override
+  public void hideChatBox() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        chatVisible = false;
+        EditText chat = (EditText) findViewById(R.id.message);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
+        chatBox.setVisibility(View.GONE);
+      }
+    });
+  }
 }

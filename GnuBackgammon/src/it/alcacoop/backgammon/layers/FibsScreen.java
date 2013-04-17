@@ -277,6 +277,7 @@ public class FibsScreen implements Screen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
+    GnuBackgammon.Instance.nativeFunctions.hideChatBox();
     
     Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
