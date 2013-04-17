@@ -128,18 +128,19 @@ public class GameScreen implements Screen {
     pInfo[1] = new PlayerInfo("PL1:", 0, stage.getWidth()/2.5f);      
     
     table = new Table();
+    table.setFillParent(true);
     stage.addActor(table);
     
     menuPopup = new GameMenuPopup(stage);
     wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel")); 
     
     ImageButtonStyle ibs = new ImageButtonStyle(
-        GnuBackgammon.skin.getDrawable("button"),
-        GnuBackgammon.skin.getDrawable("button-down"),
-        null,
-        wheel,
-        wheel,
-        null
+      GnuBackgammon.skin.getDrawable("button"),
+      GnuBackgammon.skin.getDrawable("button-down"),
+      null,
+      wheel,
+      wheel,
+      null
     );
     
     menu = new ImageButton(ibs);
@@ -157,29 +158,23 @@ public class GameScreen implements Screen {
 
   
   private void initTable() {
-    table.clear();
-    table.setFillParent(true);
-    
-    //float width = stage.getWidth()/2.4f;
-    
     String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     i.setScale(0.8f);
-    
-    table.row().minHeight(44); //BANNER ON ldpi
-    
-    table.add(i).left().padLeft(6+6*(2-GnuBackgammon.Instance.ss)).width(i.getWidth());
-    
+
+    table.clear();
+    table.add(i).left().padLeft(6+6*(2-GnuBackgammon.Instance.ss)).width(i.getWidth()).minHeight(44); //BANNER ON ldpi;
+
     Table t = new Table();
     t.add(pInfo[0]).left();
     t.row();
     t.add(pInfo[1]).left();
-    
+
     table.add().expand().fill();
     table.add(t).fillX().padTop(3+3*(2-GnuBackgammon.Instance.ss)).right().padRight((2+3*(2-GnuBackgammon.Instance.ss))*2.5f);
     table.add(menu).fillY().width(stage.getWidth()/10).padRight(6+6*(2-GnuBackgammon.Instance.ss)).padTop(3+3*(2-GnuBackgammon.Instance.ss));
-   
+
     table.row();
     table.add(board).colspan(4).expand().fill();
   }
@@ -211,23 +206,23 @@ public class GameScreen implements Screen {
   public void show() {
     bgImg.setWidth(stage.getWidth());
     bgImg.setHeight(stage.getHeight());
-    loadTextures();
-    initTable();
 
     GestureDetector gd = new GestureDetector(new SwipeDetector());
-    InputMultiplexer im = new InputMultiplexer(gd, stage); // Order matters here!
+    InputMultiplexer im = new InputMultiplexer(gd, stage);
     Gdx.input.setInputProcessor(im);
     Gdx.input.setCatchBackKey(true);
+    
+    loadTextures();
+    initTable();
+    table.setY(stage.getHeight());
     
     if ((Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists())&&(MatchState.matchType==0))
       restoreOldMatch();
     else
       initNewMatch();
     
-    table.setY(stage.getHeight());
     if (MatchState.matchType==2) {
       chatBox.reset();
-      chatBox.setVisible(true);
     } else {
       chatBox.setVisible(false);
     }
