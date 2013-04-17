@@ -45,6 +45,8 @@ import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
+import com.badlogic.gdx.Gdx;
+
 public class FIBSFSM extends BaseFSM implements Context {
 
   private Board board;
@@ -66,6 +68,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           
         case FIBS_ROLLS:
           int[] dices = (int[])params;
+          System.out.println("DICES 1: "+dices[0]+"/"+dices[1]);
           int d1 = Math.max(dices[0], dices[1]);
           int d2 = Math.min(dices[0], dices[1]);
           GnuBackgammon.Instance.snd.playRoll();
@@ -73,8 +76,9 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
           
         case DICES_ROLLED:
-          int ds[] = (int[])params;
-          int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], ds[0], ds[1]);
+          dices = (int[])params;
+          System.out.println("DICES 2: "+dices[0]+"/"+dices[1]);
+          int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           ctx.board().availableMoves.setMoves(mv);
           GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);          
           break;
@@ -250,6 +254,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.fibs.releaseBoard(b);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
           } else {
+            System.out.println("DICES 0: "+b.dices[0]+"/"+b.dices[1]);
             if (b.turn == MatchState.FibsColor) {
               ctx.state(States.LOCAL_TURN);
             } else {
@@ -272,8 +277,8 @@ public class FIBSFSM extends BaseFSM implements Context {
               ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             }
-            
-            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
+            int ds[] = {b.dices[0], b.dices[1]};
+            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, ds);
             GnuBackgammon.Instance.fibs.releaseBoard(b);
           }
         }
@@ -553,40 +558,49 @@ public class FIBSFSM extends BaseFSM implements Context {
   
   
   @Override
-  public boolean processEvent(Events evt, Object params) {
-      
-    if (evt==Events.FIBS_PLAYER_LOGOUT) {
-      String s = (String)params;
-      if (s.equals(GnuBackgammon.Instance.FibsOpponent)) {
-        state(States.MATCH_OVER);
-        UIDialog.getFlashDialog(
-          Events.STOPPED, 
-          "Your opponent dropped server connection..",
-          0.82f,
-          this.board().getStage());
+  public void processEvent(final Events evt, final Object params) {
+    final FIBSFSM fsm = this;
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        switch (evt) {
+          case FIBS_MATCHOVER:
+            terminated = true;
+            state(States.MATCH_OVER);
+            break;
+            
+          case FIBS_PLAYER_LOGOUT:
+            String s = (String)params;
+            if (s.equals(GnuBackgammon.Instance.FibsOpponent)) {
+              state(States.MATCH_OVER);
+              UIDialog.getFlashDialog(
+                Events.STOPPED, 
+                "Your opponent dropped server connection..",
+                0.82f, 
+                fsm.board().getStage());
+            }
+            break;
+            
+          case FIBS_ABANDON_GAME:
+            state(States.MATCH_OVER);
+            UIDialog.getFlashDialog(
+              Events.STOPPED, 
+              "Your opponent abandoned the game..",
+              0.82f,
+              fsm.board().getStage());
+            break;
+            
+          case FIBS_RESIGN_REQUEST:
+            MatchState.resignValue = 4;
+            terminated = true;
+            GnuBackgammon.Instance.commandDispatcher.send("accept"); //FIBS WILL SEND MATCHOVER MSG
+            break;
+            
+          default:
+            state().processEvent(fsm, evt, params);
+            break;
+        }
       }
-    }
-    
-    if (evt==Events.FIBS_ABANDON_GAME) {
-      state(States.MATCH_OVER);
-      UIDialog.getFlashDialog(
-        Events.STOPPED, 
-        "Your opponent abandoned the game..",
-        0.82f,
-        this.board().getStage());
-    }
-    
-    if (evt==Events.FIBS_RESIGN_REQUEST) {
-      MatchState.resignValue = 4;
-      terminated = true;
-      GnuBackgammon.Instance.commandDispatcher.send("accept"); //FIBS WILL SEND MATCHOVER MSG
-    }
-      
-    if (evt==Events.FIBS_MATCHOVER) {
-      terminated = true;
-      state(States.MATCH_OVER);
-    }
-        
-    return super.processEvent(evt, params);
+    });
   }
 }

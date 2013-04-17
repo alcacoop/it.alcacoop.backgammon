@@ -33,6 +33,8 @@
 
 package it.alcacoop.backgammon.fsm;
 
+import com.badlogic.gdx.Gdx;
+
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
@@ -162,10 +164,15 @@ public class BaseFSM implements Context {
     start();
   }
 
-  public boolean processEvent(Events evt, Object params) {
+  public void processEvent(final Events evt, final Object params) {
     //System.out.println("EVENT: "+evt+" ON: "+currentState);
-    boolean res = state().processEvent(this, evt, params);
-    return res;
+    final BaseFSM ctx = this;
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        state().processEvent(ctx, evt, params);    
+      }
+    });
   }
 
   public State state() {

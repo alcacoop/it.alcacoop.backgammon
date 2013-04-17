@@ -89,19 +89,20 @@ public class FibsNetHandler {
         Evt e = null;
         while (!found) {
           try {
-            e = q.take();
+            while (true) {
+              e = q.take();
+              if (e.e!=null) break;
+            }
           } catch (InterruptedException e1) {}
-          if ((evt == null)&&(e.e!=null)) { //PASSO IL PRIMO DISPONIBILE
+          
+          if (evt == null) { //PASSO IL PRIMO DISPONIBILE
             GnuBackgammon.fsm.processEvent(e.e, e.o);
             found = true;
-            evtPool.free(e);
-          } else {
-            if (evt==e.e) {
-              GnuBackgammon.fsm.processEvent(e.e, e.o);
-              found = true;
-            }
-            evtPool.free(e);
+          } else if (evt==e.e) { //PASSO IL PRIMO RICHIESTO DISPONIBILE
+            GnuBackgammon.fsm.processEvent(e.e, e.o);
+            found = true;
           }
+          evtPool.free(e);
         }
       }
     }
