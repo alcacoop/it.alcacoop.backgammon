@@ -68,7 +68,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           
         case FIBS_ROLLS:
           int[] dices = (int[])params;
-          System.out.println("DICES 1: "+dices[0]+"/"+dices[1]);
           int d1 = Math.max(dices[0], dices[1]);
           int d2 = Math.min(dices[0], dices[1]);
           GnuBackgammon.Instance.snd.playRoll();
@@ -77,7 +76,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           
         case DICES_ROLLED:
           dices = (int[])params;
-          System.out.println("DICES 2: "+dices[0]+"/"+dices[1]);
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           ctx.board().availableMoves.setMoves(mv);
           GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);          
@@ -254,7 +252,6 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.fibs.releaseBoard(b);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
           } else {
-            System.out.println("DICES 0: "+b.dices[0]+"/"+b.dices[1]);
             if (b.turn == MatchState.FibsColor) {
               ctx.state(States.LOCAL_TURN);
             } else {
@@ -273,7 +270,6 @@ public class FIBSFSM extends BaseFSM implements Context {
                   break;
                 }
             if (differ) {
-              System.out.println("===> NEEDED RESYNC!");
               ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             }
@@ -394,7 +390,6 @@ public class FIBSFSM extends BaseFSM implements Context {
         switch (evt) {
         
         case FIBS_MOVES:
-          System.out.println("FIBS MOVES!!!");
           FIBSFSM.bufferedMoves = (int[])params;
           FIBSFSM.isBufferedMoves = true;
           break;
@@ -470,18 +465,8 @@ public class FIBSFSM extends BaseFSM implements Context {
             }
             break;
 
-          case FIBS_PLAYER_CHANGED:
-            Player p = (Player)params;
-            GnuBackgammon.Instance.fibsScreen.playerChanged(p);
-            break;
-            
-          case FIBS_PLAYER_LOGOUT:
-            String s = (String)params;
-            GnuBackgammon.Instance.fibsScreen.playerGone(s);
-            break;
-            
           case FIBS_PLAYER_LOGIN:
-            s = (String)params;
+            String s = (String)params;
             GnuBackgammon.Instance.fibsScreen.playerLogged(s);
             break;
             
@@ -513,7 +498,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           case FIBS_START_GAME:
             String opponent = (String)params;
             GnuBackgammon.Instance.FibsOpponent = opponent;
-            GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(opponent);
+            GnuBackgammon.Instance.fibsScreen.clearSendedInvitations();
             GnuBackgammon.Instance.fibsScreen.initGame();
             break;
             
@@ -564,6 +549,11 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void run() {
         switch (evt) {
+          case FIBS_PLAYER_CHANGED:
+            Player p = (Player)params;
+            GnuBackgammon.Instance.fibsScreen.playerChanged(p);
+            break;
+          
           case FIBS_MATCHOVER:
             terminated = true;
             state(States.MATCH_OVER);
@@ -578,6 +568,8 @@ public class FIBSFSM extends BaseFSM implements Context {
                 "Your opponent dropped server connection..",
                 0.82f, 
                 fsm.board().getStage());
+            } else {
+              GnuBackgammon.Instance.fibsScreen.playerGone(s);
             }
             break;
             

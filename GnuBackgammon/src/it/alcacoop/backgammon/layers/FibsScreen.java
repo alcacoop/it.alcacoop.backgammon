@@ -43,7 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
@@ -106,7 +108,6 @@ public class FibsScreen implements Screen {
     bgImg = new Image(bgRegion);
     
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
     stage.addActor(bgImg);
 
@@ -129,14 +130,12 @@ public class FibsScreen implements Screen {
     inviteClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         String s = ((Label)event.getListenerActor()).getText().toString().trim();
-        System.out.println("invite from: "+s+" - "+fibsInvitations.get(s));
         if ((fibsInvitations.containsKey(s))&&((int)fibsInvitations.get(s)>0)) {
           lastInvite = s;
           UIDialog.getInviteClickedDialog(s, 1, stage);
         }
       };
     };
-    
     
     rowClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
@@ -154,8 +153,6 @@ public class FibsScreen implements Screen {
         else {
           lastInvite = p.getName();
           UIDialog.getYesNoDialog(Events.FIBS_INVITE_SENDED, "Really invite \""+p.getName()+"\" to new 1 point match?", stage);
-          //fibsInvitations.put(p.getName(), -1);
-          //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.INVITE, p.getName(), "1");
         }
       };
     };
@@ -302,13 +299,19 @@ public class FibsScreen implements Screen {
       me.parsePlayer(p.fibsPlayer);
       return;
     }
+    
+    //GESIONE INVITI
+    if ((p.isPlaying())&&(fibsInvitations.containsKey(p.getName()))) {
+      fibsInvitations.remove(p.getName());
+      refreshInvitationList();
+    }
+    
     String u = p.getName().toLowerCase();
     if (fibsPlayers.containsKey(u)) {
       fibsPlayers.get(u).parsePlayer(p.fibsPlayer);
       GnuBackgammon.Instance.fibsPlayersPool.free(p);
       Gdx.graphics.requestRendering();
     } else {
-      //PROBLEMA QUI...
       fibsPlayers.put(u, p);
     }
   }
@@ -318,11 +321,16 @@ public class FibsScreen implements Screen {
     String u = p.toLowerCase();
     if (u.equals(username.toLowerCase())) return;
     if (u.equals("")) return;
+    
+    //GESIONE INVITI
+    if (fibsInvitations.containsKey(p)) {
+      fibsInvitations.remove(p);
+      refreshInvitationList();
+    }
+    
     if (fibsPlayers.containsKey(u)) {
-      fibsInvitations.remove(u);
       GnuBackgammon.Instance.fibsPlayersPool.free(fibsPlayers.remove(u));
       refreshPlayerList();
-      refreshInvitationList();
     }
   }
   
@@ -347,66 +355,66 @@ public class FibsScreen implements Screen {
   }
   
   
+  public synchronized void clearSendedInvitations() {
+    Iterator<Entry<String, Integer>> i = fibsInvitations.entrySet().iterator();
+    while (i.hasNext()) {
+      Map.Entry<String,Integer> entry = i.next();
+      int value = entry.getValue();
+      if (value==-1) //SENDED
+        i.remove();
+    }
+  }
+  
+  
   public synchronized void refreshInvitationList() {
-    Gdx.app.postRunnable(new Runnable() {
-      @Override
-      public void run() {
-        float twidth2 = width*0.35f;
-        int n = 0;
-        Table it = new Table();
-        for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
-          n++;
-          String key = entry.getKey();
-          int value = entry.getValue();
-          Label user;
-          if (n%2!=0) user = new Label(" "+key, evenLs);
-          else user = new Label(" "+key, GnuBackgammon.skin);
-          Image type;
-          if (value == 1)  type =new Image(iReceived);
-          else type = new Image(iSended);
-          Table t = new Table();
-          if (n%2!=0) t.setBackground(evenbg);
-          t.add(type).expandX();
-          if (value==1) user.addListener(inviteClicked);
-          it.row();
-          it.add(user).left().width(twidth2*0.7f).height(height*0.12f);
-          it.add(t).expandX().fillX().height(height*0.12f);
-        }
-        it.row();
-        it.add().expand().fill().colspan(2);
-        invitationList.setWidget(it);
-        Gdx.graphics.requestRendering();        
-      }
-    });
+    float twidth2 = width*0.35f;
+    int n = 0;
+    Table it = new Table();
+    for(Map.Entry<String,Integer> entry : fibsInvitations.entrySet()) {
+      n++;
+      String key = entry.getKey();
+      int value = entry.getValue();
+      Label user;
+      if (n%2!=0) user = new Label(" "+key, evenLs);
+      else user = new Label(" "+key, GnuBackgammon.skin);
+      Image type;
+      if (value == 1)  type =new Image(iReceived);
+      else type = new Image(iSended);
+      Table t = new Table();
+      if (n%2!=0) t.setBackground(evenbg);
+      t.add(type).expandX();
+      if (value==1) user.addListener(inviteClicked);
+      it.row();
+      it.add(user).left().width(twidth2*0.7f).height(height*0.12f);
+      it.add(t).expandX().fillX().height(height*0.12f);
+    }
+    it.row();
+    it.add().expand().fill().colspan(2);
+    invitationList.setWidget(it);
+    Gdx.graphics.requestRendering();        
   }
 
   
-  
   public synchronized void refreshPlayerList() {
-    Gdx.app.postRunnable(new Runnable() {
-      @Override
-      public void run() {
-        float twidth = width*0.5f;
-        int n=0;
-        Table pt = new Table();
-        for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
-          n++;
-          Player value = entry.getValue();
-          Label l = value.getLabel();
-          l.addListener(rowClicked);
-          Table t = new Table();
-          if (n%2!=0) t.setBackground(evenbg);
-          t.add(l).left().width(twidth*0.86f).height(height*0.12f).fillX();
-          t.add().expandX();
-          t.add(value.getStatusImage()).left();
-          t.add().expandX();
-          pt.row();
-          pt.add(t).fillX().expandX();
-        }
-        onlineList.setWidget(pt);
-        Gdx.graphics.requestRendering();
-      }
-    });
+    float twidth = width*0.5f;
+    int n=0;
+    Table pt = new Table();
+    for(Map.Entry<String,Player> entry : fibsPlayers.entrySet()) {
+      n++;
+      Player value = entry.getValue();
+      Label l = value.getLabel();
+      l.addListener(rowClicked);
+      Table t = new Table();
+      if (n%2!=0) t.setBackground(evenbg);
+      t.add(l).left().width(twidth*0.86f).height(height*0.12f).fillX();
+      t.add().expandX();
+      t.add(value.getStatusImage()).left();
+      t.add().expandX();
+      pt.row();
+      pt.add(t).fillX().expandX();
+    }
+    onlineList.setWidget(pt);
+    Gdx.graphics.requestRendering();
   }
   
   @Override
