@@ -118,7 +118,7 @@ public final class UIDialog extends Window {
                   if (instance.optionsWindow) opts.savePrefs();
                 }
                 
-                if (instance.dicesWindow) {
+                if ((instance.dicesWindow)&&(!ret)) {
                   String[] ret2 = s.split("X");
                   int[] intArray = new int[ret2.length];
                   for(int i = 0; i < ret2.length; i++) {
