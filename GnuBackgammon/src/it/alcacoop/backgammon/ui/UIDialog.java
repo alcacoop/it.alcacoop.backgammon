@@ -33,6 +33,9 @@
 
 package it.alcacoop.backgammon.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
@@ -66,8 +69,11 @@ public final class UIDialog extends Window {
   private TextButton bExport;
   
   private Label label;
+  private Label diceLabel;
   private Drawable background;
   private static ClickListener cl;
+  
+  private Map<String, DiceButton> diceButtonMap;
   
   private static UIDialog instance;
   
@@ -93,6 +99,8 @@ public final class UIDialog extends Window {
         final String s;
         if (event.getTarget() instanceof Label) {
           s = ((Label)event.getTarget()).getText().toString().toUpperCase();
+        } else if (event.getTarget() instanceof DiceButton) {
+          s = ((DiceButton)event.getTarget()).getName();
         } else {
           s = ((TextButton)event.getTarget()).getText().toString().toUpperCase();
         }
@@ -119,7 +127,7 @@ public final class UIDialog extends Window {
                 }
                 
                 if ((instance.dicesWindow)&&(!ret)) {
-                  String[] ret2 = s.split("X");
+                  String[] ret2 = s.split("x");
                   int[] intArray = new int[ret2.length];
                   for(int i = 0; i < ret2.length; i++) {
                       intArray[i] = Integer.parseInt(ret2[i]);
@@ -136,6 +144,19 @@ public final class UIDialog extends Window {
     };
     
     label = new Label("", GnuBackgammon.skin);
+    diceLabel = new Label("", GnuBackgammon.skin);
+    
+    diceButtonMap = new HashMap<String, DiceButton>();
+    for (int i=1; i<7; i++) {
+      for (int j=1; j<7; j++) {
+         if (j<=i) {
+           DiceButton b = new DiceButton(i, j);
+           b.addListener(cl);
+           diceButtonMap.put(i+"x"+j, b);
+         }
+      }
+    }
+    
     
     TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     
@@ -651,33 +672,32 @@ public final class UIDialog extends Window {
     instance.dicesWindow = true;
     instance.remove();
     
-    float height = stage.getHeight()*0.85f;
-    float width = stage.getWidth()*0.9f;
+    float height = stage.getHeight()*0.94f;
+    float width = stage.getWidth()*0.92f;
     
     instance.setWidth(width);
     instance.setHeight(height);
     instance.setX((stage.getWidth()-width)/2);
-    instance.setY((stage.getHeight()-height)/2);
+    instance.setY(0);
     instance.clear();
     
     Table t = new Table();
     
     instance.add(t).fill().expand();
-    float cellWidth = width/7.5f;
+    float cellWidth = width/7.2f;
     float cellHeight = height/7.5f;
     
-    TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
     for (int i=1; i<7; i++) {
       t.row().space(cellHeight*0.125f);
       for (int j=1; j<7; j++) {
          if (j<=i) {
-           TextButton b = new TextButton(i+"x"+j, ts);
-           b.addListener(cl);
-           t.add(b).width(cellWidth).height(cellHeight).fill();
+           t.add(instance.diceButtonMap.get(i+"x"+j)).width(cellWidth).height(cellHeight).fill();
          }
       }
-      if (i==1)
-        t.add(new Label("Choose "+((GameScreen)GnuBackgammon.Instance.currentScreen).getCurrentPinfo()+" dices", GnuBackgammon.skin)).right().colspan(5);
+      if (i==1) {
+        instance.diceLabel.setText("Choose "+((GameScreen)GnuBackgammon.Instance.currentScreen).getCurrentPinfo()+" dices");
+        t.add(instance.diceLabel).right().top().colspan(5);
+      }
     }
     
     stage.addActor(instance);
