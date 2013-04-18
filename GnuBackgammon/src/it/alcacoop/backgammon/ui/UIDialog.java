@@ -36,8 +36,9 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
-import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.GameFSM;
+import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.Gdx;
@@ -77,8 +78,6 @@ public final class UIDialog extends Window {
   private boolean dicesWindow = false;
   
   private GameOptionsTable opts;
-  
-  private static TextButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21;
   
   static {
     instance = new UIDialog();
@@ -652,95 +651,34 @@ public final class UIDialog extends Window {
     instance.dicesWindow = true;
     instance.remove();
     
-    Label l = new Label(
-        "Choose your dices\n"
-    , GnuBackgammon.skin);
-    
     float height = stage.getHeight()*0.85f;
     float width = stage.getWidth()*0.9f;
-    
-    instance.clear(); 
-    instance.row().pad(width/75);
-    instance.add(l).fill().expand();
-    instance.add();
-    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
-    
-    b1 = new TextButton("1x1", ts);
-    b2 = new TextButton("2x1", ts);
-    b3 = new TextButton("2x2", ts);
-    b4 = new TextButton("3x1", ts);
-    b5 = new TextButton("3x2", ts);
-    b6 = new TextButton("3x3", ts);
-    b7 = new TextButton("4x1", ts);
-    b8 = new TextButton("4x2", ts);
-    b9 = new TextButton("4x3", ts);
-    b10 = new TextButton("4x4", ts);
-    b11 = new TextButton("5x1", ts);
-    b12 = new TextButton("5x2", ts);
-    b13 = new TextButton("5x3", ts);
-    b14 = new TextButton("5x4", ts);
-    b15 = new TextButton("5x5", ts);
-    b16 = new TextButton("6x1", ts);
-    b17 = new TextButton("6x2", ts);
-    b18 = new TextButton("6x3", ts);
-    b19 = new TextButton("6x4", ts);
-    b20 = new TextButton("6x5", ts);
-    b21 = new TextButton("6x6", ts);
-    b1.addListener(cl);
-    b2.addListener(cl);
-    b3.addListener(cl);
-    b4.addListener(cl);
-    b5.addListener(cl);
-    b6.addListener(cl);
-    b7.addListener(cl);
-    b8.addListener(cl);
-    b9.addListener(cl);
-    b10.addListener(cl);
-    b11.addListener(cl);
-    b12.addListener(cl);
-    b13.addListener(cl);
-    b14.addListener(cl);
-    b15.addListener(cl);
-    b16.addListener(cl);
-    b17.addListener(cl);
-    b18.addListener(cl);
-    b19.addListener(cl);
-    b20.addListener(cl);
-    b21.addListener(cl);
-    
-    instance.row();
-    instance.add(b1).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
-    instance.add(b2).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b3).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
-    instance.add(b4).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b5).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b6).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
-    instance.add(b7).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b8).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b9).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b10).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
-    instance.add(b11).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b12).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b13).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b14).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b15).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
-    instance.add(b16).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b17).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b18).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b19).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b20).fill().expand().height(height*0.10f).width(width/10);
-    instance.add(b21).fill().expand().height(height*0.10f).width(width/10);
-    instance.row();
     
     instance.setWidth(width);
     instance.setHeight(height);
     instance.setX((stage.getWidth()-width)/2);
     instance.setY((stage.getHeight()-height)/2);
+    instance.clear();
+    
+    Table t = new Table();
+    
+    instance.add(t).fill().expand();
+    float cellWidth = width/7.5f;
+    float cellHeight = height/7.5f;
+    
+    TextButtonStyle ts = GnuBackgammon.skin.get("default", TextButtonStyle.class);
+    for (int i=1; i<7; i++) {
+      t.row().space(cellHeight*0.125f);
+      for (int j=1; j<7; j++) {
+         if (j<=i) {
+           TextButton b = new TextButton(i+"x"+j, ts);
+           b.addListener(cl);
+           t.add(b).width(cellWidth).height(cellHeight).fill();
+         }
+      }
+      if (i==1)
+        t.add(new Label("Choose "+((GameScreen)GnuBackgammon.Instance.currentScreen).getCurrentPinfo()+" dices", GnuBackgammon.skin)).right().colspan(5);
+    }
     
     stage.addActor(instance);
     instance.addAction(MyActions.alpha(alpha, 0.3f));

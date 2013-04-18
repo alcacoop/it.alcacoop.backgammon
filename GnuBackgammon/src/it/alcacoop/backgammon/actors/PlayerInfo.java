@@ -95,4 +95,8 @@ public class PlayerInfo extends Table {
     setScore();
     setPIPS();
   }
+  
+  public String getPName() {
+    return name.getText().toString();
+  }
 }

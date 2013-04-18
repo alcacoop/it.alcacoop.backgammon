@@ -339,4 +339,14 @@ public class GameScreen implements Screen {
     menu.setStyle(ibs);
   }
 
+  
+  public String getCurrentPinfo() {
+    String n = "";
+    if (MatchState.fMove==1)
+      n =  pInfo[0].getPName();
+    else 
+      n = pInfo[1].getPName();
+    return n.substring(0, n.length()-1);
+  }
+  
 }
