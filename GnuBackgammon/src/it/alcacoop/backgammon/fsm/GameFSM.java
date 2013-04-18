@@ -189,12 +189,8 @@ public class GameFSM extends BaseFSM implements Context {
                 ((MatchState.fCrawford==0)||(!MatchState.fCrafwordGame)) && //NOCR OR NO CRGAME
                 ((MatchState.fCubeOwner==-1)||(MatchState.fCubeOwner==MatchState.fMove)) //AVAILABLE CUBE
                ) {
-              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
-                ctx.board().addActor(ctx.board().rollBtn);
-                ctx.board().addActor(ctx.board().doubleBtn);
-              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(ctx.board().getStage(), false);
-              }
+              ctx.board().addActor(ctx.board().rollBtn);
+              ctx.board().addActor(ctx.board().doubleBtn);
             } else {
               if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();

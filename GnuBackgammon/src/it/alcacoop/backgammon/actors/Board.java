@@ -166,7 +166,11 @@ public class Board extends Group {
       public void clicked(InputEvent event, float x, float y) {
         Board.this.rollBtn.remove();
         Board.this.doubleBtn.remove();
-        Board.this.rollDices();
+        if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+          Board.this.rollDices();
+        } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+          UIDialog.getDicesDialog(Board.this.getStage(), false);
+        }
       }
     });
     rollBtn.setWidth(boardbg.getWidth()/5);
