@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.logic.MatchState;
 
@@ -65,7 +66,7 @@ public final class UIDialog extends Window {
   
   private Label label;
   private Drawable background;
-  private ClickListener cl;
+  private static ClickListener cl;
   
   private static UIDialog instance;
   
@@ -73,9 +74,11 @@ public final class UIDialog extends Window {
   private boolean quitWindow = false;
   private boolean optionsWindow = false;
   private boolean leaveWindow = false;
+  private boolean dicesWindow = false;
   
   private GameOptionsTable opts;
   
+  private static TextButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21;
   
   static {
     instance = new UIDialog();
@@ -115,6 +118,16 @@ public final class UIDialog extends Window {
                   GnuBackgammon.fsm.processEvent(instance.evt, ret);
                   if (instance.optionsWindow) opts.savePrefs();
                 }
+                
+                if (instance.dicesWindow) {
+                  String[] ret2 = s.split("X");
+                  int[] intArray = new int[ret2.length];
+                  for(int i = 0; i < ret2.length; i++) {
+                      intArray[i] = Integer.parseInt(ret2[i]);
+                  }
+                  GnuBackgammon.fsm.processEvent(GameFSM.Events.DICES_ROLLED, intArray);
+                }
+
                 Gdx.graphics.setContinuousRendering(false);
                 Gdx.graphics.requestRendering();
               }
@@ -191,6 +204,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
+    instance.dicesWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -225,6 +239,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
+    instance.dicesWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -258,6 +273,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
+    instance.dicesWindow = false;
     instance.evt = evt;
     instance.remove();
     
@@ -309,6 +325,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
+    instance.dicesWindow = false;
     instance.evt = evt;
     instance.remove();
     instance.setText(text);
@@ -346,6 +363,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = true;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
+    instance.dicesWindow = false;
     instance.remove();
     instance.setText("Really quit the game?");
     
@@ -377,6 +395,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = true;
+    instance.dicesWindow = false;
     instance.evt = evt;
     instance.remove();
     
@@ -421,6 +440,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.leaveWindow = false;
     instance.optionsWindow = false;
+    instance.dicesWindow = false;
     instance.remove();
     Label l = new Label(
         "GAME TYPE\n" +
@@ -479,6 +499,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.leaveWindow = false;
     instance.optionsWindow = false;
+    instance.dicesWindow = false;
     instance.remove();
     
     final String gnuBgLink = "http://www.gnubg.org";
@@ -565,7 +586,7 @@ public final class UIDialog extends Window {
     instance.clear();
     instance.row().padTop(width/25);
     instance.add(sc).colspan(3).expand().fill().align(Align.center).padTop(width/25).padLeft(width/35).padRight(width/35);
-    
+
     instance.row().pad(width/25);
     instance.add();
     instance.add(instance.bContinue).fill().expand().height(height*0.15f).width(width/4);
@@ -589,6 +610,7 @@ public final class UIDialog extends Window {
     instance.quitWindow = false;
     instance.leaveWindow = false;
     instance.optionsWindow = true;
+    instance.dicesWindow = false;
     instance.remove();
     
     instance.opts.initFromPrefs();
@@ -618,5 +640,109 @@ public final class UIDialog extends Window {
     instance.bCancel.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.bExport.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
+  }
+  public static void getDicesDialog(Stage stage, Boolean cb) {
+    getDicesDialog(1, stage, cb);
+  }
+  public static void getDicesDialog(float alpha, Stage stage, Boolean cb) {
+    instance.evt = Events.NOOP;
+    instance.quitWindow = false;
+    instance.leaveWindow = false;
+    instance.optionsWindow = false;
+    instance.dicesWindow = true;
+    instance.remove();
+    
+    Label l = new Label(
+        "Choose your dices\n"
+    , GnuBackgammon.skin);
+    
+    float height = stage.getHeight()*0.85f;
+    float width = stage.getWidth()*0.9f;
+    
+    instance.clear(); 
+    instance.row().pad(width/75);
+    instance.add(l).fill().expand();
+    instance.add();
+    TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
+    
+    b1 = new TextButton("1x1", ts);
+    b2 = new TextButton("2x1", ts);
+    b3 = new TextButton("2x2", ts);
+    b4 = new TextButton("3x1", ts);
+    b5 = new TextButton("3x2", ts);
+    b6 = new TextButton("3x3", ts);
+    b7 = new TextButton("4x1", ts);
+    b8 = new TextButton("4x2", ts);
+    b9 = new TextButton("4x3", ts);
+    b10 = new TextButton("4x4", ts);
+    b11 = new TextButton("5x1", ts);
+    b12 = new TextButton("5x2", ts);
+    b13 = new TextButton("5x3", ts);
+    b14 = new TextButton("5x4", ts);
+    b15 = new TextButton("5x5", ts);
+    b16 = new TextButton("6x1", ts);
+    b17 = new TextButton("6x2", ts);
+    b18 = new TextButton("6x3", ts);
+    b19 = new TextButton("6x4", ts);
+    b20 = new TextButton("6x5", ts);
+    b21 = new TextButton("6x6", ts);
+    b1.addListener(cl);
+    b2.addListener(cl);
+    b3.addListener(cl);
+    b4.addListener(cl);
+    b5.addListener(cl);
+    b6.addListener(cl);
+    b7.addListener(cl);
+    b8.addListener(cl);
+    b9.addListener(cl);
+    b10.addListener(cl);
+    b11.addListener(cl);
+    b12.addListener(cl);
+    b13.addListener(cl);
+    b14.addListener(cl);
+    b15.addListener(cl);
+    b16.addListener(cl);
+    b17.addListener(cl);
+    b18.addListener(cl);
+    b19.addListener(cl);
+    b20.addListener(cl);
+    b21.addListener(cl);
+    
+    instance.row();
+    instance.add(b1).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    instance.add(b2).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b3).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    instance.add(b4).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b5).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b6).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    instance.add(b7).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b8).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b9).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b10).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    instance.add(b11).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b12).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b13).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b14).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b15).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    instance.add(b16).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b17).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b18).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b19).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b20).fill().expand().height(height*0.10f).width(width/10);
+    instance.add(b21).fill().expand().height(height*0.10f).width(width/10);
+    instance.row();
+    
+    instance.setWidth(width);
+    instance.setHeight(height);
+    instance.setX((stage.getWidth()-width)/2);
+    instance.setY((stage.getHeight()-height)/2);
+    
+    stage.addActor(instance);
+    instance.addAction(MyActions.alpha(alpha, 0.3f));
   }
 }
