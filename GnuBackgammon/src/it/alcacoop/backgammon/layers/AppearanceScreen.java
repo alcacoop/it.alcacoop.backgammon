@@ -260,8 +260,8 @@ public class AppearanceScreen implements Screen {
     String sDirection = prefs.getString("DIRECTION", "AntiClockwise");
     direction.setChecked(sDirection);
     
-    String points = prefs.getString("NPOINTS", "Yes");
-    npoints.setChecked(points);
+    String sPoints = prefs.getString("NPOINTS", "Yes");
+    npoints.setChecked(sPoints);
   }
 
   
@@ -272,8 +272,8 @@ public class AppearanceScreen implements Screen {
     prefs.putString("CHECKERS", sCheckers);
     String sDirection = ((TextButton)direction.getChecked()).getText().toString();
     prefs.putString("DIRECTION", sDirection);
-    String points = ((TextButton)this.npoints.getChecked()).getText().toString(); 
-    prefs.putString("NPOINTS", points);
+    String sPoints = ((TextButton)npoints.getChecked()).getText().toString(); 
+    prefs.putString("NPOINTS", sPoints);
     prefs.flush();
   }
   

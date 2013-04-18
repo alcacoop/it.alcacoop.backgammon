@@ -642,7 +642,7 @@ public class Board extends Group {
   }
   
   public void showArrow() {
-    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
+    if (GnuBackgammon.Instance.appearancePrefs.getString("NPOINTS","Yes").equals("No")) {
       larrow.setVisible(false);
       rarrow.setVisible(false);
       showNumbers();
@@ -671,7 +671,7 @@ public class Board extends Group {
   }
   
   public void showNumbers() {
-    if (GnuBackgammon.Instance.prefs.getString("NPOINTS","Yes").equals("No")) {
+    if (GnuBackgammon.Instance.appearancePrefs.getString("NPOINTS","Yes").equals("No")) {
       for (int i=0;i<24;i++) 
         ns[i].remove();
       return;
