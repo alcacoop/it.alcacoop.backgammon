@@ -111,6 +111,7 @@ public final class UIDialog extends Window {
               @Override
               public void run() {
                 instance.remove();
+                GnuBackgammon.Instance.myRequestHandler.showAds(true);
                 
                 if (leaveWindow) {
                   GnuBackgammon.fsm.processEvent(instance.evt, s);
@@ -678,7 +679,7 @@ public final class UIDialog extends Window {
     instance.setWidth(width);
     instance.setHeight(height);
     instance.setX((stage.getWidth()-width)/2);
-    instance.setY(0);
+    instance.setY((stage.getHeight()-height)/2);
     instance.clear();
     
     Table t = new Table();
@@ -701,6 +702,11 @@ public final class UIDialog extends Window {
     }
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.addAction(MyActions.sequence(Actions.run(new Runnable() {
+      @Override
+      public void run() {
+        GnuBackgammon.Instance.myRequestHandler.showAds(false);
+      }
+    }), Actions.alpha(alpha, 0.3f)));
   }
 }
