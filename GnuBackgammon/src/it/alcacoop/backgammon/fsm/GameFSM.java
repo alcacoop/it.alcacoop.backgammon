@@ -66,7 +66,7 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case ASK_FOR_RESIGNATION:
-          if((Integer)params > 0) {
+          if (((Integer)params > 0)&&(ctx.board().gameScore(1)<2)) { //RESIGN ONLY SINGLE POINT
             AICalls.GetResignValue(ctx.board()._board[0], ctx.board()._board[1]);
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
