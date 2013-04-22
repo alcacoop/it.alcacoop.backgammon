@@ -67,7 +67,12 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ASK_FOR_RESIGNATION:
           if (((Integer)params > 0)&&(ctx.board().gameScore(1)<2)) { //RESIGN ONLY SINGLE POINT
-            AICalls.GetResignValue(ctx.board()._board[0], ctx.board()._board[1]);
+            MatchState.resignValue = (Integer)params;
+            String s = "Your opponent resigned a game";
+            if ((Integer)params==2) s = "Your opponent resigned a gammon game";
+            if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
+            ctx.state(DIALOG_HANDLER);
+            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
               if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
@@ -98,15 +103,6 @@ public class GameFSM extends BaseFSM implements Context {
               }
             }
           }
-          break;
-          
-        case GET_RESIGN_VALUE:
-          MatchState.resignValue = (Integer)params;
-          String s = "Your opponent resigned a game";
-          if ((Integer)params==2) s = "Your opponent resigned a gammon game";
-          if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
-          ctx.state(DIALOG_HANDLER);
-          UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           break;
           
         case ASK_FOR_DOUBLING:
