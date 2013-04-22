@@ -75,9 +75,9 @@ public class GameFSM extends BaseFSM implements Context {
             UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
-              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
-              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
                 UIDialog.getDicesDialog(ctx.board().getStage(), false);
               }
             } else {
@@ -88,16 +88,16 @@ public class GameFSM extends BaseFSM implements Context {
                 if (MatchState.nMatchTo-MatchState.anScore[1]>1)
                   AICalls.AskForDoubling();
                 else {//DEAD CUBE!!
-                  if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+                  if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                     ctx.board().rollDices();
-                  } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+                  } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
                     UIDialog.getDicesDialog(ctx.board().getStage(), false);
                   }
                 }
               } else {
-                if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+                if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                   ctx.board().rollDices();
-                } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+                } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
                   UIDialog.getDicesDialog(ctx.board().getStage(), false);
                 }
               }
@@ -114,9 +114,9 @@ public class GameFSM extends BaseFSM implements Context {
               "CPU is asking for double. Accept?", 0.82f, 
               ctx.board().getStage());
           } else {
-            if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+            if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
-            } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+            } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
               UIDialog.getDicesDialog(ctx.board().getStage(), false);
             }
           }
@@ -124,7 +124,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case DICES_ROLLED:
           int dices[] = (int[])params;
-          if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+          if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
             ctx.board().rollDices(dices[0], dices[1]);
           }
           GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], false);
@@ -175,9 +175,9 @@ public class GameFSM extends BaseFSM implements Context {
         case SET_GAME_TURN:
           ctx.board().dices.clear();
           if (MatchState.fCubeUse==0) {
-            if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+            if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
-            } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+            } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
               UIDialog.getDicesDialog(ctx.board().getStage(), false);
             }
           } else {
@@ -188,9 +188,9 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().addActor(ctx.board().rollBtn);
               ctx.board().addActor(ctx.board().doubleBtn);
             } else {
-              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
-              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
                 UIDialog.getDicesDialog(ctx.board().getStage(), false);
               }
             }
@@ -202,7 +202,7 @@ public class GameFSM extends BaseFSM implements Context {
           if(MatchState.fCubeUse == 1)
             ctx.board().removeActor(ctx.board().doubleBtn);
           int dices[] = (int[])params;
-          if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+          if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
             ctx.board().rollDices(dices[0], dices[1]);
           }
           GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], true);
@@ -472,9 +472,9 @@ public class GameFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.rec.setCube(MatchState.nCube, 0);
               ctx.board().doubleCube();
               ctx.state(CPU_TURN);
-              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("No")) && (MatchState.matchType < 2)) {
+              if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
-              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "Yes").equals("Yes")) && (MatchState.matchType < 2)) {
+              } else if ((GnuBackgammon.Instance.prefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
                 UIDialog.getDicesDialog(ctx.board().getStage(), false);
               }
             } else { //DOUBLING NOT ACCEPTED
