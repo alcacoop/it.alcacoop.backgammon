@@ -3,42 +3,42 @@ pack.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-B3-BG
+B2-BG
   rotate: false
   xy: 1, 753
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
-B3
+B1-BG
   rotate: false
   xy: 1, 481
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
-B2-BG
+B1
   rotate: false
   xy: 483, 753
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
-B1-BG
+B2
   rotate: false
   xy: 1, 209
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
-B2
+B3-BG
   rotate: false
   xy: 483, 481
   size: 480, 270
   orig: 480, 270
   offset: 0, 0
   index: -1
-B1
+B3
   rotate: false
   xy: 483, 209
   size: 480, 270
@@ -69,8 +69,8 @@ alca
 logo
   rotate: false
   xy: 676, 167
-  size: 239, 40
-  orig: 239, 40
+  size: 240, 40
+  orig: 240, 40
   offset: 0, 0
   index: -1
 logo-gnu
@@ -94,14 +94,14 @@ b2
   orig: 80, 45
   offset: 0, 0
   index: -1
-b1
+b3
   rotate: false
   xy: 676, 31
   size: 80, 45
   orig: 80, 45
   offset: 0, 0
   index: -1
-b3
+b1
   rotate: false
   xy: 758, 78
   size: 80, 45
@@ -115,102 +115,165 @@ cs2
   orig: 38, 24
   offset: 0, 0
   index: -1
-cs1
+cs3
   rotate: false
   xy: 41, 1
   size: 38, 24
   orig: 38, 24
   offset: 0, 0
   index: -1
-cs3
+cs1
   rotate: false
   xy: 81, 1
   size: 38, 24
   orig: 38, 24
   offset: 0, 0
   index: -1
-c8
+mpl
   rotate: false
-  xy: 917, 171
-  size: 36, 36
-  orig: 36, 36
+  xy: 121, 1
+  size: 24, 24
+  orig: 24, 24
   offset: 0, 0
   index: -1
-c32
+opt
   rotate: false
-  xy: 758, 40
+  xy: 147, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+how
+  rotate: false
+  xy: 173, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+str
+  rotate: false
+  xy: 199, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+app
+  rotate: false
+  xy: 225, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+c64
+  rotate: false
+  xy: 918, 171
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 c16
   rotate: false
+  xy: 758, 40
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+c32
+  rotate: false
   xy: 840, 87
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
-c4
-  rotate: false
-  xy: 917, 133
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-c2
+c8
   rotate: false
   xy: 796, 40
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
-c64
+c2
   rotate: false
   xy: 878, 87
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
-d1
+c4
   rotate: false
-  xy: 965, 884
+  xy: 965, 878
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+d3
+  rotate: false
+  xy: 965, 846
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-d2
+d1
   rotate: false
-  xy: 965, 852
+  xy: 965, 814
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 965, 820
-  size: 30, 30
-  orig: 30, 30
-  offset: 0, 0
-  index: -1
-d5
-  rotate: false
-  xy: 965, 788
+  xy: 965, 782
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 965, 756
+  xy: 965, 750
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-d3
+d2
   rotate: false
-  xy: 965, 724
+  xy: 965, 718
   size: 30, 30
   orig: 30, 30
+  offset: 0, 0
+  index: -1
+d5
+  rotate: false
+  xy: 965, 686
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+sp
+  rotate: false
+  xy: 995, 999
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+dp
+  rotate: false
+  xy: 965, 660
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+abt
+  rotate: false
+  xy: 995, 973
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+ply
+  rotate: false
+  xy: 965, 634
+  size: 24, 24
+  orig: 24, 24
   offset: 0, 0
   index: -1
 wheel
@@ -220,128 +283,128 @@ wheel
   orig: 22, 22
   offset: 0, 0
   index: -1
+ready
+  rotate: false
+  xy: 700, 13
+  size: 27, 16
+  orig: 27, 16
+  offset: 0, 0
+  index: -1
 playing
   rotate: false
-  xy: 121, 9
+  xy: 729, 13
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 995, 1007
+  xy: 758, 22
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
-ready
+CS1-W
   rotate: false
-  xy: 965, 706
-  size: 27, 16
-  orig: 27, 16
-  offset: 0, 0
-  index: -1
-CS3-B
-  rotate: false
-  xy: 700, 9
+  xy: 995, 951
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 995, 985
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-CS2-W
-  rotate: false
-  xy: 965, 684
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-CS1-H
-  rotate: false
-  xy: 722, 9
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-CS2-H
-  rotate: false
-  xy: 722, 9
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-CS1-W
-  rotate: false
-  xy: 995, 963
-  size: 20, 20
-  orig: 20, 20
-  offset: 0, 0
-  index: -1
-CS2-B
-  rotate: false
-  xy: 965, 662
+  xy: 965, 612
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 995, 941
+  xy: 995, 929
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+CS2-H
+  rotate: false
+  xy: 1003, 907
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+CS1-H
+  rotate: false
+  xy: 1003, 907
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+CS3-B
+  rotate: false
+  xy: 1003, 885
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 965, 640
+  xy: 1003, 863
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
-isended
+CS2-B
   rotate: false
-  xy: 150, 9
-  size: 18, 16
-  orig: 18, 16
+  xy: 965, 590
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+CS2-W
+  rotate: false
+  xy: 965, 568
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1
 ireceived
   rotate: false
-  xy: 995, 923
+  xy: 251, 9
+  size: 18, 16
+  orig: 18, 16
+  offset: 0, 0
+  index: -1
+isended
+  rotate: false
+  xy: 787, 22
   size: 18, 16
   orig: 18, 16
   offset: 0, 0
   index: -1
 cb-small
   rotate: false
-  xy: 744, 17
+  xy: 965, 554
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 cw-small
   rotate: false
-  xy: 758, 26
+  xy: 807, 26
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 rarrow
   rotate: false
-  xy: 965, 630
+  xy: 840, 77
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 170, 17
+  xy: 857, 77
   size: 15, 8
   orig: 15, 8
   offset: 0, 0

@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.ui.IconButton;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -43,7 +44,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -70,7 +70,7 @@ public class WelcomeScreen implements Screen {
     Image i = new Image(r);
     
     TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
-    TextButton play = new TextButton("PLAY!", tl);
+    IconButton play = new IconButton("PLAY!", GnuBackgammon.atlas.findRegion("ply"), tl);
     play.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {

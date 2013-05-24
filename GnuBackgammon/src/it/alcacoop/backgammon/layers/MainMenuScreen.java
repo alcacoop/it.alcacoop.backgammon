@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.layers;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.ui.IconButton;
 import it.alcacoop.backgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
@@ -51,7 +52,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -76,7 +76,7 @@ public class MainMenuScreen implements Screen {
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((IconButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
     
@@ -95,35 +95,36 @@ public class MainMenuScreen implements Screen {
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     
+    
     TextButtonStyle tl = GnuBackgammon.skin.get("mainmenu", TextButtonStyle.class);
     
-    TextButton onePlayer = new TextButton("Single Player", tl);
+    IconButton onePlayer = new IconButton("Single Player", GnuBackgammon.atlas.findRegion("sp"), tl);
     onePlayer.addListener(cl);
-    TextButton twoPlayers = new TextButton("Two Players", tl);
+    IconButton twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
     twoPlayers.addListener(cl);
-    TextButton fibs  = new TextButton("FIBS", tl);
+    IconButton fibs  = new IconButton("FIBS", GnuBackgammon.atlas.findRegion("mpl"), tl);
     fibs.addListener(cl);
-    TextButton options = new TextButton("Options", tl);
+    IconButton options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
     options.addListener(cl);
     
-    TextButton appearance = new TextButton("Appearance", tl);
+    IconButton appearance = new IconButton("Appearance", GnuBackgammon.atlas.findRegion("app"), tl);
     appearance.addListener(cl);
     
-    TextButton howtoplay = new TextButton("How To Play", tl);
+    IconButton howtoplay = new IconButton("How To Play", GnuBackgammon.atlas.findRegion("how"), tl);
     howtoplay.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
         UIDialog.getHelpDialog(stage, false);
       }
     });
-    TextButton about = new TextButton("About", tl);
+    IconButton about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
     about.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
         UIDialog.getAboutDialog(stage, false);
       }
     });
-    TextButton rate = new TextButton("Rate it!", tl);
+    IconButton rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
     rate.addListener(cl);
 
     Table table = new Table();
@@ -164,7 +165,7 @@ public class MainMenuScreen implements Screen {
     
     g = new Group();
     g.setWidth(stage.getWidth()*0.6f);
-    g.setHeight(stage.getHeight()*0.85f);
+    g.setHeight(stage.getHeight()*0.95f);
     g.addActor(table);
     
     g.setX((stage.getWidth()-g.getWidth())/2);
