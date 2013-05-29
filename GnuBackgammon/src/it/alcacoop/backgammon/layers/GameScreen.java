@@ -306,6 +306,7 @@ public class GameScreen extends BaseScreen {
   public void hide() {
     board.stopCheckers();
     UIDialog.setButtonsStyle("B1"); //RESTORE STANDARD THEME
+    menuPopup.immediateHide();
   }
 
   @Override

@@ -194,6 +194,10 @@ public final class GameMenuPopup extends Table {
     visible = true;
     addAction(MyActions.moveTo(0, 0, 0.1f));
   }
+  public void immediateHide() {
+    visible = false;
+    setPosition(0, -getHeight());
+  }
   private void hide() {
     visible = false;
     addAction(MyActions.moveTo(0, -getHeight(), 0.1f));
