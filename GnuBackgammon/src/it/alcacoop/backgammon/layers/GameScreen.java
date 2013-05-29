@@ -346,4 +346,7 @@ public class GameScreen extends BaseScreen {
   }
 
 
+  @Override
+  public void moveBG(float x) {
+  }
 }

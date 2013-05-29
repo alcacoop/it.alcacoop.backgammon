@@ -53,6 +53,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -86,7 +90,7 @@ import com.google.ads.AdView;
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener {
+public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener {
   
   private String data_dir;
   protected AdView adView;
@@ -95,6 +99,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private View chatBox;
   private boolean chatVisible = false;
   private View gameView;
+  
+  private boolean mInitialized;
+  private SensorManager mSensorManager;
+  private Sensor mAccelerometer;
+  private final float NOISE = (float) 0.5;
 
   
   protected Handler handler = new Handler()
@@ -118,6 +127,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    
+    mInitialized = false;
+    mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
@@ -517,5 +531,36 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         chatBox.setVisibility(View.GONE);
       }
     });
+  }
+  
+  
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mSensorManager.unregisterListener(this);
+
+  }
+
+  @Override
+  public void onAccuracyChanged(Sensor arg0, int arg1) {
+  }
+
+  @Override
+  public void onSensorChanged(SensorEvent event) {
+    float x = event.values[1];
+    if (!mInitialized) {
+      mInitialized = true;
+    } else { 
+      if (Math.abs(x) < NOISE) return;
+      if (GnuBackgammon.Instance!=null)
+        if (GnuBackgammon.Instance.currentScreen!=null)
+          GnuBackgammon.Instance.currentScreen.moveBG(x);
+    }
   }
 }

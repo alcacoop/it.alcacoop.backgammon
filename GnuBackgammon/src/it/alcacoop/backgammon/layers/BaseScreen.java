@@ -25,14 +25,25 @@ public class BaseScreen implements Screen{
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
+    bgImg.setWidth(stage.getWidth()*1.2f);
     bgImg.setHeight(stage.getHeight());
   }
 
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
+    bgImg.setWidth(stage.getWidth()*1.2f);
     bgImg.setHeight(stage.getHeight());
+    bgImg.setPosition((stage.getWidth()-bgImg.getWidth())/2, 0);
+  }
+  
+  
+  public void moveBG(float x) {
+    float _x = bgImg.getX();
+    float newx = _x+x*3;
+    if (newx>0) newx = 0;
+    if (newx<(stage.getWidth()-bgImg.getImageWidth())) newx=stage.getWidth()-bgImg.getImageWidth();
+    bgImg.setX(newx);
+    Gdx.graphics.requestRendering();
   }
   
   public Stage getStage() {
