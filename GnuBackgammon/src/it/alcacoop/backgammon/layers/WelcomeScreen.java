@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.ui.IconButton;
 
 import com.badlogic.gdx.Gdx;
@@ -42,7 +43,9 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -69,6 +72,7 @@ public class WelcomeScreen implements Screen {
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     
+    /*
     TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
     IconButton play = new IconButton("PLAY!", GnuBackgammon.atlas.findRegion("ply"), tl);
     play.addListener(new ClickListener(){
@@ -77,6 +81,9 @@ public class WelcomeScreen implements Screen {
         GnuBackgammon.Instance.setFSM("MENU_FSM");
       }
     });
+    */
+    Label tap = new Label("Tap to continue...", GnuBackgammon.skin);
+    tap.addAction(Actions.forever(MyActions.sequence(Actions.fadeOut(0.3f), Actions.fadeIn(0.6f))));
     
     GnuBackgammon.Instance.setFSM("SIMULATED_FSM");
     
@@ -99,10 +106,16 @@ public class WelcomeScreen implements Screen {
     
     table.row();
     table.add().fill().expand().colspan(2);
-    table.add(play).fill().expand().width(stage.getWidth()*0.35f);
+    table.add(tap).center();
     table.add().fill().expand().colspan(2);
     
     stage.addActor(table);
+    stage.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.setFSM("MENU_FSM");
+      }
+    });
   }
 
 
