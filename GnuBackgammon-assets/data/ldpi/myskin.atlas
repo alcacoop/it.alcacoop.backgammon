@@ -43,57 +43,9 @@ textfield
   orig: 54, 23
   offset: 0, 0
   index: -1
-check-down
+check3
   rotate: false
   xy: 56, 9
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check1-down
-  rotate: false
-  xy: 56, 9
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button2
-  rotate: false
-  xy: 254, 91
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button
-  rotate: false
-  xy: 292, 91
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button1
-  rotate: false
-  xy: 292, 91
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check-selected
-  rotate: false
-  xy: 330, 91
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check1-selected
-  rotate: false
-  xy: 330, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -101,7 +53,7 @@ check1-selected
   index: -1
 check
   rotate: false
-  xy: 368, 91
+  xy: 254, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -109,87 +61,7 @@ check
   index: -1
 check1
   rotate: false
-  xy: 368, 91
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check3
-  rotate: false
-  xy: 406, 91
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button2-down
-  rotate: false
-  xy: 444, 91
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button-down
-  rotate: false
-  xy: 192, 53
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button1-down
-  rotate: false
-  xy: 192, 53
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check3-down
-  rotate: false
-  xy: 230, 53
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button3
-  rotate: false
-  xy: 268, 53
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check2-down
-  rotate: false
-  xy: 306, 53
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-button3-down
-  rotate: false
-  xy: 344, 53
-  size: 36, 36
-  split: 7, 7, 6, 6
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check2
-  rotate: false
-  xy: 382, 53
-  size: 36, 36
-  split: 8, 8, 7, 14
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-check2-selected
-  rotate: false
-  xy: 420, 53
+  xy: 254, 91
   size: 36, 36
   split: 8, 8, 7, 14
   orig: 36, 36
@@ -197,9 +69,137 @@ check2-selected
   index: -1
 check3-selected
   rotate: false
-  xy: 458, 53
+  xy: 292, 91
   size: 36, 36
   split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check-down
+  rotate: false
+  xy: 330, 91
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check1-down
+  rotate: false
+  xy: 330, 91
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check2-down
+  rotate: false
+  xy: 368, 91
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button2
+  rotate: false
+  xy: 406, 91
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check3-down
+  rotate: false
+  xy: 444, 91
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 192, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button1
+  rotate: false
+  xy: 192, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check2-selected
+  rotate: false
+  xy: 230, 53
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button3-down
+  rotate: false
+  xy: 268, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button-down
+  rotate: false
+  xy: 306, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button1-down
+  rotate: false
+  xy: 306, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check1-selected
+  rotate: false
+  xy: 344, 53
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check-selected
+  rotate: false
+  xy: 344, 53
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button2-down
+  rotate: false
+  xy: 382, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+check2
+  rotate: false
+  xy: 420, 53
+  size: 36, 36
+  split: 8, 8, 7, 14
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+button3
+  rotate: false
+  xy: 458, 53
+  size: 36, 36
+  split: 7, 7, 6, 6
   orig: 36, 36
   offset: 0, 0
   index: -1
