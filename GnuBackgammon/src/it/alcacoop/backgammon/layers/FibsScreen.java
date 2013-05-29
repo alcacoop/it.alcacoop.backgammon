@@ -50,13 +50,11 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -70,12 +68,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
-public class FibsScreen implements Screen {
+public class FibsScreen extends BaseScreen {
 
-  private Stage stage;
   private Group g;
-  private Image bgImg;
-  
+
   public String username = "";
   public String lastLogin;
   
@@ -104,13 +100,6 @@ public class FibsScreen implements Screen {
     iSended = GnuBackgammon.atlas.findRegion("isended");
     iReceived = GnuBackgammon.atlas.findRegion("ireceived");
     
-    TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    bgImg = new Image(bgRegion);
-    
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    stage.addActor(bgImg);
-
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
@@ -246,10 +235,6 @@ public class FibsScreen implements Screen {
     stage.addActor(g);
   }
   
-  public Stage getStage() {
-    return stage;
-  }
-
 
   @Override
   public void render(float delta) {
@@ -260,17 +245,10 @@ public class FibsScreen implements Screen {
   }
 
 
-  @Override
-  public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-  }
-
   
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
+    super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
@@ -437,7 +415,4 @@ public class FibsScreen implements Screen {
   public void resume() {
     Gdx.graphics.requestRendering();
   }
-
-  @Override
-  public void dispose() {}
 }

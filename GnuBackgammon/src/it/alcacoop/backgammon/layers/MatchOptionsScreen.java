@@ -45,14 +45,10 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -60,10 +56,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
-public class MatchOptionsScreen implements Screen {
+public class MatchOptionsScreen extends BaseScreen {
 
-  private Image bgImg;
-  public Stage stage;
   private Preferences prefs;
   
   private final FixedButtonGroup level;
@@ -99,16 +93,7 @@ public class MatchOptionsScreen implements Screen {
   
   public MatchOptionsScreen(){
     
-    TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    bgImg = new Image(bgRegion);
-    
     prefs = Gdx.app.getPreferences("MatchOptions");
-    //STAGE DIM = SCREEN RES
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    
-    stage.addActor(bgImg);
     
     stage.addListener(new InputListener() {
       @Override
@@ -177,7 +162,6 @@ public class MatchOptionsScreen implements Screen {
     back.addListener(cl);
     initFromPrefs();
     table = new Table();
-    //table.setFillParent(true);
     stage.addActor(table);
   }
 
@@ -230,17 +214,10 @@ public class MatchOptionsScreen implements Screen {
   }
 
 
-  @Override
-  public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-  }
-
   
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
+    super.show();
     initTable();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
@@ -248,23 +225,12 @@ public class MatchOptionsScreen implements Screen {
     table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 
-  @Override
-  public void hide() {
-  }
-
-  @Override
-  public void pause() {
-  }
 
   @Override
   public void resume() {
     Gdx.graphics.requestRendering();
   }
 
-  @Override
-  public void dispose() {
-  }
-  
   public void initTable() {
     //float height = stage.getWidth()/15;
     table.clear();

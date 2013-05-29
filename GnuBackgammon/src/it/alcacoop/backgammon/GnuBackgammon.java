@@ -40,6 +40,7 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
 import it.alcacoop.backgammon.layers.AppearanceScreen;
+import it.alcacoop.backgammon.layers.BaseScreen;
 import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
@@ -57,7 +58,6 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -99,7 +99,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public static BaseFSM fsm;
   
   public Board board;
-  public Screen currentScreen;
+  public BaseScreen currentScreen;
   public JSONProperties jp;
   public Preferences optionPrefs, appearancePrefs;
   

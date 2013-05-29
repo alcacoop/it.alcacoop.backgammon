@@ -41,13 +41,11 @@ import it.alcacoop.backgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -56,24 +54,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends BaseScreen {
 
-  private Stage stage;
   private Group g;
-  private Image bgImg;
   private Label connecting;
   
   public MainMenuScreen(){
-    TextureRegion  bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    bgImg = new Image(bgRegion);
-    
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    
-    stage.addActor(bgImg);
-    
-    
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((IconButton)event.getListenerActor()).getText().toString().toUpperCase());
@@ -180,10 +166,6 @@ public class MainMenuScreen implements Screen {
     stage.addActor(connecting);
   }
   
-  public Stage getStage() {
-    return stage;
-  }
-
 
   public void setConnecting(boolean b) {
     connecting.setVisible(b);
@@ -201,17 +183,10 @@ public class MainMenuScreen implements Screen {
   }
 
 
-  @Override
-  public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-  }
-
   
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
+    super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);

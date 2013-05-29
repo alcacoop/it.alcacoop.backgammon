@@ -41,31 +41,20 @@ import it.alcacoop.backgammon.ui.GameOptionsTable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 
-public class OptionsScreen implements Screen {
+public class OptionsScreen extends BaseScreen {
 
-  private Stage stage;
-  private Image bgImg;
   private Table table;
   private final GameOptionsTable opts;
   
   
   public OptionsScreen(){
-    //STAGE DIM = SCREEN RES
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
@@ -76,10 +65,6 @@ public class OptionsScreen implements Screen {
         return super.keyDown(event, keycode);
       }
     });
-    
-    TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    bgImg = new Image(bgRegion);
-    stage.addActor(bgImg);
     
     table = new Table();
     table.setFillParent(true);
@@ -100,16 +85,8 @@ public class OptionsScreen implements Screen {
 
 
   @Override
-  public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-  }
-
-  
-  @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
+    super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
@@ -117,20 +94,9 @@ public class OptionsScreen implements Screen {
     opts.initFromPrefs();
   }
 
-  @Override
-  public void hide() {
-  }
-
-  @Override
-  public void pause() {
-  }
 
   @Override
   public void resume() {
     Gdx.graphics.requestRendering();
-  }
-
-  @Override
-  public void dispose() {
   }
 }

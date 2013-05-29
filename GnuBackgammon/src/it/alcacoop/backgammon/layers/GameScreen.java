@@ -52,13 +52,11 @@ import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -70,10 +68,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.OrderedMap;
 
 
-public class GameScreen implements Screen {
+public class GameScreen extends BaseScreen {
 
-  private Stage stage;
-  private Image bgImg;
   public Board board;
   private Table table;
   
@@ -85,15 +81,6 @@ public class GameScreen implements Screen {
   public ChatBox chatBox;
   
   public GameScreen() {
-    //STAGE DIM = SCREEN RES
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    
-    TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
-    bgImg = new Image(bgRegion);
-    stage.addActor(bgImg);
-    
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
@@ -186,26 +173,16 @@ public class GameScreen implements Screen {
   
   @Override
   public void render(float delta) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());    
     Gdx.gl.glClearColor(1, 1, 1, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }
 
-  @Override
-  public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-  }
-
   
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth());
-    bgImg.setHeight(stage.getHeight());
-
+    super.show();
     GestureDetector gd = new GestureDetector(new SwipeDetector());
     InputMultiplexer im = new InputMultiplexer(gd, stage);
     Gdx.input.setInputProcessor(im);
@@ -332,16 +309,8 @@ public class GameScreen implements Screen {
   }
 
   @Override
-  public void pause() {
-  }
-
-  @Override
   public void resume() {
     Gdx.graphics.requestRendering();
-  }
-
-  @Override
-  public void dispose() {
   }
 
   private void loadTextures() {
@@ -375,7 +344,6 @@ public class GameScreen implements Screen {
       n = pInfo[1].getPName();
     return n.substring(0, n.length()-1);
   }
-
 
 
 }
