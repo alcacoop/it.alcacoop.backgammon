@@ -11,6 +11,7 @@ package it.alcacoop.fibs;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.fibs.ClientReceiveParser.Mode;
 
 
@@ -396,6 +397,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   }
   
   public void createAccount() {
+    ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).showConnecting("Trying to create new account...");
     startClientConnection(Mode.Register);
   }
   

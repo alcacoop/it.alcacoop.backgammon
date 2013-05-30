@@ -261,10 +261,16 @@ public class TwoPlayersScreen extends BaseScreen {
   }
   
 
-  public void setConnecting(boolean b) {
-    connecting.setVisible(b);
-    if (b) Gdx.graphics.setContinuousRendering(true);
-    else Gdx.graphics.setContinuousRendering(false);
+  public void hideConnecting() {
+    connecting.setVisible(false);
+    Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+  }
+  public void showConnecting(String msg) {
+    connecting.setText(msg);
+    connecting.setX((stage.getWidth()-connecting.getWidth())/2);
+    connecting.setVisible(true);
+    Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
   }
   
