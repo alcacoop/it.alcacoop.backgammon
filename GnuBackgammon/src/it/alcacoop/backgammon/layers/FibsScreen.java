@@ -412,7 +412,8 @@ public class FibsScreen extends BaseScreen {
 
   @Override
   public void pause() {
-    GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
+    if (!GnuBackgammon.Instance.interstitialVisible)
+      GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
   }
 
   @Override

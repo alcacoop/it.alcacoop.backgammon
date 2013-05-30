@@ -121,8 +121,6 @@ public final class UIDialog extends Window {
               @Override
               public void run() {
                 instance.remove();
-                GnuBackgammon.Instance.nativeFunctions.showAds(true);
-                
                 if (leaveWindow) {
                   GnuBackgammon.fsm.processEvent(instance.evt, s);
                   return;
@@ -138,6 +136,8 @@ public final class UIDialog extends Window {
                 }
                 
                 if ((instance.dicesWindow)&&(!ret)) {
+                  //MANUAL DICES CLOSE
+                  GnuBackgammon.Instance.nativeFunctions.showAds(true);
                   String[] ret2 = s.split("x");
                   int[] intArray = new int[ret2.length];
                   for(int i = 0; i < ret2.length; i++) {
@@ -945,6 +945,7 @@ public final class UIDialog extends Window {
     instance.addAction(MyActions.sequence(Actions.run(new Runnable() {
       @Override
       public void run() {
+        //MANUAL DICES OPEN
         GnuBackgammon.Instance.nativeFunctions.showAds(false);
       }
     }), Actions.alpha(alpha, 0.3f)));

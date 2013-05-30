@@ -52,6 +52,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -83,14 +84,20 @@ import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+import com.google.ads.Ad;
+import com.google.ads.AdListener;
 import com.google.ads.AdRequest;
+import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
+import com.google.ads.InterstitialAd;
 
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener {
+public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener {
   
   private String data_dir;
   protected AdView adView;
@@ -103,8 +110,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private boolean mInitialized;
   private SensorManager mSensorManager;
   private Sensor mAccelerometer;
-  private final float NOISE = (float) 0.5;
+  private final float NOISE = (float) 1;
 
+  private InterstitialAd interstitial;
+  private String ads_id = "XXXXXXXXXXXXXXX";
+  private String int_id = "XXXXXXXXXXXXXXX";
+  
   
   protected Handler handler = new Handler()
   {
@@ -114,6 +125,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       switch(msg.what) {
       case SHOW_ADS:
         adView.setVisibility(View.VISIBLE);
+        if (!adView.isReady())
+          adView.loadAd(new AdRequest());
         break;
       case HIDE_ADS:
         adView.setVisibility(View.GONE);
@@ -131,7 +144,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     mInitialized = false;
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
@@ -148,8 +161,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
     
-    adView = new AdView(this, AdSize.BANNER, "XXXXXXXXXXXXXXX");
-    adView.loadAd(new AdRequest());
+    if (isTablet(this))
+      adView = new AdView(this, AdSize.IAB_BANNER, ads_id);
+    else
+      adView = new AdView(this, AdSize.BANNER, ads_id);
+    //adView.loadAd(new AdRequest());
+    
     adView.setVisibility(View.GONE);
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
       RelativeLayout.LayoutParams.WRAP_CONTENT, 
@@ -197,8 +214,34 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     EditText target = (EditText) findViewById(R.id.message);
     target.setOnEditorActionListener(this);
     /* CHATBOX DIMS */
+  
+    // Create the interstitial
+    interstitial = new InterstitialAd(this, int_id);
+    interstitial.setAdListener(this);
+    
+    Task task = new Task() {
+      @Override
+      public void run() {
+        runOnUiThread(new Runnable() {
+          public void run() {
+            if (!interstitial.isReady()) {
+              interstitial.loadAd(new AdRequest());
+            }
+          }
+        });
+      }
+    };
+    Timer.schedule(task, 60);
   }
 
+  
+  public boolean isTablet(Context context) {
+    boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+    boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+    return (xlarge || large);
+  }
+  
+    
   //Load library
   static {
     System.loadLibrary("glib-2.0");
@@ -326,13 +369,16 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
             public void onClick(DialogInterface dialog, int which) {
               GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
             }
-          }).
-          setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
+          });
+        
+          if (!GnuBackgammon.Instance.server.equals("fibs.com"))
+          alert.setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               fibsRegistration();
             }
-          }).
-          setPositiveButton("Login", null);
+          });
+          
+          alert.setPositiveButton("Login", null);
         
         final AlertDialog d = alert.create();
         d.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -546,14 +592,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   protected void onResume() {
     super.onResume();
-    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     mSensorManager.unregisterListener(this);
-
   }
 
   @Override
@@ -572,4 +617,37 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           GnuBackgammon.Instance.currentScreen.moveBG(x);
     }
   }
+
+  @Override
+  public void showInterstitial() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (interstitial.isReady()) {
+          GnuBackgammon.Instance.interstitialVisible = true;
+          interstitial.show();
+        }
+      }
+    });
+  }
+  
+  @Override
+  public void onDismissScreen(Ad arg0) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        interstitial.loadAd(new AdRequest());
+        GnuBackgammon.Instance.interstitialVisible = false;
+      }
+    });
+  }
+
+  @Override
+  public void onReceiveAd(Ad ad) {}
+  @Override
+  public void onLeaveApplication(Ad arg0) {}
+  @Override
+  public void onPresentScreen(Ad arg0) {}
+  @Override
+  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {}
 }

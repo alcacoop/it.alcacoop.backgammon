@@ -47,4 +47,5 @@ public interface NativeFunctions {
   public boolean isNetworkUp();
   public void toggleChatBox();
   public void hideChatBox();
+  public void showInterstitial();
 }

@@ -362,6 +362,8 @@ public class GameFSM extends BaseFSM implements Context {
           score1 = "Player1: " + MatchState.anScore[1];
           score2 = "Player2: " + MatchState.anScore[0];
         }
+        if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
+          GnuBackgammon.Instance.nativeFunctions.showAds(false);
         UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2, 0.82f, ctx.board().getStage());
       }
 
@@ -372,6 +374,8 @@ public class GameFSM extends BaseFSM implements Context {
             if (MatchState.matchType==0)
               Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").delete();
             GnuBackgammon.Instance.rec.reset();
+            System.out.println("SHOW INTERSTITIAL");
+            GnuBackgammon.Instance.nativeFunctions.showInterstitial();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
             ctx.state(OPENING_ROLL);

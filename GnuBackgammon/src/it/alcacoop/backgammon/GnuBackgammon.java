@@ -121,7 +121,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public String FibsOpponent;
   public Pool<Player> fibsPlayersPool;
   
-  
+  public boolean interstitialVisible = false;
   
   public GnuBackgammon(NativeFunctions n) {
     nativeFunctions = n;
@@ -218,31 +218,26 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void goToScreen(int s) {
     switch (s) {
       case 0:
-        nativeFunctions.showAds(false);
         setScreen(welcomeScreen);
         currentScreen = welcomeScreen;
         break;
         
       case 1:
-        nativeFunctions.showAds(false);
         setScreen(optionsScreen);
         currentScreen = optionsScreen;
         break;
       
       case 2:
-        nativeFunctions.showAds(false);
         setScreen(menuScreen);
         currentScreen = menuScreen;
         break;
       
       case 3:
-        nativeFunctions.showAds(false);
         setScreen(matchOptionsScreen);
         currentScreen = matchOptionsScreen;
         break;
         
       case 4:
-        nativeFunctions.showAds(true);
         setScreen(gameScreen);
         currentScreen = gameScreen;
         break;

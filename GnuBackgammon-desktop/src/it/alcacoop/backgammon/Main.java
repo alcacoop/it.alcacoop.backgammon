@@ -204,4 +204,7 @@ public class Main implements NativeFunctions {
   @Override
   public void hideChatBox() {
   }
+
+  @Override
+  public void showInterstitial() {}
 }

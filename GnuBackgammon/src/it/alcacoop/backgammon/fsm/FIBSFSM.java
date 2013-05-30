@@ -370,6 +370,7 @@ public class FIBSFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.STOPPED) {
           MatchState.resignValue = 0;
+          GnuBackgammon.Instance.nativeFunctions.showInterstitial();
           ctx.state(FIBS_MENU);
           GnuBackgammon.Instance.goToScreen(8);
         }

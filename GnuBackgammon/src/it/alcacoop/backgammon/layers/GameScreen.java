@@ -183,6 +183,8 @@ public class GameScreen extends BaseScreen {
   @Override
   public void show() {
     super.show();
+    Gdx.app.log("SHOW", "GAME SCREEN");
+    GnuBackgammon.Instance.nativeFunctions.showAds(true);
     GestureDetector gd = new GestureDetector(new SwipeDetector());
     InputMultiplexer im = new InputMultiplexer(gd, stage);
     Gdx.input.setInputProcessor(im);
@@ -307,6 +309,7 @@ public class GameScreen extends BaseScreen {
     board.stopCheckers();
     UIDialog.setButtonsStyle("B1"); //RESTORE STANDARD THEME
     menuPopup.immediateHide();
+    GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
 
   @Override

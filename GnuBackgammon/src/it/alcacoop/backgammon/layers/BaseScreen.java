@@ -34,12 +34,13 @@ public class BaseScreen implements Screen{
     bgImg.setWidth(stage.getWidth()*1.2f);
     bgImg.setHeight(stage.getHeight());
     bgImg.setPosition((stage.getWidth()-bgImg.getWidth())/2, 0);
+    GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
   
   
   public void moveBG(float x) {
     float _x = bgImg.getX();
-    float newx = _x+x*3;
+    float newx = _x+x*2;
     if (newx>0) newx = 0;
     if (newx<(stage.getWidth()-bgImg.getImageWidth())) newx=stage.getWidth()-bgImg.getImageWidth();
     bgImg.setX(newx);
