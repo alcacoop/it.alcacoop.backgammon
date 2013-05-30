@@ -96,6 +96,7 @@ public class MainMenuScreen extends BaseScreen {
     howtoplay.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         UIDialog.getHelpDialog(stage, false);
       }
     });
@@ -103,6 +104,7 @@ public class MainMenuScreen extends BaseScreen {
     about.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         UIDialog.getAboutDialog(stage, false);
       }
     });

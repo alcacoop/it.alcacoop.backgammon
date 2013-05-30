@@ -60,17 +60,29 @@ public class GameOptionsTable extends Table {
     setFillParent(decoration);
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     
+    ClickListener cls = new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        super.clicked(event, x, y);
+      }
+    };
+    
     speed = new FixedButtonGroup();
     TextButton sp1 = new TextButton("Fast", ts);
     TextButton sp2 = new TextButton("Slow", ts);
     speed.add(sp1);
     speed.add(sp2);
+    sp1.addListener(cls);
+    sp2.addListener(cls);
     
     sound = new FixedButtonGroup();
     TextButton sn1 = new TextButton("Yes", ts);
     TextButton sn2 = new TextButton("No", ts);
     sound.add(sn1);
     sound.add(sn2);
+    sn1.addListener(cls);
+    sn2.addListener(cls);
     
     automoves = new FixedButtonGroup();
     TextButton am1 = new TextButton("Tap", ts);
@@ -83,6 +95,8 @@ public class GameOptionsTable extends Table {
     lm2 = new TextButton("No", ts);
     lmoves.add(lm1);
     lmoves.add(lm2);
+    lm1.addListener(cls);
+    lm2.addListener(cls);
     
     mdices = new FixedButtonGroup();
     TextButton md1 = new TextButton("Yes", ts);
@@ -99,6 +113,7 @@ public class GameOptionsTable extends Table {
     };
     ClickListener cl2 = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         String s = ((TextButton)event.getListenerActor()).getText().toString().toUpperCase();
         if (s.equals("TAP")) setDisabledLmoves(false);
         if (s.equals("AUTO")) setDisabledLmoves(true);
@@ -106,6 +121,7 @@ public class GameOptionsTable extends Table {
     };
     ClickListener cl3 = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         savePrefs();
       };
     };

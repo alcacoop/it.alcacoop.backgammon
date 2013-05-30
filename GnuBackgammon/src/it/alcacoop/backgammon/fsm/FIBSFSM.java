@@ -450,6 +450,7 @@ public class FIBSFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           case BUTTON_CLICKED:
+            GnuBackgammon.Instance.snd.playMoveStart();
             if (params.toString().equals("BACK")) {
               GnuBackgammon.Instance.commandDispatcher.send("BYE");
               GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();

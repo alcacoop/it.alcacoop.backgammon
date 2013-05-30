@@ -67,6 +67,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
+          GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
             if (!Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists()) { //NO SAVED MATCH
@@ -135,6 +136,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
+          GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }
@@ -266,6 +268,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
           if (evt==Events.BUTTON_CLICKED) {
+            GnuBackgammon.Instance.snd.playMoveStart();
             if (params.toString().equals("PLAY0")) {
               MatchState.matchType = 1;
               ctx.state(States.MATCH_OPTIONS);
@@ -303,6 +306,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
+          GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("PLAY")) {
             if((MatchState.currentLevel.ordinal() >= 5)&&(MatchState.matchType==0)) {
               UIDialog.getYesNoDialog(
@@ -336,6 +340,7 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.BUTTON_CLICKED) {
+          GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }

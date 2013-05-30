@@ -118,7 +118,13 @@ public class AppearanceScreen extends BaseScreen {
       }
     });
     
-    
+    ClickListener cls = new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        super.clicked(event, x, y);
+      }
+    };
     
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
@@ -128,6 +134,7 @@ public class AppearanceScreen extends BaseScreen {
     };
     ClickListener cl2 = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         savePrefs();
         GnuBackgammon.Instance.board.showArrow();
       };
@@ -165,11 +172,13 @@ public class AppearanceScreen extends BaseScreen {
     );
     b3 = new ImageButton(ibs);
     b3.setName("B3");
-    
     board = new FixedButtonGroup();
     board.add(b1);
     board.add(b2);
     board.add(b3);
+    b1.addListener(cls);
+    b2.addListener(cls);
+    b3.addListener(cls);
     
     ibs = new ImageButtonStyle(
         GnuBackgammon.skin.getDrawable("check"),
@@ -205,14 +214,18 @@ public class AppearanceScreen extends BaseScreen {
     checkers.add(cs1);
     checkers.add(cs2);
     checkers.add(cs3);
-    
+    cs1.addListener(cls);
+    cs2.addListener(cls);
+    cs3.addListener(cls);
     
     d1 = new TextButton("AntiClockwise", ts);
     d2 = new TextButton("Clockwise", ts);
     direction = new FixedButtonGroup();
     direction.add(d1);
     direction.add(d2);
-
+    d1.addListener(cls);
+    d2.addListener(cls);
+    
     npoints = new FixedButtonGroup();
     np1 = new TextButton("Yes", ts);
     np2 = new TextButton("No", ts);

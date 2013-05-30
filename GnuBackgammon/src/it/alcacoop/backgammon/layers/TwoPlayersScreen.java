@@ -165,6 +165,7 @@ public class TwoPlayersScreen extends BaseScreen {
     local.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         Table text = new Table();
         text.add(llocal).left().top().expandX().fillX();
         text.row();
@@ -179,6 +180,7 @@ public class TwoPlayersScreen extends BaseScreen {
     fibs.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         Table text = new Table();
         text.add(lfibs).left().top().expand().fill();
         text.row();
@@ -193,6 +195,7 @@ public class TwoPlayersScreen extends BaseScreen {
     tiga.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         Table text = new Table();
         text.add(ltiga).left().top().expand().fill();
         text.row();
@@ -218,14 +221,15 @@ public class TwoPlayersScreen extends BaseScreen {
     t1.add().expandX().fill().height(height/10);
 
     t1.row();
-    t1.add(fibs).fillX().expandX().height(height).padRight(pad);
-    t1.row();
-    t1.add().expandX().fill().height(height/10);
-    
-    t1.row();
     t1.add(tiga).fillX().expandX().height(height).padRight(pad);
     t1.row();
+    t1.add().expandX().fill().height(height/10);
+
+    t1.row();
+    t1.add(fibs).fillX().expandX().height(height).padRight(pad);
+    t1.row();
     t1.add().expand().fill();
+    
     
     Table text = new Table();
     text.add(llocal).expandX().fillX();

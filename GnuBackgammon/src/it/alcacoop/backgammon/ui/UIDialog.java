@@ -101,6 +101,7 @@ public final class UIDialog extends Window {
     cl = new ClickListener(){
       public void clicked(InputEvent event, float x, float y) {
         final String s;
+        GnuBackgammon.Instance.snd.playMoveStart();
         if (event.getTarget() instanceof Label) {
           s = ((Label)event.getTarget()).getText().toString().toUpperCase();
         } else if (event.getTarget() instanceof DiceButton) {
@@ -183,6 +184,7 @@ public final class UIDialog extends Window {
     bExport.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.shareMatch(GnuBackgammon.Instance.rec);
         super.clicked(event, x, y);
       }
@@ -191,6 +193,7 @@ public final class UIDialog extends Window {
     bAccept.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         instance.addAction(MyActions.sequence(
           Actions.fadeOut(0.3f),
           Actions.run(new Runnable() {
@@ -211,6 +214,7 @@ public final class UIDialog extends Window {
     bReject.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         instance.addAction(MyActions.sequence(
             Actions.fadeOut(0.3f),
             Actions.run(new Runnable() {
@@ -588,6 +592,7 @@ public final class UIDialog extends Window {
     Label link1 = new Label(gnuBgLink, GnuBackgammon.skin);
     link1.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.openURL(gnuBgLink);
       };
     });
@@ -600,6 +605,7 @@ public final class UIDialog extends Window {
     Label link2 = new Label(gplLink, GnuBackgammon.skin);
     link2.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.openURL(gplLink);
       };
     });
@@ -612,12 +618,14 @@ public final class UIDialog extends Window {
     Label link3 = new Label(githubLink1, GnuBackgammon.skin);
     link3.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.openURL(githubLink1);
       };
     });
     Label link4 = new Label(githubLink2, GnuBackgammon.skin);
     link4.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.openURL(githubLink2);
       };
     });
@@ -632,6 +640,7 @@ public final class UIDialog extends Window {
     Label link5 = new Label(wikipediaLink, GnuBackgammon.skin);
     link5.addListener(new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.openURL(wikipediaLink);
       };
     });
@@ -763,6 +772,7 @@ public final class UIDialog extends Window {
     t1.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
         instance.remove();
         super.clicked(event, x, y);
@@ -772,6 +782,7 @@ public final class UIDialog extends Window {
     t2.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         UIDialog.getCreateAccountDialog(1, ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).getStage());
         super.clicked(event, x, y);
       }
@@ -780,6 +791,7 @@ public final class UIDialog extends Window {
     t3.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         String u = username.getText();
         String p = password.getText();
         if (u.length()>0&&p.length()>0) {
@@ -848,6 +860,7 @@ public final class UIDialog extends Window {
     t1.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
         instance.remove();
         super.clicked(event, x, y);

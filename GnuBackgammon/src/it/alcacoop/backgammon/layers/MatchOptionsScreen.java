@@ -107,6 +107,12 @@ public class MatchOptionsScreen extends BaseScreen {
       }
     });
     
+    ClickListener cls = new ClickListener() {
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+      };
+    };
+    
     titleLabel = new Label("MATCH SETTINGS", GnuBackgammon.skin);
     difficultyLabel = new Label("Difficulty:", GnuBackgammon.skin);
     playToLabel = new Label("Match to:", GnuBackgammon.skin);
@@ -119,6 +125,7 @@ public class MatchOptionsScreen extends BaseScreen {
     level = new FixedButtonGroup();
     for (int i=0; i<_levels.length; i++) {
       levelButtons[i] = new TextButton(_levels[i], ts);
+      levelButtons[i].addListener(cls);
       level.add(levelButtons[i]);
     }
     
@@ -126,6 +133,7 @@ public class MatchOptionsScreen extends BaseScreen {
     matchTo = new FixedButtonGroup();
     for (int i=0; i<_matchTo.length; i++) {
       matchToButtons[i] = new TextButton(_matchTo[i], ts);
+      matchToButtons[i].addListener(cls);
       matchTo.add(matchToButtons[i]);
     }
     
@@ -133,6 +141,7 @@ public class MatchOptionsScreen extends BaseScreen {
     doubleCube = new FixedButtonGroup();
     for (int i=0; i<_yesNo.length; i++) {
       doublingButtons[i] = new TextButton(_yesNo[i], ts);
+      doublingButtons[i].addListener(cls);
       doubleCube.add(doublingButtons[i]);
     }
     
@@ -140,6 +149,7 @@ public class MatchOptionsScreen extends BaseScreen {
     crawford = new FixedButtonGroup();
     for (int i=0; i<_yesNo.length; i++) {
       crawfordButtons[i] = new TextButton(_yesNo[i], ts);
+      crawfordButtons[i].addListener(cls);
       crawford.add(crawfordButtons[i]);
     }
     
@@ -147,6 +157,7 @@ public class MatchOptionsScreen extends BaseScreen {
     gametype = new FixedButtonGroup();
     for (int i=0; i<_yesNo.length; i++) {
       gameTypeButtons[i] = new TextButton(_gametype[i], ts);
+      gameTypeButtons[i].addListener(cls);
       gametype.add(gameTypeButtons[i]);
     }
     

@@ -120,6 +120,7 @@ public class FibsScreen extends BaseScreen {
 
     inviteClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         String s = ((Label)event.getListenerActor()).getText().toString().trim();
         if ((fibsInvitations.containsKey(s))&&((int)fibsInvitations.get(s)>0)) {
           lastInvite = s;
@@ -130,6 +131,7 @@ public class FibsScreen extends BaseScreen {
     
     rowClicked = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         String s = ((Label)event.getListenerActor()).getText().toString();
         String arg[] = s.split(" ");
         String u = arg[1].toLowerCase();

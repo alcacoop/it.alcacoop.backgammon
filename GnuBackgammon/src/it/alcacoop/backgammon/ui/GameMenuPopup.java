@@ -93,6 +93,7 @@ public final class GameMenuPopup extends Table {
     undo.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         hide(new Runnable(){
         @Override
         public void run() {
@@ -106,6 +107,7 @@ public final class GameMenuPopup extends Table {
     resign.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         hide(new Runnable(){
           @Override
           public void run() {
@@ -127,6 +129,7 @@ public final class GameMenuPopup extends Table {
     abandon = new TextButton("Abandon Match", tl);
     abandon.addListener(new ClickListener(){@Override
     public void clicked(InputEvent event, float x, float y) {
+      GnuBackgammon.Instance.snd.playMoveStart();
       hide(new Runnable(){
       @Override
       public void run() {
@@ -146,6 +149,7 @@ public final class GameMenuPopup extends Table {
     options = new TextButton("Options", tl);
     options.addListener(new ClickListener(){@Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         hide(new Runnable(){
         @Override
         public void run() {

@@ -133,6 +133,7 @@ public class GameScreen extends BaseScreen {
     menu.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
         menuPopup.toggle();
       }
     });
