@@ -451,9 +451,9 @@ public class FIBSFSM extends BaseFSM implements Context {
           case BUTTON_CLICKED:
             if (params.toString().equals("BACK")) {
               GnuBackgammon.Instance.commandDispatcher.send("BYE");
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
               GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
               GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
             }
             break;
             

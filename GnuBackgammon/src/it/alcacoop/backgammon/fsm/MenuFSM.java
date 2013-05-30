@@ -312,7 +312,10 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.setFSM("GAME_FSM");
           }
           if (params.toString().equals("BACK")) {
-            ctx.state(States.MAIN_MENU);
+            if (MatchState.matchType==0)
+              ctx.state(States.MAIN_MENU);
+            else
+              ctx.state(States.TWO_PLAYERS);
           }
           return true;
         } else if (evt == Events.LEVEL_ALERT) {
@@ -360,7 +363,10 @@ public class MenuFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    state(States.MAIN_MENU);
+    if (GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen)
+      state(States.TWO_PLAYERS);
+    else
+      state(States.MAIN_MENU);
   }
 
   public void stop() {

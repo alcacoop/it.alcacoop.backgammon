@@ -73,7 +73,7 @@ public class FibsScreen extends BaseScreen {
   private Group g;
 
   public String username = "";
-  public String lastLogin;
+  public String lastLogin = "";
   
   public Map<String, Player> fibsPlayers; 
   public Map<String, Integer> fibsInvitations;
