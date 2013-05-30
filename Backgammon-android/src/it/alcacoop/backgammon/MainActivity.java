@@ -338,8 +338,17 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
-            ((EditText)myView.findViewById(R.id.username)).setText(GnuBackgammon.Instance.fibsPrefs.getString("username"));
-            ((EditText)myView.findViewById(R.id.password)).setText(GnuBackgammon.Instance.fibsPrefs.getString("password"));
+            String usr = "";
+            String pwd = "";
+            if (GnuBackgammon.Instance.server.equals("fibs.com")) {
+              usr = GnuBackgammon.Instance.fibsPrefs.getString("fusername");
+              pwd = GnuBackgammon.Instance.fibsPrefs.getString("fpassword");
+            } else {
+              usr = GnuBackgammon.Instance.fibsPrefs.getString("tusername");
+              pwd = GnuBackgammon.Instance.fibsPrefs.getString("tpassword");
+            }
+            ((EditText)myView.findViewById(R.id.username)).setText(usr);
+            ((EditText)myView.findViewById(R.id.password)).setText(pwd);
             Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
             b.setOnClickListener(new View.OnClickListener() {
               @Override

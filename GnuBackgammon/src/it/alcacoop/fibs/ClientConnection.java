@@ -105,10 +105,9 @@ public class ClientConnection extends Thread {
   @Override
   public synchronized void run() {
     sock = null;
-    String server = "ti-ga.com";
     int port = 4321;
     try {
-      sock = new Socket(server, port);
+      sock = new Socket(GnuBackgammon.Instance.server, port);
     } catch (UnknownHostException e) {
       GnuBackgammon.fsm.processEvent(Events.FIBS_NETWORK_ERROR, null);
       e.printStackTrace();

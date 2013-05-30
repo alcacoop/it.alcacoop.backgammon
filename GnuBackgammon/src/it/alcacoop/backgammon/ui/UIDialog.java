@@ -42,8 +42,8 @@ import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.layers.GameScreen;
+import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.logic.MatchState;
-import it.alcacoop.backgammon.layers.MainMenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -712,6 +712,17 @@ public final class UIDialog extends Window {
     instance.optionsWindow = true;
     instance.remove();
     
+    String usr = "";
+    String pwd = "";
+    
+    if (GnuBackgammon.Instance.server.equals("fibs.com")) {
+      usr = GnuBackgammon.Instance.fibsPrefs.getString("fusername");
+      pwd = GnuBackgammon.Instance.fibsPrefs.getString("fpassword");
+    } else {
+      usr = GnuBackgammon.Instance.fibsPrefs.getString("tusername");
+      pwd = GnuBackgammon.Instance.fibsPrefs.getString("tpassword");
+    }
+    
     float width = stage.getWidth()*0.65f;
     float height = stage.getHeight()*0.6f;
 
@@ -728,12 +739,12 @@ public final class UIDialog extends Window {
     
     instance.row();
     instance.add(new Label("Username:", GnuBackgammon.skin));
-    final TextField username = new TextField(GnuBackgammon.Instance.fibsPrefs.getString("username"), GnuBackgammon.skin);
+    final TextField username = new TextField(usr, GnuBackgammon.skin);
     instance.add(username).colspan(2).fillX().expandX();
     
     instance.row();
     instance.add(new Label("Password:", GnuBackgammon.skin));
-    final TextField password = new TextField(GnuBackgammon.Instance.fibsPrefs.getString("password"), GnuBackgammon.skin);
+    final TextField password = new TextField(pwd, GnuBackgammon.skin);
     instance.add(password).colspan(2).fillX().expandX();
     
     instance.row();
@@ -761,7 +772,7 @@ public final class UIDialog extends Window {
     t2.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        UIDialog.getCreateAccountDialog(1, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+        UIDialog.getCreateAccountDialog(1, ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).getStage());
         super.clicked(event, x, y);
       }
     });

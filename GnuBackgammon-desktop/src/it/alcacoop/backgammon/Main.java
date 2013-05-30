@@ -33,6 +33,11 @@
 
 package it.alcacoop.backgammon;
 
+import it.alcacoop.backgammon.layers.TwoPlayersScreen;
+import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.MatchRecorder;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,12 +45,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.NativeFunctions;
-import it.alcacoop.backgammon.layers.MainMenuScreen;
-import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.utils.MatchRecorder;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
 import bsh.Interpreter;
 import bsh.util.JConsole;
 
@@ -185,7 +185,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void fibsSignin() {
-    UIDialog.getLoginDialog(1, ((MainMenuScreen)GnuBackgammon.Instance.currentScreen).getStage());
+    UIDialog.getLoginDialog(1, ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).getStage());
   }
 
   @Override

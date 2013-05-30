@@ -48,7 +48,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -57,7 +56,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MainMenuScreen extends BaseScreen {
 
   private Group g;
-  private Label connecting;
   
   public MainMenuScreen(){
     ClickListener cl = new ClickListener() {
@@ -88,8 +86,6 @@ public class MainMenuScreen extends BaseScreen {
     onePlayer.addListener(cl);
     IconButton twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
     twoPlayers.addListener(cl);
-    IconButton fibs  = new IconButton("FIBS", GnuBackgammon.atlas.findRegion("mpl"), tl);
-    fibs.addListener(cl);
     IconButton options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
     options.addListener(cl);
     
@@ -126,8 +122,7 @@ public class MainMenuScreen extends BaseScreen {
     table.row().pad(2);
     table.add(onePlayer).expand().fill().colspan(2);
     table.row().pad(2);
-    table.add(twoPlayers).expand().fill().width(table.getWidth()/2);;
-    table.add(fibs).expand().fill().width(table.getWidth()/2);;
+    table.add(twoPlayers).expand().fill().colspan(2);
     
     table.row().pad(2);
     table.add(options).expand().fill().width(table.getWidth()/2);
@@ -158,22 +153,9 @@ public class MainMenuScreen extends BaseScreen {
     g.setY((stage.getHeight()-g.getHeight())/2);
     
     stage.addActor(g);
-    connecting = new Label("Connecting to server...", GnuBackgammon.skin);
-    connecting.setVisible(false);
-    connecting.setX((stage.getWidth()-connecting.getWidth())/2);
-    connecting.setY(connecting.getHeight());
-    connecting.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.5f, 0.4f), Actions.alpha(1,  0.4f))));
-    stage.addActor(connecting);
   }
   
 
-  public void setConnecting(boolean b) {
-    connecting.setVisible(b);
-    if (b) Gdx.graphics.setContinuousRendering(true);
-    else Gdx.graphics.setContinuousRendering(false);
-    Gdx.graphics.requestRendering();
-  }
-  
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -191,21 +173,5 @@ public class MainMenuScreen extends BaseScreen {
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
-  }
-
-  @Override
-  public void hide() {
-  }
-
-  @Override
-  public void pause() {
-  }
-
-  @Override
-  public void resume() {
-  }
-
-  @Override
-  public void dispose() {
   }
 }

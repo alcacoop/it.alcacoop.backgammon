@@ -89,6 +89,8 @@ public class FibsScreen extends BaseScreen {
   public String lastInvite;
   public boolean showWho = false;
   
+  private Label l1;
+  
   
   public FibsScreen() {
     me = new Player();
@@ -193,7 +195,7 @@ public class FibsScreen extends BaseScreen {
     table.row();
     table.add().colspan(2).expand().fill();
     
-    Label l1 = new Label("ONLINE USERS",GnuBackgammon.skin);
+    l1 = new Label("ONLINE USERS",GnuBackgammon.skin);
     l1.setAlignment(Align.top);
     
     Table t1 = new Table();
@@ -249,6 +251,8 @@ public class FibsScreen extends BaseScreen {
   @Override
   public void show() {
     super.show();
+    me.getLabel().setText("Connecting...");
+    l1.setText("ONLINE USERS ON FIBS");
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);

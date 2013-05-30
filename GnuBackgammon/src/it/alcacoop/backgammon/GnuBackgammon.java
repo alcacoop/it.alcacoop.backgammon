@@ -46,7 +46,7 @@ import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.layers.OptionsScreen;
-import it.alcacoop.backgammon.layers.SplashScreen;
+import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.logic.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
@@ -72,6 +72,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private GameScreen gameScreen;
   private MatchOptionsScreen matchOptionsScreen;
   public  MainMenuScreen menuScreen;
+  public TwoPlayersScreen twoplayersScreen;
   private OptionsScreen optionsScreen;
   private WelcomeScreen welcomeScreen;
   private AppearanceScreen appearanceScreen;
@@ -111,6 +112,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public MatchRecorder rec;
   public String fname;
+  public String server;
   
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;
@@ -199,13 +201,14 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
     menuScreen = new MainMenuScreen();
+    twoplayersScreen =  new TwoPlayersScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
     
-    setScreen(new SplashScreen());
-    //setFSM("MENU_FSM");
+    //setScreen(new SplashScreen());
+    setFSM("MENU_FSM");
   }
 
   public String getResName() {
@@ -257,6 +260,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       case 8:
         setScreen(fibsScreen);
         currentScreen = fibsScreen;
+        break;
+        
+      case 9:
+        setScreen(twoplayersScreen);
+        currentScreen = twoplayersScreen;
         break;
     }
   }
