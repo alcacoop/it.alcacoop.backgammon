@@ -3,7 +3,7 @@ pack.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-B2-BG
+ù
   rotate: false
   xy: 1, 1419
   size: 1102, 620
@@ -11,6 +11,13 @@ B2-BG
   offset: 0, 0
   index: -1
 B1-BG
+  rotate: false
+  xy: 1, 1419
+  size: 1102, 620
+  orig: 1102, 620
+  offset: 0, 0
+  index: -1
+B2-BG
   rotate: false
   xy: 1, 797
   size: 1102, 620
