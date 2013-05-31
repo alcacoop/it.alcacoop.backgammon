@@ -33,13 +33,14 @@
 
 package it.alcacoop.backgammon.fsm;
 
-import com.badlogic.gdx.Gdx;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+
+import com.badlogic.gdx.Gdx;
 
 
 public class GameFSM extends BaseFSM implements Context {
@@ -67,8 +68,7 @@ public class GameFSM extends BaseFSM implements Context {
           p0 = p0+p0*0.3f;
           if (p1<=p0) {
             //NON CALCOLO RESIGN - PICCOLO VANTAGGIO PIPS
-            Gdx.app.log("RESIGN", "SURE NOT RESIGN: "+p1+":"+p0);
-            GnuBackgammon.fsm.processEvent(GameFSM.Events.ASK_FOR_RESIGNATION, -1);
+            GnuBackgammon.fsm.processEvent(GameFSM.Events.ASK_FOR_RESIGNATION, 0);
           } else {
             AICalls.AskForResignation();  
           }
@@ -76,8 +76,6 @@ public class GameFSM extends BaseFSM implements Context {
           
         case ASK_FOR_RESIGNATION:
           int resign = (Integer)params;
-          if (resign!=-1)
-            Gdx.app.log("RESIGN", "VALUE: "+resign);
           if (resign>0) {
             MatchState.resignValue = resign;
             String s = "Your opponent resigned a game";
