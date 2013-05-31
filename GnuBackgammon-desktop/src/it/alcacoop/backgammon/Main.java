@@ -207,4 +207,8 @@ public class Main implements NativeFunctions {
 
   @Override
   public void showInterstitial() {}
+
+  @Override
+  public void initEngine() {
+  }
 }

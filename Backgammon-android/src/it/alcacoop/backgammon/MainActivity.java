@@ -82,6 +82,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Timer;
@@ -150,9 +151,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     cfg.useGL20 = false;
     
     data_dir = getBaseContext().getApplicationInfo().dataDir+"/gnubg/";
-    
-    copyAssetsIfNotExists();
-    GnubgAPI.InitializeEnvironment(data_dir);
         
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -242,13 +240,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   }
   
     
-  //Load library
-  static {
-    System.loadLibrary("glib-2.0");
-    System.loadLibrary("gthread-2.0");
-    System.loadLibrary("gnubg");
-  }   
-
   private void copyAssetsIfNotExists() {
     File a1 = new File(data_dir+"g11.xml");
     File a2 = new File(data_dir+"gnubg_os0.bd");
@@ -650,4 +641,16 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onPresentScreen(Ad arg0) {}
   @Override
   public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {}
+
+
+
+  @Override
+  public void initEngine() {
+    Gdx.app.log("INITIALIZATION","LOADING..");
+    System.loadLibrary("glib-2.0");
+    System.loadLibrary("gthread-2.0");
+    System.loadLibrary("gnubg");
+    copyAssetsIfNotExists();
+    GnubgAPI.InitializeEnvironment(data_dir);    
+  }
 }

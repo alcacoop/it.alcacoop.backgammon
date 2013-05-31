@@ -48,4 +48,5 @@ public interface NativeFunctions {
   public void toggleChatBox();
   public void hideChatBox();
   public void showInterstitial();
+  public void initEngine();
 }

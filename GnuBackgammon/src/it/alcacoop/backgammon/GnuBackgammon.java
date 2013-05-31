@@ -46,6 +46,7 @@ import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.layers.OptionsScreen;
+import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.logic.FibsNetHandler;
@@ -138,10 +139,22 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   @Override
   public void create() {
+    Instance = this;
+    nativeFunctions.injectBGInstance();
+    //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
+    int pWidth = Gdx.graphics.getWidth();
+    if (pWidth<=480) ss = 2;
+    else if (pWidth<=800) ss = 1;
+    else ss = 0;
+    resolution = resolutions[ss];
+    setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
+  }
+  
+  public void initAssets() { 
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
 
-    Instance = this;
+    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     
     fibsPlayersPool = new Pool<Player>(50){
       @Override
@@ -160,20 +173,11 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     
     fibs = new FibsNetHandler();
     commandDispatcher = new CommandDispatcherImpl();
-    nativeFunctions.injectBGInstance();
-    
-    //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
-    int pWidth = Gdx.graphics.getWidth();
-    if (pWidth<=480) ss = 2;
-    else if (pWidth<=800) ss = 1;
-    else ss = 0;
-    resolution = resolutions[ss];
     
     fname = nativeFunctions.getDataDir()+"/data/match.";
 
     GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
     skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
-    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
     font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -207,8 +211,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
     
-    //setScreen(new SplashScreen());
-    setFSM("MENU_FSM");
+    //setFSM("MENU_FSM");
   }
 
   public String getResName() {

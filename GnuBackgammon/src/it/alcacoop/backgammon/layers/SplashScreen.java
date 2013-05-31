@@ -39,7 +39,8 @@ import it.alcacoop.backgammon.actions.MyActions;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -50,27 +51,30 @@ public class SplashScreen implements Screen {
 
   private Stage stage;
   private final Image alca;
-  private final Image gnu;
+  //private final Image gnu;
   
-  public SplashScreen(){
+  public SplashScreen(String img){
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
     
-    TextureRegion r = GnuBackgammon.atlas.findRegion("alca");
+    
+    Texture r = new Texture(Gdx.files.internal(img));
+    r.setFilter(TextureFilter.Linear, TextureFilter.Linear);
     
     alca = new Image(r);
     alca.setX((stage.getWidth()-alca.getWidth())/2);
     alca.setY((stage.getHeight()-alca.getHeight())/2);
     alca.setColor(1,1,1,0);
     
+    /*
     r = GnuBackgammon.atlas.findRegion("gnu");
     gnu = new Image(r);
     gnu.setX((stage.getWidth()-gnu.getWidth())/2);
     gnu.setY((stage.getHeight()-gnu.getHeight())/2);
     gnu.setColor(1,1,1,0);
-    
+    */
     stage.addActor(alca);
-    stage.addActor(gnu);
+    //stage.addActor(gnu);
   }
 
 
@@ -90,23 +94,6 @@ public class SplashScreen implements Screen {
   
   @Override
   public void show() {
-    Action r1 = Actions.run(new Runnable() {
-      @Override
-      public void run() {
-        gnu.addAction(MyActions.sequence(
-            Actions.delay(0.5f),
-            Actions.fadeIn(0.8f),
-            Actions.delay(1.5f),
-            Actions.fadeOut(0.8f),
-            Actions.run(new Runnable() {
-              @Override
-              public void run() {
-                GnuBackgammon.Instance.goToScreen(6);
-              }
-            })
-        ));
-      }
-    });
     Action r2 = Actions.run(new Runnable() {
       @Override
       public void run() {
@@ -115,13 +102,20 @@ public class SplashScreen implements Screen {
     });
     
     alca.addAction(MyActions.sequence(
-        Actions.delay(0.1f),
+        Actions.delay(0.2f),
         Actions.fadeIn(0.8f),
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            GnuBackgammon.Instance.nativeFunctions.initEngine();
+            GnuBackgammon.Instance.initAssets();
+          }
+        }),
         Actions.delay(1.5f),
         Actions.fadeOut(0.8f),
-        GnuBackgammon.Instance.isGNU?Actions.delay(0.6f):Actions.delay(0.1f),
-        GnuBackgammon.Instance.isGNU?r1:r2
-      ));
+        Actions.delay(0.2f),
+        r2
+        ));
   }
 
   @Override
