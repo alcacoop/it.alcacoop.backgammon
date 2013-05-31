@@ -62,15 +62,27 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case SET_BOARD:
-          AICalls.AskForResignation();
+          float p0 = ctx.board().getPIPS(0); //BACK PIPS
+          float  p1 = ctx.board().getPIPS(1); //WHITE PIPS
+          p0 = p0+p0*0.3f;
+          if (p1<=p0) {
+            //NON CALCOLO RESIGN - PICCOLO VANTAGGIO PIPS
+            Gdx.app.log("RESIGN", "SURE NOT RESIGN: "+p1+":"+p0);
+            GnuBackgammon.fsm.processEvent(GameFSM.Events.ASK_FOR_RESIGNATION, -1);
+          } else {
+            AICalls.AskForResignation();  
+          }
           break;
           
         case ASK_FOR_RESIGNATION:
-          if (((Integer)params > 0)&&(ctx.board().gameScore(1)<2)) { //RESIGN ONLY SINGLE POINT
-            MatchState.resignValue = (Integer)params;
+          int resign = (Integer)params;
+          if (resign!=-1)
+            Gdx.app.log("RESIGN", "VALUE: "+resign);
+          if (resign>0) {
+            MatchState.resignValue = resign;
             String s = "Your opponent resigned a game";
-            if ((Integer)params==2) s = "Your opponent resigned a gammon game";
-            if ((Integer)params==3) s = "Your opponent resigned a backgammon game";
+            if (resign==2) s = "Your opponent resigned a gammon game";
+            if (resign==3) s = "Your opponent resigned a backgammon game";
             ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f, ctx.board().getStage());
           } else { //ASKFORDOUBLING OR ROLL..
