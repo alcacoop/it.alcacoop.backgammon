@@ -111,8 +111,9 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private boolean mInitialized;
   private SensorManager mSensorManager;
   private Sensor mAccelerometer;
-  private final float NOISE = (float) 1;
 
+  private int rotation;
+  
   private InterstitialAd interstitial;
   private String ads_id = "XXXXXXXXXXXXXXX";
   private String int_id = "XXXXXXXXXXXXXXX";
@@ -188,6 +189,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     
     /* CHATBOX DIMS */
     Display display = getWindowManager().getDefaultDisplay();
+    rotation = display.getRotation();
     Point size = new Point();
     try {
         display.getSize(size);
@@ -596,9 +598,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onAccuracyChanged(Sensor arg0, int arg1) {
   }
 
+  
+  private final float NOISE = 0.5f;
   @Override
   public void onSensorChanged(SensorEvent event) {
+    
+    
     float x = event.values[1];
+    if (rotation==3) x=-x;
     if (!mInitialized) {
       mInitialized = true;
     } else { 
