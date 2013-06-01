@@ -263,14 +263,6 @@ public final class UIDialog extends Window {
     label.setText(t);
   }
   
-  /*
-  private void hide(Runnable r) {
-    addAction(MyActions.sequence(
-      Actions.fadeOut(0.3f),
-      Actions.run(r)
-    ));
-  }
-  */
   
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
     getYesNoDialog(evt, text, 1, stage);

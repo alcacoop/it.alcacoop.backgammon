@@ -88,7 +88,7 @@ public class GameFSM extends BaseFSM implements Context {
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(ctx.board().getStage(), false);
+                UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
               }
             } else {
               if (
@@ -101,14 +101,14 @@ public class GameFSM extends BaseFSM implements Context {
                   if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                     ctx.board().rollDices();
                   } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                    UIDialog.getDicesDialog(ctx.board().getStage(), false);
+                    UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
                   }
                 }
               } else {
                 if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                   ctx.board().rollDices();
                 } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                  UIDialog.getDicesDialog(ctx.board().getStage(), false);
+                  UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
                 }
               }
             }
@@ -127,7 +127,7 @@ public class GameFSM extends BaseFSM implements Context {
             if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
             } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-              UIDialog.getDicesDialog(ctx.board().getStage(), false);
+              UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
             }
           }
           break;
@@ -188,7 +188,7 @@ public class GameFSM extends BaseFSM implements Context {
             if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
             } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-              UIDialog.getDicesDialog(ctx.board().getStage(), false);
+              UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
             }
           } else {
             if (
@@ -201,7 +201,7 @@ public class GameFSM extends BaseFSM implements Context {
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(ctx.board().getStage(), false);
+                UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
               }
             }
           }
@@ -489,7 +489,7 @@ public class GameFSM extends BaseFSM implements Context {
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(ctx.board().getStage(), false);
+                UIDialog.getDicesDialog(0.82f, ctx.board().getStage(), false);
               }
             } else { //DOUBLING NOT ACCEPTED
               GnuBackgammon.Instance.rec.addDoubleDrop(0);

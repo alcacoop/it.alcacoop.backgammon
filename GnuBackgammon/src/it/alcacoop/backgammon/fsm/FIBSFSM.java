@@ -492,7 +492,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             String u = (String)params;
             if (GnuBackgammon.Instance.fibsScreen.fibsInvitations.containsKey(u)) {
               GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
-              UIDialog.getFlashDialog(Events.NOOP, "User \""+u+"\" declined your invitation", 0.9f, GnuBackgammon.Instance.fibsScreen.getStage());
+              UIDialog.getFlashDialog(Events.NOOP, "User \""+u+"\" declined your invitation", 0.82f, GnuBackgammon.Instance.fibsScreen.getStage());
               GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
             }
             break;
