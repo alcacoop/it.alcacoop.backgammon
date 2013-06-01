@@ -246,6 +246,7 @@ public class FibsScreen extends BaseScreen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
+    if ((onlineList.getVelocityY()!=0)||(invitationList.getVelocityY()!=0)) Gdx.graphics.requestRendering();
   }
 
 

@@ -155,4 +155,9 @@ public class ChatBox extends Table {
   public boolean chatHit(float x, float y) {
     return ((x > getX() && x< getX()+getWidth())&&(y < getHeight()));
   }
+
+  public boolean isScrolling() {
+    return (scroll.getVelocityY()!=0);
+  }
+
 }

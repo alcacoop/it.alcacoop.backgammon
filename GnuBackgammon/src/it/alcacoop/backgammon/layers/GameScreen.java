@@ -178,6 +178,7 @@ public class GameScreen extends BaseScreen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
+    if ((MatchState.matchType==2)&&(chatBox.isScrolling())) Gdx.graphics.requestRendering();
   }
 
   

@@ -33,9 +33,6 @@
 
 package it.alcacoop.backgammon.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
@@ -44,6 +41,10 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.logic.MatchState;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -52,8 +53,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -536,6 +537,7 @@ public final class UIDialog extends Window {
     sc.setFadeScrollBars(false);
     sc.setOverscroll(false, false);
     
+    
     float height = stage.getHeight()*0.85f;
     float width = stage.getWidth()*0.9f;
     
@@ -554,7 +556,12 @@ public final class UIDialog extends Window {
     instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.addAction(Actions.sequence(MyActions.alpha(alpha, 0.3f),Actions.run(new Runnable() {
+      @Override
+      public void run() {
+        Gdx.graphics.setContinuousRendering(true);
+      }
+    })));
   }
   
   
@@ -670,7 +677,12 @@ public final class UIDialog extends Window {
     instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.addAction(Actions.sequence(MyActions.alpha(alpha, 0.3f),Actions.run(new Runnable() {
+      @Override
+      public void run() {
+        Gdx.graphics.setContinuousRendering(true);
+      }
+    })));
   }
   
   
