@@ -244,7 +244,13 @@ public class GameScreen extends BaseScreen {
     MatchState.fMove = 1;
     MatchState.SwitchTurn(false);
     
-    boolean rolled = (Boolean)gi.get("_rl");
+    boolean rolled; 
+    try {
+      rolled = (Boolean)gi.get("_rl");
+    } catch(Exception e) {
+      rolled=false;
+    }
+    
     if (!rolled) {
       if (MatchState.matchType<2)
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);

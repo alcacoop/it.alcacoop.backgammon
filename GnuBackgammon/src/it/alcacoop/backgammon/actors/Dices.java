@@ -134,10 +134,6 @@ public class Dices extends Group {
       setVisible(false);
     }
     
-    @Override
-    public void act(float delta) {
-      super.act(delta);
-    }
   }
   
   class _dice extends Group {

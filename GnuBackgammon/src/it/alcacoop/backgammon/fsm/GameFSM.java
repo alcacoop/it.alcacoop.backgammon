@@ -580,12 +580,16 @@ public class GameFSM extends BaseFSM implements Context {
                 GnuBackgammon.fsm.back();
               }
             } else {
-              if (((String)params).equals("YES")) {
+              String response = "YES";
+              try {
+                response = (String)params;
+              } catch(Exception e) {}
+              if (response.equals("YES")) {
                 //SAVING AND ABANDONING
                 GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.Instance.fname+"json");
                 GnuBackgammon.Instance.rec.reset();
                 GnuBackgammon.Instance.setFSM("MENU_FSM");
-              } else if (((String)params).equals("NO")) {
+              } else if (response.equals("NO")) {
                 //ABANDONING
                 Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").delete();
                 GnuBackgammon.Instance.rec.reset();
