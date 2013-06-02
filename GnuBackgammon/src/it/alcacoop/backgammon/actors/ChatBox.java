@@ -4,13 +4,16 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class ChatBox extends Table {
   private Stage stage; 
@@ -23,13 +26,20 @@ public class ChatBox extends Table {
   String lastSender = "----";
   private Runnable r1, r2;
   
+  private Table cont;
 
   public ChatBox(Stage _stage) {
     super();
     stage = _stage;
-    height = stage.getHeight()*0.68f;
+    
+    setWidth(stage.getWidth()*0.7f);
+    setHeight(stage.getHeight()*0.8f);
+    
+    cont = new Table();
+    
+    height = stage.getHeight()*0.6f;
     cheight = GnuBackgammon.chatHeight;
-    position = (height)*0.07f;
+    position = (height)*0.32f;
     
     r1 = new Runnable() {
       @Override
@@ -49,20 +59,34 @@ public class ChatBox extends Table {
     tchat = new Table();
     tchat.bottom();
     
-    setHeight(height);
-    setWidth(stage.getWidth()*0.7f);
-    setX((stage.getWidth()-getWidth())/2);
-    setY(stage.getHeight()-position);
-    setColor(0.85f, 0.85f, 0.85f, 0.85f);
+    cont.setHeight(height);
+    cont.setWidth(stage.getWidth()*0.7f);
+    cont.setColor(0.85f, 0.85f, 0.85f, 0.85f);
 
     
-    setBackground(GnuBackgammon.skin.getDrawable("chatbox"));
+    cont.setBackground(GnuBackgammon.skin.getDrawable("chatbox"));
     scroll = new ScrollPane(tchat, GnuBackgammon.skin);
     scroll.setColor(1, 1, 1, 1);
     scroll.setOverscroll(false, false);
-    add().expandX().fillX().height(cheight);
+    cont.add().expandX().fillX().height(cheight);
+    cont.row();
+    cont.add(scroll).expand().fill().height((height-cheight));
+    
+    add(cont).width(stage.getWidth()*0.7f).fill();
     row();
-    add(scroll).expand().fill().height((height-cheight));
+    add().expand().fill();
+    setX((stage.getWidth()-getWidth())/2);
+    setY(stage.getHeight()-position);
+    
+    setTouchable(Touchable.enabled);
+    
+    addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        toggle();
+        Gdx.app.log("CLICK!", "OK");
+      }
+    });
   }
   
   public void toggle() {
@@ -123,7 +147,7 @@ public class ChatBox extends Table {
           public void run() {
             scroll.setScrollPercentY(1);
           }
-        }), Actions.delay(1f)));
+        }), Actions.delay(1.2f)));
         
         Gdx.graphics.requestRendering();        
       }
