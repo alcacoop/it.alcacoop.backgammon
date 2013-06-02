@@ -43,8 +43,10 @@ public class BaseScreen implements Screen{
     float newx = _x+x*2;
     if (newx>0) newx = 0;
     if (newx<(stage.getWidth()-bgImg.getImageWidth())) newx=stage.getWidth()-bgImg.getImageWidth();
-    bgImg.setX(newx);
-    Gdx.graphics.requestRendering();
+    if (bgImg.getX()!=newx) {
+      bgImg.setX(newx);
+      Gdx.graphics.requestRendering();
+    }
   }
   
   public Stage getStage() {
