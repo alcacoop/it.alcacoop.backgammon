@@ -140,7 +140,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   @Override
   public void create() {
     Instance = this;
-    nativeFunctions.injectBGInstance();
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
     if (pWidth<=480) ss = 2;
@@ -211,6 +210,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
     
+    nativeFunctions.injectBGInstance();
     //setFSM("MENU_FSM");
   }
 
