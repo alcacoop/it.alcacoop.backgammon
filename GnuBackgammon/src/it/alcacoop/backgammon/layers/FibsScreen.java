@@ -204,7 +204,7 @@ public class FibsScreen extends BaseScreen {
     t1.setBackground(GnuBackgammon.skin.getDrawable("list"));
     t1.add(l1).center().height(height*0.075f);
     t1.row();
-    t1.add(onlineList).fill().left().height(height*0.48f).width(width*0.52f);
+    t1.add(onlineList).fill().left().top().height(height*0.48f).width(width*0.52f);
     
     Label l2 = new Label("INVITATIONS",GnuBackgammon.skin);
     l2.setAlignment(Align.top);
@@ -398,6 +398,8 @@ public class FibsScreen extends BaseScreen {
       pt.row();
       pt.add(t).fillX().expandX();
     }
+    pt.row();
+    pt.add().expand().fill().colspan(2);
     onlineList.setWidget(pt);
     Gdx.graphics.requestRendering();
   }
