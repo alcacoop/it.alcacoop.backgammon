@@ -84,7 +84,6 @@ public class ChatBox extends Table {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         toggle();
-        Gdx.app.log("CLICK!", "OK");
       }
     });
   }
