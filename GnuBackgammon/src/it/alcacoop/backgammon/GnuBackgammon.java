@@ -146,7 +146,15 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (pWidth<=800) ss = 1;
     else ss = 0;
     resolution = resolutions[ss];
-    setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
+    
+    boolean debug_fibs = true;
+    if (!debug_fibs) {
+      setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
+    } else {
+      initAssets();
+      setFSM("MENU_FSM");
+      fsm.state(MenuFSM.States.TWO_PLAYERS);
+    }
   }
   
   public void initAssets() { 
@@ -171,6 +179,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fibsPrefs = Gdx.app.getPreferences("FibsPreferences");
     
     fibs = new FibsNetHandler();
+    
     commandDispatcher = new CommandDispatcherImpl();
     
     fname = nativeFunctions.getDataDir()+"/data/match.";
@@ -211,7 +220,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fibsScreen = new FibsScreen();
     
     nativeFunctions.injectBGInstance();
-    //setFSM("MENU_FSM");
   }
 
   public String getResName() {
