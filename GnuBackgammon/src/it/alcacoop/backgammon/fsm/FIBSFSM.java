@@ -63,10 +63,14 @@ public class FIBSFSM extends BaseFSM implements Context {
 
     REMOTE_TURN {
       @Override
+      public void enterState(Context ctx) {
+        System.out.println("REMOTE");
+      }
+      @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           
-        case FIBS_ROLLS:
+        case FIBS_OPPONENT_ROLLS:
           int[] dices = (int[])params;
           int d1 = Math.max(dices[0], dices[1]);
           int d2 = Math.min(dices[0], dices[1]);
@@ -75,22 +79,24 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
           
         case DICES_ROLLED:
+          System.out.println("=========== HERE");
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
-          ctx.board().availableMoves.setMoves(mv);
-          GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);          
+          if ((mv==null)||(mv.length==0)) {
+            UIDialog.getFlashDialog(
+                Events.NO_MORE_MOVES, 
+                "Your opponent has no legal moves",
+                0.82f,
+                ctx.board().getStage());
+          } else {
+            ctx.board().availableMoves.setMoves(mv);
+            GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);
+          }
           break;
           
         case FIBS_MOVES:
           int moves[] = (int[])params;
-          if (moves[0]!=-1) 
-            ctx.board().setMoves(moves);
-          else
-            UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, 
-              "Your opponent has no legal moves",
-              0.82f,
-              ctx.board().getStage());
+          ctx.board().setMoves(moves);
           break;
 
         case PERFORMED_MOVE:
@@ -116,12 +122,16 @@ public class FIBSFSM extends BaseFSM implements Context {
 
 
     LOCAL_TURN {
-      
+      @Override
+      public void enterState(Context ctx) {
+        System.out.println("LOCAL");
+      }
+
       @Override
       public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
 
         switch (evt) {
-        case FIBS_ROLLS:
+        case FIBS_YOU_ROLL:
           int[] dices = (int[])params;
           FIBSFSM.d1 = Math.max(dices[0], dices[1]);
           FIBSFSM.d2 = Math.min(dices[0], dices[1]);
@@ -140,7 +150,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           if ((moves!=null)&&(moves.length>0)) {
             ctx.board().availableMoves.setMoves(moves);
           } else  {
-            //ctx.state(DIALOG_HANDLER);
             UIDialog.getFlashDialog(
                 Events.NO_MORE_MOVES, 
                 "No legal moves available",
@@ -150,6 +159,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case POINT_TOUCHED:
+          System.out.println("TOUCHED!");
           if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
             int orig = (Integer)params;
             if ((orig==-1)||(ctx.board()._board[MatchState.fMove][orig]==0))
@@ -162,7 +172,7 @@ public class FIBSFSM extends BaseFSM implements Context {
               ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2] = orig;
               ((FIBSFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
               ((FIBSFSM)GnuBackgammon.fsm).hnmove++;
-
+              
               ctx.board().availableMoves.dropDice(orig-dest);
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
@@ -194,6 +204,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case DICE_CLICKED:
+          System.out.println("DICE CLICKED");
           ctx.board().dices.clear();
           String m = "";
           for (int i=0; i<4; i++) {
@@ -202,12 +213,17 @@ public class FIBSFSM extends BaseFSM implements Context {
             if (MatchState.FibsDirection==-1) {
               m+=(((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i]+1)+" ";
               m+=(((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i+1]+1);
+              m = m.replaceAll(" 25", " bar");
+              m = m.replaceAll(" 0", " off");
             } else {
               m+=(24-((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i])+" ";
               m+=(24-((FIBSFSM)GnuBackgammon.fsm).hmoves[2*i+1]);
+              m = m.replaceAll(" 0", " bar");
+              m = m.replaceAll(" 25", " off");
             }
           }
           GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_MOVE, m);
+          System.out.println("MOVES: "+m);
           ctx.state(SWITCH_TURN);
           break;
 
@@ -236,53 +252,62 @@ public class FIBSFSM extends BaseFSM implements Context {
       }
     },
 
-
-
-    SWITCH_TURN {
+    
+    BOARD_SYNC {
+      @Override
       public void enterState(Context ctx) {
+        GnuBackgammon.Instance.fibs.boardReset();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
+        GnuBackgammon.Instance.commandDispatcher.send("board");
       }
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt == Events.FIBS_BOARD) {
+        if (evt==Events.FIBS_BOARD) {
           FibsBoard b = (FibsBoard)params;
-          
-          if (b.dices[0]==0||b.dices[1]==0) {
-            GnuBackgammon.Instance.fibs.releaseBoard(b);
-            GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
-          } else {
-            if (b.turn == MatchState.FibsColor) {
-              ctx.state(States.LOCAL_TURN);
-            } else {
-              ctx.state(States.REMOTE_TURN);          
-            }
-            ctx.board().switchTurn();
-            for (int i=0;i<8;i++)
-              ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
-            ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
+          //SYNC...
+          boolean differ = false;
+          for (int i=0;i<2;i++)
+            for (int j=0;j<25;j++)
+              if (ctx.board()._board[i][j]!=b.board[i][j]) {
+                differ = true;
+                break;
+              }
 
-            boolean differ = false;
-            for (int i=0;i<2;i++)
-              for (int j=0;j<25;j++)
-                if (ctx.board()._board[i][j]!=b.board[i][j]) {
-                  differ = true;
-                  break;
-                }
-            if (differ) {
-              ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
-              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-            }
-            int ds[] = {b.dices[0], b.dices[1]};
-            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, ds);
-            GnuBackgammon.Instance.fibs.releaseBoard(b);
+          if (differ) {
+            System.out.println("RESYNC");
+            ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
+            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           }
+          return true;
         }
-        return true;
+        return false;
       }
     },
 
 
+    
+    
+    SWITCH_TURN {
+      public void enterState(Context ctx) {
+        for (int i=0;i<8;i++)
+          ((FIBSFSM)GnuBackgammon.fsm).hmoves[i] = -1;
+        ((FIBSFSM)GnuBackgammon.fsm).hnmove = 0;
+        
+        //SWITCH TURN
+        ctx.board().switchTurn();
+        if (MatchState.fTurn==0) {
+          ctx.state(States.LOCAL_TURN);
+          GnuBackgammon.Instance.fibs.pull(Events.FIBS_YOU_ROLL);
+        } else {
+          ctx.state(States.REMOTE_TURN);
+          GnuBackgammon.Instance.fibs.pull(Events.FIBS_OPPONENT_ROLLS);
+        }
+      }
+    },
+
+
+    
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
@@ -303,7 +328,8 @@ public class FIBSFSM extends BaseFSM implements Context {
           case FIBS_BOARD:
             FibsBoard b = (FibsBoard)params;
             if (b.dices[0]==0||b.dices[1]==0) {
-              GnuBackgammon.Instance.fibs.releaseBoard(b);
+              System.out.println("===== RETRY");
+              GnuBackgammon.Instance.commandDispatcher.send("board");
               GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
               break;
             }
@@ -327,13 +353,13 @@ public class FIBSFSM extends BaseFSM implements Context {
             if (b.turn == b.color) {
               MatchState.SetGameTurn(0, 0);
               ctx.state(LOCAL_TURN);
+              GnuBackgammon.fsm.processEvent(Events.FIBS_YOU_ROLL, b.dices);
             } else {
               MatchState.SetGameTurn(1, 1);
               ctx.state(REMOTE_TURN);
               AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
+              GnuBackgammon.fsm.processEvent(Events.FIBS_OPPONENT_ROLLS, b.dices);
             }
-            
-            GnuBackgammon.fsm.processEvent(Events.FIBS_ROLLS, b.dices);
             break;
         
           default:

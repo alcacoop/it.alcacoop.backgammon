@@ -41,69 +41,66 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pool.Poolable;
-
 
 public class FibsNetHandler {
 
-    private ExecutorService dispatchExecutor;
-    private static LinkedBlockingQueue<Evt> queue;
-    private int nreq;
-    private Pool<Evt> evtPool;
-    private Pool<FibsBoard> boardPool;
+    private ExecutorService dispatchExecutor, boardDispatchExecutor;
+    private static LinkedBlockingQueue<Evt> queue, boardQueue;
+    private int eventRequest, boardRequest;
     
-    private class Evt implements Poolable {
+    private class Evt {
       public Events e;
       public Object o;
-      public Evt() {
-        reset();
-      }
-      public void init(Events _e, Object _o) {
-        e = _e;
-        o = _o;
-      }
-      @Override
-      public void reset() {
-        e = null;
-        o = null;
+      public Evt(Events e, Object o) {
+        this.e = e;
+        this.o = o;
       }
     }
         
     
     private class Dispatcher implements Runnable {
-      private LinkedBlockingQueue<Evt> q;
-      private FibsNetHandler i;
       private Events evt;
       private boolean found;
-      public Dispatcher(LinkedBlockingQueue<Evt> _q, FibsNetHandler _i, Events _evt) {
+      public Dispatcher(Events _evt) {
         evt = _evt;
-        q = _q;
-        i = _i;
         found = false;
-        i.incReq();
+        if (_evt==Events.FIBS_BOARD)
+          boardRequest++;
+        else
+          eventRequest++;
       }
       @Override
       public void run() {
-        i.decReq();
         Evt e = null;
+        System.out.println("WAITING FOR.."+evt);
         while (!found) {
           try {
             while (true) {
-              e = q.take();
+              if (evt==Events.FIBS_BOARD)
+                e = boardQueue.take();
+              else
+                e = queue.take();
               if (e.e!=null) break;
             }
           } catch (InterruptedException e1) {}
           
-          if (evt == null) { //PASSO IL PRIMO DISPONIBILE
+          if (evt == Events.CONTINUE) {
+            found = true; //FOR CLEAR PURPOSE
+          } else if ((evt==Events.FIBS_BOARD)&&(e.o==null)) {
+            found = true; //FOR CLEAR PURPOSE
+          } else if (evt == null) { //PASSO IL PRIMO DISPONIBILE
             GnuBackgammon.fsm.processEvent(e.e, e.o);
             found = true;
           } else if (evt==e.e) { //PASSO IL PRIMO RICHIESTO DISPONIBILE
             GnuBackgammon.fsm.processEvent(e.e, e.o);
             found = true;
           }
-          evtPool.free(e);
         }
+        System.out.println("TERMINATED");
+        if (evt==Events.FIBS_BOARD)
+          boardRequest--;
+        else
+          eventRequest--;
       }
     }
 
@@ -111,88 +108,85 @@ public class FibsNetHandler {
     
     public FibsNetHandler() {
       queue = new LinkedBlockingQueue<Evt>();
+      boardQueue  = new LinkedBlockingQueue<Evt>();
       dispatchExecutor = Executors.newSingleThreadExecutor();
-      nreq=0;
-      
-      evtPool = new Pool<Evt>(5, 5) {
-        protected Evt newObject() {
-          return new Evt();
-        };
-      };
-      boardPool = new Pool<FibsBoard>(5, 5) {
-        protected FibsBoard newObject() {
-          return new FibsBoard();
-        };
-      };
+      boardDispatchExecutor = Executors.newSingleThreadExecutor();
+      eventRequest=0;
+      boardRequest=0;
     }
-    
 
-    public void pull(Events evt) {
-      dispatchExecutor.submit(new Dispatcher(queue, this, evt));
+    
+    //VORREI UN EVT DI TIPO evt...
+    public synchronized void pull() {
+      pull(null);
+    }
+    public synchronized void pull(Events evt) {
+      if (evt == Events.FIBS_BOARD)
+        boardDispatchExecutor.submit(new Dispatcher(evt));
+      else
+        dispatchExecutor.submit(new Dispatcher(evt));
+      System.out.println("REQUESTED EVT "+evt);
     }
     
-    public void post(Events _e, Object _o) {
+    public synchronized void post(Events _e, Object _o) {
       if (_e==null) return;
-      synchronized (queue) {
-        Evt e = evtPool.obtain();
-        e.init(_e, _o);
-        try {
+      Evt e = new Evt(_e, _o);
+      try {
+        if (_e==Events.FIBS_BOARD)
+          boardQueue.put(e);
+        else
           queue.put(e);
-        } catch (InterruptedException e1) {
-          e1.printStackTrace();
-        }        
-      }
-//      System.out.println("\nEVT "+_e+" ARRIVED!");
-//      debug();
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();
+      }        
+      System.out.println("POST EVT "+_e);
+      //debug();
     }
-    public void post() { //DEBUG PURPOSE..
-      synchronized (queue) {
-        Evt e = evtPool.obtain();
-        e.init(Events.CONTINUE, null);
-        try {
-          queue.put(e);
-//          debug();
-        } catch (InterruptedException e1) {
-          e1.printStackTrace();
-        }
-      }
-    }
-    public synchronized int getReq() {
-      return nreq;
-    }
-    public synchronized void incReq() {
-      nreq++;
-    }
-    public synchronized void decReq() {
-      nreq--;
-    }
-    public void reset() {
-//      System.out.println("\nRESET QUEUE..");
-      synchronized (queue) {
-        dispatchExecutor.shutdownNow();
-        nreq = 0;
-        queue.clear();
-        dispatchExecutor = Executors.newSingleThreadExecutor();
-      }
-    }
-    public void debug() {
-      synchronized (queue) {
-        System.out.println("RICHIESTE IN CODA: "+nreq);
-        System.out.println("MESSAGGI IN CODA: "+queue.size());
-        Iterator<Evt> itr = queue.iterator();
-        while(itr.hasNext()) {
-          Evt element = itr.next();
-          System.out.println("  "+element.e);
-       }
+
+    
+    public synchronized void post() { //DEBUG PURPOSE..
+      Evt e = new Evt(Events.CONTINUE, null);
+      try {
+        queue.put(e);
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();
       }
     }
     
-    public void releaseBoard(FibsBoard b) {
-      boardPool.free(b);
+    
+    public synchronized void reset() {
+      queue.clear();
+      boardQueue.clear();
+      dispatchExecutor.shutdownNow();
+      boardDispatchExecutor.shutdownNow();
+      dispatchExecutor = Executors.newSingleThreadExecutor();
+      boardDispatchExecutor = Executors.newSingleThreadExecutor();
     }
-    public FibsBoard obtainBoard(String s) {
-      FibsBoard b = boardPool.obtain();
-      b.parseBoard(s);
-      return b;
+    
+    public synchronized void boardReset() {
+      boardQueue.clear();
+      int n = boardRequest;
+      for (int i=0;i<n;i++) {
+        post(Events.FIBS_BOARD, null);
+      }
     }
+
+    
+    
+    public synchronized void debug() {
+      System.out.println("CODA EVENTI...");
+      System.out.println("RICHIESTE IN CODA: "+eventRequest);
+      System.out.println("MESSAGGI IN CODA: "+queue.size());
+      Iterator<Evt> itr = queue.iterator();
+      while(itr.hasNext()) {
+        Evt element = itr.next();
+        System.out.print("  "+element.e);
+      }
+      
+      System.out.println("CODA BOARDS");
+      System.out.println("RICHIESTE IN CODA: "+boardRequest);
+      System.out.println("MESSAGGI IN CODA: "+boardQueue.size());
+      System.out.println("");
+    }
+    
 }

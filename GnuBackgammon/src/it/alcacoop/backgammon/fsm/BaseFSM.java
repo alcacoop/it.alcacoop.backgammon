@@ -92,7 +92,8 @@ public class BaseFSM implements Context {
     
     FIBS_BOARD,
     FIBS_MOVES,
-    FIBS_ROLLS,
+    FIBS_OPPONENT_ROLLS,
+    FIBS_YOU_ROLL,
     FIBS_MATCHOVER,
     
     ACCEPT_DOUBLE,

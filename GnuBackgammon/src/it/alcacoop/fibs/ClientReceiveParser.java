@@ -207,7 +207,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         //this.commandDispatcher.writeNetworkMessageln("join");
         break;
       case FIBS_PlayerRolls:
-        //parseRoll(s);
+        parseRoll(s,0);
         break;
         
       case FIBS_PlayerMoves:
@@ -324,7 +324,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
         this.commandDispatcher.dispatch(CommandDispatcher.Command.ROLL_OR_DOUBLE);
         break;
       case FIBS_YouRoll:
-        //parseRoll(s);
+        parseRoll(s,1);
         break;
       case FIBS_YourTurnToMove: // First roll of the game, always 2 moves
         this.commandDispatcher.dispatch(CommandDispatcher.Command.YOUR_MOVE, "2");
@@ -561,12 +561,14 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
   
   public void parseBoard(String s) {
-    FibsBoard b = GnuBackgammon.Instance.fibs.obtainBoard(s); 
+    FibsBoard b = new FibsBoard();
+    b.parseBoard(s);
     GnuBackgammon.Instance.fibs.post(Events.FIBS_BOARD, b);
   }
   
   
   public void parseMove(String s) {
+    //Gdx.app.log("===> PARSEMOVE", s);
     s = s.replaceAll("-", " ");
     s = s.replaceAll("\\.", "");
     
@@ -596,8 +598,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   
-  /*
-  private void parseRoll(String s) {
+  private void parseRoll(String s, int who) {
     int[] dices = {0,0};
     Pattern p = Pattern.compile("[1-6]+");
     Matcher m = p.matcher(s); 
@@ -605,10 +606,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     dices[0] = Integer.parseInt(m.group());
     m.find();
     dices[1] = Integer.parseInt(m.group());
-    //System.out.println("===> ROLL: "+dices[0]+"/"+dices[1]);
-    //GnuBackgammon.Instance.fibs.post(Events.FIBS_ROLLS, dices);
+    //System.out.println(s+"=======> ROLL: "+dices[0]+"/"+dices[1]);
+    if (who==1)
+      GnuBackgammon.Instance.fibs.post(Events.FIBS_YOU_ROLL, dices);
+    else
+      GnuBackgammon.Instance.fibs.post(Events.FIBS_OPPONENT_ROLLS, dices);
   }
-  */
   
   private void parseMatchOverMessage(String s, int cookie) {
     String[] ss = s.split(" ");
