@@ -57,7 +57,7 @@ public class FIBSFSM extends BaseFSM implements Context {
   private static int d1, d2;
   private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   private static boolean isBufferedMoves = false;
-  
+  private static int moves[][];
   
   public enum States implements State {
 
@@ -129,34 +129,42 @@ public class FIBSFSM extends BaseFSM implements Context {
 
       @Override
       public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
-
+        
         switch (evt) {
         case FIBS_YOU_ROLL:
           int[] dices = (int[])params;
           FIBSFSM.d1 = Math.max(dices[0], dices[1]);
           FIBSFSM.d2 = Math.min(dices[0], dices[1]);
-          GnuBackgammon.Instance.snd.playRoll();
-          ctx.board().animateDices(d1, d2, true);
+          AICalls.GenerateMoves(ctx.board(), FIBSFSM.d1, FIBSFSM.d2);
           break;
-
-        case DICES_ROLLED:
-          dices = (int[])params;
-          AICalls.GenerateMoves(ctx.board(), dices[0], dices[1]);
-          break;
-
-
+        
         case GENERATE_MOVES:
-          int moves[][] = (int[][])params;
+          moves = (int[][])params;
           if ((moves!=null)&&(moves.length>0)) {
-            ctx.board().availableMoves.setMoves(moves);
+            GnuBackgammon.fsm.state(BOARD_SYNC);
           } else  {
-            UIDialog.getFlashDialog(
-                Events.NO_MORE_MOVES, 
-                "No legal moves available",
-                0.82f,
-                ctx.board().getStage());
+            //NO WAY TO SYNC
+            GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD_SYNCED, null);
           }
           break;
+          
+        case FIBS_BOARD_SYNCED:
+          GnuBackgammon.Instance.snd.playRoll();
+          ctx.board().animateDices(FIBSFSM.d1, FIBSFSM.d2, true);
+          break;
+        
+        case DICES_ROLLED:
+          if ((moves!=null)&&(moves.length>0)) {
+            ctx.board().availableMoves.setMoves(moves);  
+          } else  {
+            UIDialog.getFlashDialog(
+              Events.NO_MORE_MOVES, 
+              "No legal moves available",
+              0.82f,
+              ctx.board().getStage());
+          }
+          break;
+
 
         case POINT_TOUCHED:
           System.out.println("TOUCHED!");
@@ -256,6 +264,7 @@ public class FIBSFSM extends BaseFSM implements Context {
     BOARD_SYNC {
       @Override
       public void enterState(Context ctx) {
+        System.out.println("TRY TO SYNC..");
         GnuBackgammon.Instance.fibs.boardReset();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
         GnuBackgammon.Instance.commandDispatcher.send("board");
@@ -278,7 +287,12 @@ public class FIBSFSM extends BaseFSM implements Context {
             System.out.println("RESYNC");
             ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+          } else {
+            System.out.println("NO RESYNC NEEDED");
           }
+          
+          GnuBackgammon.fsm.back();
+          GnuBackgammon.fsm.processEvent(Events.FIBS_BOARD_SYNCED, null);
           return true;
         }
         return false;
