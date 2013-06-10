@@ -39,7 +39,7 @@ public class ChatBox extends Table {
     
     height = stage.getHeight()*0.6f;
     cheight = GnuBackgammon.chatHeight;
-    position = (height)*0.32f;
+    position = (height)*0.31f;
     
     r1 = new Runnable() {
       @Override
