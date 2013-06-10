@@ -11,7 +11,6 @@ package it.alcacoop.fibs;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
-import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.fibs.ClientReceiveParser.Mode;
 
 
@@ -230,12 +229,14 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param text The message to write
    */
   public void writeChatMessageln(String name, int cookie, String text) {
+    /*
     final String mode[] = {"says", "shouts", "whispers", "kibitzes", "say", "shout", "whisper", "kibitz"};
     int cookieMode = cookie - CLIP_SAYS;
     if (cookie == CLIP_YOU_SAY) {
       String[] ss = text.split(" ", 2);
       return;
     }
+    */
   }
 
   public void writeGameMessageln(String s) {
@@ -365,7 +366,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
 
   @Override
   public void ropChanged(boolean[] rop) {
-    //TODO
     //this.properties.setROP(rop);
   }
   
@@ -376,7 +376,7 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   }
   
   public void createAccount() {
-    ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).showConnecting("Trying to create new account...");
+    GnuBackgammon.Instance.twoplayersScreen.showConnecting("Trying to create new account...");
     startClientConnection(Mode.Register);
   }
   

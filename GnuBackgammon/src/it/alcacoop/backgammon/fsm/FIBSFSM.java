@@ -340,7 +340,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             ctx.board().initBoard(2);
             MatchState.SetGameVariant(0);
             
-            GameScreen gs = (GameScreen)GnuBackgammon.Instance.currentScreen;
+            GameScreen gs = GnuBackgammon.Instance.gameScreen;
             gs.pInfo[1].setName(GnuBackgammon.Instance.fibsScreen.username); //PRIMO NOME => NERO
             gs.pInfo[0].setName(b.p2);
             ctx.board().updatePInfo();
@@ -373,7 +373,7 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
-        ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hardHide();
+        GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
         if (MatchState.resignValue==4) {
           terminated = true;
           UIDialog.getFlashDialog(
@@ -421,7 +421,7 @@ public class FIBSFSM extends BaseFSM implements Context {
         
         case ABANDON_MATCH: //QUIT MATCH
           if ((Boolean)params) { //ABANDON
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.hardHide();
+            GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
             if (ctx.board().getPIPS(0)>ctx.board().getPIPS(1))
               GnuBackgammon.Instance.commandDispatcher.send("resign b"); //FUCK YOU DROPPER!
             else  

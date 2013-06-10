@@ -787,7 +787,7 @@ public final class UIDialog extends Window {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getCreateAccountDialog(1, ((TwoPlayersScreen)GnuBackgammon.Instance.currentScreen).getStage());
+        UIDialog.getCreateAccountDialog(1, GnuBackgammon.Instance.currentScreen.getStage());
         super.clicked(event, x, y);
       }
     });
@@ -953,7 +953,7 @@ public final class UIDialog extends Window {
          }
       }
       if (i==1) {
-        instance.diceLabel.setText("Choose "+((GameScreen)GnuBackgammon.Instance.currentScreen).getCurrentPinfo()+" dices");
+        instance.diceLabel.setText("Choose "+GnuBackgammon.Instance.gameScreen.getCurrentPinfo()+" dices");
         t.add(instance.diceLabel).right().top().colspan(5);
       }
     }

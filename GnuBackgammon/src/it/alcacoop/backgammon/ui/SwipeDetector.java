@@ -33,7 +33,7 @@ public class SwipeDetector implements GestureListener {
   @Override
   public boolean fling(float velocityX, float velocityY, int button) {
     if (MatchState.matchType!=2) return false;
-    GameScreen g = (GameScreen)GnuBackgammon.Instance.currentScreen;
+    GameScreen g = GnuBackgammon.Instance.gameScreen;
     if ((velocityY>0)&&(lastY<g.getHeight()*0.20f)&&(deltaY>g.getHeight()*0.05f)) {
       GnuBackgammon.Instance.showChatBox();
       return true;

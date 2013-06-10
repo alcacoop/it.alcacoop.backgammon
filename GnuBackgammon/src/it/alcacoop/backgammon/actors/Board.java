@@ -582,8 +582,7 @@ public class Board extends Group {
   }
   
   public void updatePInfo() {
-    GameScreen s = (GameScreen) GnuBackgammon.Instance.currentScreen;
-    s.updatePInfo();
+    GnuBackgammon.Instance.gameScreen.updatePInfo();
   }
   
   @Override

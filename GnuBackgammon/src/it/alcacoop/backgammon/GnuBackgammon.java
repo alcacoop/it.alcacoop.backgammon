@@ -70,7 +70,7 @@ import com.badlogic.gdx.utils.Pool;
 
 public class GnuBackgammon extends Game implements ApplicationListener {
   
-  private GameScreen gameScreen;
+  public GameScreen gameScreen;
   private MatchOptionsScreen matchOptionsScreen;
   public  MainMenuScreen menuScreen;
   public TwoPlayersScreen twoplayersScreen;
