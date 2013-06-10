@@ -147,8 +147,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else ss = 0;
     resolution = resolutions[ss];
     
-    boolean debug_fibs = true;
-    if (!debug_fibs) {
+    boolean develop_fibs = false;
+    if (!develop_fibs) {
       setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
     } else {
       initAssets();
