@@ -122,6 +122,8 @@ public class FIBSFSM extends BaseFSM implements Context {
         
         switch (evt) {
         case FIBS_YOU_ROLL:
+          FIBSFSM.d1 = 0;
+          FIBSFSM.d2 = 0;
           int[] dices = (int[])params;
           FIBSFSM.d1 = Math.max(dices[0], dices[1]);
           FIBSFSM.d2 = Math.min(dices[0], dices[1]);

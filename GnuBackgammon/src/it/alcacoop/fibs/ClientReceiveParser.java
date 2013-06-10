@@ -582,12 +582,12 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
   private void parseRoll(String s, int who) {
     int[] dices = {0,0};
-    Pattern p = Pattern.compile("[1-6]+");
+    Pattern p = Pattern.compile(" [1-6]+");
     Matcher m = p.matcher(s); 
     m.find();
-    dices[0] = Integer.parseInt(m.group());
+    dices[0] = Integer.parseInt(m.group().trim());
     m.find();
-    dices[1] = Integer.parseInt(m.group());
+    dices[1] = Integer.parseInt(m.group().trim());
     if (who==1)
       GnuBackgammon.Instance.fibs.post(Events.FIBS_YOU_ROLL, dices);
     else
