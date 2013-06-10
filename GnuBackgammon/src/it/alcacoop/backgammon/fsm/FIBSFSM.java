@@ -63,10 +63,6 @@ public class FIBSFSM extends BaseFSM implements Context {
 
     REMOTE_TURN {
       @Override
-      public void enterState(Context ctx) {
-        System.out.println("REMOTE");
-      }
-      @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           
@@ -79,7 +75,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
           
         case DICES_ROLLED:
-          System.out.println("=========== HERE");
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           if ((mv==null)||(mv.length==0)) {
@@ -123,11 +118,6 @@ public class FIBSFSM extends BaseFSM implements Context {
 
     LOCAL_TURN {
       @Override
-      public void enterState(Context ctx) {
-        System.out.println("LOCAL");
-      }
-
-      @Override
       public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
         
         switch (evt) {
@@ -167,7 +157,6 @@ public class FIBSFSM extends BaseFSM implements Context {
 
 
         case POINT_TOUCHED:
-          System.out.println("TOUCHED!");
           if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
             int orig = (Integer)params;
             if ((orig==-1)||(ctx.board()._board[MatchState.fMove][orig]==0))
@@ -212,7 +201,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
 
         case DICE_CLICKED:
-          System.out.println("DICE CLICKED");
           ctx.board().dices.clear();
           String m = "";
           for (int i=0; i<4; i++) {
@@ -231,7 +219,6 @@ public class FIBSFSM extends BaseFSM implements Context {
             }
           }
           GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_MOVE, m);
-          System.out.println("MOVES: "+m);
           ctx.state(SWITCH_TURN);
           break;
 
@@ -264,7 +251,6 @@ public class FIBSFSM extends BaseFSM implements Context {
     BOARD_SYNC {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("TRY TO SYNC..");
         GnuBackgammon.Instance.fibs.boardReset();
         GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
         GnuBackgammon.Instance.commandDispatcher.send("board");
@@ -284,11 +270,8 @@ public class FIBSFSM extends BaseFSM implements Context {
               }
 
           if (differ) {
-            System.out.println("RESYNC");
             ctx.board().initBoard(b.board[0], b.board[1]);//RESYNC!
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-          } else {
-            System.out.println("NO RESYNC NEEDED");
           }
           
           GnuBackgammon.fsm.back();
@@ -342,7 +325,6 @@ public class FIBSFSM extends BaseFSM implements Context {
           case FIBS_BOARD:
             FibsBoard b = (FibsBoard)params;
             if (b.dices[0]==0||b.dices[1]==0) {
-              System.out.println("===== RETRY");
               GnuBackgammon.Instance.commandDispatcher.send("board");
               GnuBackgammon.Instance.fibs.pull(Events.FIBS_BOARD);
               break;

@@ -74,7 +74,6 @@ public class CookieMonster implements FIBSMessages {
         iter = numericBatch.iterator();
         while (iter.hasNext()) {
           ptr = iter.next();
-          //System.out.println("regex=" + ptr.regex.toString());
           if (ptr.regex.matcher(message).find()) {
             result = ptr.message;
             break;

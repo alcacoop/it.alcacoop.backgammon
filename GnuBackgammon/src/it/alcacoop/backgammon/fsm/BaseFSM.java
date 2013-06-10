@@ -167,7 +167,6 @@ public class BaseFSM implements Context {
   }
 
   public void processEvent(final Events evt, final Object params) {
-    //System.out.println("EVENT: "+evt+" ON: "+currentState);
     final BaseFSM ctx = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
@@ -187,7 +186,6 @@ public class BaseFSM implements Context {
   }
 
   public void state(State state) {
-    //System.out.println("CHANGING STATE FROM: "+currentState+" TO: "+state);
     if(currentState != null)
       currentState.exitState(this);
     previousState = currentState;

@@ -222,7 +222,6 @@ public class GameScreen extends BaseScreen {
     MatchState.SetMatchTo(""+gi.get("mi_length"));
     
     MatchState.SetAILevel(AILevels.getAILevelFromOrdinal((Integer)gi.get("_df")));
-    System.out.println("CL: "+MatchState.currentLevel);
     
     MatchState.SetMatchScore((Integer)gi.get("mi_ws"), (Integer)gi.get("mi_bs"));
     MatchState.SetCrawford((Integer)gi.get("_cr"));
@@ -232,7 +231,6 @@ public class GameScreen extends BaseScreen {
     MatchState.UpdateMSCubeInfo(cubeValue, cubeOwner);
     MatchState.SetGameVariant(0);
 
-    System.out.println("NOW: "+MatchState.currentLevel.ordinal());
     pInfo[0].setName("AI("+(MatchState.currentLevel.ordinal()+1)+"):");
     MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
     pInfo[1].setName("PL1:");

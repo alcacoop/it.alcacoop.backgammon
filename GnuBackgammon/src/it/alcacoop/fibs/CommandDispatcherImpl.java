@@ -32,7 +32,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param command The command to execute
    */
   public void dispatch(Command command) {
-    //System.out.println("COMMAND: "+command);
     switch (command) {
       case DISCONNECT_FROM_NETWORK:
         onNetworkDisconnect();
@@ -77,7 +76,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         break;
 
       default:
-        System.out.println("Dispatcher: Unhandled command " + command);
         throw new RuntimeException("Unhandled command " + command);
     }
   }
@@ -88,10 +86,8 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param arg1 A string that the dispatched function wants
    */
   public void dispatch(Command command, String arg1) {
-    //System.out.println("COMMAND: "+command+" ARG1: "+arg1);
     switch (command) {
       case START_GAME:
-        System.out.println("START GAME NOW!!!");
         GnuBackgammon.fsm.processEvent(Events.FIBS_START_GAME, arg1);
         break;
         
@@ -149,7 +145,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         this.writeNetworkMessageln(arg1); 
         break;
       default:
-        System.out.println("Dispatcher: Unhandled command " + command);
         throw new RuntimeException("Unhandled command " + command);
     }
   }
@@ -161,7 +156,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param arg2 Another string that the dispatched function wants
    */
   public void dispatch(Command command, String arg1, String arg2) {
-    //System.out.println("COMMAND: "+command+" ARG1: "+arg1+" ARG2: "+arg2);
     switch (command) {
     
       case INVITED:
@@ -176,7 +170,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       case MATCH_OVER:
         break;
       default:
-        System.out.println("Dispatcher: Unhandled command " + command);
         throw new RuntimeException("Unhandled command" + command);
     }
   }
@@ -187,7 +180,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param obj An Object that the dispatched function wants
    */
   public void dispatch(Command command, Object obj) {
-    //System.out.println("COMMAND: "+command+" OBJ: "+obj);
     boolean b;
     switch (command) {
       case GAME_MOVE:
@@ -205,7 +197,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
       case SET_RATING_GRAPH_CONFIG:
         break;
       default:
-        System.out.println("Dispatcher: Unhandled command " + command);
         throw new RuntimeException("Unhandled command" + command);
     }
   }
@@ -215,7 +206,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param s The message to write
    */
   public void writeRegisterUserMessage(String s) {
-    System.out.println(s);
   }
 
   /** Write a message to the System message pane in the specified color.
@@ -223,7 +213,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param s The message to write
    */
   public void writeSystemMessage(int type, String s) {
-    System.out.println("TYPE:" + type+" - "+s);
   }
 
   /** Write a message to the System message pane in the specified color.
@@ -232,7 +221,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
    * @param s The message to write
    */
   public void writeSystemMessageln(int type, String s) {
-    System.out.println("TYPE:" + type+" - "+s);
   }
 
   /** Write a message to the chat message pane in the normal color.
@@ -246,14 +234,11 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
     int cookieMode = cookie - CLIP_SAYS;
     if (cookie == CLIP_YOU_SAY) {
       String[] ss = text.split(" ", 2);
-      System.out.println("You tell " + ss[0] + ": " + ss[1] + eol);
       return;
     }
-    System.out.println(name + " " + mode[cookieMode] + ": " + text + eol);
   }
 
   public void writeGameMessageln(String s) {
-    System.out.println(s);
   }
 
   /** Send a message to the fibs server
@@ -284,11 +269,9 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
 
   public void startClientConnection(Mode mode) {
     if (this.clientConnection != null) {
-      System.out.println("Tear down old ClientConnection");
       this.clientConnection.shutDown();
       this.clientConnection = null;
     }
-    System.out.println("Create new ClientConnection");
     this.clientConnection = new ClientConnection();
     parser = new ClientReceiveParser();
     this.clientConnection.setClientAdapter(parser);
@@ -307,7 +290,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   private void onNetworkConnected() {
     //INITIALIZE ENVIRONMENT
     writeNetworkMessageln("set boardstyle 3");
-    System.out.println("NOW WE ARE CONFIGURED!!");
     //writeNetworkMessageln("who");
   }
 
@@ -323,11 +305,9 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
   }
 
   private void onSavedMatch(String s) {
-    System.out.println("SAVED MATCH!");
   }
 
   private void onMissManners(String s) {
-    System.out.println("MISSMANNER: "+s);
   }
 
   private void onGetPlayerReport(String playerName) {
@@ -361,7 +341,6 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
 
   private void onInvited(String playerName, String matchLength) {
     //RICHIAMATO QUANDO MI ARRIVA UN INVITO
-    System.out.println("INVITED: "+playerName+" TO: "+matchLength);
     if (matchLength.toLowerCase().equals("resume")) //TODO!!
       //send("tell "+playerName+" Sorry.. at the moment my client doesn't support resuming match!");
       GnuBackgammon.fsm.processEvent(Events.FIBS_INVITE_RECEIVED, playerName);

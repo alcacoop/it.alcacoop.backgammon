@@ -72,7 +72,6 @@ public class FibsNetHandler {
       @Override
       public void run() {
         Evt e = null;
-        System.out.println("WAITING FOR.."+evt);
         while (!found) {
           try {
             while (true) {
@@ -96,7 +95,6 @@ public class FibsNetHandler {
             found = true;
           }
         }
-        System.out.println("TERMINATED");
         if (evt==Events.FIBS_BOARD)
           boardRequest--;
         else
@@ -125,7 +123,6 @@ public class FibsNetHandler {
         boardDispatchExecutor.submit(new Dispatcher(evt));
       else
         dispatchExecutor.submit(new Dispatcher(evt));
-      System.out.println("REQUESTED EVT "+evt);
     }
     
     public synchronized void post(Events _e, Object _o) {
@@ -139,21 +136,9 @@ public class FibsNetHandler {
       } catch (InterruptedException e1) {
         e1.printStackTrace();
       }        
-      System.out.println("POST EVT "+_e);
       //debug();
     }
 
-    
-    public synchronized void post() { //DEBUG PURPOSE..
-      Evt e = new Evt(Events.CONTINUE, null);
-      try {
-        queue.put(e);
-      } catch (InterruptedException e1) {
-        e1.printStackTrace();
-      }
-    }
-    
-    
     public synchronized void reset() {
       queue.clear();
       boardQueue.clear();

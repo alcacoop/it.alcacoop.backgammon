@@ -35,7 +35,6 @@ public class MyDelayAction extends DelegateAction {
 
 	/** Causes the delay to be complete. */
 	public void finish () {
-	  System.out.println("finish");
 		time = duration;
 	}
 

@@ -306,8 +306,6 @@ public class Player implements Comparable<Player>, Poolable {
     fibsPlayer = s;
     String[] ss = s.split(" ");
     if (ss.length != 13) {
-      System.out.println("Error parsing player");
-      System.out.println(s);
       return(false);
     }
     name = ss[1];

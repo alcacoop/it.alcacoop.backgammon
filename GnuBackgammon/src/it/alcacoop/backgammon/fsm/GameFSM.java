@@ -384,7 +384,6 @@ public class GameFSM extends BaseFSM implements Context {
             if (MatchState.matchType==0)
               Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").delete();
             GnuBackgammon.Instance.rec.reset();
-            System.out.println("SHOW INTERSTITIAL");
             GnuBackgammon.Instance.nativeFunctions.showInterstitial();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
           } else {
