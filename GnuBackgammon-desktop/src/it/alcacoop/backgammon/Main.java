@@ -33,7 +33,6 @@
 
 package it.alcacoop.backgammon;
 
-import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;

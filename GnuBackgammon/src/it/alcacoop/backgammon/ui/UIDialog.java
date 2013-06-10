@@ -38,8 +38,6 @@ import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.GameFSM;
-import it.alcacoop.backgammon.layers.GameScreen;
-import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 
 import java.util.HashMap;
