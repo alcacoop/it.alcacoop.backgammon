@@ -161,6 +161,8 @@ public class FibsNetHandler {
       boardDispatchExecutor.shutdownNow();
       dispatchExecutor = Executors.newSingleThreadExecutor();
       boardDispatchExecutor = Executors.newSingleThreadExecutor();
+      eventRequest = 0;
+      boardRequest = 0;
     }
     
     public synchronized void boardReset() {
