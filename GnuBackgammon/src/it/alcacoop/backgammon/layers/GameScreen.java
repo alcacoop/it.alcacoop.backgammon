@@ -45,16 +45,13 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
-import it.alcacoop.backgammon.ui.SwipeDetector;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -87,6 +84,9 @@ public class GameScreen extends BaseScreen {
         if(UIDialog.isOpened()) return false;
         
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if (chatBox.visible) {
+            chatBox.hide();
+          } else
           if ((MatchState.fMove==0)||(MatchState.matchType>0)) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
             if (MatchState.matchType!=2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
@@ -187,9 +187,7 @@ public class GameScreen extends BaseScreen {
     super.show();
     Gdx.app.log("SHOW", "GAME SCREEN");
     GnuBackgammon.Instance.nativeFunctions.showAds(true);
-    GestureDetector gd = new GestureDetector(new SwipeDetector());
-    InputMultiplexer im = new InputMultiplexer(gd, stage);
-    Gdx.input.setInputProcessor(im);
+    Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     
     loadTextures();

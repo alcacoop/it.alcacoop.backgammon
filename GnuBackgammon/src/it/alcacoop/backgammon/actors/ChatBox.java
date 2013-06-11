@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class ChatBox extends Table {
   private Stage stage; 
-  private boolean visible = false;
+  public boolean visible = false;
   private boolean animating = false;
   private ScrollPane scroll;
   private Table tchat;
@@ -44,7 +44,10 @@ public class ChatBox extends Table {
     r1 = new Runnable() {
       @Override
       public void run() {
-        GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
+        if (visible)
+          GnuBackgammon.Instance.nativeFunctions.hideChatBox();
+        else
+          GnuBackgammon.Instance.nativeFunctions.showChatBox();
         visible=!visible;
       }
     };
@@ -89,6 +92,7 @@ public class ChatBox extends Table {
   }
   
   public void toggle() {
+    if (animating) return;
     if (!visible)
       show();
     else
@@ -97,21 +101,23 @@ public class ChatBox extends Table {
 
   
   public void show() {
-    if (animating) return;
     animating = true;
     if (!visible)
       addAction(MyActions.sequence(Actions.moveTo(getX(), stage.getHeight()-getHeight(), 0.18f), Actions.run(r1), Actions.run(r2)));
-    else
-      animating = false;
   }
   
   public void hide() {
-    if (animating) return;
     animating = true;
     if (visible)
       addAction(MyActions.sequence(Actions.run(r1), Actions.moveTo(getX(), stage.getHeight()-position, 0.18f), Actions.run(r2)));
-    else
-      animating = false;
+  }
+
+  public void hardHide() {
+    if (visible) {
+      visible = !visible;
+      GnuBackgammon.Instance.nativeFunctions.hideChatBox();
+      setY(stage.getHeight()-position);
+    }
   }
   
   
@@ -153,13 +159,6 @@ public class ChatBox extends Table {
     });
   }
   
-  public void hardHide() {
-    if (visible) {
-      visible = !visible;
-      GnuBackgammon.Instance.nativeFunctions.toggleChatBox();
-      setY(stage.getHeight()-position);
-    }
-  }
   
   public void reset() {
     Gdx.app.postRunnable(new Runnable() {

@@ -298,10 +298,4 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void appendChatMessage(String username, String msg, boolean direction) {
     gameScreen.chatBox.appendMessage(username, msg, direction);
   }
-  public void showChatBox() {
-    gameScreen.chatBox.show();
-  }
-  public void hideChatBox() {
-    gameScreen.chatBox.hide();
-  }
 }

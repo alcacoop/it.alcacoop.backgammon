@@ -105,7 +105,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private final int SHOW_ADS = 1;
   private final int HIDE_ADS = 0;
   private View chatBox;
-  private boolean chatVisible = false;
   private View gameView;
   
   private boolean mInitialized;
@@ -505,28 +504,30 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     return activeNetworkInfo != null;
   }
 
+  
   @Override
-  public void toggleChatBox() {
-    if (chatVisible)
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          EditText chat = (EditText) findViewById(R.id.message);
-          InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-          imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
-          chatBox.setVisibility(View.GONE);
-        }
-      });
-      
-    else
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          chatBox.setVisibility(View.VISIBLE);
-        }
-      });
-    chatVisible = !chatVisible;
+  public void showChatBox() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        chatBox.setVisibility(View.VISIBLE);
+      }
+    });
   }
+  
+  @Override
+  public void hideChatBox() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        EditText chat = (EditText) findViewById(R.id.message);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
+        chatBox.setVisibility(View.GONE);
+      }
+    });
+  }
+  
   
   public void clearMessage(View v) {
     EditText chat = (EditText) findViewById(R.id.message);
@@ -558,30 +559,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-      if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-        if (getCurrentFocus()==findViewById(R.id.message)) {
-          adjustFocus();
-          GnuBackgammon.Instance.hideChatBox();
-        }
-      }
-      return super.onKeyDown(keyCode, event);
+    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+      adjustFocus();
+      GnuBackgammon.Instance.gameScreen.chatBox.hide();
+    }
+    return super.onKeyDown(keyCode, event);
   }
 
-  @Override
-  public void hideChatBox() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        chatVisible = false;
-        EditText chat = (EditText) findViewById(R.id.message);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
-        chatBox.setVisibility(View.GONE);
-      }
-    });
-  }
-  
-  
   @Override
   protected void onResume() {
     super.onResume();

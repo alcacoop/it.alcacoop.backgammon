@@ -254,18 +254,18 @@ public class FibsScreen extends BaseScreen {
   @Override
   public void show() {
     super.show();
+    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     me.getLabel().setText("Connecting...");
     l1.setText("ONLINE USERS ON FIBS");
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     g.setColor(1,1,1,0);
-    GnuBackgammon.Instance.nativeFunctions.hideChatBox();
     
     Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
-    //Gdx.graphics.setContinuousRendering(true);
+
     fibsPlayers.clear();
     g.addAction(MyActions.sequence(Actions.fadeIn(0.6f),Actions.run(new Runnable() {
       @Override
