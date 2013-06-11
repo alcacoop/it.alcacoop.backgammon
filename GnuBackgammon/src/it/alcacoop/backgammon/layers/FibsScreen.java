@@ -267,13 +267,7 @@ public class FibsScreen extends BaseScreen {
     LLastLogin.setText("Last login: "+formattedDate);
 
     fibsPlayers.clear();
-    g.addAction(MyActions.sequence(Actions.fadeIn(0.6f),Actions.run(new Runnable() {
-      @Override
-      public void run() {
-        showWho = true;
-        GnuBackgammon.Instance.commandDispatcher.send("who");
-      }
-    })));
+    g.addAction(MyActions.sequence(Actions.fadeIn(0.6f)));
   }
   
   public synchronized void playerChanged(Player p) {

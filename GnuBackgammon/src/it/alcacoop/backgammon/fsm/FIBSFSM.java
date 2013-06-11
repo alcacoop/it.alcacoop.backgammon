@@ -58,6 +58,7 @@ public class FIBSFSM extends BaseFSM implements Context {
   private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   private static boolean isBufferedMoves = false;
   private static int moves[][];
+  private static boolean showWho;
   
   public enum States implements State {
 
@@ -471,7 +472,8 @@ public class FIBSFSM extends BaseFSM implements Context {
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.fibs.reset();
         GnuBackgammon.Instance.FibsOpponent = "";
-        super.enterState(ctx);
+        showWho=true;
+        GnuBackgammon.Instance.commandDispatcher.send("who");
       }
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -487,10 +489,11 @@ public class FIBSFSM extends BaseFSM implements Context {
             break;
             
           case FIBS_WHO_END:
-            if (GnuBackgammon.Instance.fibsScreen.showWho) {
+            if (showWho) {
               GnuBackgammon.Instance.fibsScreen.showWho = false;
               GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
               GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
+              showWho = false;
             }
             break;
 
