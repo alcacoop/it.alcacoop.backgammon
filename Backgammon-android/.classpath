@@ -8,6 +8,12 @@
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/GnuBackgammon/libs/gdx.jar" sourcepath="/GnuBackgammon/libs/gdx-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/GoogleAdMobAdsSdk-6.4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/GoogleAdMobAdapter_MobFoxSDK_Android_4.1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/libadapterinmobi.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/InMobiAdNetwork-3.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/InMobiCommons-3.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/MMSDK.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/Android_MillennialMediaAdapter_v5_0.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -45,6 +45,8 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -85,8 +87,6 @@ import android.widget.Toast;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 import com.google.ads.Ad;
 import com.google.ads.AdListener;
 import com.google.ads.AdRequest;
@@ -112,10 +112,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private Sensor mAccelerometer;
 
   private int rotation;
-  
+
   private InterstitialAd interstitial;
   private String ads_id = "XXXXXXXXXXXXXXX";
-  private String int_id = "XXXXXXXXXXXXXXX";
+  private String int_id = "XXXXXXXXXXXXXXXX";
+  
+  
+  private Timer t;
+  private TimerTask task;
   
   
   protected Handler handler = new Handler()
@@ -163,7 +167,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       adView = new AdView(this, AdSize.IAB_BANNER, ads_id);
     else
       adView = new AdView(this, AdSize.BANNER, ads_id);
-    //adView.loadAd(new AdRequest());
     
     adView.setVisibility(View.GONE);
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
@@ -217,20 +220,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     // Create the interstitial
     interstitial = new InterstitialAd(this, int_id);
     interstitial.setAdListener(this);
-    
-    Task task = new Task() {
-      @Override
-      public void run() {
-        runOnUiThread(new Runnable() {
-          public void run() {
-            if (!interstitial.isReady()) {
-              interstitial.loadAd(new AdRequest());
-            }
-          }
-        });
-      }
-    };
-    Timer.schedule(task, 60);
   }
 
   
@@ -570,12 +559,36 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   protected void onResume() {
     super.onResume();
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+    t = new Timer();
+    task = new TimerTask() {
+      @Override
+      public void run() {
+        runOnUiThread(new Runnable() {
+          public void run() {
+            System.out.println("======> TIMER LOADED: "+interstitial.isReady());
+            if (!interstitial.isReady()) {
+              /*
+              request = new AdRequest();
+              InMobiAdapterExtras inMobiExtras = new InMobiAdapterExtras();
+              Map<String, String> map = new HashMap<String, String>();
+              map.put("d-orientation", "1");
+              inMobiExtras.setRequestParams(map);
+              request.setNetworkExtras(inMobiExtras);
+              */
+              interstitial.loadAd(new AdRequest());
+            }
+          }
+        });
+      }
+    };
+    t.schedule(task, 0,5000);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     mSensorManager.unregisterListener(this);
+    t.cancel();
   }
 
   @Override
@@ -618,6 +631,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        /*
+        request = new AdRequest();
+        InMobiAdapterExtras inMobiExtras = new InMobiAdapterExtras();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("d-orientation", "1");
+        inMobiExtras.setRequestParams(map);
+        request.setNetworkExtras(inMobiExtras);
+        */
         interstitial.loadAd(new AdRequest());
         GnuBackgammon.Instance.interstitialVisible = false;
       }
@@ -625,13 +646,17 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   }
 
   @Override
-  public void onReceiveAd(Ad ad) {}
+  public void onReceiveAd(Ad ad) {
+    System.out.println("====> RECEIVED: "+ad);
+  }
   @Override
   public void onLeaveApplication(Ad arg0) {}
   @Override
   public void onPresentScreen(Ad arg0) {}
   @Override
-  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {}
+  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {
+    System.out.println("====> NOT RECEIVED: "+arg1);
+  }
 
 
 
