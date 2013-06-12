@@ -248,114 +248,121 @@ sp
   orig: 24, 24
   offset: 0, 0
   index: -1
-dp
+gpl
   rotate: false
   xy: 995, 999
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-abt
+dp
   rotate: false
   xy: 965, 698
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-ply
+abt
   rotate: false
   xy: 500, 9
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
+ply
+  rotate: false
+  xy: 995, 973
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
 wheel
   rotate: false
-  xy: 995, 975
+  xy: 965, 674
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 965, 676
+  xy: 526, 13
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 526, 13
+  xy: 995, 951
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 995, 953
+  xy: 965, 652
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 965, 654
+  xy: 995, 929
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 965, 654
+  xy: 995, 929
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 995, 931
+  xy: 965, 630
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 965, 632
+  xy: 965, 608
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 965, 610
+  xy: 965, 586
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 965, 588
+  xy: 965, 564
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 ready
   rotate: false
-  xy: 965, 570
+  xy: 965, 546
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 playing
   rotate: false
-  xy: 965, 552
+  xy: 965, 528
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 965, 534
+  xy: 965, 510
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
@@ -369,35 +376,35 @@ ireceived
   index: -1
 isended
   rotate: false
-  xy: 965, 516
+  xy: 965, 492
   size: 18, 16
   orig: 18, 16
   offset: 0, 0
   index: -1
 cb-small
   rotate: false
-  xy: 995, 917
+  xy: 965, 478
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 cw-small
   rotate: false
-  xy: 965, 502
+  xy: 965, 464
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 rarrow
   rotate: false
-  xy: 556, 72
+  xy: 995, 919
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 573, 72
+  xy: 556, 72
   size: 15, 8
   orig: 15, 8
   offset: 0, 0

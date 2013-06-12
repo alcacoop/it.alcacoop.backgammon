@@ -64,6 +64,7 @@ public class TwoPlayersScreen extends BaseScreen {
   private Label llocal;
   private Label lfibs;
   private Label ltiga;
+  private Label lplay;
 
   private ScrollPane sp;
   
@@ -124,6 +125,13 @@ public class TwoPlayersScreen extends BaseScreen {
         "forget your password then you must start again under a new username.";
     ltiga.setText(st);
     
+    
+    lplay = new Label("", GnuBackgammon.skin);
+    lplay.setWrap(true);
+    String sg = "Google Play Games\n\n" +
+        "Play against your Google+ friends or random opponent\n\nCOMING SOON...";
+    lplay.setText(sg);
+    
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
@@ -158,9 +166,11 @@ public class TwoPlayersScreen extends BaseScreen {
     IconButton local = new IconButton("Local", GnuBackgammon.atlas.findRegion("dp"), ts);
     IconButton fibs = new IconButton("FIBS", GnuBackgammon.atlas.findRegion("mpl"), ts);
     IconButton tiga = new IconButton("TigerGammon", GnuBackgammon.atlas.findRegion("mpl"), ts);
+    IconButton gplay = new IconButton("Google Play Games", GnuBackgammon.atlas.findRegion("gpl"), ts);
     type.add(local);
     type.add(fibs);
     type.add(tiga);
+    type.add(gplay);
     
     local.addListener(new ClickListener(){
       @Override
@@ -207,6 +217,21 @@ public class TwoPlayersScreen extends BaseScreen {
       }
     });
     
+    gplay.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        Table text = new Table();
+        text.add(lplay).left().top().expand().fill();
+        text.row();
+        text.add().fill().expand();
+        sp.setWidget(text);
+        variant = 3;
+        UIDialog.getFlashDialog(Events.NOOP, "Not yet implemented.. Stay tuned!", 0.82f, getStage());
+        super.clicked(event, x, y);
+      }
+    });
+    
     table.add(titleLabel).colspan(7);
     
     table.row();
@@ -227,6 +252,11 @@ public class TwoPlayersScreen extends BaseScreen {
 
     t1.row();
     t1.add(fibs).fillX().expandX().height(height).padRight(pad);
+    t1.row();
+    t1.add().expandX().fill().height(height/10);
+    
+    t1.row();
+    t1.add(gplay).fillX().expandX().height(height).padRight(pad);
     t1.row();
     t1.add().expand().fill();
     
