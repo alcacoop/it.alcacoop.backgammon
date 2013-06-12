@@ -255,7 +255,8 @@ public class FibsScreen extends BaseScreen {
   public void show() {
     super.show();
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-    me.getLabel().setText("Connecting...");
+    if (!me.getName().equals(GnuBackgammon.Instance.FibsUsername))
+      me.getLabel().setText("Connecting...");
     l1.setText("ONLINE USERS ON FIBS");
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);

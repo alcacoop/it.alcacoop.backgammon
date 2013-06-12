@@ -494,6 +494,7 @@ public class FIBSFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
               GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
               showWho = false;
+              GnuBackgammon.Instance.commandDispatcher.send("who "+GnuBackgammon.Instance.FibsUsername);
             }
             break;
 
