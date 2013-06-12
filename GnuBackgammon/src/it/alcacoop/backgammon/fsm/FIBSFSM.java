@@ -532,6 +532,11 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.FibsOpponent = opponent;
             GnuBackgammon.Instance.fibsScreen.clearSendedInvitations();
             GnuBackgammon.Instance.fibsScreen.initGame();
+            MatchState.anScore[0] = 0;
+            MatchState.anScore[1] = 0;
+            MatchState.nMatchTo = 1;
+            GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
+            GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
             break;
             
           default:
