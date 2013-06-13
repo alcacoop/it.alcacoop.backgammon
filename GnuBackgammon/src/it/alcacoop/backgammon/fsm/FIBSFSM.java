@@ -423,12 +423,12 @@ public class FIBSFSM extends BaseFSM implements Context {
         case ABANDON_MATCH: //QUIT MATCH
           if ((Boolean)params) { //ABANDON
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-            if (ctx.board().getPIPS(0)>ctx.board().getPIPS(1))
+            if (ctx.board().getPIPS(0)>ctx.board().getPIPS(1)) {
               GnuBackgammon.Instance.commandDispatcher.send("resign b"); //FUCK YOU DROPPER!
-            else  
+            } else {
               GnuBackgammon.Instance.commandDispatcher.send("leave");
-            ctx.state(FIBS_MENU);
-            GnuBackgammon.Instance.goToScreen(8);
+              GnuBackgammon.fsm.processEvent(Events.FIBS_MATCHOVER, null);
+            }
           } else  { //CANCEL
             GnuBackgammon.fsm.back();
             if (FIBSFSM.isBufferedMoves) {
