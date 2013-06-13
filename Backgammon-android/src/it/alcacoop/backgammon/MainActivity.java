@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -548,6 +549,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (GnuBackgammon.Instance.getScreen() instanceof SplashScreen)
+      return super.onKeyDown(keyCode, event);
     if ((keyCode == KeyEvent.KEYCODE_BACK)) {
       adjustFocus();
       GnuBackgammon.Instance.gameScreen.chatBox.hide();
