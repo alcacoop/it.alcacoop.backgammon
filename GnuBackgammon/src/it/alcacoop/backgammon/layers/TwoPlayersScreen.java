@@ -68,7 +68,7 @@ public class TwoPlayersScreen extends BaseScreen {
 
   private ScrollPane sp;
   
-  private int variant = 0; //0=LOCAL,1=FIBS,2=TIGA
+  private int variant = 0; //0=LOCAL,1=FIBS,2=TIGA,3=GPLAY
   
   
   public TwoPlayersScreen(){
@@ -92,6 +92,23 @@ public class TwoPlayersScreen extends BaseScreen {
         "\n2. Nackgammon";
     llocal.setText(sl);
     
+    ltiga = new Label("", GnuBackgammon.skin);
+    ltiga.setWrap(true);
+    String st = "TIGERGAMMON\n\n" +
+        "TigerGammon is just another backgammon server like FIBS (First internet Backgammon Server).\n" +
+        "TigerGammon wants to keep the institution FIBS alive. " +
+        "TigerGammon works just like FIBS. Over time you will see features " +
+        "that exceed, what you can see on FIBS\n\n" +
+        "ANDREAS HAUSMANN features TigerGammon. He is another Fibster discontent " +
+        "with the flaws of FIBS just like so many others.\n\n" +
+        "Like FIBS, TigerGammon needs a username/password account.\nNOTE: FIBS account is " +
+        "not compatible with TigerGammon account - You must create another one, with different ranking\n\n" +
+        "Please do not forget your password. There is currently no way " +
+        "for the TigerGammon administrator to retrieve this information. If you " +
+        "forget your password then you must start again under a new username.";
+    ltiga.setText(st);
+    
+    
     lfibs = new Label("", GnuBackgammon.skin);
     lfibs.setWrap(true);
     String sf = "FIBS\n\n" +
@@ -103,27 +120,10 @@ public class TwoPlayersScreen extends BaseScreen {
         "All players need a username (nick) and password to play. The name " +
         "must be 3-20 letters only (no numbers) and underscore (_) is "  +
         "the only punctuation allowed, also remember that it is " +
-        "case-sensitive ('A' and 'a' are different). \n\n " +
-        "Please do not forget your password. There is currently no way " +
-        "for the FIBS administrators to retrieve this information. If you " +
-        "forget your password then you must start again under a new username.";
+        "case-sensitive ('A' and 'a' are different). \n" +
+        "NOTE: at the moment you CAN'T create new FIBS account from Backgammon Mobile. " +
+        "You can play on FIBS only if you are already a fibster!";
     lfibs.setText(sf);
-    
-    ltiga = new Label("", GnuBackgammon.skin);
-    ltiga.setWrap(true);
-    String st = "TIGERGAMMON\n\n" +
-        "TigerGammon is just another backgammon server like FIBS. TigerGammon " +
-        "wants to keep the institution FIBS alive. " +
-        "TigerGammon works just like FIBS. Over time you will see features " +
-        "that exceed, what you can see on FIBS\n\n" +
-        "ANDREAS HAUSMANN features TigerGammon. He is another Fibster discontent " +
-        "with the flaws of FIBS just like so many others.\n\n" +
-        "Like FIBS, TigerGammon needs a username/password account.\nNOTE: FIBS account is " +
-        "not compatible with TigerGammon account - You must create another one, with different ranking\n\n" +
-        "Please do not forget your password. There is currently no way " +
-        "for the TigerGammon administrator to retrieve this information. If you " +
-        "forget your password then you must start again under a new username.";
-    ltiga.setText(st);
     
     
     lplay = new Label("", GnuBackgammon.skin);
