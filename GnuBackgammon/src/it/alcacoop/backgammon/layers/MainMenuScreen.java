@@ -166,7 +166,7 @@ public class MainMenuScreen extends BaseScreen {
     
     
     g = new Group();
-    g.setWidth(stage.getWidth()*0.6f);
+    g.setWidth(stage.getWidth()*0.65f);
     g.setHeight(stage.getHeight()*0.9f);
     g.addActor(table);
     
