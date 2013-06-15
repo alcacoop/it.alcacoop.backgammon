@@ -102,10 +102,7 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.GAME_OPTIONS);
           }
           if (params.toString().equals("RATE IT!")) {
-            if (!GnuBackgammon.Instance.isGNU)
-              GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
-            else
-              GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammonmobile");
+            GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
           }
           if (params.toString().equals("APPEARANCE")) {
             ctx.state(States.APPEARANCE);

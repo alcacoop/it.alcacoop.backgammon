@@ -75,7 +75,7 @@ public class MainMenuScreen extends BaseScreen {
       }
     });
     
-    String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
+    String l = "logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     

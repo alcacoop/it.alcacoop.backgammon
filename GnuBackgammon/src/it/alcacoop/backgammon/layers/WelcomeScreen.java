@@ -54,7 +54,7 @@ public class WelcomeScreen extends BaseScreen {
   public WelcomeScreen(){
     super();
 
-    String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
+    String l = "logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     

@@ -145,7 +145,7 @@ public class GameScreen extends BaseScreen {
 
   
   private void initTable() {
-    String l = GnuBackgammon.Instance.isGNU?"logo-gnu":"logo";
+    String l = "logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     Image i = new Image(r);
     i.setScale(0.8f);

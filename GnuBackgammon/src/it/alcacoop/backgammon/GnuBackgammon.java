@@ -107,7 +107,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public SoundManager snd;
   public NativeFunctions nativeFunctions;
-  public boolean isGNU = false;
   
   public Preferences fibsPrefs;
   
@@ -128,11 +127,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     nativeFunctions = n;
   }
   
-  public GnuBackgammon(NativeFunctions n, boolean _isGNU) {
-    nativeFunctions = n;
-    this.isGNU = _isGNU;
-  }
-
   public void isCR() {
     System.out.println("CR: "+Gdx.graphics.isContinuousRendering());
   }
