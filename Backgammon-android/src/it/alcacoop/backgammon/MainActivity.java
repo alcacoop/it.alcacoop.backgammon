@@ -142,7 +142,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    PurchaseActivity.initKeys();
     PurchaseActivity.createBillingData(this);
     
     mInitialized = false;
@@ -669,7 +668,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   public boolean isProVersion() {
-    return PurchaseActivity.mIsPremium;
+    return PurchaseActivity.msIsPremium;
   }
 
   
