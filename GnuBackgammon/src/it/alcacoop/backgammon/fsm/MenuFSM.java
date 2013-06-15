@@ -305,13 +305,7 @@ public class MenuFSM extends BaseFSM implements Context {
         if (evt==Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("PLAY")) {
-            if((MatchState.currentLevel.ordinal() >= 5)&&(MatchState.matchType==0)) {
-              UIDialog.getYesNoDialog(
-                  Events.LEVEL_ALERT, 
-                  "AI Level choosed is very CPU intensive. \nAre you sure to proceed?", 
-                  0.82f, GnuBackgammon.Instance.currentScreen.getStage());
-            } else
-              GnuBackgammon.Instance.setFSM("GAME_FSM");
+            GnuBackgammon.Instance.setFSM("GAME_FSM");
           }
           if (params.toString().equals("BACK")) {
             if (MatchState.matchType==0)
@@ -320,10 +314,7 @@ public class MenuFSM extends BaseFSM implements Context {
               ctx.state(States.TWO_PLAYERS);
           }
           return true;
-        } else if (evt == Events.LEVEL_ALERT) {
-          if ((Boolean)params)
-            GnuBackgammon.Instance.setFSM("GAME_FSM");
-        }
+        } 
         return false;
       }
     },

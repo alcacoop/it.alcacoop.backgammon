@@ -132,7 +132,6 @@ public class BaseFSM implements Context {
     CPU_RESIGNED,
     HUMAN_RESIGNED, 
     ABANDON_MATCH, 
-    LEVEL_ALERT, 
     RESTORE_ANSWER
   }
 
