@@ -100,28 +100,12 @@ import com.google.ads.InterstitialAd;
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
 public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener {
-  
   private String data_dir;
   protected AdView adView;
   private final int SHOW_ADS = 1;
   private final int HIDE_ADS = 0;
   private View chatBox;
   private View gameView;
-  
-  private boolean mInitialized;
-  private SensorManager mSensorManager;
-  private Sensor mAccelerometer;
-
-  private int rotation;
-
-  private InterstitialAd interstitial;
-  private String ads_id = "XXXXXXXXXXXXXXX";
-  private String int_id = "XXXXXXXXXXXXXXXX";
-  
-  
-  private Timer t;
-  private TimerTask task;
-  
   
   protected Handler handler = new Handler()
   {
@@ -131,8 +115,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       switch(msg.what) {
       case SHOW_ADS:
         adView.setVisibility(View.VISIBLE);
-        if (!adView.isReady())
-          adView.loadAd(new AdRequest());
         break;
       case HIDE_ADS:
         adView.setVisibility(View.GONE);
@@ -141,11 +123,27 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     }
   };
   
+  
+  private boolean mInitialized;
+  private SensorManager mSensorManager;
+  private Sensor mAccelerometer;
+  private int rotation;
+
+  private InterstitialAd interstitial;
+  
+  private Timer t;
+  private TimerTask task;
+
+  
+
   @SuppressWarnings("deprecation")
   @SuppressLint("NewApi")
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    PurchaseActivity.initKeys();
+    PurchaseActivity.createBillingData(this);
     
     mInitialized = false;
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -163,13 +161,22 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
+
     
+    /** ADS INITIALIZATION **/
     if (isTablet(this))
-      adView = new AdView(this, AdSize.IAB_BANNER, ads_id);
+      adView = new AdView(this, AdSize.IAB_BANNER, PurchaseActivity.ads_id);
     else
-      adView = new AdView(this, AdSize.BANNER, ads_id);
-    
+      adView = new AdView(this, AdSize.BANNER, PurchaseActivity.ads_id);
     adView.setVisibility(View.GONE);
+    if (!isProVersion())
+      adView.loadAd(new AdRequest());
+    //Create the interstitial
+    interstitial = new InterstitialAd(this, PurchaseActivity.int_id);
+    interstitial.setAdListener(this);
+    /** ADS INITIALIZATION **/
+    
+    
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
       RelativeLayout.LayoutParams.WRAP_CONTENT, 
       RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -217,10 +224,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     EditText target = (EditText) findViewById(R.id.message);
     target.setOnEditorActionListener(this);
     /* CHATBOX DIMS */
-  
-    // Create the interstitial
-    interstitial = new InterstitialAd(this, int_id);
-    interstitial.setAdListener(this);
   }
 
   
@@ -282,8 +285,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void openURL(String url) {
+    Gdx.graphics.setContinuousRendering(true);
+    Gdx.graphics.requestRendering();
     Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-    startActivity(myIntent);
+    startActivityForResult(myIntent, 1000);
   }
 
   @Override
@@ -294,6 +299,9 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void shareMatch(MatchRecorder rec) {
     final Intent intent = new Intent(Intent.ACTION_SEND);
+    
+    Gdx.graphics.setContinuousRendering(true);
+    Gdx.graphics.requestRendering();
     
     intent.setType("text/plain");
     intent.setType("message/rfc822");
@@ -320,7 +328,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
-          startActivity(Intent.createChooser(intent, "Send email..."));
+          startActivityForResult(Intent.createChooser(intent, "Send email..."), 1001);
         }
       });
 
@@ -578,13 +586,15 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
               inMobiExtras.setRequestParams(map);
               request.setNetworkExtras(inMobiExtras);
               */
-              interstitial.loadAd(new AdRequest());
+              if (!isProVersion())
+                interstitial.loadAd(new AdRequest());
             }
           }
         });
       }
     };
-    t.schedule(task, 0,5000);
+    if (!isProVersion())
+      t.schedule(task, 0,15000);
   }
 
   @Override
@@ -630,23 +640,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   }
   
   @Override
-  public void onDismissScreen(Ad arg0) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        /*
-        request = new AdRequest();
-        InMobiAdapterExtras inMobiExtras = new InMobiAdapterExtras();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("d-orientation", "1");
-        inMobiExtras.setRequestParams(map);
-        request.setNetworkExtras(inMobiExtras);
-        */
-        interstitial.loadAd(new AdRequest());
-        GnuBackgammon.Instance.interstitialVisible = false;
-      }
-    });
-  }
+  public void onDismissScreen(Ad arg0) {}
 
   @Override
   public void onReceiveAd(Ad ad) {
@@ -672,4 +666,34 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     copyAssetsIfNotExists();
     GnubgAPI.InitializeEnvironment(data_dir);    
   }
+
+
+  public boolean isProVersion() {
+    return PurchaseActivity.mIsPremium;
+  }
+
+  
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    PurchaseActivity.destroyBillingData();
+  }
+
+
+  
+  @Override
+  public void inAppBilling() {
+    Gdx.graphics.setContinuousRendering(true);
+    Gdx.graphics.requestRendering();
+    Intent myIntent = new Intent(this, PurchaseActivity.class);
+    startActivityForResult(myIntent, PurchaseActivity.RC_REQUEST);
+  }
+  
+  
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+  }
+  
 }

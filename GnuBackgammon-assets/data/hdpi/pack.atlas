@@ -290,51 +290,58 @@ how
   orig: 40, 40
   offset: 0, 0
   index: -1
-str
+pro
   rotate: false
   xy: 1105, 505
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-app
+str
   rotate: false
   xy: 1105, 463
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-sp
+app
   rotate: false
   xy: 1105, 421
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-gpl
+sp
   rotate: false
   xy: 1105, 379
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-dp
+gpl
   rotate: false
   xy: 1105, 337
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-abt
+dp
   rotate: false
   xy: 1105, 295
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-ply
+abt
   rotate: false
   xy: 1105, 253
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+ply
+  rotate: false
+  xy: 1105, 211
   size: 40, 40
   orig: 40, 40
   offset: 0, 0

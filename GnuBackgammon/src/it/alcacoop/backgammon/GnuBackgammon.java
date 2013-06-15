@@ -290,7 +290,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     fsm.start();
   }
 
-  
   public void appendChatMessage(String msg, boolean direction) {
     commandDispatcher.send("tell "+FibsOpponent+" "+msg);
     appendChatMessage(FibsUsername, msg, direction);

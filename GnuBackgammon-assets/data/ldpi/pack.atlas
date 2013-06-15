@@ -143,14 +143,14 @@ how
   orig: 24, 24
   offset: 0, 0
   index: -1
-str
+pro
   rotate: false
   xy: 199, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-app
+str
   rotate: false
   xy: 225, 1
   size: 24, 24
@@ -241,128 +241,135 @@ d5
   orig: 30, 30
   offset: 0, 0
   index: -1
-sp
+app
   rotate: false
   xy: 474, 9
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-gpl
+sp
   rotate: false
   xy: 995, 999
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-dp
+gpl
   rotate: false
   xy: 965, 698
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-abt
+dp
   rotate: false
   xy: 500, 9
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-ply
+abt
   rotate: false
   xy: 995, 973
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
+ply
+  rotate: false
+  xy: 965, 672
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
 wheel
   rotate: false
-  xy: 965, 674
+  xy: 526, 11
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 526, 13
+  xy: 995, 951
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 995, 951
+  xy: 965, 650
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 965, 652
+  xy: 995, 929
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 995, 929
+  xy: 965, 628
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 995, 929
+  xy: 965, 628
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 965, 630
+  xy: 965, 606
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 965, 608
+  xy: 965, 584
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 965, 586
+  xy: 965, 562
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 965, 564
+  xy: 965, 540
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 ready
   rotate: false
-  xy: 965, 546
+  xy: 965, 522
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 playing
   rotate: false
-  xy: 965, 528
+  xy: 965, 504
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 965, 510
+  xy: 965, 486
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
@@ -376,36 +383,36 @@ ireceived
   index: -1
 isended
   rotate: false
-  xy: 965, 492
+  xy: 965, 468
   size: 18, 16
   orig: 18, 16
   offset: 0, 0
   index: -1
-cb-small
-  rotate: false
-  xy: 965, 478
-  size: 12, 12
-  orig: 12, 12
-  offset: 0, 0
-  index: -1
-cw-small
-  rotate: false
-  xy: 965, 464
-  size: 12, 12
-  orig: 12, 12
-  offset: 0, 0
-  index: -1
 rarrow
   rotate: false
-  xy: 995, 919
+  xy: 526, 1
   size: 15, 8
   orig: 15, 8
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 556, 72
+  xy: 543, 1
   size: 15, 8
   orig: 15, 8
+  offset: 0, 0
+  index: -1
+cb-small
+  rotate: false
+  xy: 965, 454
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+cw-small
+  rotate: false
+  xy: 965, 440
+  size: 12, 12
+  orig: 12, 12
   offset: 0, 0
   index: -1

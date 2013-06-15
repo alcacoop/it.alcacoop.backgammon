@@ -248,121 +248,128 @@ how
   orig: 32, 32
   offset: 0, 0
   index: -1
-str
+pro
   rotate: false
   xy: 1210, 1016
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-app
+str
   rotate: false
   xy: 1, 33
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-sp
+app
   rotate: false
   xy: 53, 85
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-gpl
+sp
   rotate: false
   xy: 169, 155
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-dp
+gpl
   rotate: false
   xy: 1427, 1339
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-abt
+dp
   rotate: false
   xy: 1974, 1722
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-ply
+abt
   rotate: false
   xy: 714, 526
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-CS1-W
+ply
   rotate: false
-  xy: 934, 696
-  size: 30, 30
-  orig: 30, 30
+  xy: 934, 694
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
-CS3-W
+CS1-W
   rotate: false
   xy: 1036, 868
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-CS3-H
+CS3-W
   rotate: false
   xy: 1929, 1625
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
+CS3-H
+  rotate: false
+  xy: 1122, 948
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
 CS2-H
-  rotate: false
-  xy: 1122, 948
-  size: 30, 30
-  orig: 30, 30
-  offset: 0, 0
-  index: -1
-CS1-H
-  rotate: false
-  xy: 1122, 948
-  size: 30, 30
-  orig: 30, 30
-  offset: 0, 0
-  index: -1
-CS3-B
   rotate: false
   xy: 1244, 1018
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-CS1-B
+CS1-H
+  rotate: false
+  xy: 1244, 1018
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+CS3-B
   rotate: false
   xy: 1, 1
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-CS2-B
+CS1-B
   rotate: false
   xy: 87, 87
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-CS2-W
+CS2-B
   rotate: false
   xy: 203, 157
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
+CS2-W
+  rotate: false
+  xy: 1427, 1307
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
 wheel
   rotate: false
-  xy: 1427, 1309
+  xy: 1974, 1692
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

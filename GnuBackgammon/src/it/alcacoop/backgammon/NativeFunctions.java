@@ -49,4 +49,7 @@ public interface NativeFunctions {
   public void showChatBox();
   public void showInterstitial();
   public void initEngine();
+  
+  public boolean isProVersion();
+  public void inAppBilling();
 }

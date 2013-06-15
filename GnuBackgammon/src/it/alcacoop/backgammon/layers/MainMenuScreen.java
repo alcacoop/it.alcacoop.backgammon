@@ -111,44 +111,63 @@ public class MainMenuScreen extends BaseScreen {
     IconButton rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
     rate.addListener(cl);
 
+    IconButton getpro = new IconButton("Remove Ads", GnuBackgammon.atlas.findRegion("pro"), tl);
+    getpro.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.inAppBilling();
+        super.clicked(event, x, y);
+      }
+    });
+    
     Table table = new Table();
     table.setFillParent(true);
     
     table.add(i).colspan(2);
     
-    table.row().pad(2);
+    table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    table.row().pad(2);
+    table.row().pad(1);
     table.add().colspan(2).fill().expand();
     
-    table.row().pad(2);
+    table.row().pad(1);
     table.add(onePlayer).expand().fill().colspan(2);
-    table.row().pad(2);
+    table.row().pad(1);
     table.add(twoPlayers).expand().fill().colspan(2);
     
-    table.row().pad(2);
+    table.row().pad(1);
+    table.add().colspan(2).fill().expand();
+    
+    table.row().pad(1);
     table.add(options).expand().fill().width(table.getWidth()/2);
     table.add(appearance).expand().fill().width(table.getWidth()/2);
     
-    table.row().pad(2);
+    table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    table.row().pad(2);
-    table.add().colspan(2).fill().expand();
-    table.row().pad(2);
-    table.add(howtoplay).colspan(2).expand().fill();
+    
+    
+    if (GnuBackgammon.Instance.nativeFunctions.isProVersion()) {
+      table.row().pad(1);
+      table.add(howtoplay).colspan(2).expand().fill();
 
-    table.row().pad(2);
-    table.add(rate).expand().fill().width(table.getWidth()/2);
-    table.add(about).expand().fill().width(table.getWidth()/2);
-
-    table.row().pad(2);
-    table.add().colspan(2).fill().expand();
-    table.row().pad(2);
-    table.add().colspan(2).fill().expand();
+      table.row().pad(1);
+      table.add(rate).expand().fill().width(table.getWidth()/2);
+      table.add(about).expand().fill().width(table.getWidth()/2);
+    } else {
+      table.row().pad(1);
+      table.add(howtoplay).expand().fill().width(table.getWidth()/2);
+      table.add(about).expand().fill().width(table.getWidth()/2);
+      
+      table.row().pad(1);
+      table.add(rate).expand().fill().width(table.getWidth()/2);
+      table.add(getpro).expand().fill().width(table.getWidth()/2);
+    }
+    
     
     g = new Group();
     g.setWidth(stage.getWidth()*0.6f);
-    g.setHeight(stage.getHeight()*0.95f);
+    g.setHeight(stage.getHeight()*0.9f);
     g.addActor(table);
     
     g.setX((stage.getWidth()-g.getWidth())/2);

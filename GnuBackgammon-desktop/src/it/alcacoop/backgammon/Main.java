@@ -69,8 +69,6 @@ public class Main implements NativeFunctions {
     cfg.title = "GnuBackgammon";
     cfg.width = 800;
     cfg.height = 480;
-    //cfg.width = 360;
-    //cfg.height = 240;
     instance = new Main();
     new LwjglApplication(new GnuBackgammon(instance), cfg);
     
@@ -210,4 +208,12 @@ public class Main implements NativeFunctions {
   @Override
   public void showChatBox() {
   }
+
+  @Override
+  public boolean isProVersion() {
+    return false;
+  }
+
+  @Override
+  public void inAppBilling() {}
 }
