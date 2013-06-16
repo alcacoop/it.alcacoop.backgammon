@@ -56,6 +56,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MainMenuScreen extends BaseScreen {
 
   private Group g;
+  private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro;
+  private Image logo;
   
   public MainMenuScreen(){
     ClickListener cl = new ClickListener() {
@@ -77,22 +79,22 @@ public class MainMenuScreen extends BaseScreen {
     
     String l = "logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
-    Image i = new Image(r);
+    logo = new Image(r);
     
     
     TextButtonStyle tl = GnuBackgammon.skin.get("mainmenu", TextButtonStyle.class);
     
-    IconButton onePlayer = new IconButton("Single Player", GnuBackgammon.atlas.findRegion("sp"), tl);
+    onePlayer = new IconButton("Single Player", GnuBackgammon.atlas.findRegion("sp"), tl);
     onePlayer.addListener(cl);
-    IconButton twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
+    twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
     twoPlayers.addListener(cl);
-    IconButton options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
+    options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
     options.addListener(cl);
     
-    IconButton appearance = new IconButton("Appearance", GnuBackgammon.atlas.findRegion("app"), tl);
+    appearance = new IconButton("Appearance", GnuBackgammon.atlas.findRegion("app"), tl);
     appearance.addListener(cl);
     
-    IconButton howtoplay = new IconButton("How To Play", GnuBackgammon.atlas.findRegion("how"), tl);
+    howtoplay = new IconButton("How To Play", GnuBackgammon.atlas.findRegion("how"), tl);
     howtoplay.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -100,7 +102,7 @@ public class MainMenuScreen extends BaseScreen {
         UIDialog.getHelpDialog(0.82f, stage, false);
       }
     });
-    IconButton about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
+    about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
     about.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -108,10 +110,10 @@ public class MainMenuScreen extends BaseScreen {
         UIDialog.getAboutDialog(0.82f, stage, false);
       }
     });
-    IconButton rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
+    rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
     rate.addListener(cl);
 
-    IconButton getpro = new IconButton("Remove Ads", GnuBackgammon.atlas.findRegion("pro"), tl);
+    getpro = new IconButton("Remove Ads", GnuBackgammon.atlas.findRegion("pro"), tl);
     getpro.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -121,10 +123,23 @@ public class MainMenuScreen extends BaseScreen {
       }
     });
     
+    g = new Group();
+    g.setColor(1,1,1,0);
+  }
+  
+  
+  public void redraw() {
+    createMenu();
+    g.addAction(MyActions.sequence(Actions.delay(0.2f),Actions.fadeIn(0.6f)));
+  }
+  
+  
+  private void createMenu() {
+    g.setColor(1,1,1,0);
     Table table = new Table();
     table.setFillParent(true);
     
-    table.add(i).colspan(2);
+    table.add(logo).colspan(2);
     
     table.row().pad(1);
     table.add().colspan(2).fill().expand();
@@ -164,8 +179,8 @@ public class MainMenuScreen extends BaseScreen {
       table.add(getpro).expand().fill().width(table.getWidth()/2);
     }
     
+    g.clear();
     
-    g = new Group();
     g.setWidth(stage.getWidth()*0.65f);
     g.setHeight(stage.getHeight()*0.9f);
     g.addActor(table);
@@ -190,9 +205,9 @@ public class MainMenuScreen extends BaseScreen {
   @Override
   public void show() {
     super.show();
+    createMenu();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    g.setColor(1,1,1,0);
     g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
   }
 }
