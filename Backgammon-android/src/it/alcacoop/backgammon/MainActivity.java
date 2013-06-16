@@ -612,8 +612,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private final float NOISE = 0.5f;
   @Override
   public void onSensorChanged(SensorEvent event) {
-    
-    
     float x = event.values[1];
     if (rotation==3) x=-x;
     if (!mInitialized) {
@@ -694,6 +692,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
+    if (requestCode == PurchaseActivity.RC_REQUEST) {
+      if (isProVersion()) {
+        adView.setVisibility(View.GONE);
+        t.cancel();
+        GnuBackgammon.Instance.menuScreen.redraw();
+      }
+    }
   }
   
 }
