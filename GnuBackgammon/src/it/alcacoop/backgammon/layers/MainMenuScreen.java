@@ -169,7 +169,6 @@ public class MainMenuScreen extends BaseScreen {
       table.row().pad(1);
       table.add(rate).expand().fill().width(table.getWidth()/2);
       table.add(about).expand().fill().width(table.getWidth()/2);
-      GnuBackgammon.Instance.nativeFunctions.removeAds();
     } else {
       table.row().pad(1);
       table.add(howtoplay).expand().fill().width(table.getWidth()/2);

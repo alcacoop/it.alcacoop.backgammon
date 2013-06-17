@@ -280,6 +280,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void showAds(boolean show) {
+    if (isProVersion()) return;
     handler.sendEmptyMessage(show ? SHOW_ADS : HIDE_ADS);
   }
 
@@ -626,6 +627,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void showInterstitial() {
+    if (isProVersion()) return;
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -694,22 +696,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     Gdx.graphics.requestRendering();
     if (requestCode == PurchaseActivity.RC_REQUEST) {
       if (isProVersion()) {
-        removeAds();
+        adView.setVisibility(View.GONE);
+        t.cancel();
         GnuBackgammon.Instance.menuScreen.redraw();
       }
     }
   }
 
-
-  @Override
-  public void removeAds() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        adView.setVisibility(View.GONE);
-        t.cancel();
-      }
-    });
-  }
   
 }
