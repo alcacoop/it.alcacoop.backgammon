@@ -52,4 +52,5 @@ public interface NativeFunctions {
   
   public boolean isProVersion();
   public void inAppBilling();
+  public void removeAds();
 }

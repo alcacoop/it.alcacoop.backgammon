@@ -694,11 +694,22 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     Gdx.graphics.requestRendering();
     if (requestCode == PurchaseActivity.RC_REQUEST) {
       if (isProVersion()) {
-        adView.setVisibility(View.GONE);
-        t.cancel();
+        removeAds();
         GnuBackgammon.Instance.menuScreen.redraw();
       }
     }
+  }
+
+
+  @Override
+  public void removeAds() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        adView.setVisibility(View.GONE);
+        t.cancel();
+      }
+    });
   }
   
 }

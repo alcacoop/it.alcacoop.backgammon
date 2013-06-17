@@ -216,4 +216,10 @@ public class Main implements NativeFunctions {
 
   @Override
   public void inAppBilling() {}
+
+  @Override
+  public void removeAds() {
+    // TODO Auto-generated method stub
+    
+  }
 }
