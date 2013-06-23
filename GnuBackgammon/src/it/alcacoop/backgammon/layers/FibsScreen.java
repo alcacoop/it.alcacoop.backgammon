@@ -271,6 +271,11 @@ public class FibsScreen extends BaseScreen {
     LLastLogin.setText("Last login: "+formattedDate);
 
     fibsPlayers.clear();
+    
+    Table t = new Table();
+    t.add(new Label("Loading list...", GnuBackgammon.skin));
+    onlineList.setWidget(t);
+    
     g.addAction(MyActions.sequence(Actions.fadeIn(0.6f)));
   }
   
