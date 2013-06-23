@@ -76,6 +76,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           break;
           
         case DICES_ROLLED:
+          ctx.board().dices.animating = false;
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           if ((mv==null)||(mv.length==0)) {
@@ -156,6 +157,7 @@ public class FIBSFSM extends BaseFSM implements Context {
               0.82f,
               ctx.board().getStage());
           }
+          ctx.board().dices.animating = false;
           break;
 
 

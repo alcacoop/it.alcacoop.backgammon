@@ -133,6 +133,7 @@ public class GameFSM extends BaseFSM implements Context {
           break;
           
         case DICES_ROLLED:
+          ctx.board().dices.animating = false;
           int dices[] = (int[])params;
           if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
             ctx.board().rollDices(dices[0], dices[1]);
@@ -237,6 +238,7 @@ public class GameFSM extends BaseFSM implements Context {
               0.82f,
               ctx.board().getStage());
           }
+          ctx.board().dices.animating = false;
           break;
           
         case POINT_TOUCHED:
@@ -462,6 +464,7 @@ public class GameFSM extends BaseFSM implements Context {
             ctx.board().thinking(true);
             AICalls.EvaluateBestMove(ctx.board().dices.get());
           }
+          ctx.board().dices.animating = false;
           break;
           
         default:

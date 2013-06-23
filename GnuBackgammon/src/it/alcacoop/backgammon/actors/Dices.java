@@ -67,7 +67,7 @@ public class Dices extends Group {
   private BaseFSM fsm;
   
   int nr = 0;
-  boolean animating = true;
+  public boolean animating = true;
   boolean firstBigger = true;
   
   private float leftX, rightX;
@@ -250,7 +250,7 @@ public class Dices extends Group {
       }
     }
     _show();
-    animating = false;
+    //animating = false;
     if ((event)&&(fsm == GnuBackgammon.fsm))
       GnuBackgammon.fsm.processEvent(GameFSM.Events.DICES_ROLLED, get());
   }
