@@ -199,6 +199,20 @@ public class FibsScreen extends BaseScreen {
     
     l1 = new Label("ONLINE USERS",GnuBackgammon.skin);
     l1.setAlignment(Align.top);
+    l1.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        if (!GnuBackgammon.Instance.fibsScreen.showWho) {
+          GnuBackgammon.Instance.fibsScreen.showWho = true;
+          GnuBackgammon.Instance.snd.playMoveStart();
+          Table t = new Table();
+          t.add(new Label("Loading list...", GnuBackgammon.skin));
+          onlineList.setWidget(t);
+          GnuBackgammon.Instance.commandDispatcher.send("who");
+        }
+      }
+    });
+    
     
     Table t1 = new Table();
     t1.setBackground(GnuBackgammon.skin.getDrawable("list"));
