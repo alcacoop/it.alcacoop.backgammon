@@ -602,7 +602,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   protected void onPause() {
     super.onPause();
     mSensorManager.unregisterListener(this);
-    t.cancel();
+    if (t!=null) t.cancel();
   }
 
   @Override
@@ -697,7 +697,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     if (requestCode == PurchaseActivity.RC_REQUEST) {
       if (isProVersion()) {
         adView.setVisibility(View.GONE);
-        t.cancel();
+        if (t!=null) t.cancel();
         GnuBackgammon.Instance.menuScreen.redraw();
       }
     }
