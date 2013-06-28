@@ -83,19 +83,6 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("TWO PLAYERS")) {
             ctx.state(States.TWO_PLAYERS);
           }
-          if (params.toString().equals("FIBS")) {
-            if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
-              MatchState.matchType = 2;
-              ctx.state(States.FIBS);
-            } else {
-              UIDialog.getFlashDialog(
-                Events.NOOP, 
-                "Network is down - Multiplayer not available",
-                0.82f,
-                GnuBackgammon.Instance.currentScreen.getStage()
-              );
-            }
-          }
           if (params.toString().equals("STATISTICS")) {
           }
           if (params.toString().equals("OPTIONS")) {
@@ -286,12 +273,69 @@ public class MenuFSM extends BaseFSM implements Context {
                 );
               }
             }
+            if (params.toString().equals("PLAY3")) {
+              if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
+                MatchState.matchType = 2;
+                ctx.state(States.GSERVICE);
+              } else {
+                UIDialog.getFlashDialog(
+                  Events.NOOP, 
+                  "Network is down - Multiplayer not available",
+                  0.82f,
+                  GnuBackgammon.Instance.currentScreen.getStage()
+                );
+              }
+            }
             return true;
           }
           return false;
       }
       
     },
+    
+    
+    
+    GSERVICE {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.twoplayersScreen.showConnecting("Try to connect to Gserver...");
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+          @Override
+          public void run() {
+            GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
+          }
+        };
+        timer.schedule(task, 5000);
+        //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+        super.enterState(ctx);
+      }
+      
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        Gdx.app.log("EVT", ""+evt);
+        switch (evt) {
+          
+          case GSERVICE_CONNECTED:
+            break;
+          
+          case GSERVICE_ERROR:
+            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
+            //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
+            UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            ctx.state(States.TWO_PLAYERS);
+            break;
+            
+          case GSERVICE_BYE:
+            break;
+            
+          default: 
+            return false;
+        }
+        return true;
+      }
+    },
+    
     
     
     MATCH_OPTIONS {

@@ -64,6 +64,11 @@ public class BaseFSM implements Context {
   public enum Events {
     NOOP,
     
+    GSERVICE_ERROR,
+    GSERVICE_CONNECTED,
+    GSERVICE_READY,
+    GSERVICE_BYE,
+    
     FIBS_ERROR,
     
     FIBS_ACCOUNT_CREATED,

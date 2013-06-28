@@ -227,7 +227,7 @@ public class TwoPlayersScreen extends BaseScreen {
         text.add().fill().expand();
         sp.setWidget(text);
         variant = 3;
-        UIDialog.getFlashDialog(Events.NOOP, "Not yet implemented.. Stay tuned!", 0.82f, getStage());
+        //UIDialog.getFlashDialog(Events.NOOP, "Not yet implemented.. Stay tuned!", 0.82f, getStage());
         super.clicked(event, x, y);
       }
     });
