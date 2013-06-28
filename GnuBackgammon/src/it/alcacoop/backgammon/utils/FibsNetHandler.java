@@ -31,7 +31,7 @@
  ##################################################################
 */
 
-package it.alcacoop.backgammon.logic;
+package it.alcacoop.backgammon.utils;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;

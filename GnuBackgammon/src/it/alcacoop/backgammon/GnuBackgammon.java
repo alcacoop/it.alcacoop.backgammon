@@ -49,7 +49,7 @@ import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
-import it.alcacoop.backgammon.logic.FibsNetHandler;
+import it.alcacoop.backgammon.utils.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
