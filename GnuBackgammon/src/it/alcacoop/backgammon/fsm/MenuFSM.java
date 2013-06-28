@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.GServiceClient;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 
 import java.util.Timer;
@@ -150,7 +151,6 @@ public class MenuFSM extends BaseFSM implements Context {
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        Gdx.app.log("EVT", ""+evt);
         switch (evt) {
           
           case FIBS_CONNECTED:
@@ -307,26 +307,32 @@ public class MenuFSM extends BaseFSM implements Context {
           }
         };
         timer.schedule(task, 5000);
-        //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
+        GServiceClient.getInstance().connect();
         super.enterState(ctx);
       }
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        Gdx.app.log("EVT", ""+evt);
         switch (evt) {
           
           case GSERVICE_CONNECTED:
+            timer.cancel();
+            GnuBackgammon.Instance.twoplayersScreen.showConnecting("Waiting for opponent...");
             break;
           
           case GSERVICE_ERROR:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            //GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
             ctx.state(States.TWO_PLAYERS);
             break;
             
+          case GSERVICE_READY:
+            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
+            GServiceClient.getInstance().sendMessage("BYE");
+            break;
+            
           case GSERVICE_BYE:
+            ctx.state(TWO_PLAYERS);
             break;
             
           default: 
