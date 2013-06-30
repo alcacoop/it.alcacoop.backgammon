@@ -1,4 +1,4 @@
-package it.alcacoop.backgammon.utils;
+package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
@@ -7,16 +7,20 @@ import java.io.*;
 import java.net.*;
 
 
-public class GServiceClient {
+public class GServiceClient implements GServiceMessages {
   
   private Socket clientSocket;
   private DataOutputStream outToServer;
   private BufferedReader inFromServer;
   private boolean active = false;
   public static GServiceClient instance;
-  
+
+  public GServiceNetHandler net;
+  public GServiceCookieMonster coockieMonster;
   
   private GServiceClient() {
+    net = new GServiceNetHandler();
+    coockieMonster = new GServiceCookieMonster();
   }
 
   public static GServiceClient getInstance() {
@@ -42,22 +46,34 @@ public class GServiceClient {
         while (active) {
           try {
             String s = inFromServer.readLine();
+            if (s==null) {
+              active=false;
+              clientSocket.close();
+              GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
+              net.reset();
+            }
             System.out.println("RECEIVED: "+s);
-            s = s.replace("\n", "");
-            int coockie = Integer.parseInt(s);
+            int coockie = coockieMonster.fIBSCookie(s);
             switch (coockie) {
-              case 1:
+              case GSERVICE_CONNECTED:
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_CONNECTED, null);
                 break;
-              case 2:
+              case GSERVICE_READY:
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
                 break;
-              case 99:
+              case GSERVICE_HANDSHAKE:
+                String chunks[] = s.split(" ");
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Integer.parseInt(chunks[1]));
+                break;
+              case GSERVICE_BYE:
                 active = false;
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+                net.reset();
                 break;
             }
-          } catch (Exception e) {}
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
         System.out.println("SHUTTING DOWN");
       }
@@ -73,7 +89,7 @@ public class GServiceClient {
   
   public void sendMessage(String msg) {
     try {
-      outToServer.writeBytes(msg);
+      outToServer.writeBytes(msg+"\n");
     } catch (Exception e) {}
   }
 }

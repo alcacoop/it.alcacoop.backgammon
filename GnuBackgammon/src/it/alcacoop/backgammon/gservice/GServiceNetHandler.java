@@ -31,7 +31,7 @@
  ##################################################################
 */
 
-package it.alcacoop.backgammon.utils;
+package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class GoogleNetHandler {
+public class GServiceNetHandler {
 
     private ExecutorService dispatchExecutor;
     private static LinkedBlockingQueue<Evt> queue;
@@ -95,7 +95,7 @@ public class GoogleNetHandler {
 
     
     
-    public GoogleNetHandler() {
+    public GServiceNetHandler() {
       queue = new LinkedBlockingQueue<Evt>();
       dispatchExecutor = Executors.newSingleThreadExecutor();
       eventRequest=0;
