@@ -33,6 +33,7 @@
 
 package it.alcacoop.backgammon;
 
+import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -178,6 +179,7 @@ public class Main implements NativeFunctions {
     setBsh("disp", GnuBackgammon.Instance.commandDispatcher);
     setBsh("fibs", GnuBackgammon.Instance.fibs);
     setBsh("gbg", GnuBackgammon.Instance);
+    setBsh("gservice", GServiceClient.getInstance());
   }
 
   @Override
