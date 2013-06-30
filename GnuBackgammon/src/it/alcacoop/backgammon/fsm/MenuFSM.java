@@ -36,9 +36,9 @@ package it.alcacoop.backgammon.fsm;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
+import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.utils.GServiceClient;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 
 import java.util.Timer;
@@ -54,7 +54,8 @@ public class MenuFSM extends BaseFSM implements Context {
   public State currentState;
   private static boolean accountCreated = false;
   private static Timer timer;
-
+  private static long waitTime;
+  
   public enum States implements State {
 
     MAIN_MENU {
@@ -317,6 +318,7 @@ public class MenuFSM extends BaseFSM implements Context {
           
           case GSERVICE_CONNECTED:
             timer.cancel();
+            waitTime = System.currentTimeMillis();
             GnuBackgammon.Instance.twoplayersScreen.showConnecting("Waiting for opponent...");
             break;
           
@@ -327,11 +329,22 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
             
           case GSERVICE_READY:
+            long l = System.currentTimeMillis();
+            waitTime = l-waitTime;
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            GServiceClient.getInstance().sendMessage("BYE");
+            GnuBackgammon.Instance.twoplayersScreen.showConnecting("Connected!");
+            GServiceClient.getInstance().sendMessage("3 "+waitTime);
+            break;
+          
+          case GSERVICE_HANDSHAKE:
+            long remoteWaitTime = (Long) params;
+            if (waitTime>remoteWaitTime) {
+              //I'M P2P MASTER
+            }
             break;
             
           case GSERVICE_BYE:
+            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             ctx.state(TWO_PLAYERS);
             break;
             

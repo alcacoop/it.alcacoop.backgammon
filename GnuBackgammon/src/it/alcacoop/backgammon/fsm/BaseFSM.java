@@ -67,6 +67,7 @@ public class BaseFSM implements Context {
     GSERVICE_ERROR,
     GSERVICE_CONNECTED,
     GSERVICE_READY,
+    GSERVICE_HANDSHAKE,
     GSERVICE_BYE,
     
     FIBS_ERROR,
