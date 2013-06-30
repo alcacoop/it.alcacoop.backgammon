@@ -50,7 +50,6 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
 import it.alcacoop.backgammon.utils.FibsNetHandler;
-import it.alcacoop.backgammon.utils.GoogleNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
@@ -117,7 +116,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;
-  public GoogleNetHandler google;
   public String FibsUsername;
   public String FibsPassword;
   public String FibsOpponent;
