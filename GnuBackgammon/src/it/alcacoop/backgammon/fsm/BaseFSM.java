@@ -69,6 +69,7 @@ public class BaseFSM implements Context {
     GSERVICE_READY,
     GSERVICE_HANDSHAKE,
     GSERVICE_BYE,
+    GSERVICE_FIRSTROLL,//params={turn, dice0, dice1}
     
     FIBS_ERROR,
     

@@ -63,7 +63,12 @@ public class GServiceClient implements GServiceMessages {
                 break;
               case GSERVICE_HANDSHAKE:
                 String chunks[] = s.split(" ");
-                GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Integer.parseInt(chunks[1]));
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
+                break;
+              case GSERVICE_OPENING_ROLL:
+                chunks = s.split(" ");
+                int p[] = {Integer.parseInt(chunks[1]), Integer.parseInt(chunks[2]), Integer.parseInt(chunks[3])};
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_FIRSTROLL, p);
                 break;
               case GSERVICE_BYE:
                 active = false;

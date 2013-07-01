@@ -37,10 +37,13 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceNetHandler;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
+import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -339,7 +342,12 @@ public class MenuFSM extends BaseFSM implements Context {
           case GSERVICE_HANDSHAKE:
             long remoteWaitTime = (Long) params;
             if (waitTime>remoteWaitTime) {
-              //I'M P2P MASTER
+              int dices[] = {0,0};
+              while (dices[0]==dices[1])
+                GnubgAPI.RollDice(dices);
+              int[] p = {(dices[0]>dices[1]?1:0), dices[0], dices[1]};
+              GServiceClient.getInstance().net.post(Events.GSERVICE_FIRSTROLL, p);
+              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
             }
             break;
             
