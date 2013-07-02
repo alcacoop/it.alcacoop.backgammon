@@ -36,8 +36,6 @@ package it.alcacoop.backgammon.actors;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.FIBSFSM;
-import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.GameFSM.States;
 import it.alcacoop.backgammon.logic.AvailableMoves;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -517,10 +515,7 @@ public class Board extends Group {
     if (playedMoves.size()>0) {
       playedMoves.pop().undo();
       updatePInfo();
-      if (MatchState.matchType<2)
-        ((GameFSM)GnuBackgammon.fsm).hnmove--;
-      else
-        ((FIBSFSM)GnuBackgammon.fsm).hnmove--;
+      GnuBackgammon.fsm.hnmove--;
     }
   }
   

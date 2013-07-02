@@ -60,7 +60,9 @@ interface State {
 public class BaseFSM implements Context {
 
   private int nMoves; 
-
+  public int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
+  public int hnmove = 0;
+  
   public enum Events {
     NOOP,
     
@@ -164,6 +166,8 @@ public class BaseFSM implements Context {
 
 
   public void start() {
+    for (int i=0;i<8;i++) hmoves[i] = -1;
+    hnmove = 0;
   }
 
   public void stop() {

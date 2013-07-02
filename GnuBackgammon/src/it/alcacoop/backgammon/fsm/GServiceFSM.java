@@ -50,8 +50,6 @@ public class GServiceFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
-  private int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
-  public int hnmove = 0;
   private static boolean terminated = false;
   private static int d1, d2;
   private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
@@ -159,10 +157,10 @@ public class GServiceFSM extends BaseFSM implements Context {
             if (dest!=-2) {
               int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
 
-              int idx = ((GServiceFSM)GnuBackgammon.fsm).hnmove;
-              ((GServiceFSM)GnuBackgammon.fsm).hmoves[idx*2] = orig;
-              ((GServiceFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
-              ((GServiceFSM)GnuBackgammon.fsm).hnmove++;
+              int idx = GnuBackgammon.fsm.hnmove;
+              GnuBackgammon.fsm.hmoves[idx*2] = orig;
+              GnuBackgammon.fsm.hmoves[idx*2+1] = dest;
+              GnuBackgammon.fsm.hnmove++;
               
               ctx.board().availableMoves.dropDice(orig-dest);
               ctx.state(HUMAN_CHECKER_MOVING);
@@ -174,10 +172,10 @@ public class GServiceFSM extends BaseFSM implements Context {
               int dest = (Integer)params;
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
 
-              int idx = ((GServiceFSM)GnuBackgammon.fsm).hnmove;
-              ((GServiceFSM)GnuBackgammon.fsm).hmoves[idx*2] = origin;
-              ((GServiceFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
-              ((GServiceFSM)GnuBackgammon.fsm).hnmove++;
+              int idx = GnuBackgammon.fsm.hnmove;
+              GnuBackgammon.fsm.hmoves[idx*2] = origin;
+              GnuBackgammon.fsm.hmoves[idx*2+1] = dest;
+              GnuBackgammon.fsm.hnmove++;
 
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
@@ -198,7 +196,7 @@ public class GServiceFSM extends BaseFSM implements Context {
           ctx.board().dices.clear();
           String m = "6";
           for (int i=0; i<8; i++)
-            m+=" "+((GServiceFSM)GnuBackgammon.fsm).hmoves[i];
+            m+=" "+GnuBackgammon.fsm.hmoves[i];
           
           GServiceClient.getInstance().sendMessage(m);
           ctx.state(SWITCH_TURN);
@@ -234,8 +232,8 @@ public class GServiceFSM extends BaseFSM implements Context {
     SWITCH_TURN {
       public void enterState(Context ctx) {
         for (int i=0;i<8;i++)
-          ((GServiceFSM)GnuBackgammon.fsm).hmoves[i] = -1;
-        ((GServiceFSM)GnuBackgammon.fsm).hnmove = 0;
+          GnuBackgammon.fsm.hmoves[i] = -1;
+        GnuBackgammon.fsm.hnmove = 0;
         
         //SWITCH TURN
         ctx.board().switchTurn();
@@ -260,7 +258,7 @@ public class GServiceFSM extends BaseFSM implements Context {
       public void enterState(Context ctx) {
         ctx.board().rollBtn.remove();
         ctx.board().doubleBtn.remove();
-        ((GServiceFSM)GnuBackgammon.fsm).hnmove = 0;
+        GnuBackgammon.fsm.hnmove = 0;
         MatchState.UpdateMSCubeInfo(1, -1);
         GnuBackgammon.Instance.optionPrefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.optionPrefs.flush();
@@ -425,6 +423,7 @@ public class GServiceFSM extends BaseFSM implements Context {
   }
 
   public void start() {
+    super.start();
     GnuBackgammon.Instance.goToScreen(4);
   }
 

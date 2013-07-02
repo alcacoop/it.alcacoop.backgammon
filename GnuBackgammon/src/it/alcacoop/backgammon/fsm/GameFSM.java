@@ -48,8 +48,6 @@ public class GameFSM extends BaseFSM implements Context {
   private Board board;
   public State currentState;
   private boolean helpShown = false;
-  private int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
-  public int hnmove = 0;
 
   public enum States implements State {
 
@@ -250,10 +248,10 @@ public class GameFSM extends BaseFSM implements Context {
             if (dest!=-2) {
               int m[] = {orig, dest, -1, -1, -1, -1, -1, -1};
               
-              int idx = ((GameFSM)GnuBackgammon.fsm).hnmove;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2] = orig;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
-              ((GameFSM)GnuBackgammon.fsm).hnmove++;
+              int idx = GnuBackgammon.fsm.hnmove;
+              GnuBackgammon.fsm.hmoves[idx*2] = orig;
+              GnuBackgammon.fsm.hmoves[idx*2+1] = dest;
+              GnuBackgammon.fsm.hnmove++;
               
               ctx.board().availableMoves.dropDice(orig-dest);
               ctx.state(HUMAN_CHECKER_MOVING);
@@ -265,10 +263,10 @@ public class GameFSM extends BaseFSM implements Context {
               int dest = (Integer)params;
               int m[] = {origin, dest, -1, -1, -1, -1, -1, -1};
               
-              int idx = ((GameFSM)GnuBackgammon.fsm).hnmove;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2] = origin;
-              ((GameFSM)GnuBackgammon.fsm).hmoves[idx*2+1] = dest;
-              ((GameFSM)GnuBackgammon.fsm).hnmove++;
+              int idx = GnuBackgammon.fsm.hnmove;
+              GnuBackgammon.fsm.hmoves[idx*2] = origin;
+              GnuBackgammon.fsm.hmoves[idx*2+1] = dest;
+              GnuBackgammon.fsm.hnmove++;
               
               ctx.state(HUMAN_CHECKER_MOVING);
               ctx.board().humanMove(m);
@@ -282,7 +280,7 @@ public class GameFSM extends BaseFSM implements Context {
           
         case DICE_CLICKED:
           int[] d = ctx.board().dices.get();
-          GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], ((GameFSM)GnuBackgammon.fsm).hmoves);
+          GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], GnuBackgammon.fsm.hmoves);
           ctx.board().dices.clear();
           ctx.state(CHECK_WIN);
           break;
@@ -314,8 +312,8 @@ public class GameFSM extends BaseFSM implements Context {
     CHECK_WIN {
       public void enterState(Context ctx) {
         for (int i=0;i<8;i++)
-          ((GameFSM)GnuBackgammon.fsm).hmoves[i] = -1;
-        ((GameFSM)GnuBackgammon.fsm).hnmove = 0;
+          GnuBackgammon.fsm.hmoves[i] = -1;
+        GnuBackgammon.fsm.hnmove = 0;
         GnuBackgammon.Instance.rec.updateBoard();
         
         if (ctx.board().gameFinished()) {
@@ -638,6 +636,7 @@ public class GameFSM extends BaseFSM implements Context {
   }
 
   public void start() {
+    super.start();
     GnuBackgammon.Instance.goToScreen(4);
     hnmove = 0;
   }
