@@ -40,6 +40,7 @@ import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
+import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.AppearanceScreen;
 import it.alcacoop.backgammon.layers.BaseScreen;
 import it.alcacoop.backgammon.layers.FibsScreen;
@@ -50,6 +51,7 @@ import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
+import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.utils.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
@@ -290,10 +292,20 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
 
   public void appendChatMessage(String msg, boolean direction) {
-    commandDispatcher.send("tell "+FibsOpponent+" "+msg);
-    appendChatMessage(FibsUsername, msg, direction);
+    if (MatchState.matchType==2)
+      commandDispatcher.send("tell "+FibsOpponent+" "+msg);
+    else
+      GServiceClient.getInstance().sendMessage("90 "+msg);
+    
+    if ((FibsUsername!=null)&&(!FibsUsername.equals("")))
+      appendChatMessage(FibsUsername, msg, direction);
+    else
+      appendChatMessage("You", msg, direction);
   }
   public void appendChatMessage(String username, String msg, boolean direction) {
     gameScreen.chatBox.appendMessage(username, msg, direction);
   }
+
+  
+  
 }

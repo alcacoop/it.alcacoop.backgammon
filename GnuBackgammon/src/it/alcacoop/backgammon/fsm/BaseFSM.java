@@ -66,15 +66,19 @@ public class BaseFSM implements Context {
   public enum Events {
     NOOP,
     
-    GSERVICE_ERROR,
     GSERVICE_CONNECTED,
     GSERVICE_READY,
     GSERVICE_HANDSHAKE,
-    GSERVICE_BYE,
+    
     GSERVICE_FIRSTROLL,//params={turn, dice0, dice1}
     GSERVICE_ROLL, //params={dice0, dice1}
     GSERVICE_MOVES, //params={-1,-1,-1,-1,-1,-1,-1,-1}
     GSERVICE_BOARD,
+    
+    GSERVICE_CHATMSG,
+    GSERVICE_ERROR,
+    GSERVICE_BYE,
+    
     
     FIBS_ERROR,
     

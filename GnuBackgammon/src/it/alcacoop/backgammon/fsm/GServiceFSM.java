@@ -444,6 +444,9 @@ public class GServiceFSM extends BaseFSM implements Context {
       @Override
       public void run() {
         switch (evt) {
+          case GSERVICE_CHATMSG:
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
+            break;
           /*
           
           case FIBS_PLAYER_LOGOUT:
