@@ -71,6 +71,11 @@ public class GServiceClient implements GServiceMessages {
                 queue.post(Events.GSERVICE_FIRSTROLL, p);
                 break;
               case GSERVICE_ROLL:
+                chunks = s.split(" ");
+                int dices[] ={0, 0};
+                for (int i=1;i<3;i++)
+                  dices[i-1] = Integer.parseInt(chunks[i]);
+                queue.post(Events.GSERVICE_ROLL, dices);
                 break;
               case GSERVICE_MOVE:
                 chunks = s.split(" ");

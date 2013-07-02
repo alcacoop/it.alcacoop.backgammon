@@ -42,7 +42,6 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
@@ -120,7 +119,7 @@ public class GServiceFSM extends BaseFSM implements Context {
 
     LOCAL_TURN {
       @Override
-      public boolean processEvent(Context ctx, FIBSFSM.Events evt, Object params) {
+      public boolean processEvent(Context ctx, GServiceFSM.Events evt, Object params) {
         
         switch (evt) {
         case GSERVICE_ROLL:
@@ -242,10 +241,14 @@ public class GServiceFSM extends BaseFSM implements Context {
         ctx.board().switchTurn();
         if (MatchState.fTurn==0) {
           ctx.state(States.LOCAL_TURN);
-          //GServiceClient.getInstance().queue.pull(Events.FIBS_YOU_ROLL);
+          GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
         } else {
           ctx.state(States.REMOTE_TURN);
-          //GServiceClient.getInstance().queue.pull(Events.FIBS_OPPONENT_ROLLS);
+          int dices[] = {0,0};
+          GnubgAPI.RollDice(dices);
+          GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
+          GServiceClient.getInstance().sendMessage("5 "+dices[0]+" "+dices[1]);
+          GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
         }
       }
     },
@@ -350,7 +353,7 @@ public class GServiceFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
         
-        case FIBS_MOVES:
+        case GSERVICE_MOVES:
           GServiceFSM.bufferedMoves = (int[])params;
           GServiceFSM.isBufferedMoves = true;
           break;
@@ -368,7 +371,7 @@ public class GServiceFSM extends BaseFSM implements Context {
             GnuBackgammon.fsm.back();
             if (GServiceFSM.isBufferedMoves) {
               GServiceFSM.isBufferedMoves = false;
-              GnuBackgammon.fsm.processEvent(Events.FIBS_MOVES, GServiceFSM.bufferedMoves);
+              GnuBackgammon.fsm.processEvent(Events.GSERVICE_MOVES, GServiceFSM.bufferedMoves);
             }
           }
           break;
