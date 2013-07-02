@@ -36,6 +36,7 @@ package it.alcacoop.backgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
@@ -93,6 +94,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private SimulationFSM simulationFSM;
   private MenuFSM menuFSM;
   private FIBSFSM fibsFSM;
+  private GServiceFSM gserviceFSM;
   
   public static BitmapFont font;
   public static TextureAtlas atlas;
@@ -201,6 +203,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     simulationFSM = new SimulationFSM(board);
     menuFSM = new MenuFSM(board);
     fibsFSM = new FIBSFSM(board);
+    gserviceFSM = new GServiceFSM(board);
     
     fsm = simulationFSM;
     
@@ -281,6 +284,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       fsm = gameFSM;
     else if (type == "FIBS_FSM")
       fsm = fibsFSM;
+    else if (type == "GSERVICE_FSM")
+      fsm = gserviceFSM;
     fsm.start();
   }
 

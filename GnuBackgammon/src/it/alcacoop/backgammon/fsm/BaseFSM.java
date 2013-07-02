@@ -70,6 +70,7 @@ public class BaseFSM implements Context {
     GSERVICE_HANDSHAKE,
     GSERVICE_BYE,
     GSERVICE_FIRSTROLL,//params={turn, dice0, dice1}
+    GSERVICE_ROLL,
     
     FIBS_ERROR,
     
@@ -174,6 +175,7 @@ public class BaseFSM implements Context {
 
   public void processEvent(final Events evt, final Object params) {
     final BaseFSM ctx = this;
+    //System.out.println("PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {

@@ -15,11 +15,11 @@ public class GServiceClient implements GServiceMessages {
   private boolean active = false;
   public static GServiceClient instance;
 
-  public GServiceNetHandler net;
+  public GServiceNetHandler queue;
   public GServiceCookieMonster coockieMonster;
   
   private GServiceClient() {
-    net = new GServiceNetHandler();
+    queue = new GServiceNetHandler();
     coockieMonster = new GServiceCookieMonster();
   }
 
@@ -50,7 +50,7 @@ public class GServiceClient implements GServiceMessages {
               active=false;
               clientSocket.close();
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
-              net.reset();
+              queue.reset();
             }
             System.out.println("RECEIVED: "+s);
             int coockie = coockieMonster.fIBSCookie(s);
@@ -68,12 +68,12 @@ public class GServiceClient implements GServiceMessages {
               case GSERVICE_OPENING_ROLL:
                 chunks = s.split(" ");
                 int p[] = {Integer.parseInt(chunks[1]), Integer.parseInt(chunks[2]), Integer.parseInt(chunks[3])};
-                GnuBackgammon.fsm.processEvent(Events.GSERVICE_FIRSTROLL, p);
+                queue.post(Events.GSERVICE_FIRSTROLL, p);
                 break;
               case GSERVICE_BYE:
                 active = false;
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
-                net.reset();
+                queue.reset();
                 break;
             }
           } catch (Exception e) {

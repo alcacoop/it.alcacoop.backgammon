@@ -40,6 +40,7 @@ import it.alcacoop.backgammon.actors.ChatBox;
 import it.alcacoop.backgammon.actors.PlayerInfo;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
@@ -199,7 +200,7 @@ public class GameScreen extends BaseScreen {
     else
       initNewMatch();
     
-    if (MatchState.matchType==2) {
+    if (MatchState.matchType>=2) {
       chatBox.reset();
     } else {
       chatBox.setVisible(false);
@@ -301,8 +302,10 @@ public class GameScreen extends BaseScreen {
         public void run() {
           if (MatchState.matchType<2)
             GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
-          else
+          else if (MatchState.matchType==2)
             GnuBackgammon.fsm.state(FIBSFSM.States.OPENING_ROLL);
+          else 
+            GnuBackgammon.fsm.state(GServiceFSM.States.OPENING_ROLL);
         }
       })
     ));

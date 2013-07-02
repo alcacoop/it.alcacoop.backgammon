@@ -37,13 +37,11 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.gservice.GServiceNetHandler;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -279,7 +277,7 @@ public class MenuFSM extends BaseFSM implements Context {
             }
             if (params.toString().equals("PLAY3")) {
               if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
-                MatchState.matchType = 2;
+                MatchState.matchType = 3;
                 ctx.state(States.GSERVICE);
               } else {
                 UIDialog.getFlashDialog(
@@ -346,9 +344,12 @@ public class MenuFSM extends BaseFSM implements Context {
               while (dices[0]==dices[1])
                 GnubgAPI.RollDice(dices);
               int[] p = {(dices[0]>dices[1]?1:0), dices[0], dices[1]};
-              GServiceClient.getInstance().net.post(Events.GSERVICE_FIRSTROLL, p);
+              
+              GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
               GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
             }
+            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
+            GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
             break;
             
           case GSERVICE_BYE:
