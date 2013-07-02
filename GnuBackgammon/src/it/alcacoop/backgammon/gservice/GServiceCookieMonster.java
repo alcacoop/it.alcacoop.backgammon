@@ -63,6 +63,9 @@ public class GServiceCookieMonster implements GServiceMessages {
     addDough(GSERVICE_READY, "^"+GSERVICE_READY);
     addDough(GSERVICE_HANDSHAKE, "^"+GSERVICE_HANDSHAKE);
     addDough(GSERVICE_OPENING_ROLL, "^"+GSERVICE_OPENING_ROLL);
+    addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL);
+    addDough(GSERVICE_MOVE, "^"+GSERVICE_MOVE);
+    addDough(GSERVICE_BOARD, "^"+GSERVICE_BOARD);
     addDough(GSERVICE_BYE, "^"+GSERVICE_BYE);
     this.numericBatch = this.currentBatchBuild;
   }

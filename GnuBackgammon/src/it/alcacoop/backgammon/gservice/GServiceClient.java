@@ -70,6 +70,17 @@ public class GServiceClient implements GServiceMessages {
                 int p[] = {Integer.parseInt(chunks[1]), Integer.parseInt(chunks[2]), Integer.parseInt(chunks[3])};
                 queue.post(Events.GSERVICE_FIRSTROLL, p);
                 break;
+              case GSERVICE_ROLL:
+                break;
+              case GSERVICE_MOVE:
+                chunks = s.split(" ");
+                int moves[] ={-1, -1, -1, -1, -1, -1, -1, -1};
+                for (int i=0;i<8;i++)
+                  moves[i] = Integer.parseInt(chunks[i+1]);
+                queue.post(Events.GSERVICE_MOVES, moves);
+                break;
+              case GSERVICE_BOARD:
+                break;
               case GSERVICE_BYE:
                 active = false;
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);

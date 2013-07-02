@@ -70,7 +70,9 @@ public class BaseFSM implements Context {
     GSERVICE_HANDSHAKE,
     GSERVICE_BYE,
     GSERVICE_FIRSTROLL,//params={turn, dice0, dice1}
-    GSERVICE_ROLL,
+    GSERVICE_ROLL, //params={dice0, dice1}
+    GSERVICE_MOVES, //params={-1,-1,-1,-1,-1,-1,-1,-1}
+    GSERVICE_BOARD,
     
     FIBS_ERROR,
     

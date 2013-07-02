@@ -86,12 +86,12 @@ public class GServiceFSM extends BaseFSM implements Context {
                 ctx.board().getStage());
           } else {
             ctx.board().availableMoves.setMoves(mv);
-            GServiceClient.getInstance().queue.pull(Events.FIBS_MOVES);
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_MOVES);
           }
           break;
 
-        /*
-        case FIBS_MOVES:
+        
+        case GSERVICE_MOVES:
           int moves[] = (int[])params;
           ctx.board().setMoves(moves);
           break;
@@ -108,7 +108,6 @@ public class GServiceFSM extends BaseFSM implements Context {
           else
             ctx.state(States.SWITCH_TURN);
           break;
-        */
           
         default:
           return false;
@@ -198,23 +197,11 @@ public class GServiceFSM extends BaseFSM implements Context {
 
         case DICE_CLICKED:
           ctx.board().dices.clear();
-          String m = "";
-          for (int i=0; i<4; i++) {
-            if (((GServiceFSM)GnuBackgammon.fsm).hmoves[2*i]==-1) break;
-            m+=" ";
-            if (MatchState.FibsDirection==-1) {
-              m+=(((GServiceFSM)GnuBackgammon.fsm).hmoves[2*i]+1)+" ";
-              m+=(((GServiceFSM)GnuBackgammon.fsm).hmoves[2*i+1]+1);
-              m = m.replaceAll(" 25", " bar");
-              m = m.replaceAll(" 0", " off");
-            } else {
-              m+=(24-((GServiceFSM)GnuBackgammon.fsm).hmoves[2*i])+" ";
-              m+=(24-((GServiceFSM)GnuBackgammon.fsm).hmoves[2*i+1]);
-              m = m.replaceAll(" 0", " bar");
-              m = m.replaceAll(" 25", " off");
-            }
-          }
-          GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SEND_MOVE, m);
+          String m = "6";
+          for (int i=0; i<8; i++)
+            m+=" "+((GServiceFSM)GnuBackgammon.fsm).hmoves[i];
+          
+          GServiceClient.getInstance().sendMessage(m);
           ctx.state(SWITCH_TURN);
           break;
 
@@ -255,10 +242,10 @@ public class GServiceFSM extends BaseFSM implements Context {
         ctx.board().switchTurn();
         if (MatchState.fTurn==0) {
           ctx.state(States.LOCAL_TURN);
-          GServiceClient.getInstance().queue.pull(Events.FIBS_YOU_ROLL);
+          //GServiceClient.getInstance().queue.pull(Events.FIBS_YOU_ROLL);
         } else {
           ctx.state(States.REMOTE_TURN);
-          GServiceClient.getInstance().queue.pull(Events.FIBS_OPPONENT_ROLLS);
+          //GServiceClient.getInstance().queue.pull(Events.FIBS_OPPONENT_ROLLS);
         }
       }
     },
