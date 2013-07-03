@@ -37,6 +37,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.logic.AICalls;
@@ -114,6 +115,8 @@ public final class GameMenuPopup extends Table {
             if (resign.isDisabled()) return;
             if (MatchState.matchType==2)
               GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            else if (MatchState.matchType==3)
+              GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
             else
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
             
@@ -136,6 +139,8 @@ public final class GameMenuPopup extends Table {
         if (abandon.isDisabled()) return;
         if (MatchState.matchType==2)
           GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+        else if (MatchState.matchType==3)
+          GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
         else
           GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
         
@@ -177,7 +182,7 @@ public final class GameMenuPopup extends Table {
       undo.setColor(1,1,1,0.4f);
       resign.setColor(1,1,1,0.4f);
       abandon.setColor(1,1,1,0.4f);
-    } else if ((MatchState.matchType==2) && (MatchState.fMove==1)) { //REMOTE TURN 
+    } else if ((MatchState.matchType>=2) && (MatchState.fMove==1)) { //REMOTE TURN 
       undo.setDisabled(true);
       resign.setDisabled(true);
       abandon.setDisabled(false);

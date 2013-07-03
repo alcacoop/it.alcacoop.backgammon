@@ -294,7 +294,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void appendChatMessage(String msg, boolean direction) {
     if (MatchState.matchType==2)
       commandDispatcher.send("tell "+FibsOpponent+" "+msg);
-    else
+    else if (MatchState.matchType==3)
       GServiceClient.getInstance().sendMessage("90 "+msg);
     
     if ((FibsUsername!=null)&&(!FibsUsername.equals("")))

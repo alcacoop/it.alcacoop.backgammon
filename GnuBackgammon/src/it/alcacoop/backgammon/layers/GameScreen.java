@@ -89,10 +89,12 @@ public class GameScreen extends BaseScreen {
             chatBox.hide();
           } else
           if ((MatchState.fMove==0)||(MatchState.matchType>0)) { //HUMAN IS PLAYING OR FIBS OR TWO PLS
-            if (MatchState.matchType!=2)
+            if (MatchState.matchType<2)
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            else
+            else if (MatchState.matchType==2)
               GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            else 
+              GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
             
             if (MatchState.matchType==0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
@@ -179,7 +181,7 @@ public class GameScreen extends BaseScreen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
-    if ((MatchState.matchType==2)&&(chatBox.isScrolling())) Gdx.graphics.requestRendering();
+    if ((MatchState.matchType>=2)&&(chatBox.isScrolling())) Gdx.graphics.requestRendering();
   }
 
   
@@ -284,7 +286,7 @@ public class GameScreen extends BaseScreen {
       MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
       pInfo[1].setName("PL1:");
       MatchState.pl1 = "PL1";
-    } else { //two players or fibs
+    } else { //two players
       pInfo[0].setName("PL1:");
       MatchState.pl0 = "PL1";
       pInfo[1].setName("PL2:");
