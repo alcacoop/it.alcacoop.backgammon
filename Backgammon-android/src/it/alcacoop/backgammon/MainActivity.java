@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -580,16 +581,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       public void run() {
         runOnUiThread(new Runnable() {
           public void run() {
-            System.out.println("======> TIMER LOADED: "+interstitial.isReady());
+            //System.out.println("======> TIMER LOADED: "+interstitial.isReady());
             if (!interstitial.isReady()) {
-              /*
-              request = new AdRequest();
-              InMobiAdapterExtras inMobiExtras = new InMobiAdapterExtras();
-              Map<String, String> map = new HashMap<String, String>();
-              map.put("d-orientation", "1");
-              inMobiExtras.setRequestParams(map);
-              request.setNetworkExtras(inMobiExtras);
-              */
               if (!isProVersion())
                 interstitial.loadAd(new AdRequest());
             }
@@ -606,7 +599,16 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     super.onPause();
     mSensorManager.unregisterListener(this);
     if (t!=null) t.cancel();
+    
+    if ((GnuBackgammon.Instance.currentScreen instanceof FibsScreen)&&(!GnuBackgammon.Instance.interstitialVisible)) {
+      GnuBackgammon.Instance.commandDispatcher.send("BYE");
+      GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
+      GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
+      GnuBackgammon.Instance.setFSM("MENU_FSM");
+    }
   }
+  
+  
 
   @Override
   public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -643,11 +645,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   }
   
   @Override
-  public void onDismissScreen(Ad arg0) {}
+  public void onDismissScreen(Ad arg0) {
+    GnuBackgammon.Instance.interstitialVisible = false;
+  }
 
   @Override
   public void onReceiveAd(Ad ad) {
-    System.out.println("====> RECEIVED: "+ad);
+    //System.out.println("====> RECEIVED: "+ad);
   }
   @Override
   public void onLeaveApplication(Ad arg0) {}
@@ -655,7 +659,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onPresentScreen(Ad arg0) {}
   @Override
   public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {
-    System.out.println("====> NOT RECEIVED: "+arg1);
+    //System.out.println("====> NOT RECEIVED: "+arg1);
   }
 
 
