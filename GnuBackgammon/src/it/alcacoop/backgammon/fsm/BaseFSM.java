@@ -77,6 +77,7 @@ public class BaseFSM implements Context {
     
     GSERVICE_CHATMSG,
     GSERVICE_ERROR,
+    GSERVICE_ABANDON, //params: 0=abandon,1=resign_single,2=resign_gammon,3=resign_bg
     GSERVICE_BYE,
     
     

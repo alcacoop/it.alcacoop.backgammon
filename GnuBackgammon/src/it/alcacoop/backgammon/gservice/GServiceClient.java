@@ -96,6 +96,10 @@ public class GServiceClient implements GServiceMessages {
                 s = s.replace("90 ", "");
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_CHATMSG, s);
                 break;
+              case GSERVICE_ABANDON:
+                chunks = s.split(" ");
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
+                break;
               case GSERVICE_ERROR:
                 onError(clientSocket);
                 break;
@@ -118,7 +122,12 @@ public class GServiceClient implements GServiceMessages {
   }
   
   public void disconnect() {
-    sendMessage("BYE\n");
+    try {
+      sendMessage("BYE\n");
+      active = false;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
   
   public void sendMessage(String msg) {

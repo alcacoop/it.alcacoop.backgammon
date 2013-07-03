@@ -37,6 +37,7 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceMessages;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -46,7 +47,7 @@ import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 
-public class GServiceFSM extends BaseFSM implements Context {
+public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   private Board board;
   public State currentState;
@@ -360,11 +361,11 @@ public class GServiceFSM extends BaseFSM implements Context {
           if ((Boolean)params) { //ABANDON
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
             if (ctx.board().getPIPS(0)>ctx.board().getPIPS(1)) {
-              GnuBackgammon.Instance.commandDispatcher.send("resign b"); //FUCK YOU DROPPER!
+              GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" 3");//FUCK YOU DROPPER!
             } else {
-              GnuBackgammon.Instance.commandDispatcher.send("leave");
-              GnuBackgammon.fsm.processEvent(Events.FIBS_MATCHOVER, null);
+              GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" 0");
             }
+            GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
           } else  { //CANCEL
             GnuBackgammon.fsm.back();
             if (GServiceFSM.isBufferedMoves) {
@@ -449,7 +450,6 @@ public class GServiceFSM extends BaseFSM implements Context {
             break;
             
           case GSERVICE_ERROR:
-            GServiceClient.getInstance().disconnect();
             UIDialog.getFlashDialog(
                 Events.GSERVICE_BYE, 
                 "Network error: opponent disconnected!",
@@ -457,7 +457,32 @@ public class GServiceFSM extends BaseFSM implements Context {
                 GnuBackgammon.Instance.currentScreen.getStage());  
             break;
             
+          case GSERVICE_ABANDON:
+            int status = (Integer)params;
+            String msg = "";
+            switch (status) {
+              case 0:
+                msg = "Opponent abandoned the match";
+                break;
+              case 1:
+                msg = "Opponent resigned the game";
+                break;
+              case 2:
+                msg = "Opponent resigned a gammon game";
+                break;
+              case 3:
+                msg = "Opponent resigned a backgammon game";
+                break;
+            }
+            UIDialog.getFlashDialog(
+                Events.GSERVICE_BYE, 
+                msg,
+                0.82f,
+                GnuBackgammon.Instance.currentScreen.getStage());
+            break;
+          
           case GSERVICE_BYE:
+            GServiceClient.getInstance().disconnect();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
             GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
             break;
