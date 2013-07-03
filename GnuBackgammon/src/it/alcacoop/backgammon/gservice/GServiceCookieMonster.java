@@ -59,16 +59,17 @@ public class GServiceCookieMonster implements GServiceMessages {
 
   private void prepareBatches() {
     currentBatchBuild = new LinkedList<CookieDough>();
-    addDough(GSERVICE_CONNECTED, "^"+GSERVICE_CONNECTED);
-    addDough(GSERVICE_READY, "^"+GSERVICE_READY);
-    addDough(GSERVICE_HANDSHAKE, "^"+GSERVICE_HANDSHAKE);
-    addDough(GSERVICE_OPENING_ROLL, "^"+GSERVICE_OPENING_ROLL);
-    addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL);
-    addDough(GSERVICE_MOVE, "^"+GSERVICE_MOVE);
-    addDough(GSERVICE_BOARD, "^"+GSERVICE_BOARD);
-    addDough(GSERVICE_CHATMSG, "^"+GSERVICE_CHATMSG);
-    addDough(GSERVICE_ERROR, "^"+GSERVICE_ERROR);
-    addDough(GSERVICE_BYE, "^"+GSERVICE_BYE);
+    addDough(GSERVICE_CONNECTED, "^"+GSERVICE_CONNECTED+"$");
+    addDough(GSERVICE_READY, "^"+GSERVICE_READY+"$");
+    addDough(GSERVICE_HANDSHAKE, "^"+GSERVICE_HANDSHAKE+" ");
+    addDough(GSERVICE_OPENING_ROLL, "^"+GSERVICE_OPENING_ROLL+" ");
+    addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL+" ");
+    addDough(GSERVICE_MOVE, "^"+GSERVICE_MOVE+" ");
+    addDough(GSERVICE_BOARD, "^"+GSERVICE_BOARD+" ");
+    addDough(GSERVICE_CHATMSG, "^"+GSERVICE_CHATMSG+" ");
+    addDough(GSERVICE_ABANDON, "^"+GSERVICE_ABANDON+" ");
+    addDough(GSERVICE_ERROR, "^"+GSERVICE_ERROR+"$");
+    addDough(GSERVICE_BYE, "^"+GSERVICE_BYE+"$");
     this.numericBatch = this.currentBatchBuild;
   }
 }
