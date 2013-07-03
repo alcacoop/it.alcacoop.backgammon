@@ -377,6 +377,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           
         case GET_RESIGN_VALUE:
           int ret = (Integer)params;
+          MatchState.resignValue = ret;
           String s = "Really resign the game?";
           if (ret == 2) s = "Really resign a gammon game?";
           if (ret == 3) s = "Really resign a backgammon game?";
@@ -385,11 +386,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           
         case HUMAN_RESIGNED:
           if ((Boolean)params) {
-            String t = "";
-            if (MatchState.resignValue == 1) t="n";
-            else if (MatchState.resignValue == 2) t="g";
-            else t = "b";
-            GnuBackgammon.Instance.commandDispatcher.send("resign "+t);
+            GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" "+MatchState.resignValue);
+            GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
           } else {
             MatchState.resignValue = 0;
             GnuBackgammon.fsm.back();
@@ -486,37 +484,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             GnuBackgammon.Instance.setFSM("MENU_FSM");
             GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
             break;
-          /*
-          
-          case FIBS_PLAYER_LOGOUT:
-            String s = (String)params;
-            if (s.equals(GnuBackgammon.Instance.FibsOpponent)) {
-              state(States.MATCH_OVER);
-              UIDialog.getFlashDialog(
-                Events.STOPPED, 
-                "Your opponent dropped server connection..",
-                0.82f, 
-                fsm.board().getStage());
-            } else {
-              GnuBackgammon.Instance.fibsScreen.playerGone(s);
-            }
-            break;
             
-          case FIBS_ABANDON_GAME:
-            state(States.MATCH_OVER);
-            UIDialog.getFlashDialog(
-              Events.STOPPED, 
-              "Your opponent abandoned the game..",
-              0.82f,
-              fsm.board().getStage());
-            break;
-            
-          case FIBS_RESIGN_REQUEST:
-            MatchState.resignValue = 4;
-            terminated = true;
-            GnuBackgammon.Instance.commandDispatcher.send("accept"); //FIBS WILL SEND MATCHOVER MSG
-            break;
-          */  
           default:
             state().processEvent(fsm, evt, params);
             break;

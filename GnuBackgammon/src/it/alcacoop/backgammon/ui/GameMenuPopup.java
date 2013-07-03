@@ -119,8 +119,8 @@ public final class GameMenuPopup extends Table {
               GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
             else
               GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            
-			if (MatchState.fTurn==0)
+
+            if (MatchState.fTurn==0)
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
             else
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
