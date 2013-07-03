@@ -56,6 +56,7 @@ public class GServiceClient implements GServiceMessages {
             String s = inFromServer.readLine();
             if (s==null) {
               onError(clientSocket);
+              break;
             }
             System.out.println("RECEIVED: "+s);
             int coockie = coockieMonster.fIBSCookie(s);

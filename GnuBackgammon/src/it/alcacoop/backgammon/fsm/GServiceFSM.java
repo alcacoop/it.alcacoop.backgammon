@@ -447,6 +447,20 @@ public class GServiceFSM extends BaseFSM implements Context {
           case GSERVICE_CHATMSG:
             ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
             break;
+            
+          case GSERVICE_ERROR:
+            GServiceClient.getInstance().disconnect();
+            UIDialog.getFlashDialog(
+                Events.GSERVICE_BYE, 
+                "Network error: opponent disconnected!",
+                0.82f,
+                GnuBackgammon.Instance.currentScreen.getStage());  
+            break;
+            
+          case GSERVICE_BYE:
+            GnuBackgammon.Instance.setFSM("MENU_FSM");
+            GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+            break;
           /*
           
           case FIBS_PLAYER_LOGOUT:
