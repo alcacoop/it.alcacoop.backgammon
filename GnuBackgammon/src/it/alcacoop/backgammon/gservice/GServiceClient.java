@@ -28,6 +28,13 @@ public class GServiceClient implements GServiceMessages {
     return instance;
   }
   
+  public void onError(Socket s) throws IOException {
+    active=false;
+    s.close();
+    GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
+    queue.reset();
+  }
+  
   public void connect() {
     try {
       clientSocket = new Socket("dmartella.homelinux.net", 4321);
@@ -38,6 +45,7 @@ public class GServiceClient implements GServiceMessages {
       return;
     }
     
+    
     Runnable r = new Runnable() {
       @Override
       public void run() {
@@ -47,10 +55,7 @@ public class GServiceClient implements GServiceMessages {
           try {
             String s = inFromServer.readLine();
             if (s==null) {
-              active=false;
-              clientSocket.close();
-              GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
-              queue.reset();
+              onError(clientSocket);
             }
             System.out.println("RECEIVED: "+s);
             int coockie = coockieMonster.fIBSCookie(s);
@@ -91,6 +96,7 @@ public class GServiceClient implements GServiceMessages {
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_CHATMSG, s);
                 break;
               case GSERVICE_ERROR:
+                onError(clientSocket);
                 break;
               case GSERVICE_BYE:
                 active = false;
