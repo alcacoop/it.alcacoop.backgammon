@@ -558,7 +558,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (GnuBackgammon.Instance.getScreen() instanceof SplashScreen)
+    if ((GnuBackgammon.Instance==null)||
+        (GnuBackgammon.Instance.currentScreen==null)||
+        (GnuBackgammon.Instance.getScreen()==null)||
+        (GnuBackgammon.Instance.getScreen() instanceof SplashScreen))
       return super.onKeyDown(keyCode, event);
     if ((keyCode == KeyEvent.KEYCODE_BACK)) {
       adjustFocus();
