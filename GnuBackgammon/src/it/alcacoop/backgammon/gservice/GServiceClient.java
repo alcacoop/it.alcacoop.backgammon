@@ -91,6 +91,11 @@ public class GServiceClient implements GServiceMessages {
                 queue.post(Events.GSERVICE_MOVES, moves);
                 break;
               case GSERVICE_BOARD:
+                chunks = s.split(" ");
+                int[][] board = new int[2][25];
+                for (int i=0;i<25;i++) board[0][i] = Integer.parseInt(chunks[i+1]);
+                for (int i=25;i<50;i++) board[1][i-25] = Integer.parseInt(chunks[i+1]);
+                queue.post(Events.GSERVICE_BOARD, board);
                 break;
               case GSERVICE_CHATMSG:
                 s = s.replace("90 ", "");

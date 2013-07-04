@@ -74,6 +74,7 @@ public class BaseFSM implements Context {
     GSERVICE_ROLL, //params={dice0, dice1}
     GSERVICE_MOVES, //params={-1,-1,-1,-1,-1,-1,-1,-1}
     GSERVICE_BOARD,
+    GSERVICE_BOARD_SYNCED,
     
     GSERVICE_CHATMSG,
     GSERVICE_ERROR,

@@ -121,6 +121,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, GServiceFSM.Events evt, Object params) {
         
         switch (evt) {
+        
         case GSERVICE_ROLL:
           GServiceFSM.d1 = 0;
           GServiceFSM.d2 = 0;
@@ -129,14 +130,27 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           GServiceFSM.d2 = Math.min(dices[0], dices[1]);
           GnuBackgammon.Instance.snd.playRoll();
           ctx.board().animateDices(GServiceFSM.d1, GServiceFSM.d2, true);
-          break;
-        
-        case DICES_ROLLED:
           AICalls.GenerateMoves(ctx.board(), GServiceFSM.d1, GServiceFSM.d2);
           break;
+        
           
         case GENERATE_MOVES:
           moves = (int[][])params;
+          if ((moves!=null)&&(moves.length>0)&&(ctx.board().getPIPS(0)!=167)) {
+            GnuBackgammon.fsm.state(BOARD_SYNC);
+          } else  {
+            //NO WAY TO SYNC
+            GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);
+          }
+          break;
+          
+        case GSERVICE_BOARD_SYNCED:
+          GnuBackgammon.Instance.snd.playRoll();
+          ctx.board().animateDices(GServiceFSM.d1, GServiceFSM.d2, true);
+          break;  
+          
+          
+        case DICES_ROLLED:
           if ((moves!=null)&&(moves.length>0)) {
             ctx.board().availableMoves.setMoves(moves);  
           } else  {
@@ -148,7 +162,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           }
           ctx.board().dices.animating = false;
           break;
-        
+          
+          
         case POINT_TOUCHED:
           if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
             int orig = (Integer)params;
@@ -195,7 +210,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
         case DICE_CLICKED:
           ctx.board().dices.clear();
-          String m = "6";
+          String m = ""+GSERVICE_MOVE;
           for (int i=0; i<8; i++)
             m+=" "+GnuBackgammon.fsm.hmoves[i];
           
@@ -227,6 +242,42 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         return true;
       }
     },
+    
+    
+    BOARD_SYNC {
+      @Override
+      public void enterState(Context ctx) {
+        GServiceClient.getInstance().queue.pull(Events.GSERVICE_BOARD);
+      }
+      
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt==Events.GSERVICE_BOARD) {
+          int b[][] = (int[][])params;
+          
+          System.out.println("SYNC ATTEMPT!");
+          
+          //SYNC...
+          boolean differ = false;
+          for (int i=0;i<2;i++)
+            for (int j=0;j<25;j++)
+              if (ctx.board()._board[i][j]!=b[i][j]) {
+                differ = true;
+                break;
+              }
+
+          if (differ) {
+            ctx.board().initBoard(b[0], b[1]);//RESYNC!
+            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+          }
+          
+          GnuBackgammon.fsm.back();
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);
+          return true;
+        }
+        return false;
+      }
+    },
 
     
     
@@ -235,6 +286,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         for (int i=0;i<8;i++)
           GnuBackgammon.fsm.hmoves[i] = -1;
         GnuBackgammon.fsm.hnmove = 0;
+
+        GServiceClient.getInstance().queue.debug();
         
         //SWITCH TURN
         ctx.board().switchTurn();
@@ -245,8 +298,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           ctx.state(States.REMOTE_TURN);
           int dices[] = {0,0};
           GnubgAPI.RollDice(dices);
+          GServiceClient.getInstance().sendMessage(GSERVICE_ROLL+" "+dices[0]+" "+dices[1]);
+          String s = "";
+          for (int i=1;i>=0;i--)
+            for (int j=0;j<25;j++) {
+              s+=" "+ctx.board()._board[i][j];
+            }
+          GServiceClient.getInstance().sendMessage(GSERVICE_BOARD+s);
           GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
-          GServiceClient.getInstance().sendMessage("5 "+dices[0]+" "+dices[1]);
           GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
         }
       }
