@@ -19,3 +19,5 @@ GnuBackgammon/bin/
 Backgammon-android/bin/
 Backgammon-android/gen/
 *.log
+google-play-services_lib/bin
+google-play-services_lib/gen
