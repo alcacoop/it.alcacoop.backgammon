@@ -48,9 +48,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -183,7 +183,6 @@ public class TwoPlayersScreen extends BaseScreen {
         sp.setWidget(text);
         variant = 0;
         GnuBackgammon.Instance.server = "";
-        super.clicked(event, x, y);
       }
     });
     
@@ -198,7 +197,6 @@ public class TwoPlayersScreen extends BaseScreen {
         sp.setWidget(text);
         variant = 1;
         GnuBackgammon.Instance.server = "fibs.com";
-        super.clicked(event, x, y);
       }
     });
     
@@ -213,7 +211,6 @@ public class TwoPlayersScreen extends BaseScreen {
         sp.setWidget(text);
         variant = 2;
         GnuBackgammon.Instance.server = "ti-ga.com";
-        super.clicked(event, x, y);
       }
     });
     
@@ -227,8 +224,8 @@ public class TwoPlayersScreen extends BaseScreen {
         text.add().fill().expand();
         sp.setWidget(text);
         variant = 3;
-        //UIDialog.getFlashDialog(Events.NOOP, "Not yet implemented.. Stay tuned!", 0.82f, getStage());
-        super.clicked(event, x, y);
+        if (!GnuBackgammon.Instance.nativeFunctions.gserviceIsSignedIn())
+          UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f, getStage());
       }
     });
     

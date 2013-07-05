@@ -52,4 +52,7 @@ public interface NativeFunctions {
   
   public boolean isProVersion();
   public void inAppBilling();
+  
+  public void gserviceSignIn();
+  public boolean gserviceIsSignedIn();
 }

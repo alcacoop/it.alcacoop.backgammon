@@ -253,46 +253,51 @@ public class MenuFSM extends BaseFSM implements Context {
       
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-          if (evt==Events.BUTTON_CLICKED) {
-            GnuBackgammon.Instance.snd.playMoveStart();
-            if (params.toString().equals("PLAY0")) {
-              MatchState.matchType = 1;
-              ctx.state(States.MATCH_OPTIONS);
-            }
-            if (params.toString().equals("BACK")) {
-              ctx.state(States.MAIN_MENU);
-            }
-            if ((params.toString().equals("PLAY1"))||(params.toString().equals("PLAY2"))) {
-              if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
-                MatchState.matchType = 2;
-                ctx.state(States.FIBS);
-              } else {
-                UIDialog.getFlashDialog(
-                  Events.NOOP, 
-                  "Network is down - Multiplayer not available",
-                  0.82f,
-                  GnuBackgammon.Instance.currentScreen.getStage()
-                );
-              }
-            }
-            if (params.toString().equals("PLAY3")) {
-              if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
-                MatchState.matchType = 3;
-                ctx.state(States.GSERVICE);
-              } else {
-                UIDialog.getFlashDialog(
-                  Events.NOOP, 
-                  "Network is down - Multiplayer not available",
-                  0.82f,
-                  GnuBackgammon.Instance.currentScreen.getStage()
-                );
-              }
-            }
-            return true;
+        
+        if ((evt==Events.GSERVICE_LOGIN)&&((Boolean)params)) {
+          GnuBackgammon.Instance.nativeFunctions.gserviceSignIn();
+        }
+        
+        if (evt==Events.BUTTON_CLICKED) {
+          GnuBackgammon.Instance.snd.playMoveStart();
+          if (params.toString().equals("PLAY0")) {
+            MatchState.matchType = 1;
+            ctx.state(States.MATCH_OPTIONS);
           }
-          return false;
+          if (params.toString().equals("BACK")) {
+            ctx.state(States.MAIN_MENU);
+          }
+          if ((params.toString().equals("PLAY1"))||(params.toString().equals("PLAY2"))) {
+            if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
+              MatchState.matchType = 2;
+              ctx.state(States.FIBS);
+            } else {
+              UIDialog.getFlashDialog(
+                  Events.NOOP, 
+                  "Network is down - Multiplayer not available",
+                  0.82f,
+                  GnuBackgammon.Instance.currentScreen.getStage()
+                  );
+            }
+          }
+          if (params.toString().equals("PLAY3")) {
+            if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
+              MatchState.matchType = 3;
+              ctx.state(States.GSERVICE);
+            } else {
+              UIDialog.getFlashDialog(
+                  Events.NOOP, 
+                  "Network is down - Multiplayer not available",
+                  0.82f,
+                  GnuBackgammon.Instance.currentScreen.getStage()
+                  );
+            }
+          }
+          return true;
+        }
+        return false;
       }
-      
+
     },
     
     

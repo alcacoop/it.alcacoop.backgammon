@@ -218,4 +218,12 @@ public class Main implements NativeFunctions {
 
   @Override
   public void inAppBilling() {}
+
+  @Override
+  public void gserviceSignIn() {}
+
+  @Override
+  public boolean gserviceIsSignedIn() {
+    return false;
+  }
 }

@@ -66,6 +66,7 @@ public class BaseFSM implements Context {
   public enum Events {
     NOOP,
     
+    GSERVICE_LOGIN,
     GSERVICE_CONNECTED,
     GSERVICE_READY,
     GSERVICE_HANDSHAKE,
@@ -187,7 +188,7 @@ public class BaseFSM implements Context {
 
   public void processEvent(final Events evt, final Object params) {
     final BaseFSM ctx = this;
-    //System.out.println("PROCESS "+evt+" ON "+state());
+    System.out.println("PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {

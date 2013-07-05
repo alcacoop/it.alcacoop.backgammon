@@ -36,6 +36,7 @@ package it.alcacoop.backgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
+import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -100,13 +101,17 @@ import com.google.ads.InterstitialAd;
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener {
+public class MainActivity extends AndroidApplication 
+  implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
+    GServiceGameHelper.GameHelperListener
+{
   private String data_dir;
   protected AdView adView;
   private final int SHOW_ADS = 1;
   private final int HIDE_ADS = 0;
   private View chatBox;
   private View gameView;
+  private GServiceGameHelper gHelper;
   
   protected Handler handler = new Handler()
   {
@@ -143,13 +148,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    PurchaseActivity.createBillingData(this);
-    
-    mInitialized = false;
-    mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-    
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
     
@@ -163,6 +161,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
+    
+    /** SENSOR INITIALIZATION **/
+    mInitialized = false;
+    mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+    /** SENSOR INITIALIZATION **/
+    
     
     /** ADS INITIALIZATION **/
     if (isTablet(this))
@@ -198,7 +204,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     
     setContentView(layout);
     
-    /* CHATBOX DIMS */
+    /** CHATBOX DIMS **/
     Display display = getWindowManager().getDefaultDisplay();
     rotation = display.getRotation();
     Point size = new Point();
@@ -224,7 +230,14 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     s3.setLayoutParams(pars);
     EditText target = (EditText) findViewById(R.id.message);
     target.setOnEditorActionListener(this);
-    /* CHATBOX DIMS */
+    /** CHATBOX DIMS **/
+
+  
+    /** GOOGLE API  INITIALIZATION **/
+    PurchaseActivity.createBillingData(this);
+    gHelper = new GServiceGameHelper(this);
+    gHelper.setup(this);
+    /** GOOGLE API  INITIALIZATION **/
   }
 
   
@@ -696,19 +709,62 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     startActivityForResult(myIntent, PurchaseActivity.RC_REQUEST);
   }
   
+
   
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Gdx.graphics.setContinuousRendering(false);
-    Gdx.graphics.requestRendering();
     if (requestCode == PurchaseActivity.RC_REQUEST) {
       if (isProVersion()) {
         adView.setVisibility(View.GONE);
         if (t!=null) t.cancel();
         GnuBackgammon.Instance.menuScreen.redraw();
       }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+      gHelper.onActivityResult(requestCode, resultCode, data);
     }
+    Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    gHelper.onStart(this);
+  }
+  
+  @Override
+  protected void onStop() {
+    super.onStop();
+    gHelper.onStop();
   }
 
   
+  
+  //GSERVICE STUFF...
+  @Override
+  public void onSignInFailed() {
+  }
+
+  @Override
+  public void onSignInSucceeded() {
+  }
+
+
+  @Override
+  public void gserviceSignIn() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        gHelper.beginUserInitiatedSignIn();
+      }
+    });
+  }
+
+
+  @Override
+  public boolean gserviceIsSignedIn() {
+    return gHelper.isSignedIn();
+  }
+
 }
