@@ -283,7 +283,8 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("PLAY3")) {
             if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
               MatchState.matchType = 3;
-              ctx.state(States.GSERVICE);
+              GnuBackgammon.Instance.nativeFunctions.gsericeStartRoom();
+              //ctx.state(States.GSERVICE);
             } else {
               UIDialog.getFlashDialog(
                   Events.NOOP, 

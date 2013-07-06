@@ -47,7 +47,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -97,13 +99,23 @@ import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.multiplayer.Invitation;
+import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.Room;
+import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
+import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
+import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
 public class MainActivity extends AndroidApplication 
   implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
-    GServiceGameHelper.GameHelperListener
+    GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
+    RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener
 {
   private String data_dir;
   protected AdView adView;
@@ -236,7 +248,7 @@ public class MainActivity extends AndroidApplication
     /** GOOGLE API  INITIALIZATION **/
     PurchaseActivity.createBillingData(this);
     gHelper = new GServiceGameHelper(this);
-    gHelper.setup(this);
+    gHelper.setup(this, GServiceGameHelper.CLIENT_PLUS|GServiceGameHelper.CLIENT_GAMES);
     /** GOOGLE API  INITIALIZATION **/
   }
 
@@ -700,7 +712,6 @@ public class MainActivity extends AndroidApplication
   }
 
 
-  
   @Override
   public void inAppBilling() {
     Gdx.graphics.setContinuousRendering(true);
@@ -709,29 +720,13 @@ public class MainActivity extends AndroidApplication
     startActivityForResult(myIntent, PurchaseActivity.RC_REQUEST);
   }
   
-
   
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == PurchaseActivity.RC_REQUEST) {
-      if (isProVersion()) {
-        adView.setVisibility(View.GONE);
-        if (t!=null) t.cancel();
-        GnuBackgammon.Instance.menuScreen.redraw();
-      }
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
-      gHelper.onActivityResult(requestCode, resultCode, data);
-    }
-    Gdx.graphics.setContinuousRendering(false);
-    Gdx.graphics.requestRendering();
-  }
-
   @Override
   protected void onStart() {
     super.onStart();
     gHelper.onStart(this);
   }
+
   
   @Override
   protected void onStop() {
@@ -741,6 +736,48 @@ public class MainActivity extends AndroidApplication
 
   
   
+  private static int RC_SELECT_PLAYERS = 6000;
+  private static int RC_WAITING_ROOM = 6001;
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == PurchaseActivity.RC_REQUEST) {
+      if (isProVersion()) {
+        adView.setVisibility(View.GONE);
+        if (t!=null) t.cancel();
+        GnuBackgammon.Instance.menuScreen.redraw();
+      }
+    } else if (requestCode==RC_SELECT_PLAYERS) {
+      if (resultCode == RESULT_OK) {
+        Bundle autoMatchCriteria = null;
+        int minAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
+        int maxAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
+        if (minAutoMatchPlayers > 0 || maxAutoMatchPlayers > 0) {
+          autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+        }
+
+        final ArrayList<String> invitees = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
+        // create the room
+        RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
+        rtmConfigBuilder.addPlayersToInvite(invitees);
+        rtmConfigBuilder.setMessageReceivedListener(this);
+        rtmConfigBuilder.setRoomStatusUpdateListener(this);
+        if (autoMatchCriteria != null) {
+          rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
+        }
+        gHelper.getGamesClient().createRoom(rtmConfigBuilder.build());
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+      gHelper.onActivityResult(requestCode, resultCode, data);
+    }
+    Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+  }
+
+  
+  
+  
+  
   //GSERVICE STUFF...
   @Override
   public void onSignInFailed() {
@@ -748,6 +785,7 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void onSignInSucceeded() {
+    gHelper.getGamesClient().registerInvitationListener(this);
   }
 
 
@@ -765,6 +803,126 @@ public class MainActivity extends AndroidApplication
   @Override
   public boolean gserviceIsSignedIn() {
     return gHelper.isSignedIn();
+  }
+
+
+  @Override
+  public void gsericeStartRoom() {
+    Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
+    startActivityForResult(intent, RC_SELECT_PLAYERS);
+  }
+
+
+  @Override
+  public void onInvitationReceived(Invitation arg0) {
+    System.out.println("======> GSERVICE INVITE");
+  }
+
+
+  @Override
+  public void onJoinedRoom(int arg0, Room arg1) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE JOINED ROOM");
+  }
+
+
+  @Override
+  public void onLeftRoom(int arg0, String arg1) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE LEFT ROOM");
+  }
+
+
+  @Override
+  public void onRoomConnected(int arg0, Room arg1) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE CONNECTED ROOM");
+  }
+
+
+  @Override
+  public void onRoomCreated(int arg0, Room room) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE CREATED ROOM");
+    Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
+    startActivityForResult(i, RC_WAITING_ROOM);
+  }
+
+
+  @Override
+  public void onConnectedToRoom(Room arg0) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE CONNECTED TO ROOM");
+  }
+
+
+  @Override
+  public void onDisconnectedFromRoom(Room arg0) {
+    // TODO Auto-generated method stub
+    System.out.println("======> GSERVICE DISCONNECTED FROM ROOM");
+  }
+
+
+  @Override
+  public void onPeerDeclined(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onPeerInvitedToRoom(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onPeerJoined(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onPeerLeft(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onPeersConnected(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onPeersDisconnected(Room arg0, List<String> arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onRoomAutoMatching(Room arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onRoomConnecting(Room arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void onRealTimeMessageReceived(RealTimeMessage arg0) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

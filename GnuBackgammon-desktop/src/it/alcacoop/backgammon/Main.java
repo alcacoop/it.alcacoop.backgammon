@@ -226,4 +226,10 @@ public class Main implements NativeFunctions {
   public boolean gserviceIsSignedIn() {
     return false;
   }
+
+  @Override
+  public void gsericeStartRoom() {
+    // TODO Auto-generated method stub
+    
+  }
 }
