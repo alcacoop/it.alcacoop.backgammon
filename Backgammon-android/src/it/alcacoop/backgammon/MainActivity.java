@@ -84,6 +84,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -99,6 +100,7 @@ import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -786,6 +788,7 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onSignInSucceeded() {
     gHelper.getGamesClient().registerInvitationListener(this);
+    System.out.println("======> GSERVICE INVITE "+gHelper.getInvitationId());
   }
 
 
@@ -814,8 +817,10 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void onInvitationReceived(Invitation arg0) {
-    System.out.println("======> GSERVICE INVITE");
+  public void onInvitationReceived(Invitation invitation) {
+    System.out.println("======> GSERVICE INVITE: "+invitation);
+    gserviceInvitation(GnuBackgammon.Instance.ss==2?invitation.getInviter().getIconImageUri():invitation.getInviter().getHiResImageUri(), 
+        invitation.getInviter().getDisplayName(), invitation.getInvitationId());
   }
 
 
@@ -923,6 +928,51 @@ public class MainActivity extends AndroidApplication
   public void onRealTimeMessageReceived(RealTimeMessage arg0) {
     // TODO Auto-generated method stub
     
+  }
+
+  
+  public void gserviceInvitation(final Uri imagesrc, final String username, final String invitationId) {
+    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    final LayoutInflater inflater = this.getLayoutInflater();
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final View myView = inflater.inflate(R.layout.dialog_invitation, null);
+        alert.setView(myView).
+          setTitle("Invitation received").
+          setCancelable(false).
+          setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              gHelper.getGamesClient().declineRoomInvitation(invitationId);
+            }
+          });
+          alert.setPositiveButton("Accept", null);
+        
+        final AlertDialog d = alert.create();
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+          @Override
+          public void onShow(DialogInterface arg0) {
+            ImageManager im = ImageManager.create(MainActivity.this);
+            im.loadImage(((ImageView)myView.findViewById(R.id.image)), imagesrc);
+            ((TextView)myView.findViewById(R.id.text)).setText(username+" wants to play with you...");
+            Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                RoomConfig.Builder roomConfigBuilder  = RoomConfig.builder(MainActivity.this);
+                roomConfigBuilder.setInvitationIdToAccept(invitationId);
+                roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
+                roomConfigBuilder.setRoomStatusUpdateListener(MainActivity.this);
+                gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
+              }
+            });
+          }
+        });
+        d.show();
+      }
+    });
   }
 
 }
