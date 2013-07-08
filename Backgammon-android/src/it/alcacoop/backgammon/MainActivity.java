@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
+import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -857,6 +858,7 @@ public class MainActivity extends AndroidApplication
     //INIT MATCH??
     System.out.println("======> GSERVICE CONNECTED ROOM");
     hideProgressDialog();
+    MatchState.matchType = 3;
     GnuBackgammon.fsm.state(States.GSERVICE);
   }
 
@@ -914,6 +916,7 @@ public class MainActivity extends AndroidApplication
     byte[] buf = rtm.getMessageData();
 	
 	String s = new String(buf);
+	System.out.println("GSERVICE: ===========> Message recived: "+s);
 	GServiceClient.getInstance().precessReceivedMessage(s);
   }
 
@@ -1005,12 +1008,13 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-	
+	byte[] byteMsg = msg.getBytes();
 	for (Participant p : mParticipants) {
 	  if (p.getParticipantId().equals(mMyId))
 		continue;
 	  if (p.getStatus() != Participant.STATUS_JOINED)
 		continue;
+	  System.out.println("GSERVICE: ===========> Message sent: "+ new String(byteMsg));
       gHelper.getGamesClient().sendReliableRealTimeMessage(null, msg.getBytes(), mRoomId, p.getParticipantId());
 	}
   }

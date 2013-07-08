@@ -332,21 +332,20 @@ public class MenuFSM extends BaseFSM implements Context {
           case GSERVICE_READY:
         	Random gen = new Random();
             waitTime = gen.nextLong();
-            GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage("3 "+waitTime);
-//            GServiceClient.getInstance().sendMessage("3 "+waitTime);
+            GServiceClient.getInstance().sendMessage("3 "+waitTime);
             break;
           
           case GSERVICE_HANDSHAKE:
             long remoteWaitTime = (Long) params;
             if (waitTime>remoteWaitTime) {
+              System.out.println("GSERVICE: ==========> Master");
               int dices[] = {0,0};
               while (dices[0]==dices[1])
                 GnubgAPI.RollDice(dices);
               int[] p = {(dices[0]>dices[1]?1:0), dices[0], dices[1]};
               
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
-              GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
-//              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
+              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
             }
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");

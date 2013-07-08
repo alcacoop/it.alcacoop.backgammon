@@ -62,6 +62,7 @@ public class BaseFSM implements Context {
   private int nMoves; 
   public int[] hmoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   public int hnmove = 0;
+  public boolean helpShown = false;
   
   public enum Events {
     NOOP,

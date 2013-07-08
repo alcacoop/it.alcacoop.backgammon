@@ -47,7 +47,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
-  private boolean helpShown = false;
+  
 
   public enum States implements State {
 
@@ -405,9 +405,9 @@ public class GameFSM extends BaseFSM implements Context {
         
         GnuBackgammon.Instance.rec.addGame();
         
-        if ((!((GameFSM)GnuBackgammon.fsm).helpShown)&&(GnuBackgammon.Instance.optionPrefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
+        if ((!GnuBackgammon.fsm.helpShown)&&(GnuBackgammon.Instance.optionPrefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
           UIDialog.getHelpDialog(0.82f, ctx.board().getStage(), true);
-          ((GameFSM)GnuBackgammon.fsm).helpShown = true;
+          GnuBackgammon.fsm.helpShown = true;
         } else {
           processEvent(ctx, Events.NOOP, null);
         }
@@ -643,7 +643,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   public void stop() {
     state(States.STOPPED);
-    helpShown = false;
+    GnuBackgammon.fsm.helpShown = false;
   }
 
   public Board board() {

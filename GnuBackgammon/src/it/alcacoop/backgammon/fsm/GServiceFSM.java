@@ -322,6 +322,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         MatchState.UpdateMSCubeInfo(1, -1);
         GnuBackgammon.Instance.optionPrefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.optionPrefs.flush();
+        GServiceClient.getInstance().queue.debug();
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_FIRSTROLL); //WAITING FOR BOARD..
         terminated = false;
       }

@@ -196,8 +196,5 @@ public class GServiceClient implements GServiceMessages {
   
   public void sendMessage(String msg) {
 	GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
-//    try {
-//      outToServer.writeBytes(msg+"\n");
-//    } catch (Exception e) {}
   }
 }
