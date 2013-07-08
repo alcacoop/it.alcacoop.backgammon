@@ -19,7 +19,6 @@ package it.alcacoop.backgammon.util;
 import java.util.Vector;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -329,17 +328,6 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
         mActivity = null;
     }
 
-    /** Convenience method to show an alert dialog. */
-    public void showAlert(String title, String message) {
-        (new AlertDialog.Builder(getContext())).setTitle(title).setMessage(message)
-                .setNeutralButton(android.R.string.ok, null).create().show();
-    }
-
-    /** Convenience method to show an alert dialog. */
-    public void showAlert(String message) {
-        (new AlertDialog.Builder(getContext())).setMessage(message)
-                .setNeutralButton(android.R.string.ok, null).create().show();
-    }
 
     /**
      * Returns the invitation ID received through an invitation notification.
@@ -448,7 +436,7 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
             // Nope.
             debugLog("Google Play services not available. Show error dialog.");
             Dialog errorDialog = getErrorDialog(result);
-            errorDialog.show();
+            if (errorDialog!=null) errorDialog.show();
             if (mListener != null)
                 mListener.onSignInFailed();
             return;
@@ -707,7 +695,7 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
         if (mConnectionResult != null) {
             // get error dialog for that specific problem
             errorDialog = getErrorDialog(mConnectionResult.getErrorCode());
-            errorDialog.show();
+            if (errorDialog!=null) errorDialog.show();
             if (mListener != null) {
                 mListener.onSignInFailed();
             }
@@ -735,15 +723,8 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
     /** Returns an error dialog that's appropriate for the given error code. */
     Dialog getErrorDialog(int errorCode) {
         debugLog("Making error dialog for error: " + errorCode);
-        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, mActivity,
-                RC_UNUSED, null);
-
-        if (errorDialog != null)
-            return errorDialog;
-
-        // as a last-resort, make a sad "unknown error" dialog.
-        return (new AlertDialog.Builder(getContext())).setMessage(mUnknownErrorMessage)
-                .setNeutralButton(android.R.string.ok, null).create();
+        Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, mActivity, RC_UNUSED, null);
+        return errorDialog;
     }
 
     void debugLog(String message) {
