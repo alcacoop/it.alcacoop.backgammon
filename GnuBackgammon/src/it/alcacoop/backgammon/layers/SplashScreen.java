@@ -97,7 +97,11 @@ public class SplashScreen implements Screen {
     Action r2 = Actions.run(new Runnable() {
       @Override
       public void run() {
+        if (GnuBackgammon.Instance.invitationId!="") {
+          GnuBackgammon.Instance.setFSM("MENU_FSM");
+        } else {
           GnuBackgammon.Instance.goToScreen(6);
+        }
       }
     });
     

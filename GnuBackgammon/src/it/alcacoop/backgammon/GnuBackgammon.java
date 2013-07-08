@@ -124,6 +124,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public String FibsPassword;
   public String FibsOpponent;
   public Pool<Player> fibsPlayersPool;
+
+  private boolean skipSplashScreen;
+  public String invitationId = "";
   
   public boolean interstitialVisible = false;
   
@@ -145,8 +148,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else ss = 0;
     resolution = resolutions[ss];
     
-    boolean develop_fibs = false;
-    if (!develop_fibs) {
+    
+    System.out.println("=====> GSERVICE START: "+skipSplashScreen);
+    if (!skipSplashScreen) {
       setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
     } else {
       initAssets();

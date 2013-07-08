@@ -249,6 +249,10 @@ public class MenuFSM extends BaseFSM implements Context {
       public void enterState(Context ctx) {
         if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.Instance.twoplayersScreen)
           GnuBackgammon.Instance.goToScreen(9);
+        if (GnuBackgammon.Instance.invitationId!="") {
+          MatchState.matchType = 3;
+          GnuBackgammon.Instance.nativeFunctions.gserviceAcceptInvitation(GnuBackgammon.Instance.invitationId);
+        }
       }
       
       @Override
@@ -284,7 +288,6 @@ public class MenuFSM extends BaseFSM implements Context {
             if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
               MatchState.matchType = 3;
               GnuBackgammon.Instance.nativeFunctions.gsericeStartRoom();
-              //ctx.state(States.GSERVICE);
             } else {
               UIDialog.getFlashDialog(
                   Events.NOOP, 
@@ -435,7 +438,8 @@ public class MenuFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    if (GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen)
+    if ((GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen)||
+        (GnuBackgammon.Instance.invitationId!=""))
       state(States.TWO_PLAYERS);
     else
       state(States.MAIN_MENU);

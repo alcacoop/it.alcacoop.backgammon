@@ -55,6 +55,7 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -756,7 +757,6 @@ public class MainActivity extends AndroidApplication
         if (minAutoMatchPlayers > 0 || maxAutoMatchPlayers > 0) {
           autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers, maxAutoMatchPlayers, 0);
         }
-
         final ArrayList<String> invitees = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
         // create the room
         RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
@@ -767,7 +767,11 @@ public class MainActivity extends AndroidApplication
           rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         }
         gHelper.getGamesClient().createRoom(rtmConfigBuilder.build());
+      } else {
+        hideProgressDialog();
       }
+    } else if (requestCode==RC_WAITING_ROOM) {
+      hideProgressDialog();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
       gHelper.onActivityResult(requestCode, resultCode, data);
@@ -788,7 +792,12 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onSignInSucceeded() {
     gHelper.getGamesClient().registerInvitationListener(this);
-    System.out.println("======> GSERVICE INVITE "+gHelper.getInvitationId());
+    
+    if (gHelper.getInvitationId()!=null) {
+      //acceptInvitation(gHelper.getInvitationId());
+      System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
+      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId(); 
+    }
   }
 
 
@@ -811,6 +820,7 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void gsericeStartRoom() {
+    showProgressDialog();
     Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
     startActivityForResult(intent, RC_SELECT_PLAYERS);
   }
@@ -819,35 +829,33 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onInvitationReceived(Invitation invitation) {
     System.out.println("======> GSERVICE INVITE: "+invitation);
-    gserviceInvitation(GnuBackgammon.Instance.ss==2?invitation.getInviter().getIconImageUri():invitation.getInviter().getHiResImageUri(), 
+    gserviceInvitationRecieved(GnuBackgammon.Instance.ss==2?invitation.getInviter().getIconImageUri():invitation.getInviter().getHiResImageUri(), 
         invitation.getInviter().getDisplayName(), invitation.getInvitationId());
   }
 
 
   @Override
   public void onJoinedRoom(int arg0, Room arg1) {
-    // TODO Auto-generated method stub
     System.out.println("======> GSERVICE JOINED ROOM");
   }
 
 
   @Override
   public void onLeftRoom(int arg0, String arg1) {
-    // TODO Auto-generated method stub
     System.out.println("======> GSERVICE LEFT ROOM");
   }
 
 
   @Override
   public void onRoomConnected(int arg0, Room arg1) {
-    // TODO Auto-generated method stub
+    //INIT MATCH??
     System.out.println("======> GSERVICE CONNECTED ROOM");
+    hideProgressDialog();
   }
 
 
   @Override
   public void onRoomCreated(int arg0, Room room) {
-    // TODO Auto-generated method stub
     System.out.println("======> GSERVICE CREATED ROOM");
     Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
     startActivityForResult(i, RC_WAITING_ROOM);
@@ -856,82 +864,46 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void onConnectedToRoom(Room arg0) {
-    // TODO Auto-generated method stub
     System.out.println("======> GSERVICE CONNECTED TO ROOM");
   }
 
 
   @Override
   public void onDisconnectedFromRoom(Room arg0) {
-    // TODO Auto-generated method stub
     System.out.println("======> GSERVICE DISCONNECTED FROM ROOM");
   }
 
 
   @Override
-  public void onPeerDeclined(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeerDeclined(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onPeerInvitedToRoom(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeerInvitedToRoom(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onPeerJoined(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeerJoined(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onPeerLeft(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeerLeft(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onPeersConnected(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeersConnected(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onPeersDisconnected(Room arg0, List<String> arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onPeersDisconnected(Room arg0, List<String> arg1) {}
 
   @Override
-  public void onRoomAutoMatching(Room arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onRoomAutoMatching(Room arg0) {}
 
   @Override
-  public void onRoomConnecting(Room arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
+  public void onRoomConnecting(Room arg0) {}
 
   @Override
-  public void onRealTimeMessageReceived(RealTimeMessage arg0) {
-    // TODO Auto-generated method stub
-    
-  }
+  public void onRealTimeMessageReceived(RealTimeMessage arg0) {}
 
   
-  public void gserviceInvitation(final Uri imagesrc, final String username, final String invitationId) {
+  
+  public void gserviceInvitationRecieved(final Uri imagesrc, final String username, final String invitationId) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
 
@@ -946,6 +918,7 @@ public class MainActivity extends AndroidApplication
             @Override
             public void onClick(DialogInterface dialog, int which) {
               gHelper.getGamesClient().declineRoomInvitation(invitationId);
+              
             }
           });
           alert.setPositiveButton("Accept", null);
@@ -961,11 +934,8 @@ public class MainActivity extends AndroidApplication
             b.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                RoomConfig.Builder roomConfigBuilder  = RoomConfig.builder(MainActivity.this);
-                roomConfigBuilder.setInvitationIdToAccept(invitationId);
-                roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
-                roomConfigBuilder.setRoomStatusUpdateListener(MainActivity.this);
-                gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
+                gserviceAcceptInvitation(invitationId);
+                d.dismiss();
               }
             });
           }
@@ -975,4 +945,45 @@ public class MainActivity extends AndroidApplication
     });
   }
 
+  
+  @Override
+  public void gserviceAcceptInvitation(String invitationId) {
+    RoomConfig.Builder roomConfigBuilder  = RoomConfig.builder(MainActivity.this);
+    roomConfigBuilder.setInvitationIdToAccept(invitationId);
+    roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
+    roomConfigBuilder.setRoomStatusUpdateListener(MainActivity.this);
+    gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
+    showProgressDialog();
+  }
+  
+  
+  ProgressDialog mProgressDialog = null;
+  void showProgressDialog() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (mProgressDialog == null) {
+          if (MainActivity.this == null)
+            return;
+          mProgressDialog = new ProgressDialog(MainActivity.this);
+        }
+        mProgressDialog.setMessage("Please wait..");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+      }
+    });
+  }
+
+  void hideProgressDialog() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (mProgressDialog!=null) {
+          mProgressDialog.dismiss();
+          mProgressDialog=null;
+        }
+      }
+    });
+  }
 }

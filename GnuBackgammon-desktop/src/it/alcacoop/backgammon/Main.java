@@ -228,8 +228,8 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void gsericeStartRoom() {
-    // TODO Auto-generated method stub
-    
-  }
+  public void gsericeStartRoom() {}
+
+  @Override
+  public void gserviceAcceptInvitation(String invitationId) {}
 }
