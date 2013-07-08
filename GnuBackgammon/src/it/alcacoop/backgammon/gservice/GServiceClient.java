@@ -3,8 +3,12 @@ package it.alcacoop.backgammon.gservice;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
-import java.io.*; 
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
 
 
 public class GServiceClient implements GServiceMessages {
@@ -18,9 +22,26 @@ public class GServiceClient implements GServiceMessages {
   public GServiceNetHandler queue;
   public GServiceCookieMonster coockieMonster;
   
+  public ArrayBlockingQueue<String> sendQueue;
+  
   private GServiceClient() {
     queue = new GServiceNetHandler();
     coockieMonster = new GServiceCookieMonster();
+    sendQueue = new ArrayBlockingQueue<String>(20);
+    
+    Thread t = new Thread(){
+      @Override
+      public void run() {
+        try {
+          String msg = sendQueue.take();
+          GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    };
+    t.start();
   }
 
   public static GServiceClient getInstance() {
@@ -36,6 +57,9 @@ public class GServiceClient implements GServiceMessages {
   }
   
   public void connect() {
+    System.out.println("GSERVICE: CLIENT INITIALIZATION");
+  }
+  public void _connect() {
     try {
       clientSocket = new Socket("dmartella.homelinux.net", 4321);
       outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -194,7 +218,12 @@ public class GServiceClient implements GServiceMessages {
     }
   }
   
-  public void sendMessage(String msg) {
-	GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
+  public synchronized void sendMessage(String msg) {
+    try {
+      sendQueue.put(msg);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }

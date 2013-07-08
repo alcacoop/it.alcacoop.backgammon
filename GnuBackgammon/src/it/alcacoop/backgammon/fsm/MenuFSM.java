@@ -319,7 +319,7 @@ public class MenuFSM extends BaseFSM implements Context {
 //          }
 //        };
 //        timer.schedule(task, 5000);
-//        GServiceClient.getInstance().connect();
+        GServiceClient.getInstance().connect();
     	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
         super.enterState(ctx);
       }

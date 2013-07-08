@@ -111,6 +111,7 @@ import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeReliableMessageSentListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
@@ -122,7 +123,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 public class MainActivity extends AndroidApplication 
   implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
     GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
-    RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener
+    RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener
 {
   private String data_dir;
   protected AdView adView;
@@ -854,7 +855,7 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void onRoomConnected(int arg0, Room arg1) {
+  public void onRoomConnected(int arg0, Room room) {
     //INIT MATCH??
     System.out.println("======> GSERVICE CONNECTED ROOM");
     hideProgressDialog();
@@ -874,7 +875,6 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onConnectedToRoom(Room room) {
     System.out.println("======> GSERVICE CONNECTED TO ROOM");
-    // get room ID, participants and my ID:
     mRoomId = room.getRoomId();
     mParticipants = room.getParticipants();
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
@@ -1008,14 +1008,30 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-	byte[] byteMsg = msg.getBytes();
-	for (Participant p : mParticipants) {
-	  if (p.getParticipantId().equals(mMyId))
-		continue;
-	  if (p.getStatus() != Participant.STATUS_JOINED)
-		continue;
-	  System.out.println("GSERVICE: ===========> Message sent: "+ new String(byteMsg));
-      gHelper.getGamesClient().sendReliableRealTimeMessage(null, msg.getBytes(), mRoomId, p.getParticipantId());
-	}
+    for (Participant p : mParticipants) {
+      if (p.getParticipantId().equals(mMyId))
+        continue;
+      if (p.getStatus() != Participant.STATUS_JOINED)
+        continue;
+      int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+      System.out.println("GSERVICE: token "+token+" SENT MESSAGE: "+msg);
+    }
+  }
+
+
+  @Override
+  public void onRealTimeMessageSent(int arg0, int arg1, String arg2) {
+    Thread t = new Thread(){
+      @Override
+      public void run() {
+        try {
+          String msg = GServiceClient.getInstance().sendQueue.take();
+          GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    };
+    t.start();
   }
 }
