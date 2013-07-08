@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -309,16 +310,17 @@ public class MenuFSM extends BaseFSM implements Context {
     GSERVICE {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.twoplayersScreen.showConnecting("Try to connect to Gserver...");
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-          @Override
-          public void run() {
-            GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
-          }
-        };
-        timer.schedule(task, 5000);
-        GServiceClient.getInstance().connect();
+//        GnuBackgammon.Instance.twoplayersScreen.showConnecting("Try to connect to Gserver...");
+//        timer = new Timer();
+//        TimerTask task = new TimerTask() {
+//          @Override
+//          public void run() {
+//            GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
+//          }
+//        };
+//        timer.schedule(task, 5000);
+//        GServiceClient.getInstance().connect();
+    	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
         super.enterState(ctx);
       }
       
@@ -326,24 +328,12 @@ public class MenuFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           
-          case GSERVICE_CONNECTED:
-            timer.cancel();
-            waitTime = System.currentTimeMillis();
-            GnuBackgammon.Instance.twoplayersScreen.showConnecting("Waiting for opponent...");
-            break;
-          
-          case GSERVICE_ERROR:
-            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
-            ctx.state(States.TWO_PLAYERS);
-            break;
-            
+                     
           case GSERVICE_READY:
-            long l = System.currentTimeMillis();
-            waitTime = l-waitTime;
-            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            GnuBackgammon.Instance.twoplayersScreen.showConnecting("Connected!");
-            GServiceClient.getInstance().sendMessage("3 "+waitTime);
+        	Random gen = new Random();
+            waitTime = gen.nextLong();
+            GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage("3 "+waitTime);
+//            GServiceClient.getInstance().sendMessage("3 "+waitTime);
             break;
           
           case GSERVICE_HANDSHAKE:
@@ -355,7 +345,8 @@ public class MenuFSM extends BaseFSM implements Context {
               int[] p = {(dices[0]>dices[1]?1:0), dices[0], dices[1]};
               
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
-              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
+              GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
+//              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
             }
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");

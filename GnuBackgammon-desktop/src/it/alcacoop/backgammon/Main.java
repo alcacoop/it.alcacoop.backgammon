@@ -232,4 +232,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceAcceptInvitation(String invitationId) {}
+
+  @Override
+  public void gserviceSendReliableRealTimeMessage(String msg) {}
 }

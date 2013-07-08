@@ -34,6 +34,8 @@
 package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.MenuFSM.States;
+import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
@@ -105,6 +107,7 @@ import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
+import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
@@ -154,7 +157,10 @@ public class MainActivity extends AndroidApplication
   
   private Timer t;
   private TimerTask task;
-
+  
+  private String mRoomId = null;
+  private String mMyId = null;
+  ArrayList<Participant> mParticipants = null;
   
 
   @SuppressWarnings("deprecation")
@@ -851,6 +857,7 @@ public class MainActivity extends AndroidApplication
     //INIT MATCH??
     System.out.println("======> GSERVICE CONNECTED ROOM");
     hideProgressDialog();
+    GnuBackgammon.fsm.state(States.GSERVICE);
   }
 
 
@@ -863,8 +870,12 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void onConnectedToRoom(Room arg0) {
+  public void onConnectedToRoom(Room room) {
     System.out.println("======> GSERVICE CONNECTED TO ROOM");
+    // get room ID, participants and my ID:
+    mRoomId = room.getRoomId();
+    mParticipants = room.getParticipants();
+    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
   }
 
 
@@ -899,7 +910,12 @@ public class MainActivity extends AndroidApplication
   public void onRoomConnecting(Room arg0) {}
 
   @Override
-  public void onRealTimeMessageReceived(RealTimeMessage arg0) {}
+  public void onRealTimeMessageReceived(RealTimeMessage rtm) {
+    byte[] buf = rtm.getMessageData();
+	
+	String s = new String(buf);
+	GServiceClient.getInstance().precessReceivedMessage(s);
+  }
 
   
   
@@ -985,5 +1001,17 @@ public class MainActivity extends AndroidApplication
         }
       }
     });
+  }
+
+  @Override
+  public void gserviceSendReliableRealTimeMessage(String msg) {
+	
+	for (Participant p : mParticipants) {
+	  if (p.getParticipantId().equals(mMyId))
+		continue;
+	  if (p.getStatus() != Participant.STATUS_JOINED)
+		continue;
+      gHelper.getGamesClient().sendReliableRealTimeMessage(null, msg.getBytes(), mRoomId, p.getParticipantId());
+	}
   }
 }

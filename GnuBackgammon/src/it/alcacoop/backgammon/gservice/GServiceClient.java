@@ -126,6 +126,65 @@ public class GServiceClient implements GServiceMessages {
     t.start();
   }
   
+  public void precessReceivedMessage(String s) {
+	  System.out.println("RECEIVED: "+s);
+      int coockie = coockieMonster.fIBSCookie(s);
+      switch (coockie) {
+        case GSERVICE_CONNECTED:
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_CONNECTED, null);
+          break;
+        case GSERVICE_READY:
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
+          break;
+        case GSERVICE_HANDSHAKE:
+          String chunks[] = s.split(" ");
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
+          break;
+        case GSERVICE_OPENING_ROLL:
+          chunks = s.split(" ");
+          int p[] = {Integer.parseInt(chunks[1]), Integer.parseInt(chunks[2]), Integer.parseInt(chunks[3])};
+          queue.post(Events.GSERVICE_FIRSTROLL, p);
+          break;
+        case GSERVICE_ROLL:
+          chunks = s.split(" ");
+          int dices[] ={0, 0};
+          for (int i=1;i<3;i++)
+            dices[i-1] = Integer.parseInt(chunks[i]);
+          queue.post(Events.GSERVICE_ROLL, dices);
+          break;
+        case GSERVICE_MOVE:
+          chunks = s.split(" ");
+          int moves[] ={-1, -1, -1, -1, -1, -1, -1, -1};
+          for (int i=0;i<8;i++)
+            moves[i] = Integer.parseInt(chunks[i+1]);
+          queue.post(Events.GSERVICE_MOVES, moves);
+          break;
+        case GSERVICE_BOARD:
+          chunks = s.split(" ");
+          int[][] board = new int[2][25];
+          for (int i=0;i<25;i++) board[0][i] = Integer.parseInt(chunks[i+1]);
+          for (int i=25;i<50;i++) board[1][i-25] = Integer.parseInt(chunks[i+1]);
+          queue.post(Events.GSERVICE_BOARD, board);
+          break;
+        case GSERVICE_CHATMSG:
+          s = s.replace("90 ", "");
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_CHATMSG, s);
+          break;
+        case GSERVICE_ABANDON:
+          chunks = s.split(" ");
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
+          break;
+        case GSERVICE_ERROR:
+//          onError(clientSocket);
+          break;
+        case GSERVICE_BYE:
+          active = false;
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+          queue.reset();
+          break;
+      }
+  }
+  
   public void disconnect() {
     try {
       sendMessage("BYE\n");
@@ -136,8 +195,9 @@ public class GServiceClient implements GServiceMessages {
   }
   
   public void sendMessage(String msg) {
-    try {
-      outToServer.writeBytes(msg+"\n");
-    } catch (Exception e) {}
+	GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
+//    try {
+//      outToServer.writeBytes(msg+"\n");
+//    } catch (Exception e) {}
   }
 }

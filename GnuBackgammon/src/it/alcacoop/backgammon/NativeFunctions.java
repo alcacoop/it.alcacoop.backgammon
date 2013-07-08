@@ -57,4 +57,5 @@ public interface NativeFunctions {
   public boolean gserviceIsSignedIn();
   public void gsericeStartRoom();
   public void gserviceAcceptInvitation(String invitationId);
+  public void gserviceSendReliableRealTimeMessage(String msg);
 }
