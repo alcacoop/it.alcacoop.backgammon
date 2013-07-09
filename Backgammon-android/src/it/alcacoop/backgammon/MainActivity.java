@@ -1024,4 +1024,10 @@ public class MainActivity extends AndroidApplication
     System.out.println("GSERVICE: RECEIVED MESSAGE WITH TOKEN: "+token);
     GServiceClient.getInstance().notifyDispatched();
   }
+
+
+  @Override
+  public void gserviceLeaveRoom() {
+    gHelper.getGamesClient().leaveRoom(this, mRoomId);
+  }
 }
