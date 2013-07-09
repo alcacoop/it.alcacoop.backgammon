@@ -530,6 +530,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 msg = "Opponent resigned a backgammon game";
                 break;
             }
+            GnuBackgammon.Instance.gameScreen.chatBox.hide();
             UIDialog.getFlashDialog(
                 Events.GSERVICE_BYE, 
                 msg,
