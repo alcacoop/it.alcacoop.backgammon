@@ -105,7 +105,6 @@ public class GServiceClient implements GServiceMessages {
           break;
         case GSERVICE_BYE:
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
-          queue.reset();
           break;
       }
   }
