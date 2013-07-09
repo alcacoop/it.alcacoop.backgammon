@@ -188,8 +188,7 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void fibsRegistration() {
-  }
+  public void fibsRegistration() {}
 
   @Override
   public boolean isNetworkUp() {
@@ -197,19 +196,16 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void hideChatBox() {
-  }
+  public void hideChatBox() {}
 
   @Override
   public void showInterstitial() {}
 
   @Override
-  public void initEngine() {
-  }
+  public void initEngine() {}
 
   @Override
-  public void showChatBox() {
-  }
+  public void showChatBox() {}
 
   @Override
   public boolean isProVersion() {
@@ -235,4 +231,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {}
+
+  @Override
+  public void gserviceLeaveRoom() {}
 }
