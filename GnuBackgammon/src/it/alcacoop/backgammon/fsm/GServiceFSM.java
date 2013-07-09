@@ -542,8 +542,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_BYE:
             GnuBackgammon.Instance.setFSM("MENU_FSM");
             GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
-            GServiceClient.getInstance().queue.reset();
-            GnuBackgammon.Instance.nativeFunctions.gserviceLeaveRoom();
             break;
             
           default:

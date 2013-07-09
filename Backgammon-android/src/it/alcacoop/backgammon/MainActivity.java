@@ -843,6 +843,7 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onLeftRoom(int arg0, String arg1) {
     System.out.println("======> GSERVICE LEFT ROOM");
+    GServiceClient.getInstance().notifyDispatched();
     mParticipants.clear();
     mParticipants = null;
     mRoomId = "";
@@ -1030,8 +1031,4 @@ public class MainActivity extends AndroidApplication
     startActivityForResult(intent, RC_SELECT_PLAYERS);
   }
 
-  @Override
-  public void gserviceLeaveRoom() {
-    gHelper.getGamesClient().leaveRoom(this, mRoomId);
-  }
 }
