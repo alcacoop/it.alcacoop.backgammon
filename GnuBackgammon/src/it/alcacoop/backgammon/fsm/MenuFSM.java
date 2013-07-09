@@ -253,6 +253,7 @@ public class MenuFSM extends BaseFSM implements Context {
         if (GnuBackgammon.Instance.invitationId!="") {
           MatchState.matchType = 3;
           GnuBackgammon.Instance.nativeFunctions.gserviceAcceptInvitation(GnuBackgammon.Instance.invitationId);
+          GnuBackgammon.Instance.invitationId="";
         }
       }
       

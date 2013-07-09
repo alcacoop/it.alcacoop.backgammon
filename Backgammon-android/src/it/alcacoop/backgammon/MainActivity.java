@@ -827,14 +827,6 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void gsericeStartRoom() {
-    showProgressDialog();
-    Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
-    startActivityForResult(intent, RC_SELECT_PLAYERS);
-  }
-
-
-  @Override
   public void onInvitationReceived(Invitation invitation) {
     System.out.println("======> GSERVICE INVITE: "+invitation);
     gserviceInvitationRecieved(GnuBackgammon.Instance.ss==2?invitation.getInviter().getIconImageUri():invitation.getInviter().getHiResImageUri(), 
@@ -847,19 +839,25 @@ public class MainActivity extends AndroidApplication
     System.out.println("======> GSERVICE JOINED ROOM");
   }
 
-
+  
   @Override
   public void onLeftRoom(int arg0, String arg1) {
     System.out.println("======> GSERVICE LEFT ROOM");
+    mParticipants.clear();
+    mParticipants = null;
+    mRoomId = "";
+    mMyId = "";
   }
 
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
-    //INIT MATCH??
     System.out.println("======> GSERVICE CONNECTED ROOM");
     hideProgressDialog();
     MatchState.matchType = 3;
+    mRoomId = room.getRoomId();
+    mParticipants = room.getParticipants();
+    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     GnuBackgammon.fsm.state(States.GSERVICE);
   }
 
@@ -873,12 +871,7 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void onConnectedToRoom(Room room) {
-    System.out.println("======> GSERVICE CONNECTED TO ROOM");
-    mRoomId = room.getRoomId();
-    mParticipants = room.getParticipants();
-    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
-  }
+  public void onConnectedToRoom(Room room) {}
 
 
   @Override
@@ -911,14 +904,6 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onRoomConnecting(Room arg0) {}
 
-  @Override
-  public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    byte[] buf = rtm.getMessageData();
-	
-	String s = new String(buf);
-	System.out.println("GSERVICE: ===========> Message recived: "+s);
-	GServiceClient.getInstance().precessReceivedMessage(s);
-  }
 
   
   
@@ -967,6 +952,7 @@ public class MainActivity extends AndroidApplication
   
   @Override
   public void gserviceAcceptInvitation(String invitationId) {
+    System.out.println("GSERVICE: ACCEPT INVITATION");
     RoomConfig.Builder roomConfigBuilder  = RoomConfig.builder(MainActivity.this);
     roomConfigBuilder.setInvitationIdToAccept(invitationId);
     roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
@@ -1006,6 +992,16 @@ public class MainActivity extends AndroidApplication
     });
   }
 
+  
+  @Override
+  public void onRealTimeMessageReceived(RealTimeMessage rtm) {
+    byte[] buf = rtm.getMessageData();
+    String s = new String(buf);
+    System.out.println("GSERVICE: ===========> Message recived: "+s);
+    GServiceClient.getInstance().precessReceivedMessage(s);
+  }
+  
+  
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
     for (Participant p : mParticipants) {
@@ -1025,6 +1021,14 @@ public class MainActivity extends AndroidApplication
     GServiceClient.getInstance().notifyDispatched();
   }
 
+
+  
+  @Override
+  public void gsericeStartRoom() {
+    showProgressDialog();
+    Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
+    startActivityForResult(intent, RC_SELECT_PLAYERS);
+  }
 
   @Override
   public void gserviceLeaveRoom() {
