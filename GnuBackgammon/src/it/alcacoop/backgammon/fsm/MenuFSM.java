@@ -310,15 +310,6 @@ public class MenuFSM extends BaseFSM implements Context {
     GSERVICE {
       @Override
       public void enterState(Context ctx) {
-//        GnuBackgammon.Instance.twoplayersScreen.showConnecting("Try to connect to Gserver...");
-//        timer = new Timer();
-//        TimerTask task = new TimerTask() {
-//          @Override
-//          public void run() {
-//            GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, null);
-//          }
-//        };
-//        timer.schedule(task, 5000);
         GServiceClient.getInstance().connect();
     	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
         super.enterState(ctx);
@@ -338,7 +329,7 @@ public class MenuFSM extends BaseFSM implements Context {
           case GSERVICE_HANDSHAKE:
             long remoteWaitTime = (Long) params;
             if (waitTime>remoteWaitTime) {
-              System.out.println("GSERVICE: ==========> Master");
+              System.out.println("GSERVICE: MASTER");
               int dices[] = {0,0};
               while (dices[0]==dices[1])
                 GnubgAPI.RollDice(dices);
@@ -347,12 +338,10 @@ public class MenuFSM extends BaseFSM implements Context {
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
               GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
             }
-            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
             break;
             
           case GSERVICE_BYE:
-            GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             ctx.state(TWO_PLAYERS);
             break;
             

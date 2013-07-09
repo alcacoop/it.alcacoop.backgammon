@@ -1014,24 +1014,14 @@ public class MainActivity extends AndroidApplication
       if (p.getStatus() != Participant.STATUS_JOINED)
         continue;
       int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
-      System.out.println("GSERVICE: token "+token+" SENT MESSAGE: "+msg);
+      System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
     }
   }
 
 
   @Override
-  public void onRealTimeMessageSent(int arg0, int arg1, String arg2) {
-    Thread t = new Thread(){
-      @Override
-      public void run() {
-        try {
-          String msg = GServiceClient.getInstance().sendQueue.take();
-          GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    };
-    t.start();
+  public void onRealTimeMessageSent(int arg0, int token, String arg2) {
+    System.out.println("GSERVICE: RECEIVED MESSAGE WITH TOKEN: "+token);
+    GServiceClient.getInstance().notifyDispatched();
   }
 }
