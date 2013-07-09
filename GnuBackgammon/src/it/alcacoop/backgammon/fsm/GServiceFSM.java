@@ -128,8 +128,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           int[] dices = (int[])params;
           GServiceFSM.d1 = Math.max(dices[0], dices[1]);
           GServiceFSM.d2 = Math.min(dices[0], dices[1]);
-          GnuBackgammon.Instance.snd.playRoll();
-          ctx.board().animateDices(GServiceFSM.d1, GServiceFSM.d2, true);
           AICalls.GenerateMoves(ctx.board(), GServiceFSM.d1, GServiceFSM.d2);
           break;
         
