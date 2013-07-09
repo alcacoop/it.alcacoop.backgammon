@@ -502,6 +502,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public void run() {
         switch (evt) {
           case GSERVICE_CHATMSG:
+            GnuBackgammon.Instance.snd.playMessage();
             ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
             break;
             
