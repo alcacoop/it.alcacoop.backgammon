@@ -992,7 +992,11 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
           public void onShow(DialogInterface arg0) {
             ImageManager im = ImageManager.create(MainActivity.this);
             im.loadImage(((ImageView)myView.findViewById(R.id.image)), imagesrc);
-            ((TextView)myView.findViewById(R.id.text)).setText(username+" wants to play with you...");
+            TextView tv = (TextView)myView.findViewById(R.id.text);
+            tv.setText(username+" wants to play with you...");
+            tv.setFocusable(true);
+            tv.setFocusableInTouchMode(true);
+            tv.requestFocus();
             Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
             b.setOnClickListener(new View.OnClickListener() {
               @Override
