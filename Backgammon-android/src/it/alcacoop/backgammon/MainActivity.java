@@ -742,7 +742,10 @@ public class MainActivity extends AndroidApplication
   @Override
   protected void onStop() {
     super.onStop();
-    gHelper.onStop();
+    if (mRoomId != null) {
+      leaveRoom(10000);
+      gHelper.onStop();
+    }
   }
 
   
@@ -841,69 +844,125 @@ public class MainActivity extends AndroidApplication
 
   
   @Override
-  public void onLeftRoom(int arg0, String arg1) {
-    System.out.println("======> GSERVICE LEFT ROOM");
-    GServiceClient.getInstance().notifyDispatched();
-    mParticipants.clear();
-    mParticipants = null;
-    mRoomId = "";
-    mMyId = "";
+  public void onLeftRoom(int statusCode, String roomId) {
+	System.out.println("      GSERVICE: onLeftRoom: ROOMID: " + roomId + " statusCode:" + statusCode);
   }
 
+
+  private void switchToMenuScreen(int cause) {
+	switch (cause) {
+	case GamesClient.STATUS_OK:
+	  // opponent disconnected
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 0);
+	  break;
+	case GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED:
+	  // you disconnected
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 1);
+	  break;
+	case 10000:
+	  // activity stopped
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
+	  break;
+	default:
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+	  break;
+	}
+  }
+
+  private Timer tping;
+  private TimerTask pingtask;
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
-    System.out.println("======> GSERVICE CONNECTED ROOM");
+    System.out.println("======> GSERVICE CONNECTED ROOM: " + room.getRoomId());
+    updateRoom(room);
     hideProgressDialog();
     MatchState.matchType = 3;
-    mRoomId = room.getRoomId();
-    mParticipants = room.getParticipants();
-    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     GnuBackgammon.fsm.state(States.GSERVICE);
+    pingtask = new TimerTask() {
+	  @Override
+	  public void run() {
+	    gserviceSendReliableRealTimeMessage("70 PING");
+	  }
+	};
+	tping = new Timer();
+	tping.schedule(pingtask, 0, 5000);
   }
 
 
-  @Override
-  public void onRoomCreated(int arg0, Room room) {
-    System.out.println("======> GSERVICE CREATED ROOM");
+  private void updateRoom(Room room) {
+	mParticipants = room.getParticipants();
+  }
+
+
+@Override
+  public void onRoomCreated(int statusCode, Room room) {
+    if (statusCode != GamesClient.STATUS_OK) {
+    	System.out.println("      GSERVICE: onRoomCreated: Error with statusCode:"  + statusCode);
+        return;
+    }
+    System.out.println("======> GSERVICE CREATED ROOM: " + room.getRoomId());
     Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
     startActivityForResult(i, RC_WAITING_ROOM);
   }
 
 
   @Override
-  public void onConnectedToRoom(Room room) {}
-
-
-  @Override
-  public void onDisconnectedFromRoom(Room arg0) {
-    System.out.println("======> GSERVICE DISCONNECTED FROM ROOM");
+  public void onConnectedToRoom(Room room) {
+    mRoomId = room.getRoomId();
+    mParticipants = room.getParticipants();
+	mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
+	System.out.println("      GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
   }
 
 
   @Override
-  public void onPeerDeclined(Room arg0, List<String> arg1) {}
+  public void onDisconnectedFromRoom(Room room) {
+    System.out.println("      GSERVICE: onDisconnectedFromRoom");
+    mRoomId = null;
+    lastReceptionTime = 0;
+  }
+
 
   @Override
-  public void onPeerInvitedToRoom(Room arg0, List<String> arg1) {}
+  public void onPeerDeclined(Room room, List<String> arg1) {
+	updateRoom(room);
+  }
 
   @Override
-  public void onPeerJoined(Room arg0, List<String> arg1) {}
+  public void onPeerInvitedToRoom(Room room, List<String> arg1) {
+	updateRoom(room);
+  }
 
   @Override
-  public void onPeerLeft(Room arg0, List<String> arg1) {}
+  public void onPeerJoined(Room room, List<String> arg1) {
+	updateRoom(room);
+  }
 
   @Override
-  public void onPeersConnected(Room arg0, List<String> arg1) {}
+  public void onPeerLeft(Room room, List<String> arg1) {
+	updateRoom(room);
+  }
 
   @Override
-  public void onPeersDisconnected(Room arg0, List<String> arg1) {}
+  public void onPeersConnected(Room room, List<String> arg1) {
+	updateRoom(room);
+  }
 
   @Override
-  public void onRoomAutoMatching(Room arg0) {}
+  public void onPeersDisconnected(Room room, List<String> arg1) {
+	  updateRoom(room);
+  }
 
   @Override
-  public void onRoomConnecting(Room arg0) {}
+  public void onRoomAutoMatching(Room room) {
+	updateRoom(room);
+  }
+
+  @Override
+  public void onRoomConnecting(Room room) {
+	updateRoom(room);
+  }
 
 
   
@@ -993,10 +1052,11 @@ public class MainActivity extends AndroidApplication
     });
   }
 
-  
+  long lastReceptionTime = 0;
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    byte[] buf = rtm.getMessageData();
+	lastReceptionTime = System.currentTimeMillis();
+	byte[] buf = rtm.getMessageData();
     String s = new String(buf);
     System.out.println("GSERVICE: ===========> Message recived: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
@@ -1005,30 +1065,64 @@ public class MainActivity extends AndroidApplication
   
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    for (Participant p : mParticipants) {
-      if (p.getParticipantId().equals(mMyId))
-        continue;
-      if (p.getStatus() != Participant.STATUS_JOINED)
-        continue;
-      int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
-      System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
-    }
+	if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
+	  System.out.println("GSERVICE: We are not getting pong!");
+	  leaveRoom(0);
+	} else {
+	  System.out.println("GSERVICE: Sending message... Participants:"+mParticipants.size());
+      for (Participant p : mParticipants) {
+        if (p.getParticipantId().equals(mMyId))
+          continue;
+        if (p.getStatus() != Participant.STATUS_JOINED) {
+          continue;
+        }
+        int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+        System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
+      }
+	}
   }
 
 
   @Override
-  public void onRealTimeMessageSent(int arg0, int token, String arg2) {
-    System.out.println("GSERVICE: RECEIVED MESSAGE WITH TOKEN: "+token);
+  public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
+    System.out.println("GSERVICE: onRealTimeMessageSent: "+statusCode);
     GServiceClient.getInstance().notifyDispatched();
+    if (statusCode != GamesClient.STATUS_OK) {
+      System.out.println("GSERVICE: onRealTimeMessageSent: Message not sent! "+statusCode+ " mRoomId: "+mRoomId);
+      leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+    }
   }
 
-
+  void leaveRoom(int code) {
+    System.out.println("GSERVICE: Leaving room...");
+    GServiceClient.getInstance().notifyDispatched();
+    GnuBackgammon.Instance.gameScreen.chatBox.hide();
+    if (mRoomId != null) {
+      gHelper.getGamesClient().leaveRoom(this, mRoomId);
+      mRoomId = null;
+      lastReceptionTime = 0;
+      tping.cancel();
+    }
+    switchToMenuScreen(code);
+  }
   
   @Override
   public void gsericeStartRoom() {
     showProgressDialog();
     Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
     startActivityForResult(intent, RC_SELECT_PLAYERS);
+  }
+
+  @Override
+  public void gserviceResetRoom() {
+	GServiceClient.getInstance().notifyDispatched();
+    GnuBackgammon.Instance.gameScreen.chatBox.hide();
+    if (mRoomId != null) {
+      gHelper.getGamesClient().leaveRoom(this, mRoomId);
+      mRoomId = null;
+      lastReceptionTime = 0;
+      tping.cancel();
+    }
   }
 
 }

@@ -507,9 +507,22 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             break;
             
           case GSERVICE_ERROR:
+        	int errorCode = (Integer)params;
+        	String message = "";
+        	switch (errorCode) {
+        	  case 0:
+        	    message = "Network error: opponent disconnected!";
+                break;
+              case 1:
+            	message = "Network Error: you disconnected!";
+                break;
+              case 2:
+            	message = "Match stopped. You have to reinvite!";
+                break;
+            }
             UIDialog.getFlashDialog(
                 Events.GSERVICE_BYE, 
-                "Network error: opponent disconnected!",
+                message,
                 0.82f,
                 GnuBackgammon.Instance.currentScreen.getStage());  
             break;
@@ -542,6 +555,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_BYE:
             GnuBackgammon.Instance.setFSM("MENU_FSM");
             GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+            GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
             break;
             
           default:

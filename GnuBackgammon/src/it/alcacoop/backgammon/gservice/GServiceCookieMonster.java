@@ -66,6 +66,7 @@ public class GServiceCookieMonster implements GServiceMessages {
     addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL+" ");
     addDough(GSERVICE_MOVE, "^"+GSERVICE_MOVE+" ");
     addDough(GSERVICE_BOARD, "^"+GSERVICE_BOARD+" ");
+    addDough(GSERVICE_PING, "^"+GSERVICE_PING+" ");
     addDough(GSERVICE_CHATMSG, "^"+GSERVICE_CHATMSG+" ");
     addDough(GSERVICE_ABANDON, "^"+GSERVICE_ABANDON+" ");
     addDough(GSERVICE_ERROR, "^"+GSERVICE_ERROR+"$");

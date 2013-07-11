@@ -2,6 +2,9 @@ package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -30,7 +33,7 @@ public class GServiceClient implements GServiceMessages {
             
             System.out.println("GSERVICE: WAITING....");
             synchronized (sendThread) {
-              wait();  
+              wait();
             }
             
           } catch (InterruptedException e) {
@@ -101,6 +104,7 @@ public class GServiceClient implements GServiceMessages {
           chunks = s.split(" ");
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
           break;
+        case GSERVICE_PING:
         case GSERVICE_ERROR:
           break;
         case GSERVICE_BYE:
