@@ -3,8 +3,6 @@ package it.alcacoop.backgammon.gservice;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -126,5 +124,29 @@ public class GServiceClient implements GServiceMessages {
     synchronized (sendThread) {
      sendThread.notify(); 
     }
+  }
+  
+  private final static int STATUS_OK = 0;
+  private final static int STATUS_NETWORK_ERROR_OPERATION_FAILED = 6;
+  
+  public void leaveRoom(int code) {
+    GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+    switch (code) {
+	case STATUS_OK:
+	  // opponent disconnected
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 0);
+	  break;
+	case STATUS_NETWORK_ERROR_OPERATION_FAILED:
+	  // you disconnected
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 1);
+	  break;
+	case 10000:
+	  // activity stopped
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
+	  break;
+	default:
+	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+	  break;
+	}
   }
 }

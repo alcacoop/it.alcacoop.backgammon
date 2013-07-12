@@ -37,6 +37,7 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.FibsScreen;
+import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
@@ -743,9 +744,9 @@ public class MainActivity extends AndroidApplication
   protected void onStop() {
     super.onStop();
     if (mRoomId != null) {
-      leaveRoom(10000);
-      gHelper.onStop();
+      GServiceClient.getInstance().leaveRoom(10000);
     }
+    gHelper.onStop();
   }
 
   
@@ -782,7 +783,9 @@ public class MainActivity extends AndroidApplication
         hideProgressDialog();
       }
     } else if (requestCode==RC_WAITING_ROOM) {
+      System.out.println("GSERVICE resultcode: "+ resultCode);
       hideProgressDialog();
+//      gserviceResetRoom();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
       gHelper.onActivityResult(requestCode, resultCode, data);
@@ -848,26 +851,6 @@ public class MainActivity extends AndroidApplication
 	System.out.println("      GSERVICE: onLeftRoom: ROOMID: " + roomId + " statusCode:" + statusCode);
   }
 
-
-  private void switchToMenuScreen(int cause) {
-	switch (cause) {
-	case GamesClient.STATUS_OK:
-	  // opponent disconnected
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 0);
-	  break;
-	case GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED:
-	  // you disconnected
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 1);
-	  break;
-	case 10000:
-	  // activity stopped
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
-	  break;
-	default:
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
-	  break;
-	}
-  }
 
   private Timer tping;
   private TimerTask pingtask;
@@ -1067,7 +1050,7 @@ public class MainActivity extends AndroidApplication
   public void gserviceSendReliableRealTimeMessage(String msg) {
 	if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
 	  System.out.println("GSERVICE: We are not getting pong!");
-	  leaveRoom(0);
+	  GServiceClient.getInstance().leaveRoom(0);
 	} else {
 	  System.out.println("GSERVICE: Sending message... Participants:"+mParticipants.size());
       for (Participant p : mParticipants) {
@@ -1089,23 +1072,11 @@ public class MainActivity extends AndroidApplication
     GServiceClient.getInstance().notifyDispatched();
     if (statusCode != GamesClient.STATUS_OK) {
       System.out.println("GSERVICE: onRealTimeMessageSent: Message not sent! "+statusCode+ " mRoomId: "+mRoomId);
-      leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+      GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
   }
 
-  void leaveRoom(int code) {
-    System.out.println("GSERVICE: Leaving room...");
-    GServiceClient.getInstance().notifyDispatched();
-    GnuBackgammon.Instance.gameScreen.chatBox.hide();
-    if (mRoomId != null) {
-      gHelper.getGamesClient().leaveRoom(this, mRoomId);
-      mRoomId = null;
-      lastReceptionTime = 0;
-      tping.cancel();
-    }
-    switchToMenuScreen(code);
-  }
-  
+ 
   @Override
   public void gsericeStartRoom() {
     showProgressDialog();
