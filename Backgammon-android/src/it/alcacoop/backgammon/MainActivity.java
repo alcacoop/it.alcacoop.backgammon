@@ -835,7 +835,12 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onInvitationReceived(Invitation invitation) {
     System.out.println("======> GSERVICE INVITE: "+invitation);
-    gserviceInvitationRecieved(GnuBackgammon.Instance.ss==2?invitation.getInviter().getIconImageUri():invitation.getInviter().getHiResImageUri(), 
+    if (GnuBackgammon.Instance.currentScreen instanceof GameScreen) {
+  	  gHelper.getGamesClient().declineRoomInvitation(invitation.getInvitationId());
+  	  System.out.println("======> GSERVICE INVITE: Autodeclined");
+  	  return;
+  	}
+    gserviceInvitationRecieved(invitation.getInviter().getIconImageUri(), 
         invitation.getInviter().getDisplayName(), invitation.getInvitationId());
   }
 
