@@ -29,7 +29,7 @@
  #  If not, see <http://http://www.gnu.org/licenses/>             #
  #                                                                #
  ##################################################################
-*/
+ */
 
 package it.alcacoop.backgammon;
 
@@ -40,6 +40,7 @@ import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -122,9 +123,9 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
 public class MainActivity extends AndroidApplication 
-  implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
-    GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
-    RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener
+implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
+GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
+RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener
 {
   private String data_dir;
   protected AdView adView;
@@ -133,7 +134,7 @@ public class MainActivity extends AndroidApplication
   private View chatBox;
   private View gameView;
   private GServiceGameHelper gHelper;
-  
+
   protected Handler handler = new Handler()
   {
     @SuppressLint("HandlerLeak")
@@ -149,22 +150,22 @@ public class MainActivity extends AndroidApplication
       }
     }
   };
-  
-  
+
+
   private boolean mInitialized;
   private SensorManager mSensorManager;
   private Sensor mAccelerometer;
   private int rotation;
 
   private InterstitialAd interstitial;
-  
+
   private Timer t;
   private TimerTask task;
-  
+
   private String mRoomId = null;
   private String mMyId = null;
   ArrayList<Participant> mParticipants = null;
-  
+
 
   @SuppressWarnings("deprecation")
   @SuppressLint("NewApi")
@@ -174,26 +175,26 @@ public class MainActivity extends AndroidApplication
 
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
-    
+
     data_dir = getBaseContext().getApplicationInfo().dataDir+"/gnubg/";
-        
+
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    
+
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
-    
+
     /** SENSOR INITIALIZATION **/
     mInitialized = false;
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     /** SENSOR INITIALIZATION **/
-    
-    
+
+
     /** ADS INITIALIZATION **/
     if (isTablet(this))
       adView = new AdView(this, AdSize.IAB_BANNER, PurchaseActivity.ads_id);
@@ -206,37 +207,37 @@ public class MainActivity extends AndroidApplication
     interstitial = new InterstitialAd(this, PurchaseActivity.int_id);
     interstitial.setAdListener(this);
     /** ADS INITIALIZATION **/
-    
-    
+
+
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
-      RelativeLayout.LayoutParams.WRAP_CONTENT, 
-      RelativeLayout.LayoutParams.WRAP_CONTENT
-    );
+        RelativeLayout.LayoutParams.WRAP_CONTENT, 
+        RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
     layout.addView(gameView);
     layout.addView(adView, adParams);
-    
+
     LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     chatBox = inflater.inflate(R.layout.chat_box, null);
     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
         RelativeLayout.LayoutParams.MATCH_PARENT, 
         RelativeLayout.LayoutParams.WRAP_CONTENT
-      );
+        );
     chatBox.setVisibility(View.GONE);
     layout.addView(chatBox, params);
-    
+
     setContentView(layout);
-    
+
     /** CHATBOX DIMS **/
     Display display = getWindowManager().getDefaultDisplay();
     rotation = display.getRotation();
     Point size = new Point();
     try {
-        display.getSize(size);
+      display.getSize(size);
     } catch (java.lang.NoSuchMethodError ignore) { // Older device
-        size.x = display.getWidth();
-        size.y = display.getHeight();
+      size.x = display.getWidth();
+      size.y = display.getHeight();
     }
     int width = size.x;
     View s1 = findViewById(R.id.space1);
@@ -256,7 +257,7 @@ public class MainActivity extends AndroidApplication
     target.setOnEditorActionListener(this);
     /** CHATBOX DIMS **/
 
-  
+
     /** GOOGLE API  INITIALIZATION **/
     PurchaseActivity.createBillingData(this);
     gHelper = new GServiceGameHelper(this);
@@ -264,27 +265,27 @@ public class MainActivity extends AndroidApplication
     /** GOOGLE API  INITIALIZATION **/
   }
 
-  
+
   public boolean isTablet(Context context) {
     boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
     boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
     return (xlarge || large);
   }
-  
-    
+
+
   private void copyAssetsIfNotExists() {
     File a1 = new File(data_dir+"g11.xml");
     File a2 = new File(data_dir+"gnubg_os0.bd");
     File a3 = new File(data_dir+"gnubg_ts0.bd");
     File a4 = new File(data_dir+"gnubg.weights");
     File a5 = new File(data_dir+"gnubg.wd");
-    
+
     //Asset already presents
     if (a1.exists()&&a2.exists()&&a3.exists()&&a4.exists()&&a5.exists()) return;
-    
+
     File assetDir = new File(data_dir);
     assetDir.mkdirs();
-    
+
     AssetManager assetManager = getAssets();
     String[] files = null;
     try {
@@ -307,7 +308,7 @@ public class MainActivity extends AndroidApplication
       }       
     }
   }
-  
+
   private void copyFile(InputStream in, OutputStream out) throws IOException {
     byte[] buffer = new byte[1024];
     int read;
@@ -338,10 +339,10 @@ public class MainActivity extends AndroidApplication
   @Override
   public void shareMatch(MatchRecorder rec) {
     final Intent intent = new Intent(Intent.ACTION_SEND);
-    
+
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
-    
+
     intent.setType("text/plain");
     intent.setType("message/rfc822");
     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -349,21 +350,21 @@ public class MainActivity extends AndroidApplication
     String d = dateFormat.format(date);
     intent.putExtra(Intent.EXTRA_SUBJECT, "Backgammon Mobile exported Match (Played on "+d+")");
     intent.putExtra(Intent.EXTRA_TEXT, "You can analize attached file with desktop version of GNU Backgammon\nNOTE: GNU Backgammon is available for Windows, MacOS and Linux\n\nIf you enjoyed Backgammon Mobile please help us rating it on the market");
-    
+
     try {
       dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
       d = dateFormat.format(date);
       File dir = new File(Environment.getExternalStorageDirectory(), "gnubg-sgf");
       dir.mkdir();
       final File data = new File(dir, "match-"+d+".sgf");
-      
+
       FileOutputStream out = new FileOutputStream(data);
       out.write(rec.saveSGF().getBytes());
       out.close();
-      
+
       Uri uri = Uri.fromFile(data);
       intent.putExtra(Intent.EXTRA_STREAM, uri);
-      
+
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
@@ -391,24 +392,24 @@ public class MainActivity extends AndroidApplication
       public void run() {
         final View myView = inflater.inflate(R.layout.dialog_signin, null);
         alert.setView(myView).
-          setTitle("Login to server...").
-          setCancelable(false).
-          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
-            }
-          });
-        
-          if (!GnuBackgammon.Instance.server.equals("fibs.com"))
+        setTitle("Login to server...").
+        setCancelable(false).
+        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+          }
+        });
+
+        if (!GnuBackgammon.Instance.server.equals("fibs.com"))
           alert.setNeutralButton("Create Account",  new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
               fibsRegistration();
             }
           });
-          
-          alert.setPositiveButton("Login", null);
-        
+
+        alert.setPositiveButton("Login", null);
+
         final AlertDialog d = alert.create();
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
@@ -439,7 +440,7 @@ public class MainActivity extends AndroidApplication
                   if (username.length()<=3) text = "Username must be at least 4-chars length";
                   else if (password.length()<=3) text = "Password must be at least 4-chars length";
                   else text = "Generic error, please retype username and password";
-                  
+
                   int duration = Toast.LENGTH_SHORT;
                   Toast toast = Toast.makeText(context, text, duration);
                   toast.setGravity(Gravity.TOP, 0, 0);
@@ -456,27 +457,27 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void fibsRegistration() {
-    
+
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
     final AlertDialog.Builder popupBuilder = new AlertDialog.Builder(this);
     final TextView myMsg = new TextView(this);
-    
+
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
         final View myView = inflater.inflate(R.layout.dialog_register, null);
         alert.setView(myView).
-          setCancelable(false).
-          setTitle("Create new account...").
-          setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
-            }
-          }).
-          setPositiveButton("Create", null);
-        
+        setCancelable(false).
+        setTitle("Create new account...").
+        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            GnuBackgammon.fsm.processEvent(Events.FIBS_CANCEL, null);
+          }
+        }).
+        setPositiveButton("Create", null);
+
         final AlertDialog d = alert.create();
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
@@ -500,7 +501,7 @@ public class MainActivity extends AndroidApplication
                   else if (password.length()<=3) text = "Password must be at least 4-chars length";
                   else if (!password.equals(password2)) text = "Provided passwords don't match";
                   else text = "Generic error, please retype username and password";
-                  
+
                   int duration = Toast.LENGTH_SHORT;
                   Toast toast = Toast.makeText(context, text, duration);
                   toast.setGravity(Gravity.TOP, 0, 0);
@@ -510,24 +511,24 @@ public class MainActivity extends AndroidApplication
             });
           }
         });
-        
-        
+
+
         myMsg.setText("\nYou are creating new account...\n\n" +
             "Available chars for username are: A-Z,a-z,_\n" +
             "Available chars for password are: A-Z,a-z,0-9,_\n\n" +
             "Note: username and password must be\n minimum 4-chars length\n");
         myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
         popupBuilder.setCancelable(false)
-          .setView(myMsg)
-          .setTitle("Info")
-          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              d.show();
-            }
-          });
+        .setView(myMsg)
+        .setTitle("Info")
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            d.show();
+          }
+        });
         popupBuilder.show();
-        
+
       }
     });
   }
@@ -535,13 +536,13 @@ public class MainActivity extends AndroidApplication
   @Override
   public boolean isNetworkUp() {
     ConnectivityManager connectivityManager = 
-      (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo activeNetworkInfo = 
-      connectivityManager.getActiveNetworkInfo();
+        connectivityManager.getActiveNetworkInfo();
     return activeNetworkInfo != null;
   }
 
-  
+
   @Override
   public void showChatBox() {
     runOnUiThread(new Runnable() {
@@ -551,7 +552,7 @@ public class MainActivity extends AndroidApplication
       }
     });
   }
-  
+
   @Override
   public void hideChatBox() {
     runOnUiThread(new Runnable() {
@@ -564,13 +565,13 @@ public class MainActivity extends AndroidApplication
       }
     });
   }
-  
-  
+
+
   public void clearMessage(View v) {
     EditText chat = (EditText) findViewById(R.id.message);
     chat.setText("");
   }
-  
+
   public void sendMessage(View v) {
     EditText chat = (EditText) findViewById(R.id.message);
     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -593,7 +594,7 @@ public class MainActivity extends AndroidApplication
     gameView.setFocusableInTouchMode(true);
     gameView.requestFocus();
   }
-  
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     if ((GnuBackgammon.Instance==null)||
@@ -636,7 +637,7 @@ public class MainActivity extends AndroidApplication
     super.onPause();
     mSensorManager.unregisterListener(this);
     if (t!=null) t.cancel();
-    
+
     if ((GnuBackgammon.Instance.currentScreen instanceof FibsScreen)&&(!GnuBackgammon.Instance.interstitialVisible)) {
       GnuBackgammon.Instance.commandDispatcher.send("BYE");
       GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
@@ -644,14 +645,14 @@ public class MainActivity extends AndroidApplication
       GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
   }
-  
-  
+
+
 
   @Override
   public void onAccuracyChanged(Sensor arg0, int arg1) {
   }
 
-  
+
   private final float NOISE = 0.5f;
   @Override
   public void onSensorChanged(SensorEvent event) {
@@ -680,24 +681,20 @@ public class MainActivity extends AndroidApplication
       }
     });
   }
-  
+
   @Override
   public void onDismissScreen(Ad arg0) {
     GnuBackgammon.Instance.interstitialVisible = false;
   }
 
   @Override
-  public void onReceiveAd(Ad ad) {
-    //System.out.println("====> RECEIVED: "+ad);
-  }
+  public void onReceiveAd(Ad ad) {}
   @Override
   public void onLeaveApplication(Ad arg0) {}
   @Override
   public void onPresentScreen(Ad arg0) {}
   @Override
-  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {
-    //System.out.println("====> NOT RECEIVED: "+arg1);
-  }
+  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {}
 
 
 
@@ -716,7 +713,7 @@ public class MainActivity extends AndroidApplication
     return PurchaseActivity.msIsPremium;
   }
 
-  
+
   @Override
   protected void onDestroy() {
     super.onDestroy();
@@ -731,15 +728,15 @@ public class MainActivity extends AndroidApplication
     Intent myIntent = new Intent(this, PurchaseActivity.class);
     startActivityForResult(myIntent, PurchaseActivity.RC_REQUEST);
   }
-  
-  
+
+
   @Override
   protected void onStart() {
     super.onStart();
     gHelper.onStart(this);
   }
 
-  
+
   @Override
   protected void onStop() {
     super.onStop();
@@ -749,8 +746,8 @@ public class MainActivity extends AndroidApplication
     gHelper.onStop();
   }
 
-  
-  
+
+
   private static int RC_SELECT_PLAYERS = 6000;
   private static int RC_WAITING_ROOM = 6001;
   @Override
@@ -783,9 +780,11 @@ public class MainActivity extends AndroidApplication
         hideProgressDialog();
       }
     } else if (requestCode==RC_WAITING_ROOM) {
+      if (resultCode!=RESULT_OK) {
+        gserviceResetRoom();
+      }
       System.out.println("GSERVICE resultcode: "+ resultCode);
       hideProgressDialog();
-//      gserviceResetRoom();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
       gHelper.onActivityResult(requestCode, resultCode, data);
@@ -794,10 +793,10 @@ public class MainActivity extends AndroidApplication
     Gdx.graphics.requestRendering();
   }
 
-  
-  
-  
-  
+
+
+
+
   //GSERVICE STUFF...
   @Override
   public void onSignInFailed() {
@@ -806,7 +805,7 @@ public class MainActivity extends AndroidApplication
   @Override
   public void onSignInSucceeded() {
     gHelper.getGamesClient().registerInvitationListener(this);
-    
+
     if (gHelper.getInvitationId()!=null) {
       //acceptInvitation(gHelper.getInvitationId());
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
@@ -846,8 +845,14 @@ public class MainActivity extends AndroidApplication
 
 
   @Override
-  public void onJoinedRoom(int arg0, Room arg1) {
-    System.out.println("======> GSERVICE JOINED ROOM");
+  public void onJoinedRoom(int arg0, Room room) {
+    if (room==null) {
+      hideProgressDialog();
+      UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation", 0.8f, GnuBackgammon.Instance.currentScreen.getStage());
+    } else {
+      updateRoom(room);
+      System.out.println("======> GSERVICE JOINED ROOM");
+    }
   }
 
   
@@ -868,28 +873,34 @@ public class MainActivity extends AndroidApplication
     MatchState.matchType = 3;
     GnuBackgammon.fsm.state(States.GSERVICE);
     pingtask = new TimerTask() {
-	  @Override
-	  public void run() {
-	    gserviceSendReliableRealTimeMessage("70 PING");
-	  }
-	};
-	tping = new Timer();
-	tping.schedule(pingtask, 0, 5000);
+      @Override
+      public void run() {
+        gserviceSendReliableRealTimeMessage("70 PING");
+      }
+    };
+    tping = new Timer();
+    tping.schedule(pingtask, 0, 5000);
   }
 
 
   private void updateRoom(Room room) {
-	mParticipants = room.getParticipants();
+    if (room!=null) {
+      mRoomId = room.getRoomId();
+      mParticipants = room.getParticipants();
+    }
   }
 
 
-@Override
+  @Override
   public void onRoomCreated(int statusCode, Room room) {
     if (statusCode != GamesClient.STATUS_OK) {
-    	System.out.println("      GSERVICE: onRoomCreated: Error with statusCode:"  + statusCode);
-        return;
+      System.out.println("GSERVICE: onRoomCreated: Error with statusCode:"  + statusCode);
+      hideProgressDialog();
+      UIDialog.getFlashDialog(Events.NOOP, "Unknown error", 0.8f, GnuBackgammon.Instance.currentScreen.getStage());
+      return;
     }
-    System.out.println("======> GSERVICE CREATED ROOM: " + room.getRoomId());
+    System.out.println("GSERVICE CREATED ROOM: " + room.getRoomId());
+    mRoomId = room.getRoomId();
     Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
     startActivityForResult(i, RC_WAITING_ROOM);
   }
@@ -897,16 +908,16 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void onConnectedToRoom(Room room) {
-    mRoomId = room.getRoomId();
     mParticipants = room.getParticipants();
-	mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
-	System.out.println("      GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
+    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
+    updateRoom(room);
+    System.out.println("GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
   }
 
 
   @Override
   public void onDisconnectedFromRoom(Room room) {
-    System.out.println("      GSERVICE: onDisconnectedFromRoom");
+    System.out.println("GSERVICE: onDisconnectedFromRoom");
     mRoomId = null;
     lastReceptionTime = 0;
   }
@@ -914,47 +925,47 @@ public class MainActivity extends AndroidApplication
 
   @Override
   public void onPeerDeclined(Room room, List<String> arg1) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onPeerInvitedToRoom(Room room, List<String> arg1) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onPeerJoined(Room room, List<String> arg1) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onPeerLeft(Room room, List<String> arg1) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onPeersConnected(Room room, List<String> arg1) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
-	  updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onRoomAutoMatching(Room room) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
   @Override
   public void onRoomConnecting(Room room) {
-	updateRoom(room);
+    updateRoom(room);
   }
 
 
-  
-  
+
+
   public void gserviceInvitationRecieved(final Uri imagesrc, final String username, final String invitationId) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
@@ -964,17 +975,17 @@ public class MainActivity extends AndroidApplication
       public void run() {
         final View myView = inflater.inflate(R.layout.dialog_invitation, null);
         alert.setView(myView).
-          setTitle("Invitation received").
-          setCancelable(false).
-          setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              gHelper.getGamesClient().declineRoomInvitation(invitationId);
-              
-            }
-          });
-          alert.setPositiveButton("Accept", null);
-        
+        setTitle("Invitation received").
+        setCancelable(false).
+        setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            gHelper.getGamesClient().declineRoomInvitation(invitationId);
+
+          }
+        });
+        alert.setPositiveButton("Accept", null);
+
         final AlertDialog d = alert.create();
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
@@ -997,7 +1008,7 @@ public class MainActivity extends AndroidApplication
     });
   }
 
-  
+
   @Override
   public void gserviceAcceptInvitation(String invitationId) {
     System.out.println("GSERVICE: ACCEPT INVITATION");
@@ -1008,8 +1019,8 @@ public class MainActivity extends AndroidApplication
     gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
     showProgressDialog();
   }
-  
-  
+
+
   ProgressDialog mProgressDialog = null;
   void showProgressDialog() {
     runOnUiThread(new Runnable() {
@@ -1043,31 +1054,35 @@ public class MainActivity extends AndroidApplication
   long lastReceptionTime = 0;
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-	lastReceptionTime = System.currentTimeMillis();
-	byte[] buf = rtm.getMessageData();
+    lastReceptionTime = System.currentTimeMillis();
+    byte[] buf = rtm.getMessageData();
     String s = new String(buf);
     System.out.println("GSERVICE: ===========> Message recived: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
   }
-  
-  
+
+
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-	if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
-	  System.out.println("GSERVICE: We are not getting pong!");
-	  GServiceClient.getInstance().leaveRoom(0);
-	} else {
-	  System.out.println("GSERVICE: Sending message... Participants:"+mParticipants.size());
-      for (Participant p : mParticipants) {
-        if (p.getParticipantId().equals(mMyId))
-          continue;
-        if (p.getStatus() != Participant.STATUS_JOINED) {
-          continue;
+    if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
+      System.out.println("GSERVICE: We are not getting pong!");
+      GServiceClient.getInstance().leaveRoom(0);
+    } else {
+      if ((mRoomId==null)||(mRoomId=="")) {
+        GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+      } else {
+        System.out.println("GSERVICE: Sending message... Participants:"+mParticipants.size());
+        for (Participant p : mParticipants) {
+          if (p.getParticipantId().equals(mMyId))
+            continue;
+          if (p.getStatus() != Participant.STATUS_JOINED) {
+            continue;
+          }
+          int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+          System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
         }
-        int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
-        System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
       }
-	}
+    }
   }
 
 
@@ -1081,23 +1096,30 @@ public class MainActivity extends AndroidApplication
     }
   }
 
- 
+
   @Override
   public void gsericeStartRoom() {
-    showProgressDialog();
-    Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
-    startActivityForResult(intent, RC_SELECT_PLAYERS);
+    if (gHelper.getGamesClient().isConnected()) {
+      showProgressDialog();
+      Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
+      startActivityForResult(intent, RC_SELECT_PLAYERS);
+    } else {
+      gHelper.signOut();
+      gHelper.beginUserInitiatedSignIn();
+    }
   }
 
   @Override
   public void gserviceResetRoom() {
-	GServiceClient.getInstance().notifyDispatched();
+    System.out.println("GSERVICE RESET ROOM");
+    GServiceClient.getInstance().notifyDispatched();
     GnuBackgammon.Instance.gameScreen.chatBox.hide();
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
       lastReceptionTime = 0;
-      tping.cancel();
+      if (tping!=null)
+        tping.cancel();
     }
   }
 
