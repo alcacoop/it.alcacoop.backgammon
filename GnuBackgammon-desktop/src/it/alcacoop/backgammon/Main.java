@@ -231,4 +231,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {}
+
+  @Override
+  public void gserviceResetRoom() {}
 }
