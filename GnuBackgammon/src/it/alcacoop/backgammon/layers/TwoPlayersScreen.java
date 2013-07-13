@@ -225,7 +225,7 @@ public class TwoPlayersScreen extends BaseScreen {
         sp.setWidget(text);
         variant = 3;
         if (!GnuBackgammon.Instance.nativeFunctions.gserviceIsSignedIn())
-          UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f, getStage());
+          UIDialog.getGServiceLoginDialog(getStage());
       }
     });
     

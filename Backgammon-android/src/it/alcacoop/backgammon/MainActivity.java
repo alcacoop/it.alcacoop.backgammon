@@ -1104,8 +1104,8 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
-      gHelper.signOut();
-      gHelper.beginUserInitiatedSignIn();
+      //TODO: DECIDERE CHE FARE...
+      UIDialog.getGServiceLoginDialog(GnuBackgammon.Instance.currentScreen.getStage());
     }
   }
 

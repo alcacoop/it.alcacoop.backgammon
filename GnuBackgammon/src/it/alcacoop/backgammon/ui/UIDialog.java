@@ -263,6 +263,9 @@ public final class UIDialog extends Window {
   }
   
   
+  public static void getGServiceLoginDialog(Stage stage) {
+    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f, stage);  
+  }
   public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
     getYesNoDialog(evt, text, 1, stage);
   }
