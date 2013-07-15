@@ -746,7 +746,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     gHelper.onStop();
   }
 
-
+  
 
   private static int RC_SELECT_PLAYERS = 6000;
   private static int RC_WAITING_ROOM = 6001;
@@ -851,20 +851,21 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation", 0.8f, GnuBackgammon.Instance.currentScreen.getStage());
     } else {
       updateRoom(room);
-      System.out.println("======> GSERVICE JOINED ROOM");
+      System.out.println("======> GSERVICE JOINED ROOM "+room.getParticipants().size());
+      gConnecting = true;
     }
   }
 
   
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
-	System.out.println("      GSERVICE: onLeftRoom: ROOMID: " + roomId + " statusCode:" + statusCode);
+	System.out.println("GSERVICE: onLeftRoom: ROOMID: " + roomId + " statusCode:" + statusCode);
   }
 
 
   private Timer tping;
   private TimerTask pingtask;
-
+  private boolean gConnecting = false;
   @Override
   public void onRoomConnected(int arg0, Room room) {
     System.out.println("======> GSERVICE CONNECTED ROOM: " + room.getRoomId());
@@ -880,6 +881,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     };
     tping = new Timer();
     tping.schedule(pingtask, 0, 5000);
+    gConnecting = false;
   }
 
 
@@ -940,7 +942,12 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
   @Override
   public void onPeerLeft(Room room, List<String> arg1) {
-    updateRoom(room);
+    if (gConnecting) {
+      hideProgressDialog();
+      gserviceResetRoom();
+      UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room", 0.8f, GnuBackgammon.Instance.currentScreen.getStage());
+      updateRoom(room);
+    }
   }
 
   @Override
@@ -960,6 +967,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
   @Override
   public void onRoomConnecting(Room room) {
+    System.out.println("GSERVICE: ROOM CONNECTING");
     updateRoom(room);
   }
 
@@ -1118,6 +1126,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     System.out.println("GSERVICE RESET ROOM");
     GServiceClient.getInstance().notifyDispatched();
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
+    gConnecting = false;
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
@@ -1126,5 +1135,4 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
         tping.cancel();
     }
   }
-
 }
