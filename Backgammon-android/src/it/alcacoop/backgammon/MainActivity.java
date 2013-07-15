@@ -1117,7 +1117,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   public void gserviceResetRoom() {
     System.out.println("GSERVICE RESET ROOM");
     GServiceClient.getInstance().notifyDispatched();
-    GnuBackgammon.Instance.gameScreen.chatBox.hide();
+    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;

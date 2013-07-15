@@ -118,6 +118,7 @@ public class ChatBox extends Table {
       GnuBackgammon.Instance.nativeFunctions.hideChatBox();
       setY(stage.getHeight()-position);
     }
+    animating = false;
   }
   
   
@@ -172,10 +173,6 @@ public class ChatBox extends Table {
         setVisible(true);
       }
     });
-  }
-  
-  public boolean chatHit(float x, float y) {
-    return ((x > getX() && x< getX()+getWidth())&&(y < getHeight()));
   }
 
   public boolean isScrolling() {
