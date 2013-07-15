@@ -290,8 +290,16 @@ public class FibsScreen extends BaseScreen {
     t.add(new Label("Loading list...", GnuBackgammon.skin));
     onlineList.setWidget(t);
     
-    g.addAction(MyActions.sequence(Actions.fadeIn(0.6f)));
+    g.setX(-stage.getWidth());
+    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, animationTime))));
   }
+  
+  
+  @Override
+  public void fadeOut() {
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-g.getHeight())/2, animationTime))));
+  }
+  
   
   public synchronized void playerChanged(Player p) {
     if (p==null) return;

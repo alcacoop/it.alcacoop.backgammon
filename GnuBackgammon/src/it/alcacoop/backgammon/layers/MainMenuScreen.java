@@ -185,7 +185,7 @@ public class MainMenuScreen extends BaseScreen {
     g.setHeight(stage.getHeight()*0.9f);
     g.addActor(table);
     
-    g.setX((stage.getWidth()-g.getWidth())/2);
+    g.setX(-g.getWidth());
     g.setY((stage.getHeight()-g.getHeight())/2);
     
     stage.addActor(g);
@@ -208,6 +208,12 @@ public class MainMenuScreen extends BaseScreen {
     createMenu();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
+  
+  @Override
+  public void fadeOut() {
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-g.getHeight())/2, 0.2f))));
+  }
+
 }

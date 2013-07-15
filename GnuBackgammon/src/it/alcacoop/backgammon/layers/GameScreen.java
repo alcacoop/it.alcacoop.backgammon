@@ -79,6 +79,7 @@ public class GameScreen extends BaseScreen {
   public ChatBox chatBox;
   
   public GameScreen() {
+    animationTime = 0f;
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {

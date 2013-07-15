@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -53,13 +55,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
-public final class UIDialog extends Window {
+public final class UIDialog extends Table {
 
   private Table t1, t2, t3;
   private TextButton bContinue;
@@ -84,19 +85,16 @@ public final class UIDialog extends Window {
   private boolean optionsWindow = false;
   private boolean leaveWindow = false;
   private boolean dicesWindow = false;
-  
+  private boolean visible = false;
   private GameOptionsTable opts;
   
   
   static {
     instance = new UIDialog();
+    instance.setSkin(GnuBackgammon.skin);
   }
   
   private UIDialog() {
-    super("", GnuBackgammon.skin);
-    setModal(true);
-    setMovable(false);
-    
     cl = new ClickListener(){
       public void clicked(InputEvent event, float x, float y) {
         final String s;
@@ -148,6 +146,7 @@ public final class UIDialog extends Window {
 
                 Gdx.graphics.setContinuousRendering(false);
                 Gdx.graphics.requestRendering();
+                visible = false;
               }
             })
         ));
@@ -270,6 +269,7 @@ public final class UIDialog extends Window {
     getYesNoDialog(evt, text, 1, stage);
   }
   public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -298,13 +298,15 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
   public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
     getContinueDialog(evt, text, 1, stage);
   }
   public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -331,7 +333,8 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(Actions.alpha(alpha, 0.3f));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
  
   
@@ -339,6 +342,7 @@ public final class UIDialog extends Window {
     getEndGameDialog(evt, text, text1, score1, score2, 1, stage);
   }
   public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -383,7 +387,8 @@ public final class UIDialog extends Window {
     instance.add(t1).colspan(4).fill().padBottom(width/25);
     
     stage.addActor(instance);
-    instance.addAction(MyActions.sequence(Actions.alpha(alpha, 0.3f)));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
   
@@ -391,6 +396,7 @@ public final class UIDialog extends Window {
     getFlashDialog(evt, text, 1, stage);
   }
   public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -429,6 +435,7 @@ public final class UIDialog extends Window {
     getQuitDialog(1, stage);
   }
   public static void getQuitDialog(float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = true;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -456,11 +463,13 @@ public final class UIDialog extends Window {
     instance.add();
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
 
   
   public static void getLeaveDialog(BaseFSM.Events evt, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = true;
@@ -498,13 +507,15 @@ public final class UIDialog extends Window {
     
     
     stage.addActor(instance);
-    instance.addAction(MyActions.sequence(Actions.alpha(alpha, 0.3f)));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
   public static void getHelpDialog(Stage stage, Boolean cb) {
     getHelpDialog(1, stage, cb);
   }
   public static void getHelpDialog(float alpha, Stage stage, Boolean cb) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -556,13 +567,43 @@ public final class UIDialog extends Window {
     instance.setX((stage.getWidth()-width)/2);
     instance.setY((stage.getHeight()-height)/2);
     
+    
+    instance.setY(stage.getHeight());
+    instance.addAction(
+        Actions.sequence(
+        
+        MyActions.sequence(
+            Actions.parallel(
+                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
+                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
+        
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            Gdx.graphics.setContinuousRendering(true);
+          }
+        })
+        )
+    );
     stage.addActor(instance);
-    instance.addAction(Actions.sequence(MyActions.alpha(alpha, 0.3f),Actions.run(new Runnable() {
-      @Override
-      public void run() {
-        Gdx.graphics.setContinuousRendering(true);
-      }
-    })));
+    
+    instance.setY(stage.getHeight());
+    instance.addAction(
+        Actions.sequence(
+        
+        MyActions.sequence(
+            Actions.parallel(
+                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
+                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
+        
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            Gdx.graphics.setContinuousRendering(true);
+          }
+        })
+        )
+    );
   }
   
   
@@ -570,6 +611,7 @@ public final class UIDialog extends Window {
     getAboutDialog(1, stage, cb);
   }
   public static void getAboutDialog(float alpha, Stage stage, Boolean cb) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -678,12 +720,25 @@ public final class UIDialog extends Window {
     instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    instance.addAction(Actions.sequence(MyActions.alpha(alpha, 0.3f),Actions.run(new Runnable() {
-      @Override
-      public void run() {
-        Gdx.graphics.setContinuousRendering(true);
-      }
-    })));
+    
+    instance.setY(stage.getHeight());
+    instance.addAction(
+        Actions.sequence(
+        
+        MyActions.sequence(
+            Actions.parallel(
+                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
+                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
+        
+        Actions.run(new Runnable() {
+          @Override
+          public void run() {
+            Gdx.graphics.setContinuousRendering(true);
+          }
+        })
+        )
+    );
+    
   }
   
   
@@ -691,6 +746,7 @@ public final class UIDialog extends Window {
     getOptionsDialog(1, stage);
   }
   public static void getOptionsDialog(float alpha, Stage stage) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -712,14 +768,17 @@ public final class UIDialog extends Window {
     instance.add(instance.opts).expand().fill();
     
     stage.addActor(instance);
-    instance.addAction(MyActions.alpha(alpha, 0.3f));
+    instance.setY(stage.getHeight());
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
 
-    public static boolean isOpened() {
+  
+  public static boolean isOpened() {
     return instance.hasParent();
   }
 
   public static void getLoginDialog(float alpha, Stage stage) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -816,6 +875,7 @@ public final class UIDialog extends Window {
   
   
   public static void getCreateAccountDialog(float alpha, Stage stage) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -879,6 +939,7 @@ public final class UIDialog extends Window {
   }
   
   public static void getInviteClickedDialog(String username, float alpha, Stage stage) {
+    instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
     instance.leaveWindow = false;
@@ -924,6 +985,7 @@ public final class UIDialog extends Window {
     getDicesDialog(1, stage, cb);
   }
   public static void getDicesDialog(float alpha, Stage stage, Boolean cb) {
+    instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
     instance.leaveWindow = false;
@@ -967,5 +1029,19 @@ public final class UIDialog extends Window {
         GnuBackgammon.Instance.nativeFunctions.showAds(false);
       }
     }), Actions.alpha(alpha, 0.3f)));
+  }
+  
+  
+  public Actor hit (float x, float y, boolean touchable) {
+    Actor hit = super.hit(x, y, touchable);
+    if (visible) {
+      if (hit != null) return hit;
+      else {
+        return this;
+      }
+      
+    } else {
+      return hit;  
+    }
   }
 }

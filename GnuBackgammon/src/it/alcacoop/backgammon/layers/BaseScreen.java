@@ -12,6 +12,7 @@ public class BaseScreen implements Screen{
 
   protected Stage stage;
   protected Image bgImg;
+  public float animationTime = 0.2f;
   
   public BaseScreen() {
     //STAGE DIM = SCREEN RES
@@ -53,6 +54,8 @@ public class BaseScreen implements Screen{
     return stage;
   }
 
+  public void fadeOut() {}
+  
   @Override
   public void render(float delta) {}
   @Override

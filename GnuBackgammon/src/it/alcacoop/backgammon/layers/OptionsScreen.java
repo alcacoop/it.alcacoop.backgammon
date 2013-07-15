@@ -67,7 +67,8 @@ public class OptionsScreen extends BaseScreen {
     });
     
     table = new Table();
-    table.setFillParent(true);
+    table.setWidth(stage.getWidth());
+    table.setHeight(stage.getHeight());
     opts = new GameOptionsTable(true, null);
     table.add(opts).expand().fill();
     stage.addActor(table);
@@ -90,10 +91,17 @@ public class OptionsScreen extends BaseScreen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
-    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    table.setX(-stage.getWidth());
+    table.setY((stage.getHeight()-table.getHeight())/2);
+    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
     opts.initFromPrefs();
   }
 
+  
+  @Override
+  public void fadeOut() {
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-table.getHeight())/2, animationTime))));
+  }
 
   @Override
   public void resume() {

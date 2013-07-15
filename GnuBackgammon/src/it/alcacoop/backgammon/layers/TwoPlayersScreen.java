@@ -321,6 +321,12 @@ public class TwoPlayersScreen extends BaseScreen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
-    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    table.setX(-stage.getWidth());
+    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
+  }
+  
+  @Override
+  public void fadeOut() {
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-table.getHeight())/2, animationTime))));
   }
 }

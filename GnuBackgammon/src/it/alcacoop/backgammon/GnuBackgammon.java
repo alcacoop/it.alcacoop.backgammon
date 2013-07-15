@@ -58,10 +58,14 @@ import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
 import it.alcacoop.fibs.Player;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -155,7 +159,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     } else {
       initAssets();
       setFSM("MENU_FSM");
-      fsm.state(MenuFSM.States.TWO_PLAYERS);
+      //fsm.state(MenuFSM.States.TWO_PLAYERS);
     }
   }
   
@@ -225,56 +229,73 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     nativeFunctions.injectBGInstance();
   }
 
+  @Override
+  public void setScreen(final Screen screen) {
+    if (currentScreen!=null) {
+      currentScreen.fadeOut();
+      Timer t = new Timer();
+      TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+          GnuBackgammon.super.setScreen(screen);    
+        }
+      };
+      t.schedule(task, (long)(currentScreen.animationTime*1000));
+    } else 
+      super.setScreen(screen);
+  }
+  
+  
   public String getResName() {
     return resname[ss];
   }
   
-  public void goToScreen(int s) {
+  public void goToScreen(final int s) {
     switch (s) {
-      case 0:
-        setScreen(welcomeScreen);
-        currentScreen = welcomeScreen;
-        break;
-        
-      case 1:
-        setScreen(optionsScreen);
-        currentScreen = optionsScreen;
-        break;
-      
-      case 2:
-        setScreen(menuScreen);
-        currentScreen = menuScreen;
-        break;
-      
-      case 3:
-        setScreen(matchOptionsScreen);
-        currentScreen = matchOptionsScreen;
-        break;
-        
-      case 4:
-        setScreen(gameScreen);
-        currentScreen = gameScreen;
-        break;
-        
-      case 6:
-        setScreen(welcomeScreen);
-        currentScreen = welcomeScreen;
-        break;
-        
-      case 7:
-        setScreen(appearanceScreen);
-        currentScreen = appearanceScreen;
-        break;
-        
-      case 8:
-        setScreen(fibsScreen);
-        currentScreen = fibsScreen;
-        break;
-        
-      case 9:
-        setScreen(twoplayersScreen);
-        currentScreen = twoplayersScreen;
-        break;
+    case 0:
+      GnuBackgammon.Instance.setScreen(welcomeScreen);
+      currentScreen = welcomeScreen;
+      break;
+
+    case 1:
+      setScreen(optionsScreen);
+      currentScreen = optionsScreen;
+      break;
+
+    case 2:
+      setScreen(menuScreen);
+      currentScreen = menuScreen;
+      break;
+
+    case 3:
+      setScreen(matchOptionsScreen);
+      currentScreen = matchOptionsScreen;
+      break;
+
+    case 4:
+      setScreen(gameScreen);
+      currentScreen = gameScreen;
+      break;
+
+    case 6:
+      setScreen(welcomeScreen);
+      currentScreen = welcomeScreen;
+      break;
+
+    case 7:
+      setScreen(appearanceScreen);
+      currentScreen = appearanceScreen;
+      break;
+
+    case 8:
+      setScreen(fibsScreen);
+      currentScreen = fibsScreen;
+      break;
+
+    case 9:
+      setScreen(twoplayersScreen);
+      currentScreen = twoplayersScreen;
+      break;
     }
   }
 

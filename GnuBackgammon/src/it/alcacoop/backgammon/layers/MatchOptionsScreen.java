@@ -233,10 +233,16 @@ public class MatchOptionsScreen extends BaseScreen {
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
     table.setColor(1,1,1,0);
-    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.fadeIn(0.6f)));
+    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
   }
 
+  
+  @Override
+  public void fadeOut() {
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-table.getHeight())/2, animationTime))));
+  }
 
+  
   @Override
   public void resume() {
     Gdx.graphics.requestRendering();
@@ -248,7 +254,7 @@ public class MatchOptionsScreen extends BaseScreen {
     
     table.setWidth(stage.getWidth()*0.9f);
     table.setHeight(stage.getHeight()*0.9f);
-    table.setX((stage.getWidth()-table.getWidth())/2);
+    table.setX(-stage.getWidth());
     table.setY((stage.getHeight()-table.getHeight())/2);
     
     float width = table.getWidth()/9f;
