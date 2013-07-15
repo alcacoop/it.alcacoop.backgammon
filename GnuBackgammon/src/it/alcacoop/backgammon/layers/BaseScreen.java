@@ -13,14 +13,22 @@ public class BaseScreen implements Screen{
   protected Stage stage;
   protected Image bgImg;
   public float animationTime = 0.2f;
+  protected static float lastBGX;
+  private float width; 
   
   public BaseScreen() {
     //STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
+    width = stage.getWidth()*1.2f;
+    
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
+    bgImg.setWidth(width);
+    bgImg.setHeight(stage.getHeight());
+    lastBGX = (stage.getWidth()-width)/2;
+    bgImg.setPosition(lastBGX, 0);
     stage.addActor(bgImg);
   }
 
@@ -32,22 +40,28 @@ public class BaseScreen implements Screen{
 
   @Override
   public void show() {
-    bgImg.setWidth(stage.getWidth()*1.2f);
-    bgImg.setHeight(stage.getHeight());
-    bgImg.setPosition((stage.getWidth()-bgImg.getWidth())/2, 0);
+    if (lastBGX>0) lastBGX = 0;
+    if (lastBGX<(stage.getWidth()-width)) lastBGX=stage.getWidth()-width;
+    bgImg.setX(lastBGX);
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
   
   
   public void moveBG(float x) {
-    float _x = bgImg.getX();
+    float _x = lastBGX;
     float newx = _x+x*2;
     if (newx>0) newx = 0;
-    if (newx<(stage.getWidth()-bgImg.getImageWidth())) newx=stage.getWidth()-bgImg.getImageWidth();
-    if (bgImg.getX()!=newx) {
+    if (newx<(stage.getWidth()-width)) newx=stage.getWidth()-width;
+    if (lastBGX!=newx) {
       bgImg.setX(newx);
       Gdx.graphics.requestRendering();
     }
+    lastBGX = newx;
+  }
+
+  
+  public void fixBGImg() {
+    bgImg.setX(lastBGX);
   }
   
   public Stage getStage() {
