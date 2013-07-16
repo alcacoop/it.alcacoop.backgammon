@@ -638,7 +638,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     mSensorManager.unregisterListener(this);
     if (t!=null) t.cancel();
 
-    if ((GnuBackgammon.Instance.currentScreen instanceof FibsScreen)&&(!GnuBackgammon.Instance.interstitialVisible)) {
+    if ((GnuBackgammon.Instance!=null)&&(GnuBackgammon.Instance.currentScreen instanceof FibsScreen)&&(!GnuBackgammon.Instance.interstitialVisible)) {
       GnuBackgammon.Instance.commandDispatcher.send("BYE");
       GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
       GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
