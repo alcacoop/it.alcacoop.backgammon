@@ -159,6 +159,7 @@ public class MenuFSM extends BaseFSM implements Context {
           case FIBS_CONNECTED:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             timer.cancel();
+            timer.purge();
             if (MenuFSM.accountCreated) {
               GnuBackgammon.Instance.commandDispatcher.sendLogin(GnuBackgammon.Instance.FibsUsername, GnuBackgammon.Instance.FibsPassword);
               MenuFSM.accountCreated = false;
@@ -168,6 +169,10 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
           
           case FIBS_ERROR:
+            if (timer!=null) {
+              timer.cancel();
+              timer.purge();
+            }
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());

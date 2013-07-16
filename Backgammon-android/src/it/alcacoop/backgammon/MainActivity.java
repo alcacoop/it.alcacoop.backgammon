@@ -159,9 +159,11 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
   private InterstitialAd interstitial;
 
-  private Timer t;
-  private TimerTask task;
-
+  private Timer adsTimer;
+  private TimerTask adsTask;
+  private Timer tping;
+  private TimerTask pingtask;
+  
   private String mRoomId = null;
   private String mMyId = null;
   ArrayList<Participant> mParticipants = null;
@@ -613,30 +615,35 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   protected void onResume() {
     super.onResume();
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-    t = new Timer();
-    task = new TimerTask() {
-      @Override
-      public void run() {
-        runOnUiThread(new Runnable() {
-          public void run() {
-            //System.out.println("======> TIMER LOADED: "+interstitial.isReady());
-            if (!interstitial.isReady()) {
-              if (!isProVersion())
-                interstitial.loadAd(new AdRequest());
+    System.out.println("GSERVICE: resume");
+    if (!isProVersion()) {
+      adsTimer = new Timer();
+      adsTask = new TimerTask() {
+        @Override
+        public void run() {
+          runOnUiThread(new Runnable() {
+            public void run() {
+              if (!interstitial.isReady()) {
+                if (!isProVersion())
+                  interstitial.loadAd(new AdRequest());
+              }
             }
-          }
-        });
-      }
-    };
-    if (!isProVersion())
-      t.schedule(task, 0,15000);
+          });
+        }
+      };
+      adsTimer.schedule(adsTask, 0,15000);
+    }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
+    System.out.println("GSERVICE: pause");
     mSensorManager.unregisterListener(this);
-    if (t!=null) t.cancel();
+    if (adsTimer!=null) {
+      adsTimer.cancel();
+      adsTimer.purge();
+    }
 
     if ((GnuBackgammon.Instance!=null)&&(GnuBackgammon.Instance.currentScreen instanceof FibsScreen)&&(!GnuBackgammon.Instance.interstitialVisible)) {
       GnuBackgammon.Instance.commandDispatcher.send("BYE");
@@ -755,7 +762,10 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     if (requestCode == PurchaseActivity.RC_REQUEST) {
       if (isProVersion()) {
         adView.setVisibility(View.GONE);
-        if (t!=null) t.cancel();
+        if (adsTimer!=null) {
+          adsTimer.cancel();
+          adsTimer.purge();
+        }
         GnuBackgammon.Instance.menuScreen.redraw();
       }
     } else if (requestCode==RC_SELECT_PLAYERS) {
@@ -863,8 +873,6 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   }
 
 
-  private Timer tping;
-  private TimerTask pingtask;
   private boolean gConnecting = false;
   @Override
   public void onRoomConnected(int arg0, Room room) {
@@ -1131,8 +1139,10 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
       lastReceptionTime = 0;
-      if (tping!=null)
+      if (tping!=null) {
         tping.cancel();
+        tping.purge();
+      }
     }
   }
 }

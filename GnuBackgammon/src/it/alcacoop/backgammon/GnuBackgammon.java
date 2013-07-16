@@ -142,6 +142,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     System.out.println("CR: "+Gdx.graphics.isContinuousRendering());
   }
   
+  private Timer transitionTimer;
+  
+  
   @Override
   public void create() {
     Instance = this;
@@ -151,7 +154,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (pWidth<=800) ss = 1;
     else ss = 0;
     resolution = resolutions[ss];
-    
+    transitionTimer = new Timer();
     
     System.out.println("=====> GSERVICE START: "+skipSplashScreen);
     if (!skipSplashScreen) {
@@ -234,7 +237,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     if (currentScreen!=null) {
       ((BaseScreen)screen).initialize();
       currentScreen.fadeOut();
-      Timer t = new Timer();
       TimerTask task = new TimerTask() {
         @Override
         public void run() {
@@ -242,7 +244,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
           GnuBackgammon.super.setScreen(screen);    
         }
       };
-      t.schedule(task, (long)(currentScreen.animationTime*1500));
+      transitionTimer.schedule(task, (long)(currentScreen.animationTime*1000));
     } else 
       super.setScreen(screen);
   }
