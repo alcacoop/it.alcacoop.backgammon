@@ -224,16 +224,20 @@ public class MatchOptionsScreen extends BaseScreen {
     stage.draw();
   }
 
+  
+  @Override
+  public void initialize() {
+    initTable();
+    table.setColor(1,1,1,0);
+  }
 
   
   @Override
   public void show() {
     super.show();
-    initTable();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    table.setColor(1,1,1,0);
-    table.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
   }
 
   

@@ -264,10 +264,8 @@ public class FibsScreen extends BaseScreen {
   }
 
 
-  
   @Override
-  public void show() {
-    super.show();
+  public void initialize() {
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     if (!me.getName().equals(GnuBackgammon.Instance.FibsUsername))
       me.getLabel().setText("Connecting...");
@@ -275,23 +273,24 @@ public class FibsScreen extends BaseScreen {
       l1.setText("ONLINE USERS ON FIBS");
     else
       l1.setText("ONLINE USERS ON TIGA");
-    Gdx.input.setInputProcessor(stage);
-    Gdx.input.setCatchBackKey(true);
-    g.setColor(1,1,1,0);
-    
     Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     String formattedDate = formatter.format(expiry);
     LLastLogin.setText("Last login: "+formattedDate);
-
     fibsPlayers.clear();
-    
     Table t = new Table();
     t.add(new Label("Loading list...", GnuBackgammon.skin));
     onlineList.setWidget(t);
-    
+    g.setColor(1,1,1,0);
     g.setX(-stage.getWidth());
-    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, animationTime))));
+  }
+  
+  @Override
+  public void show() {
+    super.show();
+    Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, animationTime))));
   }
   
   

@@ -130,7 +130,7 @@ public class MainMenuScreen extends BaseScreen {
   
   public void redraw() {
     createMenu();
-    g.addAction(MyActions.sequence(Actions.delay(0.2f),Actions.fadeIn(0.6f)));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
   
   
@@ -201,14 +201,17 @@ public class MainMenuScreen extends BaseScreen {
   }
 
 
+  @Override
+  public void initialize() {
+    createMenu();
+  }
   
   @Override
   public void show() {
     super.show();
-    createMenu();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    g.addAction(MyActions.sequence(Actions.delay(0.1f),Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
   
   @Override

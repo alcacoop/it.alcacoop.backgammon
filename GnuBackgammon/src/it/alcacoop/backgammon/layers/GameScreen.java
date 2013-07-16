@@ -79,7 +79,6 @@ public class GameScreen extends BaseScreen {
   public ChatBox chatBox;
   
   public GameScreen() {
-    animationTime = 0f;
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
@@ -187,17 +186,10 @@ public class GameScreen extends BaseScreen {
 
   
   @Override
-  public void show() {
-    super.show();
-    Gdx.app.log("SHOW", "GAME SCREEN");
-    GnuBackgammon.Instance.nativeFunctions.showAds(true);
-    Gdx.input.setInputProcessor(stage);
-    Gdx.input.setCatchBackKey(true);
-    
+  public void initialize() {
     loadTextures();
     initTable();
     table.setY(stage.getHeight());
-    
     if ((Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists())&&(MatchState.matchType==0))
       restoreOldMatch();
     else
@@ -207,7 +199,38 @@ public class GameScreen extends BaseScreen {
       chatBox.reset();
     } else {
       chatBox.setVisible(false);
+      chatBox.hardHide();
     }
+  }
+  
+  @Override
+  public void show() {
+    super.show();
+    GnuBackgammon.Instance.nativeFunctions.showAds(true);
+    Gdx.input.setInputProcessor(stage);
+    Gdx.input.setCatchBackKey(true);
+    if ((Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists())&&(MatchState.matchType==0))
+      table.addAction(MyActions.sequence(Actions.moveTo(0, 0, 0.3f)));
+    else
+      table.addAction(MyActions.sequence(
+          Actions.moveTo(0, 0, 0.3f),
+          Actions.run(new Runnable() {
+            @Override
+            public void run() {
+              if (MatchState.matchType<2)
+                GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
+              else if (MatchState.matchType==2)
+                GnuBackgammon.fsm.state(FIBSFSM.States.OPENING_ROLL);
+              else 
+                GnuBackgammon.fsm.state(GServiceFSM.States.OPENING_ROLL);
+            }
+          })
+        ));
+  }
+  
+  @Override
+  public void fadeOut() {
+    table.addAction(MyActions.sequence(Actions.moveTo(0, stage.getHeight(), 0.3f)));
   }
 
   
@@ -274,10 +297,6 @@ public class GameScreen extends BaseScreen {
     
     GameMenuPopup.setDisabledButtons();
     board.setCube(cubeValue, cubeOwner);
-    table.addAction(MyActions.sequence(
-      Actions.delay(0.1f),
-      Actions.moveTo(0, 0, 0.3f)
-    ));
   }
   
   public void initNewMatch() {
@@ -296,22 +315,6 @@ public class GameScreen extends BaseScreen {
     
     pInfo[0].update();
     pInfo[1].update();
-
-    table.addAction(MyActions.sequence(
-      Actions.delay(0.1f),
-      Actions.moveTo(0, 0, 0.3f),
-      Actions.run(new Runnable() {
-        @Override
-        public void run() {
-          if (MatchState.matchType<2)
-            GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
-          else if (MatchState.matchType==2)
-            GnuBackgammon.fsm.state(FIBSFSM.States.OPENING_ROLL);
-          else 
-            GnuBackgammon.fsm.state(GServiceFSM.States.OPENING_ROLL);
-        }
-      })
-    ));
   }
   
   @Override

@@ -46,6 +46,7 @@ public class BaseScreen implements Screen{
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
   
+  public void initialize() {}
   
   public void moveBG(float x) {
     float _x = lastBGX;

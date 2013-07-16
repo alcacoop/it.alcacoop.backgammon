@@ -232,6 +232,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   @Override
   public void setScreen(final Screen screen) {
     if (currentScreen!=null) {
+      ((BaseScreen)screen).initialize();
       currentScreen.fadeOut();
       Timer t = new Timer();
       TimerTask task = new TimerTask() {
@@ -241,7 +242,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
           GnuBackgammon.super.setScreen(screen);    
         }
       };
-      t.schedule(task, (long)(currentScreen.animationTime*1000));
+      t.schedule(task, (long)(currentScreen.animationTime*1500));
     } else 
       super.setScreen(screen);
   }
@@ -331,7 +332,5 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public void appendChatMessage(String username, String msg, boolean direction) {
     gameScreen.chatBox.appendMessage(username, msg, direction);
   }
-
-  
   
 }
