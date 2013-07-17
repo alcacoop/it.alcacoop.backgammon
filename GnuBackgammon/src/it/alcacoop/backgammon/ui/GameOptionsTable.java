@@ -138,7 +138,7 @@ public class GameOptionsTable extends Table {
     
     Label l = new Label("Animation Speed:", GnuBackgammon.skin);
     
-    float width = l.getWidth()*0.8f;
+    float width = l.getWidth()*0.9f;
     float height = l.getHeight()*1.8f;
     
     
@@ -151,53 +151,53 @@ public class GameOptionsTable extends Table {
       add().fill().expand().colspan(5);
     }
 
-    row().height(height*1.3f);
-    add().fill().height(height*1.3f).expandX();
+    row().spaceBottom(height*0.05f);
+    add().fill().expandX();
     add(new Label("Sounds:", GnuBackgammon.skin)).right().spaceRight(6).height(height);
-    add(sn1).width(width).fillY().height(height).spaceRight(6);
-    add(sn2).width(width).fillY().height(height);
-    add().fill().height(height).expandX();
+    add(sn1).width(width).fillY().height(height*1.3f);
+    add(sn2).width(width).fillY().height(height*1.3f);
+    add().fill().expandX();
     
     
-    row().height(height*1.3f);
-    add().fill().height(height*1.3f).expandX();
+    row().spaceBottom(height*0.05f);
+    add().fill().expandX();
     add(l).right().spaceRight(6);
-    add(sp1).height(height).width(width).spaceRight(6);
-    add(sp2).height(height).width(width);
-    add().fill().height(height).expandX();
+    add(sp1).height(height*1.3f).width(width);
+    add(sp2).height(height*1.3f).width(width);
+    add().fill().expandX();
     
     
-    row().height(height*1.3f);
-    add().fill().height(height*1.3f).expandX();
+    row().spaceBottom(height*0.05f);
+    add().fill().height(height*1.1f).expandX();
     add(new Label("Move Logic:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(am1).height(height).width(width).spaceRight(6);
-    add(am2).height(height).width(width);
-    add().fill().height(height).expandX();
+    add(am1).height(height*1.3f).width(width);
+    add(am2).height(height*1.3f).width(width);
+    add().fill().expandX();
 
     
-    row().height(height*1.3f);
-    add().fill().height(height*1.3f).expandX();
+    row().spaceBottom(height*0.05f);
+    add().fill().height(height*1.1f).expandX();
     add(new Label("Legal Moves:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(lm1).height(height).width(width).spaceRight(6);
-    add(lm2).height(height).width(width);
-    add().fill().height(height).expandX();
+    add(lm1).height(height*1.3f).width(width);
+    add(lm2).height(height*1.3f).width(width);
+    add().fill().expandX();
     
-    row().height(height*1.3f);
-    add().fill().height(height*1.3f).expandX();
+    row().spaceBottom(height*0.1f);
+    add().fill().height(height*1.05f).expandX();
     add(new Label("Manual dices:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(md1).height(height).width(width).spaceRight(6);
-    add(md2).height(height).width(width);
-    add().fill().height(height).expandX();
+    add(md1).height(height*1.3f).width(width);
+    add(md2).height(height*1.3f).width(width);
+    add().fill().expandX();
 
     row();
     add().fill().expand().colspan(5);
     
     if (decoration) {
-      row().height(height*1.3f);
-      add(back).expand().fill().colspan(5).height(height).width(1.5f*width);
+      row();
+      add(back).expand().fill().colspan(5).height(height*1.3f).width(1.5f*width);
     } else {
-      row().height(height*1.3f);
-      add(ok).expandX().fillX().colspan(5).height(height).width(1.5f*width);
+      row();
+      add(ok).expandX().fillX().colspan(5).height(height*1.3f).width(1.5f*width);
     }
     row();
     add().fill().expand().colspan(5);

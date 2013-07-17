@@ -756,8 +756,8 @@ public final class UIDialog extends Table {
     
     instance.opts.initFromPrefs();
     
-    float width = stage.getWidth()*0.75f;
-    float height = stage.getHeight()*0.92f;
+    float width = stage.getWidth()*0.85f;
+    float height = stage.getHeight()*0.95f;
     
     instance.clear();
     instance.setWidth(width);

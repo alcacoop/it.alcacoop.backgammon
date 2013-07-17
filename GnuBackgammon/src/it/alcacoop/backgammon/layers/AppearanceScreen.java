@@ -338,21 +338,21 @@ public class AppearanceScreen extends BaseScreen {
     table.row();
     table.add().fill().expand();
     table.add(new Label("Direction:", GnuBackgammon.skin)).right().padRight(7);
-    table.add(d1).width(b1.getWidth()).height(b1.getHeight()*0.5f);
-    table.add(d2).width(b1.getWidth()).height(b1.getHeight()*0.5f);
+    table.add(d1).width(b1.getWidth()).height(cs1.getHeight());
+    table.add(d2).width(b1.getWidth()).height(cs1.getHeight());
     table.add().fill().expand().colspan(2);
 
     table.row();
     table.add().fill().expand();
     table.add(new Label("Numbered points:", GnuBackgammon.skin)).right().padRight(7);
-    table.add(np1).width(b1.getWidth()).height(b1.getHeight()*0.5f);
-    table.add(np2).width(b1.getWidth()).height(b1.getHeight()*0.5f);
+    table.add(np1).width(b1.getWidth()).height(cs1.getHeight());
+    table.add(np2).width(b1.getWidth()).height(cs1.getHeight());
     table.add().fill().expand().colspan(2);
     
     table.row();
     table.add().fill().expand().colspan(6);
     
     table.row();
-    table.add(back).colspan(6).width(b1.getWidth()*1.4f).height(b1.getHeight()*0.5f).fill().expand();
+    table.add(back).colspan(6).width(b1.getWidth()*1.7f).height(cs1.getHeight()).fill().expand();
   }
 }
