@@ -849,7 +849,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   	  System.out.println("======> GSERVICE INVITE: Autodeclined");
   	  return;
   	}
-    gserviceInvitationRecieved(invitation.getInviter().getIconImageUri(), 
+    gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), 
         invitation.getInviter().getDisplayName(), invitation.getInvitationId());
   }
 
@@ -982,7 +982,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
 
 
-  public void gserviceInvitationRecieved(final Uri imagesrc, final String username, final String invitationId) {
+  public void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
 
