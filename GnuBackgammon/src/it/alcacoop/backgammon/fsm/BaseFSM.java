@@ -70,7 +70,8 @@ public class BaseFSM implements Context {
     GSERVICE_LOGIN,
     GSERVICE_CONNECTED,
     GSERVICE_READY,
-    GSERVICE_HANDSHAKE,
+    GSERVICE_INIT_RATING,//params={rating}
+    GSERVICE_HANDSHAKE,   
     
     GSERVICE_FIRSTROLL,//params={turn, dice0, dice1}
     GSERVICE_ROLL, //params={dice0, dice1}

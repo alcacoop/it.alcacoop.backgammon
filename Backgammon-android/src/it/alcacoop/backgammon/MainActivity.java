@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -862,9 +863,6 @@ OnStateLoadedListener
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
     }
-    
-    
-    gHelper.getAppStateClient().loadState(this, APP_DATA_KEY);
   }
 
 

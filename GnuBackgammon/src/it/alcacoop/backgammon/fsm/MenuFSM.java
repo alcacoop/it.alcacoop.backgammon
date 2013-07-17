@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -312,10 +313,18 @@ public class MenuFSM extends BaseFSM implements Context {
           
                      
           case GSERVICE_READY:
+            double rating = ELORatingManager.getInstance().getRating();
+            GServiceClient.getInstance().sendMessage("8 "+rating);
+            GServiceClient.getInstance().queue.reset();
+            break;
+
+          case GSERVICE_INIT_RATING:
+            double opponentRating = (Double) params;
+            ELORatingManager.getInstance().setOpponentRating(opponentRating);
+
             Random gen = new Random();
             waitTime = gen.nextLong();
             GServiceClient.getInstance().sendMessage("3 "+waitTime);
-            GServiceClient.getInstance().queue.reset();
             break;
           
           case GSERVICE_HANDSHAKE:

@@ -43,6 +43,7 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
@@ -317,6 +318,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
         
           case GSERVICE_FIRSTROLL:
+            System.out.println("GSERVICE FIRST ROLL RATING: " + ELORatingManager.getInstance().getRating());
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
             GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
@@ -418,6 +420,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             } else {
               GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" 0");
             }
+            ELORatingManager.getInstance().updateRating(false);
             GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
           } else  { //CANCEL
             GnuBackgammon.fsm.back();

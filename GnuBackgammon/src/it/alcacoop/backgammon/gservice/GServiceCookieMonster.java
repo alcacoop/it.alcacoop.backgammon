@@ -61,6 +61,7 @@ public class GServiceCookieMonster implements GServiceMessages {
     currentBatchBuild = new LinkedList<CookieDough>();
     addDough(GSERVICE_CONNECTED, "^"+GSERVICE_CONNECTED+"$");
     addDough(GSERVICE_READY, "^"+GSERVICE_READY+"$");
+    addDough(GSERVICE_INIT_RATING, "^"+GSERVICE_INIT_RATING+" ");
     addDough(GSERVICE_HANDSHAKE, "^"+GSERVICE_HANDSHAKE+" ");
     addDough(GSERVICE_OPENING_ROLL, "^"+GSERVICE_OPENING_ROLL+" ");
     addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL+" ");
