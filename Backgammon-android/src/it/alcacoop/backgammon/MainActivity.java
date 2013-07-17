@@ -59,6 +59,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -264,6 +266,17 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     PurchaseActivity.createBillingData(this);
     gHelper = new GServiceGameHelper(this);
     gHelper.setup(this, GServiceGameHelper.CLIENT_PLUS|GServiceGameHelper.CLIENT_GAMES);
+
+    System.out.println("GSERVICE: onCreate");
+    ActivityManager actvityManager = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
+    List<RunningTaskInfo> taskInfos = actvityManager.getRunningTasks(3);
+    for(RunningTaskInfo runningTaskInfo:taskInfos){
+      if (runningTaskInfo.baseActivity.getPackageName().contains("gms")) {
+        System.out.println("GSERVICE: Running Processes "+runningTaskInfo.baseActivity.getPackageName());
+        gHelper.beginUserInitiatedSignIn();
+        break;
+      }
+    }
     /** GOOGLE API  INITIALIZATION **/
   }
 
