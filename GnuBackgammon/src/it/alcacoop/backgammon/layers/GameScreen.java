@@ -169,6 +169,12 @@ public class GameScreen extends BaseScreen {
     table.add(board).colspan(4).expand().fill();
   }
 
+  public void updatePInfo(String me, String opponent) {
+    pInfo[0].setName(me);
+    pInfo[1].setName(opponent);
+    pInfo[0].update();
+    pInfo[1].update();
+  }
   
   public void updatePInfo() {
     pInfo[0].update();
@@ -306,7 +312,7 @@ public class GameScreen extends BaseScreen {
       MatchState.pl0 = "AI("+(MatchState.currentLevel.ordinal()+1)+")";
       pInfo[1].setName("PL1:");
       MatchState.pl1 = "PL1";
-    } else { //two players
+    } else if (MatchState.matchType == 1) { //two players
       pInfo[0].setName("PL1:");
       MatchState.pl0 = "PL1";
       pInfo[1].setName("PL2:");
@@ -361,7 +367,6 @@ public class GameScreen extends BaseScreen {
       n = pInfo[1].getPName();
     return n.substring(0, n.length()-1);
   }
-
 
   @Override
   public void moveBG(float x) {

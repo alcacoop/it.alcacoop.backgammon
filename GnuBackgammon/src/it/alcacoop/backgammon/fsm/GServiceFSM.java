@@ -332,11 +332,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_FIRSTROLL:
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
-            
-            GameScreen gs = GnuBackgammon.Instance.gameScreen;
-            gs.pInfo[1].setName("You"); //PRIMO NOME => NERO
-            gs.pInfo[0].setName("Opponent");
-            ctx.board().updatePInfo();
             GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
             
             int pars[] = (int[])params;

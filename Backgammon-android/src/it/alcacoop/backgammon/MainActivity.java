@@ -819,7 +819,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     if (gHelper.getInvitationId()!=null) {
       //acceptInvitation(gHelper.getInvitationId());
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
-      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId(); 
+      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
     }
   }
 
@@ -921,6 +921,15 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     mParticipants = room.getParticipants();
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     updateRoom(room);
+    String me, opponent;
+    if (mParticipants.get(0).getParticipantId()==mMyId) {
+      me = mParticipants.get(0).getDisplayName();
+      opponent = mParticipants.get(1).getDisplayName();
+    } else {
+      me = mParticipants.get(1).getDisplayName();
+      opponent = mParticipants.get(0).getDisplayName();
+    }
+    GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
     System.out.println("GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
   }
 
