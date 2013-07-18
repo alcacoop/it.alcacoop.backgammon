@@ -234,4 +234,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceResetRoom() {}
+
+  @Override
+  public void gserviceStopPing() {}
 }
