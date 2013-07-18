@@ -7,8 +7,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class BaseScreen implements Screen{
 
@@ -17,6 +20,8 @@ public class BaseScreen implements Screen{
   public float animationTime = 0.2f;
   protected static float lastBGX;
   private float width; 
+  private Image alca;
+  private TextButton alcaBtn;
   
   public BaseScreen() {
     //STAGE DIM = SCREEN RES
@@ -38,13 +43,24 @@ public class BaseScreen implements Screen{
     int[] splits = ((AtlasRegion)r).splits;
     patch = new NinePatch(r, splits[0], splits[1], splits[2], splits[3]);
 
-    Image i = new Image(patch);
+    alca = new Image(patch);
+    alca.setWidth(stage.getWidth());
+    alca.setPosition(0, 0);
     
-    i.setWidth(stage.getWidth());
-    i.setPosition(0, 0);
+    alcaBtn = new TextButton("", GnuBackgammon.skin);
+    alcaBtn.setWidth(alca.getHeight());
+    alcaBtn.setHeight(alca.getHeight());
+    alcaBtn.setX(stage.getWidth()-alcaBtn.getHeight());
+    alcaBtn.setColor(0,0,0,0);
+    alcaBtn.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.nativeFunctions.openURL("market://search?q=pub:Alca Soc. Coop.");
+      }
+    });
     
     stage.addActor(bgImg);
-    stage.addActor(i);
+    stage.addActor(alca);
   }
 
   @Override
@@ -55,6 +71,13 @@ public class BaseScreen implements Screen{
 
   @Override
   public void show() {
+    if (this instanceof GameScreen) {
+      alca.setColor(0,0,0,0);
+      if (alcaBtn.hasParent()) alcaBtn.remove();
+    } else {
+      alca.setColor(1,1,1,1);
+      stage.addActor(alcaBtn);
+    }
     if (lastBGX>0) lastBGX = 0;
     if (lastBGX<(stage.getWidth()-width)) lastBGX=stage.getWidth()-width;
     bgImg.setX(lastBGX);
