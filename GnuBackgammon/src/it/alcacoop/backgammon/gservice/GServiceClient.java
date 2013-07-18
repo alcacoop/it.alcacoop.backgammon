@@ -132,21 +132,21 @@ public class GServiceClient implements GServiceMessages {
   public void leaveRoom(int code) {
     GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
     switch (code) {
-	case STATUS_OK:
-	  // opponent disconnected
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 0);
-	  break;
-	case STATUS_NETWORK_ERROR_OPERATION_FAILED:
-	  // you disconnected
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 1);
-	  break;
-	case 10000:
-	  // activity stopped
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
-	  break;
-	default:
-	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
-	  break;
-	}
+    case STATUS_OK:
+      // opponent disconnected
+      GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 0);
+      break;
+    case STATUS_NETWORK_ERROR_OPERATION_FAILED:
+      // you disconnected
+      GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 1);
+      break;
+    case 10000:
+      // activity stopped
+      GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
+      break;
+    default:
+      GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+      break;
+    }
   }
 }

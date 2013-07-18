@@ -59,4 +59,5 @@ public interface NativeFunctions {
   public void gserviceAcceptInvitation(String invitationId);
   public void gserviceSendReliableRealTimeMessage(String msg);
   public void gserviceResetRoom();
+  public void gserviceStopPing();
 }

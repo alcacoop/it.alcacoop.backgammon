@@ -496,66 +496,68 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       @Override
       public void run() {
         switch (evt) {
-          case GSERVICE_CHATMSG:
-            GnuBackgammon.Instance.snd.playMessage();
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
+        case GSERVICE_CHATMSG:
+          GnuBackgammon.Instance.snd.playMessage();
+          ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
+          break;
+
+        case GSERVICE_ERROR:
+          int errorCode = (Integer)params;
+          String message = "";
+          switch (errorCode) {
+          case 0:
+            message = "Network error: opponent disconnected!";
             break;
-            
-          case GSERVICE_ERROR:
-        	int errorCode = (Integer)params;
-        	String message = "";
-        	switch (errorCode) {
-        	  case 0:
-        	    message = "Network error: opponent disconnected!";
-                break;
-              case 1:
-            	message = "Network Error: you disconnected!";
-                break;
-              case 2:
-            	message = "Match stopped. You have to reinvite!";
-                break;
-            }
-            UIDialog.getFlashDialog(
-                Events.GSERVICE_BYE, 
-                message,
-                0.82f,
-                GnuBackgammon.Instance.currentScreen.getStage());  
+          case 1:
+            message = "Network Error: you disconnected!";
             break;
-            
-          case GSERVICE_ABANDON:
-            int status = (Integer)params;
-            String msg = "";
-            switch (status) {
-              case 0:
-                msg = "Opponent abandoned the match";
-                break;
-              case 1:
-                msg = "Opponent resigned the game";
-                break;
-              case 2:
-                msg = "Opponent resigned a gammon game";
-                break;
-              case 3:
-                msg = "Opponent resigned a backgammon game";
-                break;
-            }
-            GnuBackgammon.Instance.gameScreen.chatBox.hide();
-            UIDialog.getFlashDialog(
-                Events.GSERVICE_BYE, 
-                msg,
-                0.82f,
-                GnuBackgammon.Instance.currentScreen.getStage());
+          case 2:
+            message = "Match stopped. You have to reinvite!";
             break;
-          
-          case GSERVICE_BYE:
-            GnuBackgammon.Instance.setFSM("MENU_FSM");
-            GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
-            GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+          }
+          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
+          UIDialog.getFlashDialog(
+              Events.GSERVICE_BYE, 
+              message,
+              0.82f,
+              GnuBackgammon.Instance.currentScreen.getStage());  
+          break;
+
+        case GSERVICE_ABANDON:
+          int status = (Integer)params;
+          String msg = "";
+          switch (status) {
+          case 0:
+            msg = "Opponent abandoned the match";
             break;
-            
-          default:
-            state().processEvent(fsm, evt, params);
+          case 1:
+            msg = "Opponent resigned the game";
             break;
+          case 2:
+            msg = "Opponent resigned a gammon game";
+            break;
+          case 3:
+            msg = "Opponent resigned a backgammon game";
+            break;
+          }
+          GnuBackgammon.Instance.gameScreen.chatBox.hide();
+          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
+          UIDialog.getFlashDialog(
+              Events.GSERVICE_BYE, 
+              msg,
+              0.82f,
+              GnuBackgammon.Instance.currentScreen.getStage());
+          break;
+
+        case GSERVICE_BYE:
+          GnuBackgammon.Instance.setFSM("MENU_FSM");
+          GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+          GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+          break;
+
+        default:
+          state().processEvent(fsm, evt, params);
+          break;
         }
       }
     });

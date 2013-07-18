@@ -1166,10 +1166,16 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
       lastReceptionTime = 0;
-      if (tping!=null) {
-        tping.cancel();
-        tping.purge();
-      }
+      gserviceStopPing();
     }
   }
+
+  @Override
+  public void gserviceStopPing() {
+    if (tping!=null) {
+      tping.cancel();
+      tping.purge();
+    }
+  }
+
 }
