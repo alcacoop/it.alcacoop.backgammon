@@ -74,7 +74,7 @@ public class MainMenuScreen extends BaseScreen {
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           if (UIDialog.isOpened()) return false;
-          UIDialog.getQuitDialog(0.82f, stage);
+          UIDialog.getQuitDialog(0.82f);
         }
         return super.keyDown(event, keycode);
       }
@@ -102,7 +102,7 @@ public class MainMenuScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getHelpDialog(0.82f, stage, false);
+        UIDialog.getHelpDialog(0.82f, false);
       }
     });
     about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
@@ -110,7 +110,7 @@ public class MainMenuScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getAboutDialog(0.82f, stage, false);
+        UIDialog.getAboutDialog(0.82f, false);
       }
     });
     rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);

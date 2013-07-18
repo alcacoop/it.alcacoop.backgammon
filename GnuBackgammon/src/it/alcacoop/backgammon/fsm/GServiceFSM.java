@@ -77,11 +77,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           if ((mv==null)||(mv.length==0)) {
-            UIDialog.getFlashDialog(
-                Events.NO_MORE_MOVES, 
-                "Your opponent has no legal moves",
-                0.82f,
-                ctx.board().getStage());
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.82f);
           } else {
             ctx.board().availableMoves.setMoves(mv);
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_MOVES);
@@ -152,11 +148,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           if ((moves!=null)&&(moves.length>0)) {
             ctx.board().availableMoves.setMoves(moves);  
           } else  {
-            UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, 
-              "No legal moves available",
-              0.82f,
-              ctx.board().getStage());
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.82f);
           }
           ctx.board().dices.animating = false;
           break;
@@ -367,17 +359,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
         if (MatchState.resignValue==4) {
           terminated = true;
-          UIDialog.getFlashDialog(
-              Events.STOPPED, 
-              "Your opponent resigned the game",
-              0.82f,
-              ctx.board().getStage());
+          UIDialog.getFlashDialog(Events.STOPPED, "Your opponent resigned the game", 0.82f);
         } else {
-          UIDialog.getFlashDialog(
-            Events.STOPPED, 
-            "Match terminated",
-            0.82f,
-            ctx.board().getStage());
+          UIDialog.getFlashDialog(Events.STOPPED, "Match terminated", 0.82f);
         }
       }
       
@@ -434,7 +418,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           String s = "Really resign the game?";
           if (ret == 2) s = "Really resign a gammon game?";
           if (ret == 3) s = "Really resign a backgammon game?";
-          UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f, ctx.board().getStage());
+          UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f);
           break;
           
         case HUMAN_RESIGNED:
@@ -490,7 +474,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   
   @Override
   public void processEvent(final Events evt, final Object params) {
-    final GServiceFSM fsm = this;
     System.out.println("PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
@@ -516,11 +499,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             break;
           }
           GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
-          UIDialog.getFlashDialog(
-              Events.GSERVICE_BYE, 
-              message,
-              0.82f,
-              GnuBackgammon.Instance.currentScreen.getStage());  
+          UIDialog.getFlashDialog(Events.GSERVICE_BYE, message, 0.82f);  
           break;
 
         case GSERVICE_ABANDON:
@@ -542,11 +521,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           }
           GnuBackgammon.Instance.gameScreen.chatBox.hide();
           GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
-          UIDialog.getFlashDialog(
-              Events.GSERVICE_BYE, 
-              msg,
-              0.82f,
-              GnuBackgammon.Instance.currentScreen.getStage());
+          UIDialog.getFlashDialog(Events.GSERVICE_BYE, msg, 0.82f);
           break;
 
         case GSERVICE_BYE:
@@ -556,7 +531,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           break;
 
         default:
-          state().processEvent(fsm, evt, params);
+          state().processEvent(GServiceFSM.this, evt, params);
           break;
         }
       }

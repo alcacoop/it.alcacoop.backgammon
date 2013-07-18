@@ -168,7 +168,7 @@ public class Board extends Group {
           if (GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) {
             Board.this.rollDices();
           } else {
-            UIDialog.getDicesDialog(0.82f, Board.this.getStage(), false);
+            UIDialog.getDicesDialog(0.82f, false);
           }
         else
           GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, null);
@@ -370,7 +370,6 @@ public class Board extends Group {
       c.moveTo(m.to);
       lastMoved = c;
     } else {
-      //UIDialog.getFlashDialog(Events.NOOP, "PROBLEMA SERIO QUI!", getStage());
       GnuBackgammon.fsm.state(States.HUMAN_TURN);
     }
   }

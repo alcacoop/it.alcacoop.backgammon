@@ -184,7 +184,7 @@ public class Main implements NativeFunctions {
 
   @Override
   public void fibsSignin() {
-    UIDialog.getLoginDialog(1, GnuBackgammon.Instance.currentScreen.getStage());
+    UIDialog.getLoginDialog(1);
   }
 
   @Override

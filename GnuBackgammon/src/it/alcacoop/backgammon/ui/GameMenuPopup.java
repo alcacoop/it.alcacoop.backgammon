@@ -145,9 +145,9 @@ public final class GameMenuPopup extends Table {
           GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
         
         if (MatchState.matchType==0)
-          UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
+          UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f);
         else
-          UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
+          UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f);
       }});
     }});
     
@@ -158,7 +158,7 @@ public final class GameMenuPopup extends Table {
         hide(new Runnable(){
         @Override
         public void run() {
-          UIDialog.getOptionsDialog(0.9f, GnuBackgammon.Instance.board.getStage());
+          UIDialog.getOptionsDialog(0.9f);
         }});
       }});
     

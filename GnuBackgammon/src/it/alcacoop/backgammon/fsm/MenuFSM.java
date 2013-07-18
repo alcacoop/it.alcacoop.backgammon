@@ -77,11 +77,7 @@ public class MenuFSM extends BaseFSM implements Context {
               Gdx.files.absolute(GnuBackgammon.Instance.fname+"sgf").delete();
               ctx.state(States.MATCH_OPTIONS);
             } else { //SAVED MATCH PRESENT!
-              UIDialog.getYesNoDialog(
-                  Events.RESTORE_ANSWER, 
-                  "Restore previous match?", 
-                  0.82f,
-                  GnuBackgammon.Instance.currentScreen.getStage());
+              UIDialog.getYesNoDialog(Events.RESTORE_ANSWER, "Restore previous match?", 0.82f);
             }
           }
           if (params.toString().equals("TWO PLAYERS")) {
@@ -175,7 +171,7 @@ public class MenuFSM extends BaseFSM implements Context {
             }
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
-            UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later", 0.82f);
             ctx.state(States.TWO_PLAYERS);
             break;
             
@@ -195,7 +191,7 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.fibsPrefs.putString("tpassword", "");
             }
             GnuBackgammon.Instance.fibsPrefs.flush();
-            UIDialog.getFlashDialog(Events.NOOP, "Authentication error...\nUser not known or wrong password", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            UIDialog.getFlashDialog(Events.NOOP, "Authentication error...\nUser not known or wrong password", 0.82f);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
@@ -215,21 +211,21 @@ public class MenuFSM extends BaseFSM implements Context {
           
           case FIBS_NETWORK_ERROR:  
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred", 0.82f);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
           
           case FIBS_ACCOUNT_PRESENT:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'"+GnuBackgammon.Instance.FibsUsername+"' is already used by someone else", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'"+GnuBackgammon.Instance.FibsUsername+"' is already used by someone else", 0.82f);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
             
           case FIBS_ACCOUNT_SPAM:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            UIDialog.getFlashDialog(Events.NOOP, "Too much account created from your IP..\nAre you a spammer?", 0.82f, GnuBackgammon.Instance.currentScreen.getStage());
+            UIDialog.getFlashDialog(Events.NOOP, "Too much account created from your IP..\nAre you a spammer?", 0.82f);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;  
@@ -283,12 +279,7 @@ public class MenuFSM extends BaseFSM implements Context {
               MatchState.matchType = 2;
               ctx.state(States.FIBS);
             } else {
-              UIDialog.getFlashDialog(
-                  Events.NOOP, 
-                  "Network is down - Multiplayer not available",
-                  0.82f,
-                  GnuBackgammon.Instance.currentScreen.getStage()
-                  );
+              UIDialog.getFlashDialog(Events.NOOP, "Network is down - Multiplayer not available", 0.82f);
             }
           }
           if (params.toString().equals("PLAY3")) {
@@ -296,12 +287,7 @@ public class MenuFSM extends BaseFSM implements Context {
               MatchState.matchType = 3;
               GnuBackgammon.Instance.nativeFunctions.gsericeStartRoom();
             } else {
-              UIDialog.getFlashDialog(
-                  Events.NOOP, 
-                  "Network is down - Multiplayer not available",
-                  0.82f,
-                  GnuBackgammon.Instance.currentScreen.getStage()
-                  );
+              UIDialog.getFlashDialog(Events.NOOP, "Network is down - Multiplayer not available", 0.82f);
             }
           }
           return true;

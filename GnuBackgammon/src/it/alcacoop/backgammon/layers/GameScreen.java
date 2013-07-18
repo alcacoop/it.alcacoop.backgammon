@@ -97,9 +97,9 @@ public class GameScreen extends BaseScreen {
               GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
             
             if (MatchState.matchType==0)
-              UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f, GnuBackgammon.Instance.board.getStage());
+              UIDialog.getLeaveDialog(Events.ABANDON_MATCH, 0.82f);
             else
-              UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f, GnuBackgammon.Instance.board.getStage());
+              UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?", 0.82f);
           }
         }
         

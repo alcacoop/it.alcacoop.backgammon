@@ -262,13 +262,14 @@ public final class UIDialog extends Table {
   }
   
   
-  public static void getGServiceLoginDialog(Stage stage) {
-    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f, stage);  
+  public static void getGServiceLoginDialog() {
+    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f);  
   }
-  public static void getYesNoDialog(BaseFSM.Events evt, String text, Stage stage) {
-    getYesNoDialog(evt, text, 1, stage);
+  public static void getYesNoDialog(BaseFSM.Events evt, String text) {
+    getYesNoDialog(evt, text, 1);
   }
-  public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+  public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -302,10 +303,11 @@ public final class UIDialog extends Table {
     instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
-  public static void getContinueDialog(BaseFSM.Events evt, String text, Stage stage) {
-    getContinueDialog(evt, text, 1, stage);
+  public static void getContinueDialog(BaseFSM.Events evt, String text) {
+    getContinueDialog(evt, text, 1);
   }
-  public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+  public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -338,10 +340,11 @@ public final class UIDialog extends Table {
   }
  
   
-  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, Stage stage) {
-    getEndGameDialog(evt, text, text1, score1, score2, 1, stage);
+  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2) {
+    getEndGameDialog(evt, text, text1, score1, score2, 1);
   }
-  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha, Stage stage) {
+  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -392,10 +395,11 @@ public final class UIDialog extends Table {
   }
   
   
-  public static void getFlashDialog(BaseFSM.Events evt, String text, Stage stage) {
-    getFlashDialog(evt, text, 1, stage);
+  public static void getFlashDialog(BaseFSM.Events evt, String text) {
+    getFlashDialog(evt, text, 1);
   }
-  public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha, Stage stage) {
+  public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -431,10 +435,11 @@ public final class UIDialog extends Table {
     ));
   }
   
-  public static void getQuitDialog(Stage stage) {
-    getQuitDialog(1, stage);
+  public static void getQuitDialog() {
+    getQuitDialog(1);
   }
-  public static void getQuitDialog(float alpha, Stage stage) {
+  public static void getQuitDialog(float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = true;
     instance.optionsWindow = false;
@@ -468,7 +473,8 @@ public final class UIDialog extends Table {
   }
 
   
-  public static void getLeaveDialog(BaseFSM.Events evt, float alpha, Stage stage) {
+  public static void getLeaveDialog(BaseFSM.Events evt, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -511,10 +517,11 @@ public final class UIDialog extends Table {
     instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
-  public static void getHelpDialog(Stage stage, Boolean cb) {
-    getHelpDialog(1, stage, cb);
+  public static void getHelpDialog(Boolean cb) {
+    getHelpDialog(1, cb);
   }
-  public static void getHelpDialog(float alpha, Stage stage, Boolean cb) {
+  public static void getHelpDialog(float alpha, Boolean cb) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
@@ -607,10 +614,11 @@ public final class UIDialog extends Table {
   }
   
   
-  public static void getAboutDialog(Stage stage, Boolean cb) {
-    getAboutDialog(1, stage, cb);
+  public static void getAboutDialog(Boolean cb) {
+    getAboutDialog(1, cb);
   }
-  public static void getAboutDialog(float alpha, Stage stage, Boolean cb) {
+  public static void getAboutDialog(float alpha, Boolean cb) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
@@ -742,10 +750,11 @@ public final class UIDialog extends Table {
   }
   
   
-  public static void getOptionsDialog(Stage stage) {
-    getOptionsDialog(1, stage);
+  public static void getOptionsDialog() {
+    getOptionsDialog(1);
   }
-  public static void getOptionsDialog(float alpha, Stage stage) {
+  public static void getOptionsDialog(float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
@@ -777,7 +786,8 @@ public final class UIDialog extends Table {
     return instance.hasParent();
   }
 
-  public static void getLoginDialog(float alpha, Stage stage) {
+  public static void getLoginDialog(float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
@@ -847,7 +857,7 @@ public final class UIDialog extends Table {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getCreateAccountDialog(1, GnuBackgammon.Instance.currentScreen.getStage());
+        UIDialog.getCreateAccountDialog(1);
         super.clicked(event, x, y);
       }
     });
@@ -874,7 +884,8 @@ public final class UIDialog extends Table {
   
   
   
-  public static void getCreateAccountDialog(float alpha, Stage stage) {
+  public static void getCreateAccountDialog(float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
@@ -938,7 +949,8 @@ public final class UIDialog extends Table {
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
-  public static void getInviteClickedDialog(String username, float alpha, Stage stage) {
+  public static void getInviteClickedDialog(String username, float alpha) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
     instance.optionsWindow = false;
@@ -981,10 +993,11 @@ public final class UIDialog extends Table {
     instance.bReject.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
   }
-  public static void getDicesDialog(Stage stage, Boolean cb) {
-    getDicesDialog(1, stage, cb);
+  public static void getDicesDialog(Boolean cb) {
+    getDicesDialog(1, cb);
   }
-  public static void getDicesDialog(float alpha, Stage stage, Boolean cb) {
+  public static void getDicesDialog(float alpha, Boolean cb) {
+    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
     instance.quitWindow = false;
