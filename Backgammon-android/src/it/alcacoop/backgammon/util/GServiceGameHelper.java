@@ -101,7 +101,7 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
     ProgressDialog mProgressDialog = null;
 
     // Whether to automatically try to sign in on onStart().
-    boolean mAutoSignIn = true;
+    boolean mAutoSignIn;
 
     /*
      * Whether user has specifically requested that the sign-in process begin.
@@ -149,8 +149,9 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
      * After constructing this object, call @link{setup} from the onCreate()
      * method of your Activity.
      */
-    public GServiceGameHelper(Activity activity) {
+    public GServiceGameHelper(Activity activity, boolean autoSignIn) {
         mActivity = activity;
+        mAutoSignIn = autoSignIn;
     }
 
     /** Sets the message that appears onscreen while signing in. */

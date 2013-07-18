@@ -99,6 +99,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.ads.Ad;
@@ -169,6 +170,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   private String mRoomId = null;
   private String mMyId = null;
   ArrayList<Participant> mParticipants = null;
+  private Preferences prefs;
 
 
   @SuppressWarnings("deprecation")
@@ -264,7 +266,8 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
     /** GOOGLE API  INITIALIZATION **/
     PurchaseActivity.createBillingData(this);
-    gHelper = new GServiceGameHelper(this);
+    prefs = Gdx.app.getPreferences("GameOptions");
+    gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_PLUS|GServiceGameHelper.CLIENT_GAMES);
 
     System.out.println("GSERVICE: onCreate");
@@ -273,7 +276,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     for(RunningTaskInfo runningTaskInfo:taskInfos){
       if (runningTaskInfo.baseActivity.getPackageName().contains("gms")) {
         System.out.println("GSERVICE: Running Processes "+runningTaskInfo.baseActivity.getPackageName());
-        gHelper.beginUserInitiatedSignIn();
+        gserviceSignIn();
         break;
       }
     }
@@ -827,9 +830,11 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
 
   @Override
   public void onSignInSucceeded() {
+    prefs.putBoolean("ALREADY_SIGNEDIN", true);
+    prefs.flush();
     gHelper.getGamesClient().registerInvitationListener(this);
 
-    if (gHelper.getInvitationId()!=null) {
+    if (gHelper.getInvitationId()!=null && gHelper.getGamesClient().isConnected()) {
       //acceptInvitation(gHelper.getInvitationId());
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
