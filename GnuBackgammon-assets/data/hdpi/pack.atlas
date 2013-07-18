@@ -5,378 +5,407 @@ filter: Linear,Linear
 repeat: none
 B2-BG
   rotate: false
-  xy: 1, 1418
+  xy: 1, 1414
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 B1-BG
   rotate: false
-  xy: 1, 796
+  xy: 1, 792
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 B1
   rotate: false
-  xy: 1, 174
+  xy: 1, 170
   size: 1102, 620
   orig: 1102, 620
   offset: 0, 0
   index: -1
 bg
   rotate: false
-  xy: 1105, 1704
-  size: 500, 334
-  orig: 500, 334
+  xy: 1105, 1734
+  size: 450, 300
+  orig: 450, 300
   offset: 0, 0
   index: -1
 logo
   rotate: false
-  xy: 1, 97
+  xy: 1, 93
   size: 529, 75
   orig: 529, 75
   offset: 0, 0
   index: -1
 point
   rotate: false
-  xy: 1105, 1418
+  xy: 1105, 1448
   size: 75, 284
   orig: 75, 284
   offset: 0, 0
   index: -1
 b2
   rotate: false
-  xy: 1607, 1914
+  xy: 1557, 1910
   size: 220, 124
   orig: 220, 124
   offset: 0, 0
   index: -1
 b3
   rotate: false
-  xy: 1182, 1578
+  xy: 1182, 1608
   size: 220, 124
   orig: 220, 124
   offset: 0, 0
   index: -1
 b1
   rotate: false
-  xy: 1607, 1788
+  xy: 1557, 1784
   size: 220, 124
   orig: 220, 124
   offset: 0, 0
   index: -1
+alca
+  rotate: false
+  xy: 1, 1
+  size: 248, 90
+  split: 3, 244, 87, 2
+  orig: 248, 90
+  offset: 0, 0
+  index: -1
+twitter
+  rotate: false
+  xy: 1779, 1952
+  size: 90, 82
+  orig: 90, 82
+  offset: 0, 0
+  index: -1
+gplus
+  rotate: false
+  xy: 1182, 1525
+  size: 90, 81
+  orig: 90, 81
+  offset: 0, 0
+  index: -1
+facebook
+  rotate: false
+  xy: 1404, 1652
+  size: 90, 80
+  orig: 90, 80
+  offset: 0, 0
+  index: -1
 c64
   rotate: false
-  xy: 1, 21
+  xy: 532, 94
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c16
   rotate: false
-  xy: 532, 98
+  xy: 1105, 1372
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c32
   rotate: false
-  xy: 1105, 1342
+  xy: 251, 17
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c8
   rotate: false
-  xy: 1829, 1964
+  xy: 1779, 1876
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c2
   rotate: false
-  xy: 1182, 1502
+  xy: 1871, 1960
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 c4
   rotate: false
-  xy: 1404, 1628
+  xy: 1182, 1449
   size: 74, 74
   orig: 74, 74
   offset: 0, 0
   index: -1
 cs2
   rotate: false
-  xy: 1607, 1732
+  xy: 1274, 1552
   size: 86, 54
   orig: 86, 54
   offset: 0, 0
   index: -1
 cs3
   rotate: false
-  xy: 77, 41
+  xy: 608, 114
   size: 86, 54
   orig: 86, 54
   offset: 0, 0
   index: -1
 cs1
   rotate: false
-  xy: 608, 118
+  xy: 327, 37
   size: 86, 54
   orig: 86, 54
   offset: 0, 0
   index: -1
 d3
   rotate: false
-  xy: 1105, 1276
+  xy: 1105, 1306
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d1
   rotate: false
-  xy: 1829, 1898
+  xy: 1779, 1810
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d4
   rotate: false
-  xy: 1905, 1974
+  xy: 1947, 1970
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d6
   rotate: false
-  xy: 1182, 1436
+  xy: 1105, 1240
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d2
   rotate: false
-  xy: 1258, 1512
+  xy: 1105, 1174
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 d5
   rotate: false
-  xy: 1480, 1638
+  xy: 1105, 1108
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ready
   rotate: false
-  xy: 1404, 1590
+  xy: 1557, 1746
   size: 62, 36
   orig: 62, 36
   offset: 0, 0
   index: -1
 playing
   rotate: false
-  xy: 1695, 1750
+  xy: 1404, 1614
   size: 62, 36
   orig: 62, 36
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 165, 59
+  xy: 696, 132
   size: 62, 36
   orig: 62, 36
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 696, 126
+  xy: 1496, 1686
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 1105, 1228
+  xy: 415, 45
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 1829, 1850
+  xy: 1105, 1060
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 1971, 1992
+  xy: 463, 45
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 1971, 1992
+  xy: 463, 45
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 1324, 1530
+  xy: 1105, 1012
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 1546, 1656
+  xy: 1105, 964
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 744, 126
+  xy: 1105, 916
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 1105, 1180
+  xy: 1105, 868
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 mpl
   rotate: false
-  xy: 1829, 1808
+  xy: 1362, 1566
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 opt
   rotate: false
-  xy: 792, 132
+  xy: 1404, 1572
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 how
   rotate: false
-  xy: 1105, 1138
+  xy: 1105, 826
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 pro
   rotate: false
-  xy: 834, 132
+  xy: 1105, 784
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 str
   rotate: false
-  xy: 1105, 1096
+  xy: 1105, 742
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 app
   rotate: false
-  xy: 876, 132
+  xy: 1105, 700
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 sp
   rotate: false
-  xy: 1105, 1054
+  xy: 1105, 658
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 gpl
   rotate: false
-  xy: 918, 132
+  xy: 1105, 616
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 dp
   rotate: false
-  xy: 1105, 1012
+  xy: 1105, 574
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 abt
   rotate: false
-  xy: 960, 132
+  xy: 1105, 532
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 ply
   rotate: false
-  xy: 1105, 970
+  xy: 1105, 490
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 ireceived
   rotate: false
-  xy: 1759, 1750
+  xy: 1621, 1746
   size: 40, 36
   orig: 40, 36
   offset: 0, 0
   index: -1
 isended
   rotate: false
-  xy: 229, 59
+  xy: 760, 132
   size: 40, 36
   orig: 40, 36
   offset: 0, 0
   index: -1
 wheel
   rotate: false
-  xy: 1002, 136
+  xy: 1105, 452
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
   index: -1
 rarrow
   rotate: false
-  xy: 1, 1
+  xy: 1274, 1532
   size: 35, 18
   orig: 35, 18
   offset: 0, 0
   index: -1
 larrow
   rotate: false
-  xy: 1607, 1712
+  xy: 608, 94
   size: 35, 18
   orig: 35, 18
   offset: 0, 0
   index: -1
 cb-small
   rotate: false
-  xy: 2019, 2014
+  xy: 1779, 1784
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 cw-small
   rotate: false
-  xy: 1372, 1552
+  xy: 2013, 2010
   size: 24, 24
   orig: 24, 24
   offset: 0, 0

@@ -48,15 +48,18 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class MainMenuScreen extends BaseScreen {
 
   private Group g;
   private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro;
+  private ImageButton scoreboards, achievements, gplus, twitter, facebook;
   private Image logo;
   
   public MainMenuScreen(){
@@ -125,6 +128,22 @@ public class MainMenuScreen extends BaseScreen {
     
     g = new Group();
     g.setColor(1,1,1,0);
+    
+    
+    gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));
+    twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));
+    facebook = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("facebook")));
+    
+    Table t1 = new Table();
+    t1.setWidth(gplus.getWidth());
+    t1.setHeight(gplus.getHeight()*3);
+    t1.add(gplus).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    t1.row().spaceTop(0);
+    t1.add(twitter).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    t1.row().spaceTop(0);
+    t1.add(facebook).width(facebook.getWidth()).height(facebook.getHeight()).fill();
+    t1.setPosition(0, 30);
+    stage.addActor(t1);
   }
   
   
@@ -143,8 +162,7 @@ public class MainMenuScreen extends BaseScreen {
     
     table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    table.row().pad(1);
-    table.add().colspan(2).fill().expand();
+    
     
     table.row().pad(1);
     table.add(onePlayer).expand().fill().colspan(2);
@@ -182,7 +200,7 @@ public class MainMenuScreen extends BaseScreen {
     g.clear();
     
     g.setWidth(stage.getWidth()*0.65f);
-    g.setHeight(stage.getHeight()*0.9f);
+    g.setHeight(stage.getHeight()*0.85f);
     g.addActor(table);
     
     g.setX(-g.getWidth());
