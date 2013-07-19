@@ -36,7 +36,6 @@ package it.alcacoop.backgammon.fsm;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
-import it.alcacoop.backgammon.fsm.FIBSFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.gservice.GServiceMessages;
 import it.alcacoop.backgammon.layers.GameScreen;
@@ -52,7 +51,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   private Board board;
   public State currentState;
-  private static boolean terminated = false;
   private static int d1, d2;
   private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   private static boolean isBufferedMoves = false;
@@ -98,10 +96,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
         case NO_MORE_MOVES: //END TURN
           GnuBackgammon.Instance.board.dices.clear();
-          if (terminated)
-            ctx.state(States.MATCH_OVER);
-          else
-            ctx.state(States.SWITCH_TURN);
+          ctx.state(States.SWITCH_TURN);
           break;
           
         default:
@@ -245,9 +240,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.GSERVICE_BOARD) {
           int b[][] = (int[][])params;
-          
           System.out.println("SYNC ATTEMPT!");
-          
           //SYNC...
           boolean differ = false;
           for (int i=0;i<2;i++)
@@ -278,26 +271,28 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           GnuBackgammon.fsm.hmoves[i] = -1;
         GnuBackgammon.fsm.hnmove = 0;
 
-        GServiceClient.getInstance().queue.debug();
-        
-        //SWITCH TURN
-        ctx.board().switchTurn();
-        if (MatchState.fTurn==0) {
-          ctx.state(States.LOCAL_TURN);
-          GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+        if (ctx.board().gameFinished()) {
+          ctx.state(MATCH_OVER);
         } else {
-          ctx.state(States.REMOTE_TURN);
-          int dices[] = {0,0};
-          GnubgAPI.RollDice(dices);
-          GServiceClient.getInstance().sendMessage(GSERVICE_ROLL+" "+dices[0]+" "+dices[1]);
-          String s = "";
-          for (int i=1;i>=0;i--)
-            for (int j=0;j<25;j++) {
-              s+=" "+ctx.board()._board[i][j];
-            }
-          GServiceClient.getInstance().sendMessage(GSERVICE_BOARD+s);
-          GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
-          GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+          //SWITCH TURN
+          ctx.board().switchTurn();
+          if (MatchState.fTurn==0) {
+            ctx.state(States.LOCAL_TURN);
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+          } else {
+            ctx.state(States.REMOTE_TURN);
+            int dices[] = {0,0};
+            GnubgAPI.RollDice(dices);
+            GServiceClient.getInstance().sendMessage(GSERVICE_ROLL+" "+dices[0]+" "+dices[1]);
+            String s = "";
+            for (int i=1;i>=0;i--)
+              for (int j=0;j<25;j++) {
+                s+=" "+ctx.board()._board[i][j];
+              }
+            GServiceClient.getInstance().sendMessage(GSERVICE_BOARD+s);
+            GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+          }
         }
       }
     },
@@ -313,9 +308,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         MatchState.UpdateMSCubeInfo(1, -1);
         GnuBackgammon.Instance.optionPrefs.putString("SHOWHELP", "No");
         GnuBackgammon.Instance.optionPrefs.flush();
-        GServiceClient.getInstance().queue.debug();
-        GServiceClient.getInstance().queue.pull(Events.GSERVICE_FIRSTROLL); //WAITING FOR BOARD..
-        terminated = false;
+        GServiceClient.getInstance().queue.pull(Events.GSERVICE_FIRSTROLL);
       }
 
       @Override
@@ -497,7 +490,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   
   @Override
   public void processEvent(final Events evt, final Object params) {
-    System.out.println("PROCESS "+evt+" ON "+state());
+    System.out.println("GSERVICE: PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
@@ -527,7 +520,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
         case GSERVICE_ABANDON:
           int status = (Integer)params;
-          terminated = true;
           MatchState.resignValue = status;
           if (status==0) MatchState.resignValue = 4;
           state(States.MATCH_OVER);
