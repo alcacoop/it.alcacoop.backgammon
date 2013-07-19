@@ -20,7 +20,7 @@ public class BaseScreen implements Screen{
   public float animationTime = 0.2f;
   protected static float lastBGX;
   private float width; 
-  private Image alca;
+  private Image alca, top;
   private TextButton alcaBtn;
   
   public BaseScreen() {
@@ -47,6 +47,17 @@ public class BaseScreen implements Screen{
     alca.setWidth(stage.getWidth());
     alca.setPosition(0, 0);
     
+    
+    NinePatch patch2 = null;
+    TextureRegion r2 = GnuBackgammon.atlas.findRegion("topborder");
+    splits = ((AtlasRegion)r2).splits;
+    patch2 = new NinePatch(r2, splits[0], splits[1], splits[2], splits[3]);
+
+    top = new Image(patch2);
+    top.setWidth(stage.getWidth());
+    top.setPosition(0, stage.getHeight()-top.getHeight());
+    
+    
     alcaBtn = new TextButton("", GnuBackgammon.skin);
     alcaBtn.setWidth(alca.getHeight());
     alcaBtn.setHeight(alca.getHeight());
@@ -61,6 +72,7 @@ public class BaseScreen implements Screen{
     
     stage.addActor(bgImg);
     stage.addActor(alca);
+    stage.addActor(top);
   }
 
   @Override
@@ -73,9 +85,11 @@ public class BaseScreen implements Screen{
   public void show() {
     if (this instanceof GameScreen) {
       alca.setColor(0,0,0,0);
+      top.setColor(0,0,0,0);
       if (alcaBtn.hasParent()) alcaBtn.remove();
     } else {
       alca.setColor(1,1,1,1);
+      top.setColor(1,1,1,1);
       stage.addActor(alcaBtn);
     }
     if (lastBGX>0) lastBGX = 0;

@@ -154,12 +154,6 @@ public class MainMenuScreen extends BaseScreen {
   }
   
   
-  public void redraw() {
-    createMenu();
-    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
-  }
-  
-  
   private void createMenu() {
     g.setColor(1,1,1,0);
     Table table = new Table();
@@ -230,14 +224,22 @@ public class MainMenuScreen extends BaseScreen {
   public void initialize() {
     createMenu();
   }
+
+  
+  public void redraw() {
+    createMenu();
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-buttonGroup.getHeight())/2, 0.2f))));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
+  }
+  
+  
   
   @Override
   public void show() {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    System.out.println("GSERVICE: "+g.getHeight()+" "+stage.getHeight());
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-g.getHeight())/2, 0.2f))));
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-buttonGroup.getHeight())/2, 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
   
