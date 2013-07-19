@@ -131,6 +131,12 @@ public class MainMenuScreen extends BaseScreen {
     g.setColor(1,1,1,0);
     
     scoreboards = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("leaderboards")));
+    scoreboards.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.nativeFunctions.gserviceOpenLeaderboards(); 
+      }
+    });
     achievements = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("achievements")));
     
     gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));

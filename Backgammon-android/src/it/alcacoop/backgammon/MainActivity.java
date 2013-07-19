@@ -115,6 +115,8 @@ import com.google.android.gms.appstate.AppStateClient;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.leaderboard.OnScoreSubmittedListener;
+import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.Participant;
@@ -798,6 +800,7 @@ OnStateLoadedListener
 
   private static int RC_SELECT_PLAYERS = 6000;
   private static int RC_WAITING_ROOM = 6001;
+  private static int RC_LEADERBOARD = 6002;
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == PurchaseActivity.RC_REQUEST) {
@@ -1148,7 +1151,7 @@ OnStateLoadedListener
     lastReceptionTime = System.currentTimeMillis();
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    System.out.println("GSERVICE: ===========> Message recived: "+s);
+    System.out.println("GSERVICE: <=== Message recived: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
   }
 
@@ -1162,7 +1165,6 @@ OnStateLoadedListener
       if ((mRoomId==null)||(mRoomId=="")) {
         GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
       } else {
-        System.out.println("GSERVICE: Sending message... Participants:"+mParticipants.size());
         for (Participant p : mParticipants) {
           if (p.getParticipantId().equals(mMyId))
             continue;
@@ -1170,7 +1172,7 @@ OnStateLoadedListener
             continue;
           }
           int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
-          System.out.println("GSERVICE: SENT MESSAGE: "+msg+" WITH TOKEN: "+token);
+          System.out.println("GSERVICE: ===> SENT MESSAGE: "+msg+" with token: "+token);
         }
       }
     }
@@ -1179,7 +1181,6 @@ OnStateLoadedListener
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    System.out.println("GSERVICE: onRealTimeMessageSent: "+statusCode);
     GServiceClient.getInstance().notifyDispatched();
     if (statusCode != GamesClient.STATUS_OK) {
       System.out.println("GSERVICE: onRealTimeMessageSent: Message not sent! "+statusCode+ " mRoomId: "+mRoomId);
@@ -1220,10 +1221,25 @@ OnStateLoadedListener
       tping.purge();
     }
   }
+  
+  public void gserviceSubmitRating() {
+    double score = ELORatingManager.getInstance().getRating();
+    long scoreToSubmit = (long)score * 100;
+    System.out.println("GSERVICE: gserviceSubmitRating: "+scoreToSubmit);
+    gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
+      
+      @Override
+      public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
+        System.out.println("GSERVICE: score submitted!");
+      }
+    }, "CgkI9ZWZjusDEAIQAQ", scoreToSubmit);
+    
+  }
 
 
   @Override
   public void gserviceOpenLeaderboards() {
+    startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
   }
   @Override
   public void gserviceOpenAchievements() {

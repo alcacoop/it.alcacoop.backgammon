@@ -65,6 +65,6 @@ public interface NativeFunctions {
   public void gserviceStopPing();
   public void gserviceOpenLeaderboards();
   public void gserviceOpenAchievements();
-  
+  public void gserviceSubmitRating();
   public void gserviceUpdateState();
 }

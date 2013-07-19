@@ -27,7 +27,7 @@ public class ELORatingManager {
   }
   
   public double getRating() {
-    return currentRating;
+    return Math.round(currentRating * 100) / 100;
   }
   
   public void setOpponentRating(double opponentRating) {

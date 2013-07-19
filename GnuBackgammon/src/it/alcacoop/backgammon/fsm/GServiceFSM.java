@@ -143,7 +143,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           
         case DICES_ROLLED:
           if ((moves!=null)&&(moves.length>0)) {
-            ctx.board().availableMoves.setMoves(moves);  
+            ctx.board().availableMoves.setMoves(moves);
           } else  {
             UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
           }
@@ -318,7 +318,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
         
           case GSERVICE_FIRSTROLL:
-            System.out.println("GSERVICE FIRST ROLL RATING: " + ELORatingManager.getInstance().getRating());
+            System.out.println("GSERVICE CURRENT RATING: " + ELORatingManager.getInstance().getRating());
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
             GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
@@ -354,8 +354,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
         String msg = "";
-        GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
-        
+        boolean youWin = true;
+        GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
         if (MatchState.resignValue>0) {
           switch (MatchState.resignValue) {
           case 1:
@@ -378,10 +378,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         if (MatchState.resignValue<5) {
           GnuBackgammon.Instance.gameScreen.chatBox.hide();
           UIDialog.getFlashDialog(Events.STOPPED, msg);
+          youWin = false;
         } else {
           GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
           GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
         }
+        ELORatingManager.getInstance().updateRating(youWin);
+        GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating();
+        GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
       }
       
       @Override
@@ -420,7 +424,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             } else {
               GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" 0");
             }
-            ELORatingManager.getInstance().updateRating(false);
             GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
           } else  { //CANCEL
             GnuBackgammon.fsm.back();
