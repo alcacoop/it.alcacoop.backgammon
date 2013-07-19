@@ -60,4 +60,6 @@ public interface NativeFunctions {
   public void gserviceSendReliableRealTimeMessage(String msg);
   public void gserviceResetRoom();
   public void gserviceStopPing();
+  public void gserviceOpenLeaderboards();
+  public void gserviceOpenAchievements();
 }

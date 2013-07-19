@@ -1178,4 +1178,12 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     }
   }
 
+
+  @Override
+  public void gserviceOpenLeaderboards() {
+  }
+  @Override
+  public void gserviceOpenAchievements() {
+  }
+
 }

@@ -237,4 +237,10 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceStopPing() {}
+  
+  @Override
+  public void gserviceOpenLeaderboards() {}
+  @Override
+  public void gserviceOpenAchievements() {}
+
 }
