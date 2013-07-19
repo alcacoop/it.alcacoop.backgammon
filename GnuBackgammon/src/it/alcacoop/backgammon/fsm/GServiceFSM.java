@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.fsm;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
+import it.alcacoop.backgammon.fsm.FIBSFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.gservice.GServiceMessages;
 import it.alcacoop.backgammon.layers.GameScreen;
@@ -356,12 +357,34 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
-        GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-        if (MatchState.resignValue==4) {
-          terminated = true;
-          UIDialog.getFlashDialog(Events.STOPPED, "Your opponent resigned the game");
+        String msg = "";
+        GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+        
+        if (MatchState.resignValue>0) {
+          switch (MatchState.resignValue) {
+          case 1:
+            msg = "Opponent resigned the game";
+            break;
+          case 2:
+            msg = "Opponent resigned a gammon game";
+            break;
+          case 3:
+            msg = "Opponent resigned a backgammon game";
+            break;
+          case 4:
+            msg = "Opponent abandoned the match";
+            break;
+          }
         } else {
-          UIDialog.getFlashDialog(Events.STOPPED, "Match terminated");
+          msg = "Match terminated";
+        }
+        
+        if (MatchState.resignValue<5) {
+          GnuBackgammon.Instance.gameScreen.chatBox.hide();
+          UIDialog.getFlashDialog(Events.STOPPED, msg);
+        } else {
+          GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
+          GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
         }
       }
       
@@ -370,10 +393,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         if (evt==Events.STOPPED) {
           MatchState.resignValue = 0;
           GnuBackgammon.Instance.nativeFunctions.showInterstitial();
-          //ctx.state(FIBS_MENU);
-          GnuBackgammon.Instance.goToScreen(8);
+          GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
         }
-        return super.processEvent(ctx, evt, params);
+        return true;
       }
     },
 
@@ -424,7 +446,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         case HUMAN_RESIGNED:
           if ((Boolean)params) {
             GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON+" "+MatchState.resignValue);
-            GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
+            MatchState.resignValue=5;
+            ctx.state(MATCH_OVER);
           } else {
             MatchState.resignValue = 0;
             GnuBackgammon.fsm.back();
@@ -504,24 +527,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
         case GSERVICE_ABANDON:
           int status = (Integer)params;
-          String msg = "";
-          switch (status) {
-          case 0:
-            msg = "Opponent abandoned the match";
-            break;
-          case 1:
-            msg = "Opponent resigned the game";
-            break;
-          case 2:
-            msg = "Opponent resigned a gammon game";
-            break;
-          case 3:
-            msg = "Opponent resigned a backgammon game";
-            break;
-          }
-          GnuBackgammon.Instance.gameScreen.chatBox.hide();
-          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
-          UIDialog.getFlashDialog(Events.GSERVICE_BYE, msg);
+          terminated = true;
+          MatchState.resignValue = status;
+          if (status==0) MatchState.resignValue = 4;
+          state(States.MATCH_OVER);
           break;
 
         case GSERVICE_BYE:
