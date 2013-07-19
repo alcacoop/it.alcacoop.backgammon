@@ -168,7 +168,7 @@ public class Board extends Group {
           if (GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) {
             Board.this.rollDices();
           } else {
-            UIDialog.getDicesDialog(0.82f, false);
+            UIDialog.getDicesDialog(false);
           }
         else
           GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, null);

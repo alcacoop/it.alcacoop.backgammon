@@ -87,7 +87,7 @@ public final class UIDialog extends Table {
   private boolean dicesWindow = false;
   private boolean visible = false;
   private GameOptionsTable opts;
-  
+  private static float alpha = 0.9f;
   
   static {
     instance = new UIDialog();
@@ -263,12 +263,9 @@ public final class UIDialog extends Table {
   
   
   public static void getGServiceLoginDialog() {
-    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer", 0.82f);  
+    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer");  
   }
   public static void getYesNoDialog(BaseFSM.Events evt, String text) {
-    getYesNoDialog(evt, text, 1);
-  }
-  public static void getYesNoDialog(BaseFSM.Events evt, String text, float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -300,13 +297,11 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
+  
   public static void getContinueDialog(BaseFSM.Events evt, String text) {
-    getContinueDialog(evt, text, 1);
-  }
-  public static void getContinueDialog(BaseFSM.Events evt, String text, float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -336,14 +331,11 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
  
   
   public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2) {
-    getEndGameDialog(evt, text, text1, score1, score2, 1);
-  }
-  public static void getEndGameDialog(BaseFSM.Events evt, String text, String text1, String score1, String score2, float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -391,14 +383,11 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
   
   public static void getFlashDialog(BaseFSM.Events evt, String text) {
-    getFlashDialog(evt, text, 1);
-  }
-  public static void getFlashDialog(BaseFSM.Events evt, String text, float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -423,7 +412,7 @@ public final class UIDialog extends Table {
     stage.addActor(instance);
     instance.addAction(MyActions.sequence(
         Actions.alpha(alpha, 0.3f),
-        Actions.delay(1.5f),
+        Actions.delay(1.2f),
         Actions.fadeOut(0.3f),
         Actions.run(new Runnable() {
           @Override
@@ -435,10 +424,8 @@ public final class UIDialog extends Table {
     ));
   }
   
+
   public static void getQuitDialog() {
-    getQuitDialog(1);
-  }
-  public static void getQuitDialog(float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = true;
@@ -469,11 +456,11 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
 
   
-  public static void getLeaveDialog(BaseFSM.Events evt, float alpha) {
+  public static void getLeaveDialog(BaseFSM.Events evt) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -514,13 +501,11 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
   
+
   public static void getHelpDialog(Boolean cb) {
-    getHelpDialog(1, cb);
-  }
-  public static void getHelpDialog(float alpha, Boolean cb) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
@@ -574,50 +559,24 @@ public final class UIDialog extends Table {
     instance.setX((stage.getWidth()-width)/2);
     instance.setY((stage.getHeight()-height)/2);
     
-    
-    instance.setY(stage.getHeight());
-    instance.addAction(
-        Actions.sequence(
-        
-        MyActions.sequence(
-            Actions.parallel(
-                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
-                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
-        
-        Actions.run(new Runnable() {
-          @Override
-          public void run() {
-            Gdx.graphics.setContinuousRendering(true);
-          }
-        })
-        )
-    );
     stage.addActor(instance);
-    
     instance.setY(stage.getHeight());
-    instance.addAction(
-        Actions.sequence(
-        
-        MyActions.sequence(
-            Actions.parallel(
-                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
-                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
-        
-        Actions.run(new Runnable() {
-          @Override
-          public void run() {
-            Gdx.graphics.setContinuousRendering(true);
-          }
-        })
-        )
-    );
+    instance.addAction(Actions.sequence(
+      MyActions.sequence(
+        Actions.parallel(
+          Actions.color(new Color(1, 1, 1, alpha), 0.2f), 
+          Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
+      Actions.run(new Runnable() {
+        @Override
+        public void run() {
+          Gdx.graphics.setContinuousRendering(true);
+        }
+      })
+    ));
   }
   
   
   public static void getAboutDialog(Boolean cb) {
-    getAboutDialog(1, cb);
-  }
-  public static void getAboutDialog(float alpha, Boolean cb) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
@@ -725,35 +684,25 @@ public final class UIDialog extends Table {
     instance.setWidth(width);
     instance.setHeight(height);
     instance.setX((stage.getWidth()-width)/2);
-    instance.setY((stage.getHeight()-height)/2);
     
     stage.addActor(instance);
-    
     instance.setY(stage.getHeight());
-    instance.addAction(
-        Actions.sequence(
-        
-        MyActions.sequence(
-            Actions.parallel(
-                Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), 
-                Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
-        
-        Actions.run(new Runnable() {
-          @Override
-          public void run() {
-            Gdx.graphics.setContinuousRendering(true);
-          }
-        })
-        )
-    );
-    
+    instance.addAction(Actions.sequence(
+      MyActions.sequence(
+        Actions.parallel(
+          Actions.color(new Color(1, 1, 1, alpha), 0.2f), 
+          Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))),
+      Actions.run(new Runnable() {
+        @Override
+        public void run() {
+          Gdx.graphics.setContinuousRendering(true);
+        }
+      })
+    ));
   }
   
   
   public static void getOptionsDialog() {
-    getOptionsDialog(1);
-  }
-  public static void getOptionsDialog(float alpha) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
@@ -778,7 +727,7 @@ public final class UIDialog extends Table {
     
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, 0.8f), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
+    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f), Actions.moveTo((stage.getWidth()-width)/2, (stage.getHeight()-height)/2, 0.2f))));
   }
 
   
@@ -786,7 +735,7 @@ public final class UIDialog extends Table {
     return instance.hasParent();
   }
 
-  public static void getLoginDialog(float alpha) {
+  public static void getLoginDialog() {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
@@ -857,7 +806,7 @@ public final class UIDialog extends Table {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getCreateAccountDialog(1);
+        UIDialog.getCreateAccountDialog();
         super.clicked(event, x, y);
       }
     });
@@ -884,7 +833,7 @@ public final class UIDialog extends Table {
   
   
   
-  public static void getCreateAccountDialog(float alpha) {
+  public static void getCreateAccountDialog() {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;
@@ -949,7 +898,7 @@ public final class UIDialog extends Table {
     instance.addAction(Actions.alpha(alpha, 0.3f));
   }
   
-  public static void getInviteClickedDialog(String username, float alpha) {
+  public static void getInviteClickedDialog(String username) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -993,10 +942,9 @@ public final class UIDialog extends Table {
     instance.bReject.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
   }
+  
+
   public static void getDicesDialog(Boolean cb) {
-    getDicesDialog(1, cb);
-  }
-  public static void getDicesDialog(float alpha, Boolean cb) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.evt = Events.NOOP;

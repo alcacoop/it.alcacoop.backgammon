@@ -124,7 +124,7 @@ public class FibsScreen extends BaseScreen {
         String s = ((Label)event.getListenerActor()).getText().toString().trim();
         if ((fibsInvitations.containsKey(s))&&((int)fibsInvitations.get(s)>0)) {
           lastInvite = s;
-          UIDialog.getInviteClickedDialog(s, 0.82f);
+          UIDialog.getInviteClickedDialog(s);
         }
       };
     };
@@ -140,12 +140,12 @@ public class FibsScreen extends BaseScreen {
           p = fibsPlayers.get(u);
         
         if (p.isPlaying())
-          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is playing.. You can't invite him", 0.82f);
+          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is playing.. You can't invite him");
         else if (!p.isReady())
-          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is busy.. You can't invite him", 0.82f);
+          UIDialog.getFlashDialog(Events.NOOP, "User \""+p.getName()+"\" is busy.. You can't invite him");
         else {
           lastInvite = p.getName();
-          UIDialog.getYesNoDialog(Events.FIBS_INVITE_SENDED, "Really invite \""+p.getName()+"\" to new 1 point match?", 0.82f);
+          UIDialog.getYesNoDialog(Events.FIBS_INVITE_SENDED, "Really invite \""+p.getName()+"\" to new 1 point match?");
         }
       };
     };

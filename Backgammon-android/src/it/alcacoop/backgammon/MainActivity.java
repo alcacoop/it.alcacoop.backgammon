@@ -876,7 +876,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   public void onJoinedRoom(int arg0, Room room) {
     if (room==null) {
       hideProgressDialog();
-      UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation", 0.8f);
+      UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation");
     } else {
       updateRoom(room);
       System.out.println("======> GSERVICE JOINED ROOM "+room.getParticipants().size());
@@ -924,7 +924,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     if (statusCode != GamesClient.STATUS_OK) {
       System.out.println("GSERVICE: onRoomCreated: Error with statusCode:"  + statusCode);
       hideProgressDialog();
-      UIDialog.getFlashDialog(Events.NOOP, "Unknown error", 0.8f);
+      UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
       return;
     }
     System.out.println("GSERVICE CREATED ROOM: " + room.getRoomId());
@@ -980,7 +980,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     if (gConnecting) {
       hideProgressDialog();
       gserviceResetRoom();
-      UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room", 0.8f);
+      UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room");
       updateRoom(room);
     }
   }

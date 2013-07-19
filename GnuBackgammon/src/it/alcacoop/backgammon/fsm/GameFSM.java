@@ -80,13 +80,13 @@ public class GameFSM extends BaseFSM implements Context {
             if (resign==2) s = "Your opponent resigned a gammon game";
             if (resign==3) s = "Your opponent resigned a backgammon game";
             ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s, 0.82f);
+            UIDialog.getFlashDialog(Events.CPU_RESIGNED, s);
           } else { //ASKFORDOUBLING OR ROLL..
             if(MatchState.fCubeUse == 0) { //NO CUBE USE
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(0.82f, false);
+                UIDialog.getDicesDialog(false);
               }
             } else {
               if (
@@ -99,14 +99,14 @@ public class GameFSM extends BaseFSM implements Context {
                   if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                     ctx.board().rollDices();
                   } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                    UIDialog.getDicesDialog(0.82f, false);
+                    UIDialog.getDicesDialog(false);
                   }
                 }
               } else {
                 if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                   ctx.board().rollDices();
                 } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                  UIDialog.getDicesDialog(0.82f, false);
+                  UIDialog.getDicesDialog(false);
                 }
               }
             }
@@ -117,12 +117,12 @@ public class GameFSM extends BaseFSM implements Context {
           if(Integer.parseInt(params.toString())==1) { // OPEN DOUBLING DIALOG
             GnuBackgammon.Instance.rec.addDoubleRequest(1);
             ctx.state(DIALOG_HANDLER);
-            UIDialog.getYesNoDialog(Events.DOUBLING_RESPONSE, "CPU is asking for double. Accept?", 0.82f);
+            UIDialog.getYesNoDialog(Events.DOUBLING_RESPONSE, "CPU is asking for double. Accept?");
           } else {
             if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
             } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-              UIDialog.getDicesDialog(0.82f, false);
+              UIDialog.getDicesDialog(false);
             }
           }
           break;
@@ -145,7 +145,7 @@ public class GameFSM extends BaseFSM implements Context {
           GnuBackgammon.Instance.rec.addMove(1, d[0], d[1], moves);
           if(moves[0] == -1) {
             ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.82f);
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves");
           } else {
             moves = (int[])params;
             ctx.board().setMoves(moves);
@@ -180,7 +180,7 @@ public class GameFSM extends BaseFSM implements Context {
             if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices();
             } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-              UIDialog.getDicesDialog(0.82f, false);
+              UIDialog.getDicesDialog(false);
             }
           } else {
             if (
@@ -193,7 +193,7 @@ public class GameFSM extends BaseFSM implements Context {
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(0.82f, false);
+                UIDialog.getDicesDialog(false);
               }
             }
           }
@@ -223,7 +223,7 @@ public class GameFSM extends BaseFSM implements Context {
             int[] m = {-1,-1,-1,-1,-1,-1,-1,-1};
             GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], m);
             
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.82f);
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available");
           }
           ctx.board().dices.animating = false;
           break;
@@ -363,7 +363,7 @@ public class GameFSM extends BaseFSM implements Context {
         }
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
-        UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2, 0.82f);
+        UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2);
       }
 
       @Override
@@ -395,7 +395,7 @@ public class GameFSM extends BaseFSM implements Context {
         GnuBackgammon.Instance.rec.addGame();
         
         if ((!GnuBackgammon.fsm.helpShown)&&(GnuBackgammon.Instance.optionPrefs.getString("SHOWHELP", "Yes").equals("Yes"))) {
-          UIDialog.getHelpDialog(0.82f, true);
+          UIDialog.getHelpDialog(true);
           GnuBackgammon.fsm.helpShown = true;
         } else {
           processEvent(ctx, Events.NOOP, null);
@@ -478,7 +478,7 @@ public class GameFSM extends BaseFSM implements Context {
               if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) && (MatchState.matchType < 2)) {
                 ctx.board().rollDices();
               } else if ((GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("Yes")) && (MatchState.matchType < 2)) {
-                UIDialog.getDicesDialog(0.82f, false);
+                UIDialog.getDicesDialog(false);
               }
             } else { //DOUBLING NOT ACCEPTED
               GnuBackgammon.Instance.rec.addDoubleDrop(0);
@@ -494,7 +494,7 @@ public class GameFSM extends BaseFSM implements Context {
               ctx.board().thinking(true);
               AICalls.AcceptDouble();
             } else { //SHOW DOUBLE DIALOG!
-              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?", 0.82f);
+              UIDialog.getYesNoDialog(Events.HUMAN_DOUBLE_RESPONSE, "Accept double?");
             }
             break;
             
@@ -513,9 +513,9 @@ public class GameFSM extends BaseFSM implements Context {
           case ACCEPT_DOUBLE: //CPU DOUBLING RESPONSE
             ctx.board().thinking(false);
             if(((Integer)params == 1)||(MatchState.nMatchTo-MatchState.anScore[0]==1)) { //CPU ACCEPTED MY DOUBLE || OPPONENT IS WINNING (DEAD CUBE!!) 
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double", 0.82f);
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_ACCEPTED, "Your opponent accepted double");
             } else { //CPU DIDN'T ACCEPT MY DOUBLE
-              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted", 0.82f);
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted");
             }
             break;
             
@@ -547,7 +547,7 @@ public class GameFSM extends BaseFSM implements Context {
             String s = "Really resign the game?";
             if (ret == 2) s = "Really resign a gammon game?";
             if (ret == 3) s = "Really resign a backgammon game?";
-            UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f);
+            UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s);
             break;
             
           case HUMAN_RESIGNED: //HUMAN RESIGN GAME

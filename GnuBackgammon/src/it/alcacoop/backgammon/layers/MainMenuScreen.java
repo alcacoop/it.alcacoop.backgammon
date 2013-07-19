@@ -61,6 +61,7 @@ public class MainMenuScreen extends BaseScreen {
   private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro;
   private ImageButton scoreboards, achievements, gplus, twitter, facebook;
   private Image logo;
+  private Table buttonGroup;
   
   public MainMenuScreen(){
     ClickListener cl = new ClickListener() {
@@ -74,7 +75,7 @@ public class MainMenuScreen extends BaseScreen {
       public boolean keyDown(InputEvent event, int keycode) {
         if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           if (UIDialog.isOpened()) return false;
-          UIDialog.getQuitDialog(0.82f);
+          UIDialog.getQuitDialog();
         }
         return super.keyDown(event, keycode);
       }
@@ -102,7 +103,7 @@ public class MainMenuScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getHelpDialog(0.82f, false);
+        UIDialog.getHelpDialog(false);
       }
     });
     about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
@@ -110,7 +111,7 @@ public class MainMenuScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        UIDialog.getAboutDialog(0.82f, false);
+        UIDialog.getAboutDialog(false);
       }
     });
     rate = new IconButton("Rate it!", GnuBackgammon.atlas.findRegion("str"), tl);
@@ -129,21 +130,27 @@ public class MainMenuScreen extends BaseScreen {
     g = new Group();
     g.setColor(1,1,1,0);
     
+    scoreboards = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("leaderboards")));
+    achievements = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("achievements")));
     
     gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));
     twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));
     facebook = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("facebook")));
     
-    Table t1 = new Table();
-    t1.setWidth(gplus.getWidth());
-    t1.setHeight(gplus.getHeight()*3);
-    t1.add(gplus).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    t1.row().spaceTop(0);
-    t1.add(twitter).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    t1.row().spaceTop(0);
-    t1.add(facebook).width(facebook.getWidth()).height(facebook.getHeight()).fill();
-    t1.setPosition(0, 30);
-    stage.addActor(t1);
+    buttonGroup = new Table();
+    buttonGroup.setWidth(gplus.getWidth());
+    buttonGroup.setHeight(gplus.getHeight()*6);
+    buttonGroup.add(achievements).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    buttonGroup.row().spaceTop(0);
+    buttonGroup.add(scoreboards).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    buttonGroup.row().spaceTop(gplus.getHeight()/2);
+    buttonGroup.add(gplus).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    buttonGroup.row().spaceTop(0);
+    buttonGroup.add(twitter).width(gplus.getWidth()).height(gplus.getHeight()).fill();
+    buttonGroup.row().spaceTop(0);
+    buttonGroup.add(facebook).width(facebook.getWidth()).height(facebook.getHeight()).fill();
+    buttonGroup.setPosition(0, -stage.getHeight());
+    stage.addActor(buttonGroup);
   }
   
   
@@ -229,11 +236,14 @@ public class MainMenuScreen extends BaseScreen {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
+    System.out.println("GSERVICE: "+g.getHeight()+" "+stage.getHeight());
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-g.getHeight())/2, 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
   
   @Override
   public void fadeOut() {
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f),Actions.moveTo(0,-stage.getHeight(), 0.2f))));
     g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-g.getHeight())/2, 0.2f))));
   }
 

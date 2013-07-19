@@ -77,7 +77,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           if ((mv==null)||(mv.length==0)) {
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.82f);
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves");
           } else {
             ctx.board().availableMoves.setMoves(mv);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);
@@ -145,7 +145,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             ctx.board().availableMoves.setMoves(moves);  
           } else  {
             UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, "No legal moves available", 0.82f);
+              Events.NO_MORE_MOVES, "No legal moves available");
           }
           ctx.board().dices.animating = false;
           break;
@@ -369,9 +369,9 @@ public class FIBSFSM extends BaseFSM implements Context {
         GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
         if (MatchState.resignValue==4) {
           terminated = true;
-          UIDialog.getFlashDialog(Events.STOPPED, "Your opponent resigned the game", 0.82f);
+          UIDialog.getFlashDialog(Events.STOPPED, "Your opponent resigned the game");
         } else {
-          UIDialog.getFlashDialog(Events.STOPPED, "Match terminated", 0.82f);
+          UIDialog.getFlashDialog(Events.STOPPED, "Match terminated");
         }
       }
       
@@ -427,7 +427,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           String s = "Really resign the game?";
           if (ret == 2) s = "Really resign a gammon game?";
           if (ret == 3) s = "Really resign a backgammon game?";
-          UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s, 0.82f);
+          UIDialog.getYesNoDialog(Events.HUMAN_RESIGNED, s);
           break;
           
         case HUMAN_RESIGNED:
@@ -506,7 +506,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             String u = (String)params;
             if (GnuBackgammon.Instance.fibsScreen.fibsInvitations.containsKey(u)) {
               GnuBackgammon.Instance.fibsScreen.fibsInvitations.remove(u);
-              UIDialog.getFlashDialog(Events.NOOP, "User \""+u+"\" declined your invitation", 0.82f);
+              UIDialog.getFlashDialog(Events.NOOP, "User \""+u+"\" declined your invitation");
               GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
             }
             break;
@@ -566,7 +566,6 @@ public class FIBSFSM extends BaseFSM implements Context {
   
   @Override
   public void processEvent(final Events evt, final Object params) {
-    final FIBSFSM fsm = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
@@ -585,7 +584,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             String s = (String)params;
             if (s.equals(GnuBackgammon.Instance.FibsOpponent)) {
               state(States.MATCH_OVER);
-              UIDialog.getFlashDialog(Events.STOPPED, "Your opponent dropped server connection..", 0.82f);
+              UIDialog.getFlashDialog(Events.STOPPED, "Your opponent dropped server connection..");
             } else {
               GnuBackgammon.Instance.fibsScreen.playerGone(s);
             }
@@ -593,7 +592,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             
           case FIBS_ABANDON_GAME:
             state(States.MATCH_OVER);
-            UIDialog.getFlashDialog(Events.STOPPED, "Your opponent abandoned the game..", 0.82f);
+            UIDialog.getFlashDialog(Events.STOPPED, "Your opponent abandoned the game..");
             break;
             
           case FIBS_RESIGN_REQUEST:
@@ -603,7 +602,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             break;
             
           default:
-            state().processEvent(fsm, evt, params);
+            state().processEvent(FIBSFSM.this, evt, params);
             break;
         }
       }
