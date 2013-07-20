@@ -170,7 +170,7 @@ public class FibsScreen extends BaseScreen {
     invitationList.setOverscroll(false, false);
         
     Table table = new Table();
-    Drawable d = GnuBackgammon.skin.getDrawable("default-window");
+    //Drawable d = GnuBackgammon.skin.getDrawable("default-window");
     table.setFillParent(true);
     
     
@@ -182,17 +182,16 @@ public class FibsScreen extends BaseScreen {
       };
     };
 
-    me.getStatusImage().addListener(toggleStatus);
-    me.getLabel().addListener(toggleStatus);
-    
     
     Table title = new Table();
-    title.setBackground(d);
+    title.addListener(toggleStatus);
+    
+    //title.setBackground(d);
     title.add(me.getStatusImage()).left();
     title.add(me.getLabel()).left();
     title.add(LLastLogin).expandX().right();
     
-    table.add(title).colspan(2).expand().fill();
+    table.add(title).colspan(2).expand();
     
     table.row();
     table.add().colspan(2).expand().fill();
@@ -218,7 +217,7 @@ public class FibsScreen extends BaseScreen {
     t1.setBackground(GnuBackgammon.skin.getDrawable("list"));
     t1.add(l1).center().height(height*0.075f);
     t1.row();
-    t1.add(onlineList).fill().left().top().height(height*0.48f).width(width*0.52f);
+    t1.add(onlineList).fill().left().top().height(height*0.55f).width(width*0.52f);
     
     Label l2 = new Label("INVITATIONS",GnuBackgammon.skin);
     l2.setAlignment(Align.top);
@@ -226,7 +225,7 @@ public class FibsScreen extends BaseScreen {
     t2.setBackground(GnuBackgammon.skin.getDrawable("list"));
     t2.add(l2).center().height(height*0.075f);
     t2.row();
-    t2.add(invitationList).fill().left().height(height*0.48f).width(width*0.32f);
+    t2.add(invitationList).fill().left().height(height*0.55f).width(width*0.32f);
     
     table.row();
     table.add(t1);
@@ -276,7 +275,7 @@ public class FibsScreen extends BaseScreen {
     Date expiry = new Date(Long.parseLong(lastLogin)*1000);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     String formattedDate = formatter.format(expiry);
-    LLastLogin.setText("Last login: "+formattedDate);
+    LLastLogin.setText("  -  Last login: "+formattedDate);
     fibsPlayers.clear();
     Table t = new Table();
     t.add(new Label("Loading list...", GnuBackgammon.skin));
