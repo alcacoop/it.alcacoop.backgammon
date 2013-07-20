@@ -261,7 +261,7 @@ public class MatchRecorder {
       sgf += "][game:"+((Integer)(g.gameInfo.get("mi_game"))-1);
       sgf += "][ws:"+(Integer)(g.gameInfo.get("mi_ws"));
       sgf += "][bs:"+(Integer)(g.gameInfo.get("mi_bs"));
-      sgf += "]PW["+(String)(g.gameInfo.get("pw"));
+      sgf += "]PW["+((String)(g.gameInfo.get("pw"))).replace("(", "_Level").replace(")", "");
       sgf += "]PB["+(String)(g.gameInfo.get("pb"));
       sgf += "]DT["+(String)(g.gameInfo.get("dt"));
       sgf += "]";
