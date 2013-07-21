@@ -100,6 +100,9 @@ public class Main implements NativeFunctions {
   @Override
   public void openURL(String url) {
   }
+  
+  @Override
+  public void openURL(String url, String fallback) {}
 
   @Override
   public String getDataDir() {
@@ -240,6 +243,7 @@ public class Main implements NativeFunctions {
   
   @Override
   public void gserviceOpenLeaderboards() {}
+
   @Override
   public void gserviceOpenAchievements() {}
 

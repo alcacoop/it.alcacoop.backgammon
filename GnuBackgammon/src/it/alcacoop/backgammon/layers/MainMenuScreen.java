@@ -150,7 +150,7 @@ public class MainMenuScreen extends BaseScreen {
     facebook.addListener(new ClickListener(){@Override
       public void clicked(InputEvent event, float x, float y) {
       GnuBackgammon.Instance.snd.playMoveStart();
-      GnuBackgammon.Instance.nativeFunctions.openURL("fb://group/bgmobile", "http://m.facebook.com/groups/bgmobile/");
+      GnuBackgammon.Instance.nativeFunctions.openURL("fb://page/145621258977312", "https://m.facebook.com/BackgammonMobileByAlcacoop");
     }});
     
     buttonGroup = new Table();
