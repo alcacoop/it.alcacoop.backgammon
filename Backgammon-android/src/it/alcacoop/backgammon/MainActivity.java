@@ -348,6 +348,19 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     startActivityForResult(myIntent, 1000);
   }
+  
+  @Override
+  public void openURL(String url, String fallback) {
+    Gdx.graphics.setContinuousRendering(true);
+    Gdx.graphics.requestRendering();
+    try  {
+    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    startActivityForResult(myIntent, 1000);
+    } catch (Exception e) {
+      Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(fallback));
+      startActivityForResult(myIntent, 1000);
+    }
+  }
 
   @Override
   public String getDataDir() {

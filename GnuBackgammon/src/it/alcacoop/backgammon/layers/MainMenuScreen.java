@@ -137,6 +137,22 @@ public class MainMenuScreen extends BaseScreen {
     twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));
     facebook = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("facebook")));
     
+    gplus.addListener(new ClickListener(){@Override
+      public void clicked(InputEvent event, float x, float y) {
+      GnuBackgammon.Instance.snd.playMoveStart();
+      GnuBackgammon.Instance.nativeFunctions.openURL("https://plus.google.com/104812306723791936806/posts");
+    }});
+    twitter.addListener(new ClickListener(){@Override
+      public void clicked(InputEvent event, float x, float y) {
+      GnuBackgammon.Instance.snd.playMoveStart();
+      GnuBackgammon.Instance.nativeFunctions.openURL("twitter://user?screen_name=alcamobile", "http://mobile.twitter.com/alcamobile");
+    }});
+    facebook.addListener(new ClickListener(){@Override
+      public void clicked(InputEvent event, float x, float y) {
+      GnuBackgammon.Instance.snd.playMoveStart();
+      GnuBackgammon.Instance.nativeFunctions.openURL("fb://group/bgmobile", "http://m.facebook.com/groups/bgmobile/");
+    }});
+    
     buttonGroup = new Table();
     buttonGroup.setWidth(gplus.getWidth());
     buttonGroup.setHeight(gplus.getHeight()*6);

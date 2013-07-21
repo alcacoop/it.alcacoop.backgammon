@@ -166,7 +166,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     }
   }
   
-  public void initAssets() { 
+  public void initAssets() {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
 
