@@ -639,9 +639,8 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
         public void run() {
           runOnUiThread(new Runnable() {
             public void run() {
-              if (!interstitial.isReady()) {
-                if (!isProVersion())
-                  interstitial.loadAd(new AdRequest());
+              if ((!isProVersion())&&(!interstitial.isReady())) {
+                interstitial.loadAd(new AdRequest());
               }
             }
           });
@@ -694,20 +693,27 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   @Override
   public void showInterstitial() {
     if (isProVersion()) return;
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (interstitial.isReady()) {
-          GnuBackgammon.Instance.interstitialVisible = true;
-          interstitial.show();
+    if (interstitial.isReady()) {
+      GnuBackgammon.Instance.currentScreen.pause();
+      GnuBackgammon.Instance.interstitialVisible = true;
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          synchronized (this) {
+            try {
+              wait(700);
+            } catch (InterruptedException e) {}
+            interstitial.show();  
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   @Override
   public void onDismissScreen(Ad arg0) {
     GnuBackgammon.Instance.interstitialVisible = false;
+    GnuBackgammon.Instance.currentScreen.resume();
   }
 
   @Override
