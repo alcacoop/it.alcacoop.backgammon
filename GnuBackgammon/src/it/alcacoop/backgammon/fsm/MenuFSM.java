@@ -410,7 +410,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
   public void start() {
     if ((GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen)||
-        (GnuBackgammon.Instance.invitationId!=""))
+        (GnuBackgammon.Instance.invitationId!="")||(MatchState.matchType==1))
       state(States.TWO_PLAYERS);
     else
       state(States.MAIN_MENU);
