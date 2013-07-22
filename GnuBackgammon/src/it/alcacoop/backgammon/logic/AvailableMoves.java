@@ -68,74 +68,17 @@ public class AvailableMoves {
 
 
   private void evaluatePlayableDices(int d[]) {
-    
-    //AVAILABLE MOVES DICES ON BEARING OFF..
-    int max_point = b.bearingOff();
-    int dice = 0;
-    if(max_point>=0) { //BEARING OFF!
-      
-      int max_moves = 0;
-      for (int i=0;i<moves.size();i++) {
-        for (int j=0;j<4;j++) {
-          if (moves.get(i)[j*2]!=-1) {
-            max_moves=(j+1);
-            dice = moves.get(i)[j*2]-moves.get(i)[j*2+1];
-          }
-        }
-        if (max_moves==b.dices.get().length) {
-          break;
-        }
-      }
-      
-      if ((d[0]!=d[1])&&(max_moves==1)) {
-        dices.add(dice);
-        if (dice==d[0])
-          b.dices.disable(d[1]);
-        else
-          b.dices.disable(d[0]);
-        return;
-      }
-      
-      for (int i=0;i<max_moves;i++)
-        dices.add(d[i]);
-      
-      if (d[0]==d[1])
-        for (int i=0;i<4-max_moves;i++)
-          b.dices.disable(d[0]);
-      
-      return;
-    }
-    //END BEARING OFF DICES
-    
-
-    //DISABLING UNPLAYABLE DICES ON RACE GAME
     boolean all_presents = false;
     int max_moves = 0;
-    List<Integer> presents = new ArrayList<Integer>();
-
-    if (d.length == 2) { //STANDARD ROLL
-      for (int i=0;i<moves.size();i++) {
-        for (int j=0;j<4;j++) {
-          for (int k=0;k<d.length;k++) {
-            if ((moves.get(i)[j*2]-moves.get(i)[j*2+1])==d[k])
-              presents.add(d[k]);
-          }
-        }
+    for (int i=0;i<moves.size();i++) {
+      for (int j=0;j<4;j++) {
+        if (moves.get(i)[j*2]!=-1) max_moves=(j+1);
       }
-    } else { //DOUBLE!
-      for (int i=0;i<moves.size();i++) {
-        for (int j=0;j<4;j++) {
-          if (moves.get(i)[j*2]!=-1) max_moves=(j+1);
-        }
-        if (max_moves==4) {
-          all_presents = true;
-          break;
-        }
+      if (((d.length==4)&&(max_moves==4))||((d.length==2)&&(max_moves==2))) {
+        all_presents = true;
+        break;
       }
-    }
-
-    List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(presents));
-    if (unique.size()==2) all_presents = true;
+    }    
 
     if (all_presents) { 
       for (int i=0;i<d.length;i++)
@@ -147,12 +90,14 @@ public class AvailableMoves {
         for (int i=0;i<4-max_moves;i++)
           b.dices.disable(d[0]);
       } else { //NON DOUBLING ROLL
-        int t = unique.get(0); //THE ONLY PLAYABLE DICE
-        dices.add(t);
-        if(b.dices.get()[0]==t)
-          b.dices.disable(b.dices.get()[1]);
-        else 
-          b.dices.disable(b.dices.get()[0]);
+        int dice = moves.get(0)[0]-moves.get(0)[1];
+        if (d[0]>=dice) {
+          dices.add(d[0]);
+          b.dices.disable(d[1]);
+        } else {
+          dices.add(d[1]);
+          b.dices.disable(d[0]);
+        }
       }  
     }
   }
