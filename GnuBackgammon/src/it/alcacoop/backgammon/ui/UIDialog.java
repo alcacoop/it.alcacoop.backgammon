@@ -388,6 +388,10 @@ public final class UIDialog extends Table {
   
   
   public static void getFlashDialog(BaseFSM.Events evt, String text) {
+    getFlashDialog(evt, text, 1.5f);
+  }
+  
+  public static void getFlashDialog(BaseFSM.Events evt, String text, float waitTime) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;
     instance.quitWindow = false;
@@ -412,7 +416,7 @@ public final class UIDialog extends Table {
     stage.addActor(instance);
     instance.addAction(MyActions.sequence(
         Actions.alpha(alpha, 0.3f),
-        Actions.delay(1.2f),
+        Actions.delay(waitTime),
         Actions.fadeOut(0.3f),
         Actions.run(new Runnable() {
           @Override

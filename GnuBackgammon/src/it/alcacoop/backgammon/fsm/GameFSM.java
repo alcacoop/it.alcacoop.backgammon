@@ -145,7 +145,7 @@ public class GameFSM extends BaseFSM implements Context {
           GnuBackgammon.Instance.rec.addMove(1, d[0], d[1], moves);
           if(moves[0] == -1) {
             ctx.state(DIALOG_HANDLER);
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves");
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
           } else {
             moves = (int[])params;
             ctx.board().setMoves(moves);
@@ -223,7 +223,7 @@ public class GameFSM extends BaseFSM implements Context {
             int[] m = {-1,-1,-1,-1,-1,-1,-1,-1};
             GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], m);
             
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available");
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
           }
           ctx.board().dices.animating = false;
           break;

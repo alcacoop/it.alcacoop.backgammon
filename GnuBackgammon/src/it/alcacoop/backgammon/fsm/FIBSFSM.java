@@ -77,7 +77,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           dices = (int[])params;
           int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
           if ((mv==null)||(mv.length==0)) {
-            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves");
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
           } else {
             ctx.board().availableMoves.setMoves(mv);
             GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);
@@ -144,8 +144,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           if ((moves!=null)&&(moves.length>0)) {
             ctx.board().availableMoves.setMoves(moves);  
           } else  {
-            UIDialog.getFlashDialog(
-              Events.NO_MORE_MOVES, "No legal moves available");
+            UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
           }
           ctx.board().dices.animating = false;
           break;
