@@ -117,12 +117,13 @@ public class TwoPlayersScreen extends BaseScreen {
         "real people (and even some bots). There are players of every " +
         "conceivable ability logging onto FIBS, from absolute beginners " +
         "to serious backgammon champion contenders. \n\n" +
-        "All players need a username (nick) and password to play. The name " +
-        "must be 3-20 letters only (no numbers) and underscore (_) is "  +
-        "the only punctuation allowed, also remember that it is " +
-        "case-sensitive ('A' and 'a' are different). \n" +
-        "NOTE: at the moment you CAN'T create new FIBS account from Backgammon Mobile. " +
-        "You can play on FIBS only if you are already a fibster!";
+        "NOTE: At the moment FIBS needs validation for new users, so " +
+        "you can't crate accounts within Backgammon Mobile.\n\n" +
+        "You have to do it from 'http://fibs.com' and contact FIBS administrator " +
+        "at 'pattib@fibs.com' with your username (not your password!) to request validation.\n" +
+        "As FIBS is a free server run by one person, this may take up to a day " +
+        "and occasionally longer.\n" +
+        "Alternatively you can get a try on our primary choice: TigerGammon!";
     lfibs.setText(sf);
     
     
