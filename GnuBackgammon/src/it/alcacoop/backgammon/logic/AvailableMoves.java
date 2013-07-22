@@ -91,12 +91,22 @@ public class AvailableMoves {
           b.dices.disable(d[0]);
       } else { //NON DOUBLING ROLL
         int dice = moves.get(0)[0]-moves.get(0)[1];
-        if (d[0]>=dice) {
-          dices.add(d[0]);
-          b.dices.disable(d[1]);
+        if ((dice!=d[0])&&(dice!=d[1])) {//BEAR OFF
+          if (d[0]>=dice) {
+            dices.add(d[0]);
+            b.dices.disable(d[1]);
+          } else {
+            dices.add(d[1]);
+            b.dices.disable(d[0]);
+          }
         } else {
-          dices.add(d[1]);
-          b.dices.disable(d[0]);
+          if (d[0]==dice) {
+            dices.add(d[0]);
+            b.dices.disable(d[1]);
+          } else {
+            dices.add(d[1]);
+            b.dices.disable(d[0]);
+          }
         }
       }  
     }
