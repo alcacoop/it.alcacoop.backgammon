@@ -118,9 +118,9 @@ public class TwoPlayersScreen extends BaseScreen {
         "conceivable ability logging onto FIBS, from absolute beginners " +
         "to serious backgammon champion contenders. \n\n" +
         "NOTE: At the moment FIBS needs validation for new users, so " +
-        "you can't crate accounts within Backgammon Mobile.\n\n" +
+        "you can't create accounts within Backgammon Mobile.\n\n" +
         "You have to do it from 'http://fibs.com' and contact FIBS administrator " +
-        "at 'pattib@fibs.com' with your username (not your password!) to request validation.\n" +
+        "sending an email at 'pattib@fibs.com' with your username (not password!).\n" +
         "As FIBS is a free server run by one person, this may take up to a day " +
         "and occasionally longer.\n" +
         "Alternatively you can get a try on our primary choice: TigerGammon!";
