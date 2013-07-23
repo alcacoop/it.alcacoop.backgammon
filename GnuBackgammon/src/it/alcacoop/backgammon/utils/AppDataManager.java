@@ -36,6 +36,12 @@ public class AppDataManager {
     app_data.put("checkers", GnuBackgammon.Instance.appearancePrefs.getString("CHECKERS", "CS1"));
     app_data.put("direction", GnuBackgammon.Instance.appearancePrefs.getString("DIRECTION", "AntiClockwise"));
     app_data.put("numberedp", GnuBackgammon.Instance.appearancePrefs.getString("NPOINTS", "Yes"));
+    
+    app_data.put("fusername", GnuBackgammon.Instance.fibsPrefs.getString("fusername", ""));
+    app_data.put("fpassword", GnuBackgammon.Instance.fibsPrefs.getString("fpassword", ""));
+    app_data.put("tusername", GnuBackgammon.Instance.fibsPrefs.getString("tusername", ""));
+    app_data.put("tpassword", GnuBackgammon.Instance.fibsPrefs.getString("tpassword", ""));
+
     Json json = new Json();
     return json.toJson(app_data).getBytes();
   }
@@ -75,6 +81,11 @@ public class AppDataManager {
     app_data.put("direction", hRemote.get("direction"));
     app_data.put("numberedp", hRemote.get("numberedp"));
     
+    app_data.put("fusername", hRemote.get("fusername"));
+    app_data.put("fpassword", hRemote.get("fpassword"));
+    app_data.put("tusername", hRemote.get("tusername"));
+    app_data.put("tpassword", hRemote.get("tpassword"));
+    
     savePrefs();
     return new Json().toJson(app_data).getBytes();
   }
@@ -95,7 +106,13 @@ public class AppDataManager {
     GnuBackgammon.Instance.appearancePrefs.putString("DIRECTION", app_data.get("direction"));
     GnuBackgammon.Instance.appearancePrefs.putString("NPOINTS", app_data.get("numberedp"));
     
+    GnuBackgammon.Instance.fibsPrefs.putString("fusername", app_data.get("fusername"));
+    GnuBackgammon.Instance.fibsPrefs.putString("fpassword", app_data.get("fpassword"));
+    GnuBackgammon.Instance.fibsPrefs.putString("tusername", app_data.get("tusername"));
+    GnuBackgammon.Instance.fibsPrefs.putString("tpassword", app_data.get("tpassword"));
+    
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.appearancePrefs.flush();
+    GnuBackgammon.Instance.fibsPrefs.flush();
   }
 }

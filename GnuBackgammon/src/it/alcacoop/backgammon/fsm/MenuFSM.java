@@ -192,6 +192,7 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.fibsPrefs.putString("tpassword", "");
             }
             GnuBackgammon.Instance.fibsPrefs.flush();
+            GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
@@ -206,6 +207,7 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.fibsPrefs.putString("tpassword", GnuBackgammon.Instance.FibsPassword);
             }
             GnuBackgammon.Instance.fibsPrefs.flush();
+            GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
             GnuBackgammon.Instance.setFSM("FIBS_FSM");
             break;
           

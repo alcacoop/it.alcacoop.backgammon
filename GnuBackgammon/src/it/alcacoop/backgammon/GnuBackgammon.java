@@ -150,6 +150,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     Instance = this;
     optionPrefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
+    fibsPrefs = Gdx.app.getPreferences("FibsPreferences");
     
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
@@ -185,8 +186,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
     snd = new SoundManager();
     rec = new MatchRecorder();
-    
-    fibsPrefs = Gdx.app.getPreferences("FibsPreferences");
     
     fibs = new FibsNetHandler();
     
