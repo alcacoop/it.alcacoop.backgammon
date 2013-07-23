@@ -207,6 +207,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     else
       adView = new AdView(this, AdSize.BANNER, PurchaseActivity.ads_id);
     adView.setVisibility(View.GONE);
+    
     if (!isProVersion())
       adView.loadAd(new AdRequest());
     //Create the interstitial
@@ -1093,7 +1094,27 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
         if (mProgressDialog == null) {
           if (MainActivity.this == null)
             return;
-          mProgressDialog = new ProgressDialog(MainActivity.this);
+          mProgressDialog = new ProgressDialog(MainActivity.this){
+            int clickCount=0;
+            
+            @Override
+            public void dismiss() {
+              super.dismiss();
+              clickCount = 0;
+            }
+            
+            @Override
+            public boolean onKeyDown(int keyCode, KeyEvent event) {
+              clickCount++;
+              System.out.println("BACK KEY "+clickCount);
+              if (clickCount==7) {
+                GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+                GnuBackgammon.Instance.setFSM("MENU_FSM");
+                dismiss();
+              }
+              return false;
+            }
+          };
         }
         mProgressDialog.setMessage("Please wait..");
         mProgressDialog.setIndeterminate(true);
