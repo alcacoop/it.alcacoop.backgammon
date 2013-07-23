@@ -250,4 +250,16 @@ public class Main implements NativeFunctions {
   @Override
   public void hideProgressDialog() {}
 
+  @Override
+  public void gserviceSubmitRating() {}
+
+  @Override
+  public void gserviceUpdateAchievement(int achievement_id, int increment) {}
+
+  @Override
+  public void gserviceUnlockAchievement(int achiev_id) {}
+
+  @Override
+  public void gserviceUpdateState() {}
+
 }
