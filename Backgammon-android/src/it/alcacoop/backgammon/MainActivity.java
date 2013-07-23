@@ -863,7 +863,9 @@ OnStateLoadedListener
     prefs.putBoolean("ALREADY_SIGNEDIN", true);
     prefs.flush();
     gHelper.getGamesClient().registerInvitationListener(this);
-
+    
+    gHelper.getAppStateClient().loadState(this, APP_DATA_KEY);
+    
     if (gHelper.getInvitationId()!=null && gHelper.getGamesClient().isConnected()) {
       //acceptInvitation(gHelper.getInvitationId());
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
