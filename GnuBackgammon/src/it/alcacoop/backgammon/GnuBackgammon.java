@@ -148,6 +148,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   @Override
   public void create() {
     Instance = this;
+    optionPrefs = Gdx.app.getPreferences("GameOptions");
+    appearancePrefs = Gdx.app.getPreferences("Appearance");
+    
     //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
     if (pWidth<=480) ss = 2;
@@ -179,8 +182,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       }
     };
     
-    optionPrefs = Gdx.app.getPreferences("GameOptions");
-    appearancePrefs = Gdx.app.getPreferences("Appearance");
 
     snd = new SoundManager();
     rec = new MatchRecorder();

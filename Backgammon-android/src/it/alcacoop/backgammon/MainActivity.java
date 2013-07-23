@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
+import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -109,6 +110,8 @@ import com.google.ads.AdRequest.ErrorCode;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
+import com.google.android.gms.appstate.AppStateClient;
+import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -128,7 +131,8 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 public class MainActivity extends AndroidApplication 
 implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, 
 GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
-RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener
+RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener,
+OnStateLoadedListener
 {
   private String data_dir;
   protected AdView adView;
@@ -269,7 +273,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     PurchaseActivity.createBillingData(this);
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
-    gHelper.setup(this, GServiceGameHelper.CLIENT_PLUS|GServiceGameHelper.CLIENT_GAMES);
+    gHelper.setup(this, GServiceGameHelper.CLIENT_ALL);
 
     System.out.println("GSERVICE: onCreate");
     ActivityManager actvityManager = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
@@ -858,6 +862,9 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
     }
+    
+    
+    gHelper.getAppStateClient().loadState(this, APP_DATA_KEY);
   }
 
 
@@ -1222,6 +1229,32 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   }
   @Override
   public void gserviceOpenAchievements() {
+  }
+  
+  
+  private static int APP_DATA_KEY = 0;
+  @Override
+  public void onStateLoaded(int statusCode, int stateKey, byte[] data) {
+
+      if (statusCode == AppStateClient.STATUS_OK) {
+        System.out.println("GSERVICE: APPSTATE LOADED "+new String(data));
+        AppDataManager.getInstance().loadState(data);
+      } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {
+      } else {
+        System.out.println("GSERVICE: APPSTATE ERROR "+statusCode);
+      }
+  }
+
+  @Override
+  public void onStateConflict(int stateKey, String ver, byte[] localData, byte[] serverData) {
+    gHelper.getAppStateClient().resolveState(this, APP_DATA_KEY, ver, AppDataManager.getInstance().resolveConflict(localData, serverData));
+  }
+
+  @Override
+  public void gserviceUpdateState() {
+    if (gHelper.isSignedIn()) {
+      gHelper.getAppStateClient().updateState(APP_DATA_KEY, AppDataManager.getInstance().getBytes());
+    }
   }
 
 }

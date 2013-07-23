@@ -251,6 +251,7 @@ public class GameOptionsTable extends Table {
     GnuBackgammon.Instance.optionPrefs.putString("MDICES", manualdices);
     
     GnuBackgammon.Instance.optionPrefs.flush();
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
   }
 
   

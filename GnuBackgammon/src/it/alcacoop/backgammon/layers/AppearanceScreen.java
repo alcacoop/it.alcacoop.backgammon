@@ -272,6 +272,7 @@ public class AppearanceScreen extends BaseScreen {
     String sPoints = ((TextButton)npoints.getChecked()).getText().toString(); 
     prefs.putString("NPOINTS", sPoints);
     prefs.flush();
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
   }
   
   @Override
