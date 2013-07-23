@@ -54,6 +54,8 @@ public interface NativeFunctions {
   public boolean isProVersion();
   public void inAppBilling();
   
+  public void hideProgressDialog();
+  
   public void gserviceSignIn();
   public boolean gserviceIsSignedIn();
   public void gsericeStartRoom();

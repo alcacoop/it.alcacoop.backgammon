@@ -302,6 +302,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        GnuBackgammon.Instance.nativeFunctions.hideProgressDialog();
         ctx.board().rollBtn.remove();
         ctx.board().doubleBtn.remove();
         GnuBackgammon.fsm.hnmove = 0;

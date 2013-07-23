@@ -247,4 +247,7 @@ public class Main implements NativeFunctions {
   @Override
   public void gserviceOpenAchievements() {}
 
+  @Override
+  public void hideProgressDialog() {}
+
 }

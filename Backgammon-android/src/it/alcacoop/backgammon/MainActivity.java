@@ -827,9 +827,8 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     } else if (requestCode==RC_WAITING_ROOM) {
       if (resultCode!=RESULT_OK) {
         gserviceResetRoom();
+        hideProgressDialog();
       }
-      System.out.println("GSERVICE resultcode: "+ resultCode);
-      hideProgressDialog();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
       gHelper.onActivityResult(requestCode, resultCode, data);
@@ -915,7 +914,6 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
   public void onRoomConnected(int arg0, Room room) {
     System.out.println("======> GSERVICE CONNECTED ROOM: " + room.getRoomId());
     updateRoom(room);
-    hideProgressDialog();
     MatchState.matchType = 3;
     GnuBackgammon.fsm.state(States.GSERVICE);
     pingtask = new TimerTask() {
@@ -1105,7 +1103,8 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
     });
   }
 
-  void hideProgressDialog() {
+  @Override
+  public void hideProgressDialog() {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -1170,7 +1169,6 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, Real
       Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
-      //TODO: DECIDERE CHE FARE...
       UIDialog.getGServiceLoginDialog();
     }
   }
