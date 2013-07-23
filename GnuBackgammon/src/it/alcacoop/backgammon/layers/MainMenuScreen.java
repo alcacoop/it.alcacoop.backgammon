@@ -134,10 +134,24 @@ public class MainMenuScreen extends BaseScreen {
     scoreboards.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.nativeFunctions.gserviceOpenLeaderboards(); 
+        if (GnuBackgammon.Instance.nativeFunctions.gserviceIsSignedIn()) {
+          GnuBackgammon.Instance.nativeFunctions.gserviceOpenLeaderboards();
+        } else {
+          GnuBackgammon.Instance.nativeFunctions.gserviceSignIn();
+        }
       }
     });
     achievements = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("achievements")));
+    achievements.addListener(new ClickListener(){
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        if (GnuBackgammon.Instance.nativeFunctions.gserviceIsSignedIn()) {
+          GnuBackgammon.Instance.nativeFunctions.gserviceOpenAchievements();
+        } else {
+          GnuBackgammon.Instance.nativeFunctions.gserviceSignIn();
+        }
+      }
+    });
     
     gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));
     twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));

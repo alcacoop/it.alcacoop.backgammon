@@ -43,6 +43,7 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -354,7 +355,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
         String msg = "";
-        boolean youWin = true;
         GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
         if (MatchState.resignValue>0) {
           switch (MatchState.resignValue) {
@@ -378,13 +378,16 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         if (MatchState.resignValue<5) {
           GnuBackgammon.Instance.gameScreen.chatBox.hide();
           UIDialog.getFlashDialog(Events.STOPPED, msg);
-          youWin = false;
         } else {
           GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
           GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
         }
-        ELORatingManager.getInstance().updateRating(youWin);
-        GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating();
+
+        if (ctx.board().gameFinished() && (MatchState.fMove == 0)) {
+          // YOU WIN
+          System.out.println("GSERVICE: ============================== YOU WIN! fmove:"+ MatchState.fMove);
+          AchievementsManager.getInstance().checkAchievements();
+        }
         GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
       }
       

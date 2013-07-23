@@ -8,4 +8,30 @@
     <string name="clear">X</string>
     <string name="chat_message">Chat message...</string>
     <string name="APP_ID">131831581429</string>
+    <string name="leaderboard_ID_1">CgkI9ZWZjusDEAIQAQ</string>
+
+    <!-- ACHIEVEMENTS ID -->
+    <string name="beginner">CgkI9ZWZjusDEAIQAw</string>
+    <string name="casual">CgkI9ZWZjusDEAIQCg</string>
+    <string name="intermediate">CgkI9ZWZjusDEAIQBA</string>
+    <string name="advanced">CgkI9ZWZjusDEAIQBQ</string>
+    <string name="expert">CgkI9ZWZjusDEAIQBg</string>
+    <string name="worldclass">CgkI9ZWZjusDEAIQBw</string>
+    <string name="supremo">CgkI9ZWZjusDEAIQCA</string>
+    <string name="grandmaster">CgkI9ZWZjusDEAIQCQ</string>
+
+    <string name="tournament_expert">CgkI9ZWZjusDEAIQCw</string>
+    <string name="tournament_leader">CgkI9ZWZjusDEAIQDA</string>
+    <string name="tournament_star">CgkI9ZWZjusDEAIQDQ</string>
+    <string name="big_boss_of_tournament">CgkI9ZWZjusDEAIQDg</string>
+
+    <string name="social_newbie">CgkI9ZWZjusDEAIQDw</string>
+    <string name="social_proud">CgkI9ZWZjusDEAIQEA</string>
+    <string name="social_addicted">CgkI9ZWZjusDEAIQEQ</string>
+
+    <string name="multiplayer_turtle">CgkI9ZWZjusDEAIQEg</string>
+    <string name="multiplayer_rabbit">CgkI9ZWZjusDEAIQEw</string>
+    <string name="multiplayer_dobermann">CgkI9ZWZjusDEAIQFA</string>
+    <string name="multiplayer_tiger">CgkI9ZWZjusDEAIQFQ</string>
+    <!-- END ACHIEVEMENTS ID -->
 </resources>

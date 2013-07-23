@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
@@ -363,6 +364,8 @@ public class GameFSM extends BaseFSM implements Context {
         }
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
+        System.out.println("GSERVICE: currentLevel"+ MatchState.currentLevel.ordinal() + " nMatchTo:"+MatchState.nMatchTo + " fMove:"+MatchState.fMove);
+        AchievementsManager.getInstance().checkAchievements();
         UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2);
       }
 

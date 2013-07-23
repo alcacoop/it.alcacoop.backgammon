@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
+import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
@@ -115,6 +116,7 @@ import com.google.android.gms.appstate.AppStateClient;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.achievement.OnAchievementUpdatedListener;
 import com.google.android.gms.games.leaderboard.OnScoreSubmittedListener;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -801,6 +803,7 @@ OnStateLoadedListener
   private static int RC_SELECT_PLAYERS = 6000;
   private static int RC_WAITING_ROOM = 6001;
   private static int RC_LEADERBOARD = 6002;
+  private static int RC_ACHIEVEMENTS = 6003;
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == PurchaseActivity.RC_REQUEST) {
@@ -969,6 +972,7 @@ OnStateLoadedListener
     if (mParticipants.get(0).getParticipantId()==mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
+      AchievementsManager.getInstance().checkSocialAchievements(mParticipants.get(1).getPlayer().getPlayerId());
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
@@ -1222,6 +1226,7 @@ OnStateLoadedListener
     }
   }
   
+  @Override
   public void gserviceSubmitRating() {
     double score = ELORatingManager.getInstance().getRating();
     long scoreToSubmit = (long)score * 100;
@@ -1232,17 +1237,112 @@ OnStateLoadedListener
       public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
         System.out.println("GSERVICE: score submitted!");
       }
-    }, "CgkI9ZWZjusDEAIQAQ", scoreToSubmit);
+    }, getString(R.string.leaderboard_ID_1), scoreToSubmit);
     
   }
 
+  @Override
+  public void gserviceUpdateAchievement(int achievement_id, int increment) {
+    if (gHelper.isSignedIn()) {
+      System.out.println("GSERVICE: gserviceUpdateAchievements: " + getAchievementByIdx(achievement_id));
+      gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
+
+        @Override
+        public void onAchievementUpdated(int arg0, String arg1) {
+          System.out.println("GSERVICE: achievement incremented!");
+        }
+      }, getAchievementByIdx(achievement_id), increment);
+    }
+  }
+
+  @Override
+  public void gserviceUnlockAchievement(int achievement_id) {
+    if (gHelper.isSignedIn()) {
+      System.out.println("GSERVICE: gserviceUnlockAchievements: " + getAchievementByIdx(achievement_id));
+      gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
+
+        @Override
+        public void onAchievementUpdated(int arg0, String arg1) {
+          System.out.println("GSERVICE: achievement unlocked!");
+        }
+      }, getAchievementByIdx(achievement_id));
+    }
+  }
 
   @Override
   public void gserviceOpenLeaderboards() {
     startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
   }
+
   @Override
   public void gserviceOpenAchievements() {
+    startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+  }
+
+  private String getAchievementByIdx(int idx)
+  {
+    int f = 0;
+    switch(idx){
+    case 0:
+      f = R.string.beginner;
+      break;
+    case 1:
+      f = R.string.casual;
+      break;
+    case 2:
+      f = R.string.intermediate;
+      break;
+    case 3:
+      f = R.string.advanced;
+      break;
+    case 4:
+      f = R.string.expert;
+      break;
+    case 5:
+      f = R.string.worldclass;
+      break;
+    case 6:
+      f = R.string.supremo;
+      break;
+    case 7:
+      f = R.string.grandmaster;
+      break;
+    case 8:
+      f = R.string.tournament_expert;
+      break;
+    case 9:
+      f = R.string.tournament_leader;
+      break;
+    case 10:
+      f = R.string.tournament_star;
+      break;
+    case 11:
+      f = R.string.big_boss_of_tournament;
+      break;
+    case 12:
+      f = R.string.social_newbie;
+      break;
+    case 13:
+      f = R.string.social_proud;
+      break;
+    case 14:
+      f = R.string.social_addicted;
+      break;
+    case 15:
+      f = R.string.multiplayer_turtle;
+      break;
+    case 16:
+      f = R.string.multiplayer_rabbit;
+      break;
+    case 17:
+      f = R.string.multiplayer_dobermann;
+      break;
+    case 18:
+      f = R.string.multiplayer_tiger;
+      break;
+    }
+
+    return getString(f);
   }
   
   
