@@ -227,7 +227,7 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void gsericeStartRoom() {}
+  public void gserviceStartRoom() {}
 
   @Override
   public void gserviceAcceptInvitation(String invitationId) {}

@@ -1196,7 +1196,7 @@ OnStateLoadedListener
 
 
   @Override
-  public void gsericeStartRoom() {
+  public void gserviceStartRoom() {
     if (gHelper.getGamesClient().isConnected()) {
       showProgressDialog();
       Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
