@@ -254,12 +254,15 @@ public class Main implements NativeFunctions {
   public void gserviceSubmitRating() {}
 
   @Override
-  public void gserviceUpdateAchievement(int achievement_id, int increment) {}
+  public void gserviceUpdateAchievement(String achievement_id, int increment) {}
 
   @Override
-  public void gserviceUnlockAchievement(int achiev_id) {}
+  public void gserviceUnlockAchievement(String achiev_id) {}
 
   @Override
   public void gserviceUpdateState() {}
+
+  @Override
+  public void gserviceGetSigninDialog(int from) {}
 
 }
