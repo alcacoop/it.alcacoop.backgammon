@@ -144,6 +144,10 @@ public class GServiceGameHelper implements GooglePlayServicesClient.ConnectionCa
     // Listener
     GameHelperListener mListener = null;
 
+    public void setListener(GameHelperListener listener) {
+      mListener = listener;
+    }
+    
     /**
      * Construct a GameHelper object, initially tied to the given Activity.
      * After constructing this object, call @link{setup} from the onCreate()

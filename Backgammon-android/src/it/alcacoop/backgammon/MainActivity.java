@@ -1273,12 +1273,44 @@ OnStateLoadedListener
 
   @Override
   public void gserviceOpenLeaderboards() {
-    startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+    if (gserviceIsSignedIn()) {
+      startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+    } else {
+      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
+        @Override
+        public void onSignInSucceeded() {
+          gHelper.setListener(MainActivity.this);
+          MainActivity.this.onSignInSucceeded();
+          startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+        }
+        @Override
+        public void onSignInFailed() {
+          UIDialog.getFlashDialog(Events.NOOP, "Login error");
+        }
+      });
+      gserviceSignIn();
+    }
   }
 
   @Override
   public void gserviceOpenAchievements() {
-    startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+    if (gserviceIsSignedIn()) {
+      startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+    } else {
+      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
+        @Override
+        public void onSignInSucceeded() {
+          gHelper.setListener(MainActivity.this);
+          MainActivity.this.onSignInSucceeded();
+          startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+        }
+        @Override
+        public void onSignInFailed() {
+          UIDialog.getFlashDialog(Events.NOOP, "Login error");
+        }
+      });
+      gserviceSignIn();
+    }
   }
 
   private String getAchievementByIdx(int idx)
