@@ -5,6 +5,8 @@ import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -12,7 +14,34 @@ import com.badlogic.gdx.utils.Json;
 
 public class AchievementsManager {
 
-  private static final int UNHANDLED_LEVEL = -1;
+  public static final Map<String, String> achievMap;
+  static
+  {
+    achievMap = new HashMap<String, String>();
+    achievMap.put("BEGINNER", "CgkI9ZWZjusDEAIQAw");
+    achievMap.put("CASUAL", "CgkI9ZWZjusDEAIQCg");
+    achievMap.put("INTERMEDIATE", "CgkI9ZWZjusDEAIQBA");
+    achievMap.put("ADVANCED", "CgkI9ZWZjusDEAIQBQ");
+    achievMap.put("EXPERT", "CgkI9ZWZjusDEAIQBg");
+    achievMap.put("WORLDCLASS", "CgkI9ZWZjusDEAIQBw");
+    achievMap.put("SUPREMO", "CgkI9ZWZjusDEAIQCA");
+    achievMap.put("GRANDMASTER", "CgkI9ZWZjusDEAIQCQ");
+
+    achievMap.put("TOURNAMENT_EXPERT", "CgkI9ZWZjusDEAIQCw");
+    achievMap.put("TOURNAMENT_LEADER", "CgkI9ZWZjusDEAIQDA");
+    achievMap.put("TOURNAMENT_STAR", "CgkI9ZWZjusDEAIQDQ");
+    achievMap.put("BIG_BOSS_OF_TOURNAMENT", "CgkI9ZWZjusDEAIQDg");
+
+    achievMap.put("SOCIAL_NEWBIE", "CgkI9ZWZjusDEAIQDw");
+    achievMap.put("SOCIAL_PROUD", "CgkI9ZWZjusDEAIQEA");
+    achievMap.put("SOCIAL_ADDICTED", "CgkI9ZWZjusDEAIQEQ");
+
+    achievMap.put("MULTIPLAYER_TURTLE", "CgkI9ZWZjusDEAIQEg");
+    achievMap.put("MULTIPLAYER_RABBIT", "CgkI9ZWZjusDEAIQEw");
+    achievMap.put("MULTIPLAYER_DOBERMANN", "CgkI9ZWZjusDEAIQFA");
+    achievMap.put("MULTIPLAYER_TIGER", "CgkI9ZWZjusDEAIQFQ");
+  }
+
   public Preferences prefs;
   private static AchievementsManager instance;
   public static ArrayList<String> opponents_played;
@@ -49,9 +78,9 @@ public class AchievementsManager {
     if (!opponents_played.contains(opponent_player_id)) {
       opponents_played.add(opponent_player_id);
       
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.SOCIAL_NEWBIE, 1);
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.SOCIAL_PROUD, 1);
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.SOCIAL_ADDICTED, 1);
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("SOCIAL_NEWBIE"), 1);
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("SOCIAL_PROUD"), 1);
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("SOCIAL_ADDICTED"), 1);
       
       Json json = new Json();
       prefs.putString("OPPONENTS", json.toJson(opponents_played));
@@ -60,6 +89,9 @@ public class AchievementsManager {
     }
   }
 
+  /**
+   * START PRIVATE METHODS
+   */
   private void checkSinglePlayerAchievements() {
     /*
      * If fMove != 0 the opponent won the game,
@@ -67,19 +99,15 @@ public class AchievementsManager {
      */
     if (MatchState.fMove != 0) return;
 
-    int single_achiev_id;
     switch (MatchState.nMatchTo) {
     case 3:
-      single_achiev_id = getSingleAchievementByGameLevel();
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(single_achiev_id, 1);
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(getSingleAchievementByGameLevel(), 1);
       if (MatchState.anScore[0] >= MatchState.nMatchTo) {
-        int tournament_achiev_id = getTournamentAchievementByGameLevel();
-        GnuBackgammon.Instance.nativeFunctions.gserviceUnlockAchievement(tournament_achiev_id);
+        GnuBackgammon.Instance.nativeFunctions.gserviceUnlockAchievement(getTournamentAchievementByGameLevel());
       }
       break;
     default:
-      single_achiev_id = getSingleAchievementByGameLevel();
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(single_achiev_id, 1);
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(getSingleAchievementByGameLevel(), 1);
       break;
     }
   }
@@ -91,69 +119,65 @@ public class AchievementsManager {
      */
     if (MatchState.fMove != 0) return;
 
-    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.MULTIPLAYER_TURTLE, 1);
-    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.MULTIPLAYER_RABBIT, 1);
-    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.MULTIPLAYER_DOBERMANN, 1);
-    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(Achievements.MULTIPLAYER_TIGER, 1);
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_TURTLE"), 1);
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_RABBIT"), 1);
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_DOBERMANN"), 1);
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_TIGER"), 1);
   }
 
-  private int getSingleAchievementByGameLevel() {
-    int id = 0;
+  private String getSingleAchievementByGameLevel() {
+    String id = "";
     AILevels level = MatchState.currentLevel;
     switch (level) {
     case BEGINNER:
-      id = Achievements.BEGINNER;
+      id = achievMap.get("BEGINNER");
       break;
     case CASUAL:
-      id = Achievements.CASUAL;
+      id = achievMap.get("CASUAL");
       break;
     case INTERMEDIATE:
-      id = Achievements.INTERMEDIATE;
+      id = achievMap.get("INTERMEDIATE");
       break;
     case ADVANCED:
-      id = Achievements.ADVANCED;
+      id = achievMap.get("ADVANCED");
       break;
     case EXPERT:
-      id = Achievements.EXPERT;
+      id = achievMap.get("EXPERT");
       break;
     case WORLDCLASS:
-      id = Achievements.WORLDCLASS;
+      id = achievMap.get("WORLDCLASS");
       break;
     case SUPREMO:
-      id = Achievements.SUPREMO;
+      id = achievMap.get("SUPREMO");
       break;
     case GRANDMASTER:
-      id = Achievements.GRANDMASTER;
+      id = achievMap.get("GRANDMASTER");
       break;
     default:
-      id = UNHANDLED_LEVEL;
       break;
     }
-    
     return id;
   }
   
-  private int getTournamentAchievementByGameLevel() {
-    int id = 0;
+  private String getTournamentAchievementByGameLevel() {
+    String id = "";
     AILevels level = MatchState.currentLevel;
     switch (level) {
     case EXPERT:
-      id = Achievements.TOURNAMENT_EXPERT;
+      id = achievMap.get("TOURNAMENT_EXPERT");
       break;
     case WORLDCLASS:
-      id = Achievements.TOURNAMENT_LEADER;
+      id = achievMap.get("TOURNAMENT_LEADER");
       break;
     case SUPREMO:
-      id = Achievements.TOURNAMENT_STAR;
+      id = achievMap.get("TOURNAMENT_STAR");
       break;
     case GRANDMASTER:
-      id = Achievements.BIG_BOSS_OF_TOURNAMENT;
+      id = achievMap.get("BIG_BOSS_OF_TOURNAMENT");
       break;
     default:
-      id = UNHANDLED_LEVEL;
       break;
     }
-    
     return id;
   }
 

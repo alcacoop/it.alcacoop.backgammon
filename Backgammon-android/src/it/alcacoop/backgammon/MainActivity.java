@@ -43,8 +43,8 @@ import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.AchievementsManager;
-import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -1248,30 +1248,30 @@ OnStateLoadedListener
   }
 
   @Override
-  public void gserviceUpdateAchievement(int achievement_id, int increment) {
+  public void gserviceUpdateAchievement(String achievement_id, int increment) {
     if (gHelper.isSignedIn()) {
-      System.out.println("GSERVICE: gserviceUpdateAchievements: " + getAchievementByIdx(achievement_id));
+      System.out.println("GSERVICE: gserviceUpdateAchievements: " + achievement_id);
       gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
 
         @Override
-        public void onAchievementUpdated(int arg0, String arg1) {
-          System.out.println("GSERVICE: achievement incremented!");
+        public void onAchievementUpdated(int statusCode, String achievement_id) {
+          System.out.println("GSERVICE: achievement incremented! statusCode:"+statusCode);
         }
-      }, getAchievementByIdx(achievement_id), increment);
+      }, achievement_id, increment);
     }
   }
 
   @Override
-  public void gserviceUnlockAchievement(int achievement_id) {
+  public void gserviceUnlockAchievement(String achievement_id) {
     if (gHelper.isSignedIn()) {
-      System.out.println("GSERVICE: gserviceUnlockAchievements: " + getAchievementByIdx(achievement_id));
+      System.out.println("GSERVICE: gserviceUnlockAchievements: " + achievement_id);
       gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
 
         @Override
-        public void onAchievementUpdated(int arg0, String arg1) {
-          System.out.println("GSERVICE: achievement unlocked!");
+        public void onAchievementUpdated(int statusCode, String arg1) {
+          System.out.println("GSERVICE: achievement unlocked! statusCode:"+statusCode);
         }
-      }, getAchievementByIdx(achievement_id));
+      }, achievement_id);
     }
   }
 
@@ -1293,72 +1293,6 @@ OnStateLoadedListener
     }
   }
 
-  private String getAchievementByIdx(int idx)
-  {
-    int f = 0;
-    switch(idx){
-    case 0:
-      f = R.string.beginner;
-      break;
-    case 1:
-      f = R.string.casual;
-      break;
-    case 2:
-      f = R.string.intermediate;
-      break;
-    case 3:
-      f = R.string.advanced;
-      break;
-    case 4:
-      f = R.string.expert;
-      break;
-    case 5:
-      f = R.string.worldclass;
-      break;
-    case 6:
-      f = R.string.supremo;
-      break;
-    case 7:
-      f = R.string.grandmaster;
-      break;
-    case 8:
-      f = R.string.tournament_expert;
-      break;
-    case 9:
-      f = R.string.tournament_leader;
-      break;
-    case 10:
-      f = R.string.tournament_star;
-      break;
-    case 11:
-      f = R.string.big_boss_of_tournament;
-      break;
-    case 12:
-      f = R.string.social_newbie;
-      break;
-    case 13:
-      f = R.string.social_proud;
-      break;
-    case 14:
-      f = R.string.social_addicted;
-      break;
-    case 15:
-      f = R.string.multiplayer_turtle;
-      break;
-    case 16:
-      f = R.string.multiplayer_rabbit;
-      break;
-    case 17:
-      f = R.string.multiplayer_dobermann;
-      break;
-    case 18:
-      f = R.string.multiplayer_tiger;
-      break;
-    }
-
-    return getString(f);
-  }
-  
   
   private static int APP_DATA_KEY = 0;
   @Override
