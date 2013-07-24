@@ -100,7 +100,7 @@ public class AchievementsManager {
     if (MatchState.fMove != 0) return;
 
     switch (MatchState.nMatchTo) {
-    case 3:
+    case 7:
       GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(getSingleAchievementByGameLevel(), 1);
       if (MatchState.anScore[0] >= MatchState.nMatchTo) {
         GnuBackgammon.Instance.nativeFunctions.gserviceUnlockAchievement(getTournamentAchievementByGameLevel());
