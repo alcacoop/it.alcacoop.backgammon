@@ -2,6 +2,7 @@ package it.alcacoop.backgammon.utils;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.utils.Json;
@@ -42,6 +43,7 @@ public class AppDataManager {
     app_data.put("tusername", GnuBackgammon.Instance.fibsPrefs.getString("tusername", ""));
     app_data.put("tpassword", GnuBackgammon.Instance.fibsPrefs.getString("tpassword", ""));
 
+    app_data.put("opponents", AchievementsManager.getInstance().prefs.getString("OPPONENTS", "{}"));
     Json json = new Json();
     return json.toJson(app_data).getBytes();
   }
@@ -85,7 +87,12 @@ public class AppDataManager {
     app_data.put("fpassword", hRemote.get("fpassword"));
     app_data.put("tusername", hRemote.get("tusername"));
     app_data.put("tpassword", hRemote.get("tpassword"));
-    
+
+    ArrayList<String> local_played_list = jLocal.fromJson(ArrayList.class, hLocal.get("opponents"));
+    ArrayList<String> remote_played_list = jRemote.fromJson(ArrayList.class, hRemote.get("opponents"));
+    if (local_played_list.size() >= remote_played_list.size()) app_data.put("opponents", hLocal.get("opponents"));
+    else app_data.put("opponents", hRemote.get("opponents"));
+
     savePrefs();
     return new Json().toJson(app_data).getBytes();
   }
@@ -111,8 +118,11 @@ public class AppDataManager {
     GnuBackgammon.Instance.fibsPrefs.putString("tusername", app_data.get("tusername"));
     GnuBackgammon.Instance.fibsPrefs.putString("tpassword", app_data.get("tpassword"));
     
+    AchievementsManager.getInstance().prefs.putString("OPPONENTS", app_data.get("opponents"));
+
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.appearancePrefs.flush();
     GnuBackgammon.Instance.fibsPrefs.flush();
+    AchievementsManager.getInstance().prefs.flush();
   }
 }

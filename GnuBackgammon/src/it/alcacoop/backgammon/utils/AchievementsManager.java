@@ -13,9 +13,9 @@ import com.badlogic.gdx.utils.Json;
 public class AchievementsManager {
 
   private static final int UNHANDLED_LEVEL = -1;
-  private Preferences prefs;
+  public Preferences prefs;
   private static AchievementsManager instance;
-  private static ArrayList<String> opponents_played;
+  public static ArrayList<String> opponents_played;
 
   @SuppressWarnings("unchecked")
   private AchievementsManager() {
@@ -39,6 +39,7 @@ public class AchievementsManager {
     case 3:
       // Gservice
       checkMultiplayerAchievements();
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
     default:
       break;
     }
