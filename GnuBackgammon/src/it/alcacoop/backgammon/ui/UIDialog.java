@@ -262,9 +262,7 @@ public final class UIDialog extends Table {
   }
   
   
-  public static void getGServiceLoginDialog() {
-    UIDialog.getYesNoDialog(Events.GSERVICE_LOGIN, "Sign in to Google+ to enable multiplayer");  
-  }
+  
   public static void getYesNoDialog(BaseFSM.Events evt, String text) {
     Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
     instance.visible = true;

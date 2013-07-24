@@ -862,12 +862,10 @@ OnStateLoadedListener
   public void onSignInSucceeded() {
     prefs.putBoolean("ALREADY_SIGNEDIN", true);
     prefs.flush();
-    gHelper.getGamesClient().registerInvitationListener(this);
-    
-    gHelper.getAppStateClient().loadState(this, APP_DATA_KEY);
-    
+    gHelper.getGamesClient().registerInvitationListener(MainActivity.this);
+    gHelper.getAppStateClient().loadState(MainActivity.this, APP_DATA_KEY);
+
     if (gHelper.getInvitationId()!=null && gHelper.getGamesClient().isConnected()) {
-      //acceptInvitation(gHelper.getInvitationId());
       System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
     }
@@ -1202,7 +1200,7 @@ OnStateLoadedListener
       Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
-      UIDialog.getGServiceLoginDialog();
+      gserviceGetSigninDialog(-1);
     }
   }
 
@@ -1276,19 +1274,7 @@ OnStateLoadedListener
     if (gserviceIsSignedIn()) {
       startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
     } else {
-      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
-        @Override
-        public void onSignInSucceeded() {
-          gHelper.setListener(MainActivity.this);
-          MainActivity.this.onSignInSucceeded();
-          startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
-        }
-        @Override
-        public void onSignInFailed() {
-          UIDialog.getFlashDialog(Events.NOOP, "Login error");
-        }
-      });
-      gserviceSignIn();
+      gserviceGetSigninDialog(FROM_SCOREBOARDS);
     }
   }
 
@@ -1297,19 +1283,7 @@ OnStateLoadedListener
     if (gserviceIsSignedIn()) {
       startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
     } else {
-      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
-        @Override
-        public void onSignInSucceeded() {
-          gHelper.setListener(MainActivity.this);
-          MainActivity.this.onSignInSucceeded();
-          startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
-        }
-        @Override
-        public void onSignInFailed() {
-          UIDialog.getFlashDialog(Events.NOOP, "Login error");
-        }
-      });
-      gserviceSignIn();
+      gserviceGetSigninDialog(FROM_ACHIEVEMENTS);
     }
   }
 
@@ -1405,4 +1379,59 @@ OnStateLoadedListener
     }
   }
 
+
+  private static int FROM_ACHIEVEMENTS = 1;
+  private static int FROM_SCOREBOARDS = 2;
+  public void trySignIn(final int from) {
+    if ((from==FROM_ACHIEVEMENTS)||(from==FROM_SCOREBOARDS)) {
+      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
+        @Override
+        public void onSignInSucceeded() {
+          gHelper.setListener(MainActivity.this);
+          MainActivity.this.onSignInSucceeded();
+          if (from==FROM_ACHIEVEMENTS)
+            startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+          else
+            startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+        }
+        @Override
+        public void onSignInFailed() {
+          UIDialog.getFlashDialog(Events.NOOP, "Login error");
+        }
+      });
+    }
+    gserviceSignIn();
+  }
+
+  
+  @Override
+  public void gserviceGetSigninDialog(final int from){
+    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    final LayoutInflater inflater = this.getLayoutInflater();
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final View myView = inflater.inflate(R.layout.dialog_gplus, null);
+        alert.setView(myView).
+        setTitle("Signin dialog").
+        setCancelable(true);
+        final AlertDialog d = alert.create();
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+          @Override
+          public void onShow(DialogInterface arg0) {
+            com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton) d.findViewById(R.id.sign_in_button);
+            b.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                d.dismiss();
+                trySignIn(from);
+              }
+            });
+          }
+        });
+        d.show();
+      }
+    });
+  }
 }
