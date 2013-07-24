@@ -113,6 +113,7 @@ import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
 import com.google.android.gms.appstate.AppStateClient;
+import com.google.android.gms.appstate.OnStateDeletedListener;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
@@ -180,6 +181,7 @@ OnStateLoadedListener
   private String mMyId = null;
   ArrayList<Participant> mParticipants = null;
   private Preferences prefs;
+  private boolean meSentInvitation;
 
 
   @SuppressWarnings("deprecation")
@@ -958,6 +960,7 @@ OnStateLoadedListener
     }
     System.out.println("GSERVICE CREATED ROOM: " + room.getRoomId());
     mRoomId = room.getRoomId();
+    meSentInvitation = true;
     Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
     startActivityForResult(i, RC_WAITING_ROOM);
   }
@@ -968,17 +971,19 @@ OnStateLoadedListener
     mParticipants = room.getParticipants();
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     updateRoom(room);
-    String me, opponent;
+    String me, opponent, opponent_player_id;
     if (mParticipants.get(0).getParticipantId()==mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
-      AchievementsManager.getInstance().checkSocialAchievements(mParticipants.get(1).getPlayer().getPlayerId());
+      opponent_player_id = mParticipants.get(1).getPlayer().getPlayerId();
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
+      opponent_player_id = mParticipants.get(0).getPlayer().getPlayerId();
     }
     GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
     System.out.println("GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
+    if (meSentInvitation) AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
 
 
@@ -1210,6 +1215,7 @@ OnStateLoadedListener
     GServiceClient.getInstance().notifyDispatched();
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     gConnecting = false;
+    meSentInvitation = false;
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
@@ -1375,9 +1381,25 @@ OnStateLoadedListener
   @Override
   public void gserviceUpdateState() {
     if (gHelper.isSignedIn()) {
+//      deleteAppState();
       gHelper.getAppStateClient().updateState(APP_DATA_KEY, AppDataManager.getInstance().getBytes());
     }
   }
+
+  private void deleteAppState() {
+    if (gHelper.isSignedIn()) {
+      gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
+        
+        @Override
+        public void onStateDeleted(int arg0, int arg1) {
+          System.out.println("GSERVICE STATE DELETED");
+        }
+      }, APP_DATA_KEY);
+    }
+  }
+
+
+
 
 
   private static int FROM_ACHIEVEMENTS = 1;
@@ -1405,7 +1427,7 @@ OnStateLoadedListener
 
   
   @Override
-  public void gserviceGetSigninDialog(final int from){
+  public void gserviceGetSigninDialog(final int from) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
 
