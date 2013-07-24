@@ -39,7 +39,6 @@ public class AchievementsManager {
     case 3:
       // Gservice
       checkMultiplayerAchievements();
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
     default:
       break;
     }
@@ -57,6 +56,7 @@ public class AchievementsManager {
       Json json = new Json();
       prefs.putString("OPPONENTS", json.toJson(opponents_played));
       prefs.flush();
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
     }
   }
 
@@ -67,18 +67,19 @@ public class AchievementsManager {
      */
     if (MatchState.fMove != 0) return;
 
+    int single_achiev_id;
     switch (MatchState.nMatchTo) {
-    case 1:
-      int single_achiev_id = getSingleAchievementByGameLevel();
-      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(single_achiev_id, 1);
-      break;
     case 3:
+      single_achiev_id = getSingleAchievementByGameLevel();
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(single_achiev_id, 1);
       if (MatchState.anScore[0] >= MatchState.nMatchTo) {
         int tournament_achiev_id = getTournamentAchievementByGameLevel();
         GnuBackgammon.Instance.nativeFunctions.gserviceUnlockAchievement(tournament_achiev_id);
       }
       break;
     default:
+      single_achiev_id = getSingleAchievementByGameLevel();
+      GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(single_achiev_id, 1);
       break;
     }
   }
