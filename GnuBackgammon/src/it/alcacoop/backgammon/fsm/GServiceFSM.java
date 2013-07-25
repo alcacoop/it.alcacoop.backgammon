@@ -383,11 +383,15 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
         }
 
-        if (ctx.board().gameFinished() && (MatchState.fMove == 0)) {
+        if (ctx.board().gameFinished() || (MatchState.resignValue == 1) ||
+            (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
           // YOU WIN
-          System.out.println("GSERVICE: ============================== YOU WIN! fmove:"+ MatchState.fMove);
-          AchievementsManager.getInstance().checkAchievements();
+          System.out.println("GSERVICE: ============================== YOU WIN! fmove:"+ MatchState.fMove + " resignValue:"+MatchState.resignValue);
+          AchievementsManager.getInstance().checkAchievements(true);          
+        } else {
+          AchievementsManager.getInstance().checkAchievements(false);
         }
+        
         GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
       }
       

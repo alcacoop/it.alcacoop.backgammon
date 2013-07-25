@@ -59,15 +59,15 @@ public class AchievementsManager {
     return instance;
   }
 
-  public void checkAchievements() {
+  public void checkAchievements(boolean youWin) {
     switch (MatchState.matchType) {
     case 0:
       // Single player
-      checkSinglePlayerAchievements();
+      checkSinglePlayerAchievements(youWin);
       break;
     case 3:
       // Gservice
-      checkMultiplayerAchievements();
+      checkMultiplayerAchievements(youWin);
     default:
       break;
     }
@@ -92,12 +92,8 @@ public class AchievementsManager {
   /**
    * START PRIVATE METHODS
    */
-  private void checkSinglePlayerAchievements() {
-    /*
-     * If fMove != 0 the opponent won the game,
-     * so we have not achievements to increment 
-     */
-    if (MatchState.fMove != 0) return;
+  private void checkSinglePlayerAchievements(boolean youWin) {
+    if (!youWin) return;
 
     switch (MatchState.nMatchTo) {
     case 7:
@@ -112,12 +108,8 @@ public class AchievementsManager {
     }
   }
   
-  private void checkMultiplayerAchievements() {
-    /*
-     * If fMove != 0 the opponent won the game,
-     * so we have not achievements to increment 
-     */
-    if (MatchState.fMove != 0) return;
+  private void checkMultiplayerAchievements(boolean youWin) {
+    if (!youWin) return;
 
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_TURTLE"), 1);
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_RABBIT"), 1);

@@ -364,8 +364,14 @@ public class GameFSM extends BaseFSM implements Context {
         }
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
+        
+        if (ctx.board().gameFinished() || (MatchState.resignValue == 1) ||
+            (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
+          AchievementsManager.getInstance().checkAchievements(true);
+        } else {
+          AchievementsManager.getInstance().checkAchievements(false);
+        }
         System.out.println("GSERVICE: currentLevel"+ MatchState.currentLevel.ordinal() + " nMatchTo:"+MatchState.nMatchTo + " fMove:"+MatchState.fMove);
-        AchievementsManager.getInstance().checkAchievements();
         UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2);
       }
 
