@@ -60,4 +60,9 @@ public enum AILevels {
   public static AILevels getAILevelFromOrdinal(int l) {
     return AILevels.values()[l];
   }
+
+  public static double getAILevelELO(AILevels ail) {
+    double[] ratings = {400, 650, 900, 1500, 1700, 1900, 2000, 2100};
+    return ratings[ail.ordinal()];
+  }
 }

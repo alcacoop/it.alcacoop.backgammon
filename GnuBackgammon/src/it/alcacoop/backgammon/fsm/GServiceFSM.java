@@ -319,7 +319,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
         
           case GSERVICE_FIRSTROLL:
-            System.out.println("GSERVICE CURRENT RATING: " + ELORatingManager.getInstance().getRating());
+            System.out.println("GSERVICE CURRENT RATING: " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
             GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
@@ -330,6 +330,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             
             MatchState.fMove = turn;
             MatchState.fTurn = turn;
+            MatchState.nMatchTo = 1;
             GnubgAPI.SetGameTurn(turn, turn);
             GameMenuPopup.setDisabledButtons();
             
@@ -383,11 +384,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
         }
 
-        if (ctx.board().gameFinished() || (MatchState.resignValue == 1) ||
+        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue == 1) ||
             (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
           // YOU WIN
           System.out.println("GSERVICE: ============================== YOU WIN! fmove:"+ MatchState.fMove + " resignValue:"+MatchState.resignValue);
-          AchievementsManager.getInstance().checkAchievements(true);          
+          AchievementsManager.getInstance().checkAchievements(true);
+          ELORatingManager.getInstance().updateRating(true);
         } else {
           AchievementsManager.getInstance().checkAchievements(false);
         }

@@ -37,6 +37,7 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
@@ -315,14 +316,13 @@ public class MenuFSM extends BaseFSM implements Context {
           
                      
           case GSERVICE_READY:
-            double rating = ELORatingManager.getInstance().getRating();
-            GServiceClient.getInstance().sendMessage("8 "+rating);
+            GServiceClient.getInstance().sendMessage("8 "+GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.reset();
             break;
 
           case GSERVICE_INIT_RATING:
             double opponentRating = (Double) params;
-            ELORatingManager.getInstance().setOpponentRating(opponentRating);
+            ELORatingManager.getInstance().setRatings(opponentRating);
 
             Random gen = new Random();
             waitTime = gen.nextLong();
@@ -369,6 +369,7 @@ public class MenuFSM extends BaseFSM implements Context {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("PLAY")) {
             GnuBackgammon.Instance.setFSM("GAME_FSM");
+            ELORatingManager.getInstance().setRatings(AILevels.getAILevelELO(MatchState.currentLevel));
           }
           if (params.toString().equals("BACK")) {
             if (MatchState.matchType==0)

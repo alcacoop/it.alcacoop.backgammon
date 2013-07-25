@@ -44,7 +44,6 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
-import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -113,6 +112,7 @@ import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
 import com.google.android.gms.appstate.AppStateClient;
+import com.google.android.gms.appstate.OnStateDeletedListener;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
@@ -1232,17 +1232,15 @@ OnStateLoadedListener
   }
   
   @Override
-  public void gserviceSubmitRating() {
-    double score = ELORatingManager.getInstance().getRating();
-    long scoreToSubmit = (long)score * 100;
-    System.out.println("GSERVICE: gserviceSubmitRating: "+scoreToSubmit);
+  public void gserviceSubmitRating(long score, String board_id) {
+    System.out.println("GSERVICE: gserviceSubmitRating: "+score);
     gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
       
       @Override
       public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
         System.out.println("GSERVICE: score submitted!");
       }
-    }, getString(R.string.leaderboard_ID_1), scoreToSubmit);
+    }, board_id, score);
     
   }
 
@@ -1323,7 +1321,7 @@ OnStateLoadedListener
   private void deleteAppState() {
     if (gHelper.isSignedIn()) {
       gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
-        
+
         @Override
         public void onStateDeleted(int arg0, int arg1) {
           System.out.println("GSERVICE STATE DELETED");
@@ -1332,6 +1330,7 @@ OnStateLoadedListener
     }
   }
 */
+
 
   private static int FROM_ACHIEVEMENTS = 1;
   private static int FROM_SCOREBOARDS = 2;

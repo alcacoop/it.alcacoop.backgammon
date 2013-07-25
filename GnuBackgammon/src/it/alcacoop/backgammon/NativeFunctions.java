@@ -65,7 +65,7 @@ public interface NativeFunctions {
   public void gserviceStopPing();
   public void gserviceOpenLeaderboards();
   public void gserviceOpenAchievements();
-  public void gserviceSubmitRating();
+  public void gserviceSubmitRating(long score, String board_id);
   public void gserviceUpdateAchievement(String achievement_id, int increment);
   public void gserviceUnlockAchievement(String achiev_id);
   public void gserviceUpdateState();

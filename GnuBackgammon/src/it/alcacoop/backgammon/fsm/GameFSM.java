@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
@@ -364,10 +365,12 @@ public class GameFSM extends BaseFSM implements Context {
         }
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
-        
-        if (ctx.board().gameFinished() || (MatchState.resignValue == 1) ||
+        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue == 1) ||
             (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
           AchievementsManager.getInstance().checkAchievements(true);
+          if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) {
+            ELORatingManager.getInstance().updateRating(true);
+          }
         } else {
           AchievementsManager.getInstance().checkAchievements(false);
         }
