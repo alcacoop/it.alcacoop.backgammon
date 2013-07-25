@@ -251,9 +251,6 @@ public class Main implements NativeFunctions {
   public void hideProgressDialog() {}
 
   @Override
-  public void gserviceSubmitRating() {}
-
-  @Override
   public void gserviceUpdateAchievement(String achievement_id, int increment) {}
 
   @Override
@@ -264,5 +261,8 @@ public class Main implements NativeFunctions {
 
   @Override
   public void gserviceGetSigninDialog(int from) {}
+
+  @Override
+  public void gserviceSubmitRating(long score, String board_id) {}
 
 }

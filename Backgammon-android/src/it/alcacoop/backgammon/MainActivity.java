@@ -112,7 +112,6 @@ import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.ads.InterstitialAd;
 import com.google.android.gms.appstate.AppStateClient;
-import com.google.android.gms.appstate.OnStateDeletedListener;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
