@@ -5,17 +5,18 @@
     android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/login_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dip"
+                android:layout_marginBottom="20dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:text="Sign in on Google Games Services to enable feature"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:text="Sign in on Google Games Services to enable this feature"
+                />
 
+            
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"

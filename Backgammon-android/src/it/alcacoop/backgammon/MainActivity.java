@@ -1366,12 +1366,22 @@ OnStateLoadedListener
       public void run() {
         final View myView = inflater.inflate(R.layout.dialog_gplus, null);
         alert.setView(myView).
-        setTitle("Signin dialog").
+        setTitle("Signin").
         setCancelable(true);
         final AlertDialog d = alert.create();
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
+            String msg = "";
+            TextView v = (TextView) d.findViewById(R.id.login_text);
+            if (prefs.getBoolean("ALREADY_SIGNEDIN", false)) {
+              msg = "Please sign in on Google Games Services to enable this feature";
+              //v.setVisibility(View.GONE);
+            } else {
+              msg = "Please sign in, Google will ask you to accept requested permissions and configure " +
+              "sharing settings up to two times. This may take few minutes..";
+            }
+            v.setText(msg);
             com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton) d.findViewById(R.id.sign_in_button);
             b.setOnClickListener(new View.OnClickListener() {
               @Override
