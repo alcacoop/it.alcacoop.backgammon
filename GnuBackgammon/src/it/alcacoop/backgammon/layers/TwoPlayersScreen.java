@@ -130,12 +130,12 @@ public class TwoPlayersScreen extends BaseScreen {
     lplay = new Label("", GnuBackgammon.skin);
     lplay.setWrap(true);
     String sg = "Google Play Games\n\n" +
-        "Play against your Google+ friends or random opponent\n" +
+        "Play against your Google+ friends or random opponent\n\n" +
         " - Invite your Google+ friend on involving matches\n" +
         " - Keep track of your progress, trying to unlock all achievements\n" +
         " - Share your scores on global leaderboards, with daily, weekly, and all-time lists\n" +
-        " - Save your settings and game progress on the cluod, and share it among all your devices\n" +
-        " - share the right things with the right people, using Google+ circles!";
+        " - Save your settings and game progress on the cloud, and share it among all your devices\n" +
+        " - Share the right things with the right people, using Google+ circles!";
     lplay.setText(sg);
     
     stage.addListener(new InputListener() {
