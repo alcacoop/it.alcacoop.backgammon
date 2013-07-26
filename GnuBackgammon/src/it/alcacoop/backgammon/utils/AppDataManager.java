@@ -66,8 +66,8 @@ public class AppDataManager {
     Json jRemote = new Json();
     HashMap<String, String> hRemote = jRemote.fromJson(HashMap.class, new String(remote));
     
-    int single = Math.max(Integer.parseInt(hLocal.get("singleboard")), Integer.parseInt(hRemote.get("singleboard")));
-    int multi = Math.max(Integer.parseInt(hLocal.get("multiboard")), Integer.parseInt(hRemote.get("multiboard")));
+    double single = Math.max(Double.parseDouble(hLocal.get("singleboard")), Double.parseDouble(hRemote.get("singleboard")));
+    double multi = Math.max(Double.parseDouble(hLocal.get("multiboard")), Double.parseDouble(hRemote.get("multiboard")));
     
     app_data.put("singleboard", single+"");
     app_data.put("multiboard", multi+"");
