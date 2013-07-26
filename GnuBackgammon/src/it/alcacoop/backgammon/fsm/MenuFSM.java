@@ -305,6 +305,9 @@ public class MenuFSM extends BaseFSM implements Context {
     GSERVICE {
       @Override
       public void enterState(Context ctx) {
+        MatchState.anScore[0] = 0;
+        MatchState.anScore[1] = 0;
+        MatchState.nMatchTo = 1;
         GServiceClient.getInstance().connect();
     	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
         super.enterState(ctx);
