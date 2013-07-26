@@ -44,6 +44,7 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -1296,6 +1297,7 @@ OnStateLoadedListener
       if (statusCode == AppStateClient.STATUS_OK) {
         System.out.println("GSERVICE: APPSTATE LOADED "+new String(data));
         AppDataManager.getInstance().loadState(data);
+        ELORatingManager.getInstance().syncLeaderboards();
       } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {
       } else {
         System.out.println("GSERVICE: APPSTATE ERROR "+statusCode);

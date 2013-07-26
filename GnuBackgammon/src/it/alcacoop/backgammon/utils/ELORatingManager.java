@@ -9,7 +9,7 @@ public class ELORatingManager {
   private final static String SINGLE_BOARD = "CgkI9ZWZjusDEAIQAQ";
   private final static String MULTI_BOARD = "CgkI9ZWZjusDEAIQAg";
   private final static double CONVERT_ADDENDUM = 1500.00;
-  public double matchValue;
+  private double matchValue;
 
   private static ELORatingManager instance;
   private double currentRating = 0.00; // in ELO
@@ -31,7 +31,16 @@ public class ELORatingManager {
       this.currentRating = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0")) + CONVERT_ADDENDUM;
     }
   }
-  
+
+  public void syncLeaderboards() {
+    long score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("MULTIBOARD", "0"))*100);
+    if (score>0)
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, MULTI_BOARD);
+    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0"))*100);
+    if (score>0)
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
+  }
+
   public void updateRating(boolean youWin) {
     if (!youWin) return;
 
