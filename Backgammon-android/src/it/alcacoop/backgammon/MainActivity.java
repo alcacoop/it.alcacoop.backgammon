@@ -1232,6 +1232,7 @@ OnStateLoadedListener
   
   @Override
   public void gserviceSubmitRating(long score, String board_id) {
+    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false)) return;
     System.out.println("GSERVICE: gserviceSubmitRating: "+score);
     gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
       
@@ -1245,30 +1246,28 @@ OnStateLoadedListener
 
   @Override
   public void gserviceUpdateAchievement(String achievement_id, int increment) {
-    if (gHelper.isSignedIn()) {
-      System.out.println("GSERVICE: gserviceUpdateAchievements: " + achievement_id);
-      gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
+    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
+    System.out.println("GSERVICE: gserviceUpdateAchievements: " + achievement_id);
+    gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
 
-        @Override
-        public void onAchievementUpdated(int statusCode, String achievement_id) {
-          System.out.println("GSERVICE: achievement incremented! statusCode:"+statusCode);
-        }
-      }, achievement_id, increment);
-    }
+      @Override
+      public void onAchievementUpdated(int statusCode, String achievement_id) {
+        System.out.println("GSERVICE: achievement incremented! statusCode:"+statusCode);
+      }
+    }, achievement_id, increment);
   }
 
   @Override
   public void gserviceUnlockAchievement(String achievement_id) {
-    if (gHelper.isSignedIn()) {
-      System.out.println("GSERVICE: gserviceUnlockAchievements: " + achievement_id);
-      gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
+    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
+    System.out.println("GSERVICE: gserviceUnlockAchievements: " + achievement_id);
+    gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
 
-        @Override
-        public void onAchievementUpdated(int statusCode, String arg1) {
-          System.out.println("GSERVICE: achievement unlocked! statusCode:"+statusCode);
-        }
-      }, achievement_id);
-    }
+      @Override
+      public void onAchievementUpdated(int statusCode, String arg1) {
+        System.out.println("GSERVICE: achievement unlocked! statusCode:"+statusCode);
+      }
+    }, achievement_id);
   }
 
   @Override
