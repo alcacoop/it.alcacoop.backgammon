@@ -365,8 +365,8 @@ public class GameFSM extends BaseFSM implements Context {
         }
         if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) //MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
-        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue == 1) ||
-            (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
+        if ((ctx.board().getPIPS(0) <= 0) || (((MatchState.resignValue == 1) ||
+            (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) && (MatchState.fMove == 0))) {
           AchievementsManager.getInstance().checkAchievements(true);
           if (MatchState.anScore[MatchState.fMove]>=MatchState.nMatchTo) {
             ELORatingManager.getInstance().updateRating(true);
