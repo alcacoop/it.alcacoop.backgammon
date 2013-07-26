@@ -107,12 +107,10 @@ public class GServiceNetHandler {
       pull(null);
     }
     public synchronized void pull(Events evt) {
-      System.out.println("GSERVICE: pull "+evt);
       dispatchExecutor.submit(new Dispatcher(evt));
     }
     
     public synchronized void post(Events _e, Object _o) {
-      System.out.println("GSERVICE: post "+_e);
       if (_e==null) return;
       Evt e = new Evt(_e, _o);
       try {

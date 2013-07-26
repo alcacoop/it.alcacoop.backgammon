@@ -74,7 +74,6 @@ public class AchievementsManager {
   }
   
   public void checkSocialAchievements(String opponent_player_id) {
-    System.out.println("GSERVICE checkSocialAchievements" + opponent_player_id);
     if (!opponents_played.contains(opponent_player_id)) {
       opponents_played.add(opponent_player_id);
       

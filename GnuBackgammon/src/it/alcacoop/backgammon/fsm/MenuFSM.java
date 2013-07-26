@@ -333,7 +333,6 @@ public class MenuFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
             long remoteWaitTime = (Long) params;
             if (waitTime>remoteWaitTime) {
-              System.out.println("GSERVICE: MASTER");
               int dices[] = {0,0};
               while (dices[0]==dices[1])
                 GnubgAPI.RollDice(dices);

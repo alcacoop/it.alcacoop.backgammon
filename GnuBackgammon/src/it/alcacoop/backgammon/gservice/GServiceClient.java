@@ -25,11 +25,9 @@ public class GServiceClient implements GServiceMessages {
       public void run() {
         while (true) {
           try {
-            System.out.println("GSERVICE: TAKING....");
             String msg = sendQueue.take();
             GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
             
-            System.out.println("GSERVICE: WAITING....");
             synchronized (sendThread) {
               wait();
             }
@@ -50,12 +48,10 @@ public class GServiceClient implements GServiceMessages {
   
   
   public void connect() {
-    System.out.println("GSERVICE: CLIENT INITIALIZATION");
   }
  
   
   public void precessReceivedMessage(String s) {
-	  System.out.println("RECEIVED: "+s);
       int coockie = coockieMonster.fIBSCookie(s);
       switch (coockie) {
         case GSERVICE_CONNECTED:

@@ -242,7 +242,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt==Events.GSERVICE_BOARD) {
           int b[][] = (int[][])params;
-          System.out.println("SYNC ATTEMPT!");
           //SYNC...
           boolean differ = false;
           for (int i=0;i<2;i++)
@@ -319,7 +318,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
         
           case GSERVICE_FIRSTROLL:
-            System.out.println("GSERVICE CURRENT RATING: " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
             GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
@@ -387,7 +385,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue == 1) ||
             (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
           // YOU WIN
-          System.out.println("GSERVICE: ============================== YOU WIN! fmove:"+ MatchState.fMove + " resignValue:"+MatchState.resignValue);
           AchievementsManager.getInstance().checkAchievements(true);
           ELORatingManager.getInstance().updateRating(true);
         } else {
@@ -506,7 +503,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   
   @Override
   public void processEvent(final Events evt, final Object params) {
-    System.out.println("GSERVICE: PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {

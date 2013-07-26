@@ -374,7 +374,6 @@ public class GameFSM extends BaseFSM implements Context {
         } else {
           AchievementsManager.getInstance().checkAchievements(false);
         }
-        System.out.println("GSERVICE: currentLevel"+ MatchState.currentLevel.ordinal() + " nMatchTo:"+MatchState.nMatchTo + " fMove:"+MatchState.fMove);
         UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2);
       }
 
