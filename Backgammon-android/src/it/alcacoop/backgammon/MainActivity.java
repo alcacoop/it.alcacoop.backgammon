@@ -279,7 +279,7 @@ OnStateLoadedListener
     PurchaseActivity.createBillingData(this);
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
-    gHelper.setup(this, GServiceGameHelper.CLIENT_ALL);
+    gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE|GServiceGameHelper.CLIENT_GAMES);
 
     System.out.println("GSERVICE: onCreate");
     ActivityManager actvityManager = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
