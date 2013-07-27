@@ -53,6 +53,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -971,14 +973,28 @@ OnStateLoadedListener
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     updateRoom(room);
     String me, opponent, opponent_player_id;
+    
+    SecureRandom rdm = new SecureRandom();
+    String sRdm = new BigInteger(130, rdm).toString(32);
+    
     if (mParticipants.get(0).getParticipantId()==mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
-      opponent_player_id = mParticipants.get(1).getPlayer().getPlayerId();
+      
+      if (mParticipants.get(1).getPlayer()==null)
+        opponent_player_id = sRdm;
+      else
+        opponent_player_id = mParticipants.get(1).getPlayer().getPlayerId();
+      
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
-      opponent_player_id = mParticipants.get(0).getPlayer().getPlayerId();
+      
+      if (mParticipants.get(0).getPlayer()==null)
+        opponent_player_id = sRdm;
+      else
+        opponent_player_id = mParticipants.get(0).getPlayer().getPlayerId();
+      
     }
     GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
     System.out.println("GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
