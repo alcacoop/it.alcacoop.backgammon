@@ -190,7 +190,7 @@ public class BaseFSM implements Context {
 
   public void processEvent(final Events evt, final Object params) {
     final BaseFSM ctx = this;
-    System.out.println("PROCESS "+evt+" ON "+state());
+    //System.out.println("PROCESS "+evt+" ON "+state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
