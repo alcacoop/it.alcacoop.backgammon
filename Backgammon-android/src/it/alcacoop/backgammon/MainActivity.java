@@ -1176,7 +1176,7 @@ OnStateLoadedListener
           if (p.getStatus() != Participant.STATUS_JOINED) {
             continue;
           }
-          int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+          gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
         }
       }
     }

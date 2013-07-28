@@ -53,7 +53,6 @@ public class AppDataManager {
   public void loadState(byte[] bytes) {
     Json json = new Json();
     if (bytes.length==0) return;
-    //else System.out.println("GSERVICE: "+new String(bytes));
     app_data = json.fromJson(HashMap.class, new String(bytes));
     savePrefs();
   }
