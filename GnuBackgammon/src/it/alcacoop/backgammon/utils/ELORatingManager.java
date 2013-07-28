@@ -34,8 +34,10 @@ public class ELORatingManager {
 
   public void syncLeaderboards() {
     long score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("MULTIBOARD", "0"))*100);
+    
     if (score>0)
       GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, MULTI_BOARD);
+    
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0"))*100);
     if (score>0)
       GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
@@ -45,7 +47,7 @@ public class ELORatingManager {
     if (!youWin) return;
 
     int matchLevel = MatchState.nMatchTo;
-    double wp = 1-(1/(Math.pow(10, ((currentRating - opponentRating) * Math.sqrt(matchLevel)/2000)) + 1));
+    double wp = 1-(1/(Math.pow(10, (Math.abs(currentRating - opponentRating) * Math.sqrt(matchLevel)/2000)) + 1));
     matchValue = 4*Math.sqrt(matchLevel);
 
     currentRating += matchValue * (1-wp);
@@ -60,6 +62,7 @@ public class ELORatingManager {
   }
   
   private void updatePreferences(double newRating) {
+    if (newRating<0) newRating=0.00; //FIX ON OLD RATING CALCULATOR
     if (MatchState.matchType == 3) {
       GnuBackgammon.Instance.optionPrefs.putString("MULTIBOARD", newRating+"");
     } else if (MatchState.matchType == 0) {
