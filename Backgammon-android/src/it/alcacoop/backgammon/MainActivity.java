@@ -283,12 +283,10 @@ OnStateLoadedListener
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE|GServiceGameHelper.CLIENT_GAMES);
 
-    System.out.println("GSERVICE: onCreate");
     ActivityManager actvityManager = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
     List<RunningTaskInfo> taskInfos = actvityManager.getRunningTasks(3);
     for(RunningTaskInfo runningTaskInfo:taskInfos){
       if (runningTaskInfo.baseActivity.getPackageName().contains("gms")) {
-        System.out.println("GSERVICE: Running Processes "+runningTaskInfo.baseActivity.getPackageName());
         gserviceSignIn();
         break;
       }
@@ -657,7 +655,6 @@ OnStateLoadedListener
   protected void onResume() {
     super.onResume();
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-    System.out.println("GSERVICE: resume");
     if (!isProVersion()) {
       adsTimer = new Timer();
       adsTask = new TimerTask() {
@@ -679,7 +676,6 @@ OnStateLoadedListener
   @Override
   protected void onPause() {
     super.onPause();
-    System.out.println("GSERVICE: pause");
     mSensorManager.unregisterListener(this);
     if (adsTimer!=null) {
       adsTimer.cancel();
@@ -869,7 +865,6 @@ OnStateLoadedListener
     gHelper.getAppStateClient().loadState(MainActivity.this, APP_DATA_KEY);
 
     if (gHelper.getInvitationId()!=null && gHelper.getGamesClient().isConnected()) {
-      System.out.println("======> GSERVICE INVITE FROM NOTIFICATION: "+gHelper.getInvitationId());
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
     }
   }
@@ -894,10 +889,8 @@ OnStateLoadedListener
 
   @Override
   public void onInvitationReceived(Invitation invitation) {
-    System.out.println("======> GSERVICE INVITE: "+invitation);
     if (GnuBackgammon.Instance.currentScreen instanceof GameScreen) {
   	  gHelper.getGamesClient().declineRoomInvitation(invitation.getInvitationId());
-  	  System.out.println("======> GSERVICE INVITE: Autodeclined");
   	  return;
   	}
     gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), 
@@ -912,7 +905,6 @@ OnStateLoadedListener
       UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation");
     } else {
       updateRoom(room);
-      System.out.println("======> GSERVICE JOINED ROOM "+room.getParticipants().size());
       gConnecting = true;
     }
   }
@@ -920,14 +912,12 @@ OnStateLoadedListener
   
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
-	System.out.println("GSERVICE: onLeftRoom: ROOMID: " + roomId + " statusCode:" + statusCode);
   }
 
 
   private boolean gConnecting = false;
   @Override
   public void onRoomConnected(int arg0, Room room) {
-    System.out.println("======> GSERVICE CONNECTED ROOM: " + room.getRoomId());
     updateRoom(room);
     MatchState.matchType = 3;
     GnuBackgammon.fsm.state(States.GSERVICE);
@@ -954,12 +944,10 @@ OnStateLoadedListener
   @Override
   public void onRoomCreated(int statusCode, Room room) {
     if (statusCode != GamesClient.STATUS_OK) {
-      System.out.println("GSERVICE: onRoomCreated: Error with statusCode:"  + statusCode);
       hideProgressDialog();
       UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
       return;
     }
-    System.out.println("GSERVICE CREATED ROOM: " + room.getRoomId());
     mRoomId = room.getRoomId();
     meSentInvitation = true;
     Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
@@ -997,14 +985,12 @@ OnStateLoadedListener
       
     }
     GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
-    System.out.println("GSERVICE: onConnectedToRoom: Room ID: " + mRoomId + "MyID " + mMyId);
     if (meSentInvitation) AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
 
 
   @Override
   public void onDisconnectedFromRoom(Room room) {
-    System.out.println("GSERVICE: onDisconnectedFromRoom");
     mRoomId = null;
     lastReceptionTime = 0;
   }
@@ -1052,7 +1038,6 @@ OnStateLoadedListener
 
   @Override
   public void onRoomConnecting(Room room) {
-    System.out.println("GSERVICE: ROOM CONNECTING");
     updateRoom(room);
   }
 
@@ -1108,7 +1093,6 @@ OnStateLoadedListener
 
   @Override
   public void gserviceAcceptInvitation(String invitationId) {
-    System.out.println("GSERVICE: ACCEPT INVITATION");
     RoomConfig.Builder roomConfigBuilder  = RoomConfig.builder(MainActivity.this);
     roomConfigBuilder.setInvitationIdToAccept(invitationId);
     roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
@@ -1138,7 +1122,6 @@ OnStateLoadedListener
             @Override
             public boolean onKeyDown(int keyCode, KeyEvent event) {
               clickCount++;
-              System.out.println("BACK KEY "+clickCount);
               if (clickCount==7) {
                 GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
                 GnuBackgammon.Instance.setFSM("MENU_FSM");
@@ -1175,7 +1158,6 @@ OnStateLoadedListener
     lastReceptionTime = System.currentTimeMillis();
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    System.out.println("GSERVICE: <=== Message recived: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
   }
 
@@ -1183,7 +1165,6 @@ OnStateLoadedListener
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
     if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
-      System.out.println("GSERVICE: We are not getting pong!");
       GServiceClient.getInstance().leaveRoom(0);
     } else {
       if ((mRoomId==null)||(mRoomId=="")) {
@@ -1196,7 +1177,6 @@ OnStateLoadedListener
             continue;
           }
           int token = gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
-          System.out.println("GSERVICE: ===> SENT MESSAGE: "+msg+" with token: "+token);
         }
       }
     }
@@ -1207,7 +1187,6 @@ OnStateLoadedListener
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
     GServiceClient.getInstance().notifyDispatched();
     if (statusCode != GamesClient.STATUS_OK) {
-      System.out.println("GSERVICE: onRealTimeMessageSent: Message not sent! "+statusCode+ " mRoomId: "+mRoomId);
       GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
   }
@@ -1226,7 +1205,6 @@ OnStateLoadedListener
 
   @Override
   public void gserviceResetRoom() {
-    System.out.println("GSERVICE RESET ROOM");
     GServiceClient.getInstance().notifyDispatched();
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     gConnecting = false;
@@ -1250,12 +1228,10 @@ OnStateLoadedListener
   @Override
   public void gserviceSubmitRating(long score, String board_id) {
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false)) return;
-    System.out.println("GSERVICE: gserviceSubmitRating: "+score);
     gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
       
       @Override
       public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
-        System.out.println("GSERVICE: score submitted!");
       }
     }, board_id, score);
     
@@ -1265,12 +1241,10 @@ OnStateLoadedListener
   public void gserviceUpdateAchievement(String achievement_id, int increment) {
     if (achievement_id == null || achievement_id.equals("") || achievement_id=="") return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
-    System.out.println("GSERVICE: gserviceUpdateAchievements: " + achievement_id);
     gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
 
       @Override
       public void onAchievementUpdated(int statusCode, String achievement_id) {
-        System.out.println("GSERVICE: achievement incremented! statusCode:"+statusCode);
       }
     }, achievement_id, increment);
   }
@@ -1279,12 +1253,10 @@ OnStateLoadedListener
   public void gserviceUnlockAchievement(String achievement_id) {
     if (achievement_id == null || achievement_id.equals("") || achievement_id=="") return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
-    System.out.println("GSERVICE: gserviceUnlockAchievements: " + achievement_id);
     gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
 
       @Override
       public void onAchievementUpdated(int statusCode, String arg1) {
-        System.out.println("GSERVICE: achievement unlocked! statusCode:"+statusCode);
       }
     }, achievement_id);
   }
@@ -1313,12 +1285,10 @@ OnStateLoadedListener
   public void onStateLoaded(int statusCode, int stateKey, byte[] data) {
 
       if (statusCode == AppStateClient.STATUS_OK) {
-        System.out.println("GSERVICE: APPSTATE LOADED "+new String(data));
         AppDataManager.getInstance().loadState(data);
         ELORatingManager.getInstance().syncLeaderboards();
       } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {
       } else {
-        System.out.println("GSERVICE: APPSTATE ERROR "+statusCode);
       }
   }
 
