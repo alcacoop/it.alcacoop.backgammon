@@ -1263,6 +1263,7 @@ OnStateLoadedListener
 
   @Override
   public void gserviceUpdateAchievement(String achievement_id, int increment) {
+    if (achievement_id == null || achievement_id.equals("") || achievement_id=="") return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
     System.out.println("GSERVICE: gserviceUpdateAchievements: " + achievement_id);
     gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
@@ -1276,6 +1277,7 @@ OnStateLoadedListener
 
   @Override
   public void gserviceUnlockAchievement(String achievement_id) {
+    if (achievement_id == null || achievement_id.equals("") || achievement_id=="") return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn())) return;
     System.out.println("GSERVICE: gserviceUnlockAchievements: " + achievement_id);
     gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
