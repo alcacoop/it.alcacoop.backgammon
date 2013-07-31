@@ -1198,7 +1198,7 @@ OnStateLoadedListener
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    if (statusCode != GamesClient.STATUS_OK) {
+    if ((statusCode != GamesClient.STATUS_OK)&&(lastReceptionTime!=0)) {
       GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
   }
@@ -1230,10 +1230,12 @@ OnStateLoadedListener
 
   @Override
   public void gserviceStopPing() {
+    System.out.println("GSERVICE: STOP PING");
     if (tping!=null) {
       tping.cancel();
       tping.purge();
     }
+    lastReceptionTime=0;
   }
   
   @Override

@@ -534,6 +534,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           int status = (Integer)params;
           MatchState.resignValue = status;
           if (status==0) MatchState.resignValue = 4;
+          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
           state(States.MATCH_OVER);
           break;
 
