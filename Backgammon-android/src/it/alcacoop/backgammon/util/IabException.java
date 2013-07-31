@@ -22,6 +22,7 @@ package it.alcacoop.backgammon.util;
  * call {@link #getResult()}.
  */
 public class IabException extends Exception {
+  private static final long serialVersionUID = 2840720681335493215L;
     IabResult mResult;
 
     public IabException(IabResult r) {
