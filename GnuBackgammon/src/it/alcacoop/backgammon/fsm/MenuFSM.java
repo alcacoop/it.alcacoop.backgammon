@@ -305,11 +305,15 @@ public class MenuFSM extends BaseFSM implements Context {
     GSERVICE {
       @Override
       public void enterState(Context ctx) {
+        GServiceClient.getInstance().queue.reset();
         MatchState.anScore[0] = 0;
         MatchState.anScore[1] = 0;
         MatchState.nMatchTo = 1;
         GServiceClient.getInstance().connect();
-    	  GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
+    	  //GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
+        
+        GServiceClient.getInstance().sendMessage("2");
+        GServiceClient.getInstance().queue.pull(Events.GSERVICE_READY);
         super.enterState(ctx);
       }
       
@@ -320,7 +324,7 @@ public class MenuFSM extends BaseFSM implements Context {
                      
           case GSERVICE_READY:
             GServiceClient.getInstance().sendMessage("8 "+GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
-            GServiceClient.getInstance().queue.reset();
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
             break;
 
           case GSERVICE_INIT_RATING:
@@ -330,6 +334,7 @@ public class MenuFSM extends BaseFSM implements Context {
             Random gen = new Random();
             waitTime = gen.nextLong();
             GServiceClient.getInstance().sendMessage("3 "+waitTime);
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
             break;
           
           case GSERVICE_HANDSHAKE:

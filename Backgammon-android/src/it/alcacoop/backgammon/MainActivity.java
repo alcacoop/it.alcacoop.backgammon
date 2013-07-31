@@ -1168,12 +1168,14 @@ OnStateLoadedListener
     lastReceptionTime = System.currentTimeMillis();
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
+    System.out.println("GSERVICE RECEIVED: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
   }
 
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
+    System.out.println("GSERVICE SEND: "+msg);
     if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
       GServiceClient.getInstance().leaveRoom(0);
     } else {
@@ -1186,7 +1188,8 @@ OnStateLoadedListener
           if (p.getStatus() != Participant.STATUS_JOINED) {
             continue;
           }
-          gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+          
+          gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());   //.sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
         }
       }
     }
@@ -1195,7 +1198,6 @@ OnStateLoadedListener
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    GServiceClient.getInstance().notifyDispatched();
     if (statusCode != GamesClient.STATUS_OK) {
       GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
@@ -1215,7 +1217,6 @@ OnStateLoadedListener
 
   @Override
   public void gserviceResetRoom() {
-    GServiceClient.getInstance().notifyDispatched();
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     gConnecting = false;
     meSentInvitation = false;
