@@ -1168,14 +1168,14 @@ OnStateLoadedListener
     lastReceptionTime = System.currentTimeMillis();
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    System.out.println("GSERVICE RECEIVED: "+s);
+    //System.out.println("GSERVICE RECEIVED: "+s);
     GServiceClient.getInstance().precessReceivedMessage(s);
   }
 
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    System.out.println("GSERVICE SEND: "+msg);
+    //System.out.println("GSERVICE SEND: "+msg);
     if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
       GServiceClient.getInstance().leaveRoom(0);
     } else {
@@ -1230,7 +1230,7 @@ OnStateLoadedListener
 
   @Override
   public void gserviceStopPing() {
-    System.out.println("GSERVICE: STOP PING");
+    //System.out.println("GSERVICE: STOP PING");
     if (tping!=null) {
       tping.cancel();
       tping.purge();

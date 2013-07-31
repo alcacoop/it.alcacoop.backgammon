@@ -160,7 +160,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
     transitionTimer = new Timer();
     
-    System.out.println("=====> GSERVICE START: "+skipSplashScreen);
+    //System.out.println("=====> GSERVICE START: "+skipSplashScreen);
     if (!skipSplashScreen) {
       setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
     } else {
