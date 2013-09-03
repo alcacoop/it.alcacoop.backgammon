@@ -333,8 +333,8 @@ OnStateLoadedListener
       @Override
       public void run() {
         if (show) {
-          adView.setVisibility(View.VISIBLE);
           adView.loadAd(new AdRequest());
+          adView.setVisibility(View.VISIBLE);
         } else {
           adView.setVisibility(View.GONE);
         }
