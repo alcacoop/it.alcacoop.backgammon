@@ -54,6 +54,7 @@ public class AppDataManager {
     Json json = new Json();
     if (bytes.length==0) return;
     app_data = json.fromJson(HashMap.class, new String(bytes));
+    if (app_data==null) return;
     savePrefs();
   }
   

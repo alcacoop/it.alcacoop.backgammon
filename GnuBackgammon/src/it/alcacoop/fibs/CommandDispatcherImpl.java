@@ -94,9 +94,11 @@ public class CommandDispatcherImpl implements CommandDispatcher, FIBSMessages {
         break;
       case PLAYER_CHANGED:
         Player p = GnuBackgammon.Instance.fibsPlayersPool.obtain();
-        p.parsePlayer(arg1);
-        if (GnuBackgammon.fsm instanceof FIBSFSM)
-          GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_CHANGED, p);
+        if (p!=null||arg1!=null) {
+          p.parsePlayer(arg1);
+          if (GnuBackgammon.fsm instanceof FIBSFSM)
+            GnuBackgammon.fsm.processEvent(Events.FIBS_PLAYER_CHANGED, p);
+        }
         break;
       case PLAYER_GONE:
         if (GnuBackgammon.fsm instanceof FIBSFSM)
