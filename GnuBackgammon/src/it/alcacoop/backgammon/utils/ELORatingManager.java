@@ -47,10 +47,15 @@ public class ELORatingManager {
     if (!youWin) return;
 
     int matchLevel = MatchState.nMatchTo;
-    double wp = 1-(1/(Math.pow(10, (Math.abs(currentRating - opponentRating) * Math.sqrt(matchLevel)/2000)) + 1));
+    double wp = 1/(Math.pow(10, (Math.abs(currentRating - opponentRating) * Math.sqrt(matchLevel)/2000)) + 1);
     matchValue = 4*Math.sqrt(matchLevel);
 
-    currentRating += matchValue * (1-wp);
+    if (currentRating <= opponentRating) {
+      currentRating += matchValue * (1-wp);
+    }
+    else {
+      currentRating += matchValue * wp;
+    }
     updatePreferences(Math.round((currentRating - CONVERT_ADDENDUM) * 100) / 100d );
     long score = (long)((currentRating - CONVERT_ADDENDUM) * 100);
 
