@@ -328,11 +328,15 @@ public class GameFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         int game_score = 0;
+        
         if(MatchState.resignValue == 0) {
           game_score = MatchState.nCube*ctx.board().gameScore(MatchState.fMove==1?0:1);
+          MatchState.win_type = ctx.board().gameScore(MatchState.fMove==1?0:1);
         } else {
           game_score = MatchState.resignValue * MatchState.nCube;
+          MatchState.win_type = MatchState.resignValue;
         }
+        //win_type in [1=SINGLE|2=GAMMON|3=BACKGAMMON]
         
         GnuBackgammon.Instance.rec.addResult(MatchState.fMove, game_score, (MatchState.resignValue>0));
         if (MatchState.matchType==0)
@@ -400,6 +404,7 @@ public class GameFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         MatchState.UpdateMSCubeInfo(1, -1);
+        MatchState.win_type = 0;
         ctx.board().initBoard();
         ctx.board().updatePInfo();
         

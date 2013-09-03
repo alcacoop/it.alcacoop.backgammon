@@ -40,6 +40,15 @@ public class AchievementsManager {
     achievMap.put("MULTIPLAYER_RABBIT", "CgkI9ZWZjusDEAIQEw");
     achievMap.put("MULTIPLAYER_DOBERMANN", "CgkI9ZWZjusDEAIQFA");
     achievMap.put("MULTIPLAYER_TIGER", "CgkI9ZWZjusDEAIQFQ");
+    
+    achievMap.put("WINTYPE_EXPERT_2", "CgkI9ZWZjusDEAIQGA");
+    achievMap.put("WINTYPE_EXPERT_3", "CgkI9ZWZjusDEAIQGQ");
+    achievMap.put("WINTYPE_WORLDCLASS_2", "CgkI9ZWZjusDEAIQGg");
+    achievMap.put("WINTYPE_WORLDCLASS_3", "CgkI9ZWZjusDEAIQGw");
+    achievMap.put("WINTYPE_SUPREMO_2", "CgkI9ZWZjusDEAIQHA");
+    achievMap.put("WINTYPE_SUPREMO_3", "CgkI9ZWZjusDEAIQHQ");
+    achievMap.put("WINTYPE_GRANDMASTER_2", "CgkI9ZWZjusDEAIQHg");
+    achievMap.put("WINTYPE_GRANDMASTER_3", "CgkI9ZWZjusDEAIQHw");
   }
 
   public Preferences prefs;
@@ -94,6 +103,9 @@ public class AchievementsManager {
   private void checkSinglePlayerAchievements(boolean youWin) {
     if (!youWin) return;
 
+    if (MatchState.win_type>1)
+      GnuBackgammon.Instance.nativeFunctions.gserviceUnlockAchievement(getSingleAchievementByWinType());
+    
     switch (MatchState.nMatchTo) {
     case 7:
       GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(getSingleAchievementByGameLevel(), 1);
@@ -116,6 +128,34 @@ public class AchievementsManager {
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateAchievement(achievMap.get("MULTIPLAYER_TIGER"), 1);
   }
 
+  
+  
+  private String getSingleAchievementByWinType() {
+    String id = "";
+    AILevels level = MatchState.currentLevel;
+    int win_type = MatchState.win_type;
+    
+    switch (level) {
+    case EXPERT:
+      id = achievMap.get("WINTYPE_EXPERT_"+win_type);
+      break;
+    case WORLDCLASS:
+      id = achievMap.get("WINTYPE_WORLDCLASS_"+win_type);
+      break;
+    case SUPREMO:
+      id = achievMap.get("WINTYPE_SUPREMO_"+win_type);
+      break;
+    case GRANDMASTER:
+      id = achievMap.get("WINTYPE_GRANDMASTER_"+win_type);
+      break;
+    default:
+      break;
+    }
+    return id;
+  }
+  
+  
+  
   private String getSingleAchievementByGameLevel() {
     String id = "";
     AILevels level = MatchState.currentLevel;

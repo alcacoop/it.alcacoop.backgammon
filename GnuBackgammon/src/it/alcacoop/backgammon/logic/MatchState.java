@@ -67,6 +67,8 @@ public class MatchState {
   public static int resignValue = 0;
   public static int FibsDirection = 0;
   public static int FibsColor = 0;
+
+  public static int win_type = 0; //1=SINGLE, 2=GAMMON, 3=BACKGAMMON
   
   public static String pl0;
   public static String pl1;
