@@ -83,8 +83,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.view.Display;
 import android.view.Gravity;
@@ -143,28 +141,9 @@ OnStateLoadedListener
 {
   private String data_dir;
   protected AdView adView;
-  private final int SHOW_ADS = 1;
-  private final int HIDE_ADS = 0;
   private View chatBox;
   private View gameView;
   private GServiceGameHelper gHelper;
-
-  protected Handler handler = new Handler()
-  {
-    @SuppressLint("HandlerLeak")
-    @Override
-    public void handleMessage(Message msg) {
-      switch(msg.what) {
-      case SHOW_ADS:
-        adView.setVisibility(View.VISIBLE);
-        break;
-      case HIDE_ADS:
-        adView.setVisibility(View.GONE);
-        break;
-      }
-    }
-  };
-
 
   private boolean mInitialized;
   private SensorManager mSensorManager;
@@ -348,10 +327,21 @@ OnStateLoadedListener
   }
 
   @Override
-  public void showAds(boolean show) {
+  public void showAds(final boolean show) {
     if (isProVersion()) return;
-    handler.sendEmptyMessage(show ? SHOW_ADS : HIDE_ADS);
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (show) {
+          adView.setVisibility(View.VISIBLE);
+          adView.loadAd(new AdRequest());
+        } else {
+          adView.setVisibility(View.GONE);
+        }
+      }
+    });
   }
+
 
   @Override
   public void openURL(String url) {
@@ -1377,7 +1367,6 @@ OnStateLoadedListener
             TextView v = (TextView) d.findViewById(R.id.login_text);
             if (prefs.getBoolean("ALREADY_SIGNEDIN", false)) {
               msg = "Please sign in on Google Games Services to enable this feature";
-              //v.setVisibility(View.GONE);
             } else {
               msg = "Please sign in, Google will ask you to accept requested permissions and configure " +
               "sharing settings up to two times. This may take few minutes..";
