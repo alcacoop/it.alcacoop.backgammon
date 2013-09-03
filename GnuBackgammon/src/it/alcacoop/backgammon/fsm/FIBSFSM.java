@@ -41,6 +41,7 @@ import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
@@ -56,6 +57,8 @@ public class FIBSFSM extends BaseFSM implements Context {
   private static int[] bufferedMoves = {-1,-1,-1,-1,-1,-1,-1,-1};
   private static boolean isBufferedMoves = false;
   private static int moves[][];
+  
+  private static double rating;
   
   public enum States implements State {
 
@@ -477,6 +480,13 @@ public class FIBSFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.fibsScreen.refreshPlayerList();
               GnuBackgammon.Instance.fibsScreen.refreshInvitationList();
               GnuBackgammon.Instance.commandDispatcher.send("who "+GnuBackgammon.Instance.FibsUsername);
+            } else {
+              double new_rating = GnuBackgammon.Instance.fibsScreen.me.getRating();
+              double delta = new_rating-rating;
+              if (rating>0 && delta>0) {
+                ELORatingManager.getInstance().updateRating(GnuBackgammon.Instance.server.equals("fibs.com")?1:0, delta);
+                rating = 0;
+              }
             }
             break;
 
@@ -520,6 +530,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             MatchState.nMatchTo = 1;
             GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
             GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
+            rating = GnuBackgammon.Instance.fibsScreen.me.getRating();
             break;
             
           default:

@@ -79,7 +79,7 @@ public class FibsScreen extends BaseScreen {
   public Map<String, Integer> fibsInvitations;
 
   private Label LLastLogin;
-  private Player me;
+  public Player me;
   private ScrollPane onlineList, invitationList;
   private float height, width;
   private LabelStyle evenLs;

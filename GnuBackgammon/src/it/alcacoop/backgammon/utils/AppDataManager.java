@@ -26,6 +26,9 @@ public class AppDataManager {
   public byte[] getBytes() {
     app_data.put("singleboard", GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0"));
     app_data.put("multiboard", GnuBackgammon.Instance.optionPrefs.getString("MULTIBOARD", "0"));
+    app_data.put("fibsboard", GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0"));
+    app_data.put("tigaboard", GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"));
+    
     
     app_data.put("sound", GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes"));
     app_data.put("speed", GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast"));
@@ -68,9 +71,14 @@ public class AppDataManager {
     
     double single = Math.max(Double.parseDouble(hLocal.get("singleboard")), Double.parseDouble(hRemote.get("singleboard")));
     double multi = Math.max(Double.parseDouble(hLocal.get("multiboard")), Double.parseDouble(hRemote.get("multiboard")));
+    double fibs = Math.max(Double.parseDouble(hLocal.get("fibsboard")), Double.parseDouble(hRemote.get("fibsboard")));
+    double tiga = Math.max(Double.parseDouble(hLocal.get("tigaboard")), Double.parseDouble(hRemote.get("tigaboard")));
+    
     
     app_data.put("singleboard", single+"");
     app_data.put("multiboard", multi+"");
+    app_data.put("fibsboard", fibs+"");
+    app_data.put("tigaboard", tiga+"");
     
     app_data.put("sound", hRemote.get("sound"));
     app_data.put("speed", hRemote.get("speed"));
@@ -101,6 +109,9 @@ public class AppDataManager {
   private void savePrefs() {
     GnuBackgammon.Instance.optionPrefs.putString("SINGLEBOARD", app_data.get("singleboard"));
     GnuBackgammon.Instance.optionPrefs.putString("MULTIBOARD", app_data.get("multiboard"));
+    GnuBackgammon.Instance.optionPrefs.putString("TIGABOARD", app_data.get("tigaboard"));
+    GnuBackgammon.Instance.optionPrefs.putString("FIBSBOARD", app_data.get("fibsboard"));
+    
     
     GnuBackgammon.Instance.optionPrefs.putString("SOUND", app_data.get("sound"));
     GnuBackgammon.Instance.optionPrefs.putString("SPEED", app_data.get("speed"));

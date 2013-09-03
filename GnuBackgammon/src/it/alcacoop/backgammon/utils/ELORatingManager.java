@@ -8,6 +8,9 @@ public class ELORatingManager {
   
   private final static String SINGLE_BOARD = "CgkI9ZWZjusDEAIQAQ";
   private final static String MULTI_BOARD = "CgkI9ZWZjusDEAIQAg";
+  private final static String TIGA_BOARD = "CgkI9ZWZjusDEAIQIg";
+  private final static String FIBS_BOARD = "CgkI9ZWZjusDEAIQFw";
+  
   private final static double CONVERT_ADDENDUM = 1500.00;
   private double matchValue;
 
@@ -41,8 +44,31 @@ public class ELORatingManager {
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0"))*100);
     if (score>0)
       GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
+    
+    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0"))*100);
+    if (score>0)
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, FIBS_BOARD);
+    
+    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"))*100);
+    if (score>0)
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, TIGA_BOARD);
   }
 
+  
+  public void updateRating(int server, double increment) {
+    if (server==0) { //TIGA
+      double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"));
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating((long)((start+increment) * 100), TIGA_BOARD);
+      GnuBackgammon.Instance.optionPrefs.putString("TIGABOARD", (start+increment)+"");
+    } else { //FIBS
+      double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0"));
+      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating((long)((start+increment) * 100), FIBS_BOARD);
+      GnuBackgammon.Instance.optionPrefs.putString("FIBSBOARD", (start+increment)+"");
+    }
+    GnuBackgammon.Instance.optionPrefs.flush();
+    GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
+  }
+  
   public void updateRating(boolean youWin) {
     if (!youWin) return;
 
@@ -73,6 +99,7 @@ public class ELORatingManager {
     } else if (MatchState.matchType == 0) {
       GnuBackgammon.Instance.optionPrefs.putString("SINGLEBOARD", newRating+"");
     }
+    
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
   }
