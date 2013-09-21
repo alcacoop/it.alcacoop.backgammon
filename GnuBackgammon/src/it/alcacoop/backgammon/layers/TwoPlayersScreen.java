@@ -118,8 +118,8 @@ public class TwoPlayersScreen extends BaseScreen {
         "conceivable ability logging onto FIBS, from absolute beginners " +
         "to serious backgammon champion contenders. \n\n" +
         "NOTE: At the moment FIBS needs validation for new users, so " +
-        "you can't create accounts within Backgammon Mobile;\n" +
-        "more info available @ 'http://fibs.com'\n\n" +
+        "you can't create accounts within Backgammon Mobile; " +
+        "more info available at 'http://fibs.com'\n\n" +
         "Alternatively you can get a try on our primary choice: TigerGammon!";
     lfibs.setText(sf);
     
