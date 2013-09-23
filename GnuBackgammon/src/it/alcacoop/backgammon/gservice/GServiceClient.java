@@ -49,7 +49,7 @@ public class GServiceClient implements GServiceMessages {
   }
  
   
-  public void precessReceivedMessage(String s) {
+  public void processReceivedMessage(String s) {
       int coockie = coockieMonster.fIBSCookie(s);
       switch (coockie) {
         case GSERVICE_CONNECTED:
@@ -138,7 +138,7 @@ public class GServiceClient implements GServiceMessages {
       break;
     case 10000:
       // activity stopped
-      GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
+      //GnuBackgammon.fsm.processEvent(Events.GSERVICE_ERROR, 2);
       break;
     default:
       GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);

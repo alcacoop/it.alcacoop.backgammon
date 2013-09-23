@@ -982,7 +982,6 @@ OnStateLoadedListener
   public void onDisconnectedFromRoom(Room room) {
     System.out.println("---> P2P DISCONNECTED FROM ROOM");
     mRoomId = null;
-    lastReceptionTime = 0;
   }
 
 
@@ -1144,35 +1143,28 @@ OnStateLoadedListener
     });
   }
 
-  long lastReceptionTime = 0;
   @Override
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    lastReceptionTime = System.currentTimeMillis();
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
     //System.out.println("GSERVICE RECEIVED: "+s);
-    GServiceClient.getInstance().precessReceivedMessage(s);
+    GServiceClient.getInstance().processReceivedMessage(s);
   }
 
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    //System.out.println("GSERVICE SEND: "+msg);
-    if ((lastReceptionTime!=0) && ((System.currentTimeMillis() - lastReceptionTime) > 8000)) {
-      GServiceClient.getInstance().leaveRoom(0);
+    if ((mRoomId==null)||(mRoomId=="")) {
+      GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
-      if ((mRoomId==null)||(mRoomId=="")) {
-        GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-      } else {
-        for (Participant p : mParticipants) {
-          if (p.getParticipantId().equals(mMyId))
-            continue;
-          if (p.getStatus() != Participant.STATUS_JOINED) {
-            continue;
-          }
-          
-          gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());   //.sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
+      for (Participant p : mParticipants) {
+        if (p.getParticipantId().equals(mMyId))
+          continue;
+        if (p.getStatus() != Participant.STATUS_JOINED) {
+          continue;
         }
+
+        gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());   //.sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId());
       }
     }
   }
@@ -1180,7 +1172,7 @@ OnStateLoadedListener
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    if ((statusCode != GamesClient.STATUS_OK)&&(lastReceptionTime!=0)) {
+    if (statusCode != GamesClient.STATUS_OK) {
       GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
   }
@@ -1205,7 +1197,6 @@ OnStateLoadedListener
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
-      lastReceptionTime = 0;
     }
   }
 
