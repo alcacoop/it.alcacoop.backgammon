@@ -342,7 +342,6 @@ OnStateLoadedListener
     });
   }
 
-
   @Override
   public void openURL(String url) {
     Gdx.graphics.setContinuousRendering(true);
@@ -933,6 +932,7 @@ OnStateLoadedListener
 
 
   private void updateRoom(Room room) {
+    System.out.println("---> P2P UPDATE ROOM");
     if (room!=null) {
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
@@ -990,6 +990,7 @@ OnStateLoadedListener
 
   @Override
   public void onDisconnectedFromRoom(Room room) {
+    System.out.println("---> P2P DISCONNECTED FROM ROOM");
     mRoomId = null;
     lastReceptionTime = 0;
   }
@@ -1028,6 +1029,7 @@ OnStateLoadedListener
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEER DISCONNECTED");
     updateRoom(room);
   }
 
@@ -1386,4 +1388,17 @@ OnStateLoadedListener
       }
     });
   }
+
+
+  @Override
+  public void onP2PConnected(String arg0) {
+    System.out.println("---> P2P CONNECTED");
+  }
+
+
+  @Override
+  public void onP2PDisconnected(String arg0) {
+    System.out.println("---> P2P DISCONNECTED");
+  }
+
 }
