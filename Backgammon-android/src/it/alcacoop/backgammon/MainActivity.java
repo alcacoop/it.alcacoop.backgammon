@@ -981,7 +981,7 @@ OnStateLoadedListener
   @Override
   public void onDisconnectedFromRoom(Room room) {
     System.out.println("---> P2P DISCONNECTED FROM ROOM");
-    mRoomId = null;
+    //mRoomId = null;
   }
 
 
@@ -1019,6 +1019,7 @@ OnStateLoadedListener
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
     System.out.println("---> P2P PEER DISCONNECTED");
+    GServiceClient.getInstance().leaveRoom(0);
     updateRoom(room);
   }
 
