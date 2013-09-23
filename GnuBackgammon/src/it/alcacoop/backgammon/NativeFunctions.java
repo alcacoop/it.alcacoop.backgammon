@@ -62,7 +62,6 @@ public interface NativeFunctions {
   public void gserviceAcceptInvitation(String invitationId);
   public void gserviceSendReliableRealTimeMessage(String msg);
   public void gserviceResetRoom();
-  public void gserviceStopPing();
   public void gserviceOpenLeaderboards();
   public void gserviceOpenAchievements();
   public void gserviceSubmitRating(long score, String board_id);

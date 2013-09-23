@@ -354,7 +354,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.FibsOpponent = "";
         String msg = "";
-        GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
         if (MatchState.resignValue>0) {
           switch (MatchState.resignValue) {
           case 1:
@@ -526,7 +525,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             message = "Match stopped. You have to reinvite!";
             break;
           }
-          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
           UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);  
           break;
 
@@ -534,7 +532,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           int status = (Integer)params;
           MatchState.resignValue = status;
           if (status==0) MatchState.resignValue = 4;
-          GnuBackgammon.Instance.nativeFunctions.gserviceStopPing();
           state(States.MATCH_OVER);
           break;
 

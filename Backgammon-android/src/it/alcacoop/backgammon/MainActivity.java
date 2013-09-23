@@ -154,8 +154,6 @@ OnStateLoadedListener
 
   private Timer adsTimer;
   private TimerTask adsTask;
-  private Timer tping;
-  private TimerTask pingtask;
   
   private String mRoomId = null;
   private String mMyId = null;
@@ -919,14 +917,6 @@ OnStateLoadedListener
     updateRoom(room);
     MatchState.matchType = 3;
     GnuBackgammon.fsm.state(States.GSERVICE);
-    pingtask = new TimerTask() {
-      @Override
-      public void run() {
-        gserviceSendReliableRealTimeMessage("70 PING");
-      }
-    };
-    tping = new Timer();
-    tping.schedule(pingtask, 0, 5000);
     gConnecting = false;
   }
 
@@ -1216,19 +1206,9 @@ OnStateLoadedListener
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
       lastReceptionTime = 0;
-      gserviceStopPing();
     }
   }
 
-  @Override
-  public void gserviceStopPing() {
-    //System.out.println("GSERVICE: STOP PING");
-    if (tping!=null) {
-      tping.cancel();
-      tping.purge();
-    }
-    lastReceptionTime=0;
-  }
   
   @Override
   public void gserviceSubmitRating(long score, String board_id) {
