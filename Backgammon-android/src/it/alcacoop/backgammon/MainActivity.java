@@ -214,16 +214,17 @@ OnStateLoadedListener
 
 
     /** ADS INITIALIZATION **/
+    PrivateDataManager.initData();
     if (isTablet(this))
-      adView = new AdView(this, AdSize.IAB_BANNER, PurchaseActivity.ads_id);
+      adView = new AdView(this, AdSize.IAB_BANNER, PrivateDataManager.ads_id);
     else
-      adView = new AdView(this, AdSize.BANNER, PurchaseActivity.ads_id);
+    adView = new AdView(this, AdSize.BANNER, PrivateDataManager.ads_id);
     adView.setVisibility(View.GONE);
     
     if (!isProVersion())
       adView.loadAd(new AdRequest());
     //Create the interstitial
-    interstitial = new InterstitialAd(this, PurchaseActivity.int_id);
+    interstitial = new InterstitialAd(this, PrivateDataManager.int_id);
     interstitial.setAdListener(this);
     /** ADS INITIALIZATION **/
 
@@ -278,7 +279,7 @@ OnStateLoadedListener
 
 
     /** GOOGLE API  INITIALIZATION **/
-    PurchaseActivity.createBillingData(this);
+    PrivateDataManager.createBillingData(this);
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE|GServiceGameHelper.CLIENT_GAMES);
@@ -761,14 +762,14 @@ OnStateLoadedListener
 
 
   public boolean isProVersion() {
-    return PurchaseActivity.msIsPremium;
+    return PrivateDataManager.msIsPremium;
   }
 
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    PurchaseActivity.destroyBillingData();
+    PrivateDataManager.destroyBillingData();
   }
 
 
@@ -777,7 +778,7 @@ OnStateLoadedListener
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
     Intent myIntent = new Intent(this, PurchaseActivity.class);
-    startActivityForResult(myIntent, PurchaseActivity.RC_REQUEST);
+    startActivityForResult(myIntent, PrivateDataManager.RC_REQUEST);
   }
 
 
@@ -805,14 +806,21 @@ OnStateLoadedListener
   private static int RC_ACHIEVEMENTS = 6003;
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == PurchaseActivity.RC_REQUEST) {
-      if (isProVersion()) {
-        adView.setVisibility(View.GONE);
-        if (adsTimer!=null) {
-          adsTimer.cancel();
-          adsTimer.purge();
+    if (requestCode == PrivateDataManager.RC_REQUEST) {
+      if (resultCode!=10000) { 
+        if (isProVersion()) {
+          adView.setVisibility(View.GONE);
+          if (adsTimer!=null) {
+            adsTimer.cancel();
+            adsTimer.purge();
+            PrivateDataManager.destroyBillingData();  //Memory Optimization!
+          }
+          GnuBackgammon.Instance.menuScreen.redraw();
         }
-        GnuBackgammon.Instance.menuScreen.redraw();
+      } else { //ERROR!
+         System.out.println("BILLING: 10000");
+         PrivateDataManager.destroyBillingData();
+         PrivateDataManager.createBillingData(this);
       }
     } else if (requestCode==RC_SELECT_PLAYERS) {
       if (resultCode == RESULT_OK) {
@@ -912,6 +920,7 @@ OnStateLoadedListener
   
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
+    System.out.println("---> P2P LEFT ROOM");
   }
 
 
@@ -1013,6 +1022,7 @@ OnStateLoadedListener
 
   @Override
   public void onPeerLeft(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEER LEFT");
     if (gConnecting) {
       hideProgressDialog();
       gserviceResetRoom();

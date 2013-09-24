@@ -333,9 +333,9 @@ public class IabHelper {
         launchPurchaseFlow(act, sku, requestCode, listener, "");
     }
 
-    public void launchPurchaseFlow(Activity act, String sku, int requestCode,
+    public int launchPurchaseFlow(Activity act, String sku, int requestCode,
             OnIabPurchaseFinishedListener listener, String extraData) {
-        launchPurchaseFlow(act, sku, ITEM_TYPE_INAPP, requestCode, listener, extraData);
+        return launchPurchaseFlow(act, sku, ITEM_TYPE_INAPP, requestCode, listener, extraData);
     }
 
     public void launchSubscriptionPurchaseFlow(Activity act, String sku, int requestCode,
@@ -366,7 +366,7 @@ public class IabHelper {
      *     when the purchase completes. This extra data will be permanently bound to that purchase
      *     and will always be returned when the purchase is queried.
      */
-    public void launchPurchaseFlow(Activity act, String sku, String itemType, int requestCode,
+    public int launchPurchaseFlow(Activity act, String sku, String itemType, int requestCode,
                         OnIabPurchaseFinishedListener listener, String extraData) {
         checkNotDisposed();
         checkSetupDone("launchPurchaseFlow");
@@ -378,7 +378,7 @@ public class IabHelper {
                     "Subscriptions are not available.");
             flagEndAsync();
             if (listener != null) listener.onIabPurchaseFinished(r, null);
-            return;
+            return 1;
         }
 
         try {
@@ -390,7 +390,7 @@ public class IabHelper {
                 flagEndAsync();
                 result = new IabResult(response, "Unable to buy item");
                 if (listener != null) listener.onIabPurchaseFinished(result, null);
-                return;
+                return 1;
             }
 
             PendingIntent pendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT);
@@ -404,21 +404,28 @@ public class IabHelper {
                                            Integer.valueOf(0));
         }
         catch (SendIntentException e) {
-            logError("SendIntentException while launching purchase flow for sku " + sku);
-            e.printStackTrace();
-            flagEndAsync();
+          logError("SendIntentException while launching purchase flow for sku " + sku);
+          e.printStackTrace();
+          flagEndAsync();
 
-            result = new IabResult(IABHELPER_SEND_INTENT_FAILED, "Failed to send intent.");
-            if (listener != null) listener.onIabPurchaseFinished(result, null);
+          result = new IabResult(IABHELPER_SEND_INTENT_FAILED, "Failed to send intent.");
+          if (listener != null) listener.onIabPurchaseFinished(result, null);
+          return 0;
         }
         catch (RemoteException e) {
-            logError("RemoteException while launching purchase flow for sku " + sku);
-            e.printStackTrace();
-            flagEndAsync();
+          logError("RemoteException while launching purchase flow for sku " + sku);
+          e.printStackTrace();
+          flagEndAsync();
 
-            result = new IabResult(IABHELPER_REMOTE_EXCEPTION, "Remote exception while starting purchase flow");
-            if (listener != null) listener.onIabPurchaseFinished(result, null);
+          result = new IabResult(IABHELPER_REMOTE_EXCEPTION, "Remote exception while starting purchase flow");
+          if (listener != null) listener.onIabPurchaseFinished(result, null);
+          return 0;
         }
+        catch (NullPointerException e) {
+          System.out.println("BILLING: NULL POINTER");
+          return 0;
+        }
+        return 1;
     }
 
     /**
@@ -978,14 +985,18 @@ public class IabHelper {
     }
 
     void logDebug(String msg) {
-        if (mDebugLog) Log.d(mDebugTag, msg);
+        //if (mDebugLog) Log.d(mDebugTag, msg);
     }
 
     void logError(String msg) {
-        Log.e(mDebugTag, "In-app billing error: " + msg);
+        //Log.e(mDebugTag, "In-app billing error: " + msg);
     }
 
     void logWarn(String msg) {
-        Log.w(mDebugTag, "In-app billing warning: " + msg);
+        //Log.w(mDebugTag, "In-app billing warning: " + msg);
+    }
+    
+    public boolean isSetupDone() {
+      return mSetupDone;
     }
 }
