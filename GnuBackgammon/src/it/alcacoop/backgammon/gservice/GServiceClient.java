@@ -13,6 +13,8 @@ public class GServiceClient implements GServiceMessages {
   public GServiceCookieMonster coockieMonster;
   public ArrayBlockingQueue<String> sendQueue;
   private Thread sendThread;
+  
+  private int pingCount = 0;
 
   
   private GServiceClient() {
@@ -66,6 +68,7 @@ public class GServiceClient implements GServiceMessages {
           break;
         case GSERVICE_HANDSHAKE:
           chunks = s.split(" ");
+          pingCount = 0;
           queue.post(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
           //GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
           break;
@@ -104,7 +107,12 @@ public class GServiceClient implements GServiceMessages {
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
           break;
         case GSERVICE_PING:
-          GServiceClient.getInstance().sendMessage("90 \nWARNING: Your application version is outdated and it will not be supported anymore! Please update from Google Play Store");
+          if (pingCount>5) pingCount=0;
+          if (pingCount==0)
+            GServiceClient.getInstance().sendMessage("90 \nWARNING: Your application version is outdated and it will not be supported anymore! Please update from Google Play Store");
+          else
+            GServiceClient.getInstance().sendMessage("70 BACKCOMPATIBILITY");
+          pingCount++;
           break;
         case GSERVICE_ERROR:
           break;
