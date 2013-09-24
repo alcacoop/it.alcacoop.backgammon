@@ -128,7 +128,7 @@ public class TwoPlayersScreen extends BaseScreen {
     lplay.setWrap(true);
     String sg = "Google Play Games\n\n" +
         "Play against your Google+ friends or random opponent\n\n" +
-        " - Invite your Google+ friend on involving matches\n" +
+        " - Invite your Google+ friends on involving matches\n" +
         " - Keep track of your progress, trying to unlock all achievements\n" +
         " - Share your scores on global leaderboards, with daily, weekly, and all-time lists\n" +
         " - Save your settings and game progress on the cloud, and share it among all your devices\n" +
