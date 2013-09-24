@@ -104,6 +104,8 @@ public class GServiceClient implements GServiceMessages {
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
           break;
         case GSERVICE_PING:
+          GServiceClient.getInstance().sendMessage("90 \nWARNING: Your application version is outdated and it will not be supported anymore! Please update from Google Play Store");
+          break;
         case GSERVICE_ERROR:
           break;
         case GSERVICE_BYE:
