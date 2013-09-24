@@ -87,6 +87,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public FibsScreen fibsScreen;
   public static int chatHeight = 20;
   
+  public int appVersionCode = 0;
+  
   private int resolutions[][] = {
     {1280,740},
     {800,480},

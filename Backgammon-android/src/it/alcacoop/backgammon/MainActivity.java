@@ -71,6 +71,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -160,6 +162,8 @@ OnStateLoadedListener
   ArrayList<Participant> mParticipants = null;
   private Preferences prefs;
   private boolean meSentInvitation;
+  
+  private int appVersionCode = 0;
 
 
   @SuppressWarnings("deprecation")
@@ -270,6 +274,14 @@ OnStateLoadedListener
       }
     }
     /** GOOGLE API  INITIALIZATION **/
+    
+    /** APP VERSION **/
+    PackageInfo pInfo;
+    try {
+      pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+      appVersionCode = pInfo.versionCode;
+    } catch (NameNotFoundException e) {}
+    /** APP VERSION **/
   }
 
 
@@ -1371,6 +1383,12 @@ OnStateLoadedListener
   @Override
   public void onP2PDisconnected(String arg0) {
     System.out.println("---> P2P DISCONNECTED");
+  }
+
+
+  @Override
+  public int getAppVersionCode() {
+    return appVersionCode;
   }
 
 }

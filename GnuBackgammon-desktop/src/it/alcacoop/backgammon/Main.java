@@ -262,4 +262,10 @@ public class Main implements NativeFunctions {
   @Override
   public void gserviceSubmitRating(long score, String board_id) {}
 
+  @Override
+  public int getAppVersionCode() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
 }

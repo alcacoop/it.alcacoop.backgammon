@@ -333,7 +333,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
             Random gen = new Random();
             waitTime = gen.nextLong();
-            GServiceClient.getInstance().sendMessage("3 "+waitTime);
+            GServiceClient.getInstance().sendMessage("3 "+waitTime+" "+GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
             break;
           

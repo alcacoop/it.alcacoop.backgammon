@@ -69,4 +69,6 @@ public interface NativeFunctions {
   public void gserviceUnlockAchievement(String achiev_id);
   public void gserviceUpdateState();
   public void gserviceGetSigninDialog(int from);
+  
+  public int getAppVersionCode();
 }
