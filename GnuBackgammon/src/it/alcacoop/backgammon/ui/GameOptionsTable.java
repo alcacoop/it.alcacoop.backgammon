@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

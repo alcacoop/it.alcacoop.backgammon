@@ -39,8 +39,8 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
-import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

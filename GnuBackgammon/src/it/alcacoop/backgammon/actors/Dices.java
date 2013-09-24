@@ -33,16 +33,16 @@
 
 package it.alcacoop.backgammon.actors;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM;
-import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.MatchState;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

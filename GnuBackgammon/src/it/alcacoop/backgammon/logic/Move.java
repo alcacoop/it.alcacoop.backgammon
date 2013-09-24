@@ -33,10 +33,10 @@
 
 package it.alcacoop.backgammon.logic;
 
-import java.util.ArrayList;
-
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.actors.Checker;
+
+import java.util.ArrayList;
 
 public class Move {
   

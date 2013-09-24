@@ -33,10 +33,10 @@
 
 package it.alcacoop.backgammon.fsm;
 
-import com.badlogic.gdx.Gdx;
-
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+
+import com.badlogic.gdx.Gdx;
 
 // SIMULATED GAME STATE MACHINE
 // From: http://vanillajava.blogspot.com/2011/06/java-secret-using-enum-as-state-machine.html

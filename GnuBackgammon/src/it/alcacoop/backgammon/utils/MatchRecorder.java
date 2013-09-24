@@ -33,21 +33,22 @@
 
 package it.alcacoop.backgammon.utils;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.logic.MatchState;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.badlogic.gdx.utils.OrderedMap;
 
 
 public class MatchRecorder {
