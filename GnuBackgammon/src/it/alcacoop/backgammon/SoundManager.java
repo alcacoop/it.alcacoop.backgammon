@@ -38,7 +38,7 @@ import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
-  
+
   AudioDevice audio;
   Sound roll;
   Sound moving_start;
@@ -54,7 +54,7 @@ public class SoundManager {
     invite = Gdx.audio.newSound(Gdx.files.internal("data/sounds/invite.wav"));
     newmessage = Gdx.audio.newSound(Gdx.files.internal("data/sounds/newmessage.wav"));
   }
-  
+
   public void playRoll() {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       roll.play();
@@ -64,17 +64,17 @@ public class SoundManager {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       moving_start.play();
   }
-  
+
   public void playMoveStop() {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       moving_stop.play();
   }
-  
+
   public void playInvite() {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       invite.play();
   }
-  
+
   public void playMessage() {
     if (GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes").equals("Yes"))
       newmessage.play();
