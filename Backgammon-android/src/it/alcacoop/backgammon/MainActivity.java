@@ -119,6 +119,7 @@ import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.achievement.OnAchievementUpdatedListener;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.OnScoreSubmittedListener;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -1207,17 +1208,38 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   @Override
-  public void gserviceSubmitRating(long score, String board_id) {
+  public void gserviceSubmitRating(final long score, final String board_id) {
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false))
       return;
     gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
 
       @Override
       public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
+        // FIX: SYNC WITH LEADERBOARD VALUE
+        long local_score = 0;
+        long score = arg1.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME).rawScore;
+        String board = "SINGLEBOARD";
+        if (board_id.equals(ELORatingManager.MULTI_BOARD))
+          board = "MULTIBOARD";
+        if (board_id.equals(ELORatingManager.TIGA_BOARD))
+          board = "TIGABOARD";
+        if (board_id.equals(ELORatingManager.FIBS_BOARD))
+          board = "FIBSBOARD";
+
+        local_score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(board, "0")) * 100);
+
+        System.out.println("===> " + board + ": " + GnuBackgammon.Instance.optionPrefs.getString(board) + " " + local_score + " " + score);
+        System.out.println("===> " + (double)(score / 100.00));
+
+        if (local_score < score) {
+          GnuBackgammon.Instance.optionPrefs.putString(board, ((double)(score / 100.00)) + "");
+          GnuBackgammon.Instance.optionPrefs.flush();
+          gserviceUpdateState();
+        }
       }
     }, board_id, score);
-
   }
+
 
   @Override
   public void gserviceUpdateAchievement(String achievement_id, int increment) {
