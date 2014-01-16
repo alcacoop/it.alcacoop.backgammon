@@ -25,6 +25,10 @@
             android:value="@string/APP_ID" />
         <meta-data android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/APP_ID" />
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        
+        
         
         <activity
             android:name=".MainActivity"
@@ -46,10 +50,12 @@
         </activity>
         
         
-        <activity
-            android:name="com.google.ads.AdActivity"
+        
+        <activity 
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"/>
+        
         <activity
             android:name="com.adsdk.sdk.banner.InAppWebView"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" 

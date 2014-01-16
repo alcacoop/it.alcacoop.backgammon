@@ -107,13 +107,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.google.ads.Ad;
-import com.google.ads.AdListener;
-import com.google.ads.AdRequest;
-import com.google.ads.AdRequest.ErrorCode;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
-import com.google.ads.InterstitialAd;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.appstate.AppStateClient;
 import com.google.android.gms.appstate.OnStateLoadedListener;
 import com.google.android.gms.common.images.ImageManager;
@@ -135,7 +133,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, AdListener, GServiceGameHelper.GameHelperListener,
+public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, GServiceGameHelper.GameHelperListener,
     RealTimeMessageReceivedListener, RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener, OnStateLoadedListener {
 
   private String data_dir;
@@ -193,17 +191,29 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
     /** ADS INITIALIZATION **/
     PrivateDataManager.initData();
+    adView = new AdView(this);
+    adView.setAdUnitId(PrivateDataManager.ads_id);
+
     if (isTablet(this))
-      adView = new AdView(this, AdSize.IAB_BANNER, PrivateDataManager.ads_id);
+      adView.setAdSize(AdSize.FULL_BANNER);
     else
-      adView = new AdView(this, AdSize.BANNER, PrivateDataManager.ads_id);
+      adView.setAdSize(AdSize.BANNER);
     adView.setVisibility(View.GONE);
 
     if (!isProVersion())
-      adView.loadAd(new AdRequest());
+      adView.loadAd(new AdRequest.Builder().build());
     // Create the interstitial
-    interstitial = new InterstitialAd(this, PrivateDataManager.int_id);
-    interstitial.setAdListener(this);
+    interstitial = new InterstitialAd(this);
+    interstitial.setAdUnitId(PrivateDataManager.int_id);
+
+    interstitial.setAdListener(new AdListener() {
+      @Override
+      public void onAdClosed() {
+        GnuBackgammon.Instance.interstitialVisible = false;
+        GnuBackgammon.Instance.currentScreen.resume();
+        super.onAdClosed();
+      }
+    });
     /** ADS INITIALIZATION **/
 
 
@@ -337,7 +347,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       @Override
       public void run() {
         if (show) {
-          adView.loadAd(new AdRequest());
+          adView.loadAd(new AdRequest.Builder().build());
           adView.setVisibility(View.VISIBLE);
         } else {
           adView.setVisibility(View.GONE);
@@ -473,7 +483,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
                 } else {
                   Context context = getApplicationContext();
                   CharSequence text = "";
-                  if (username.length() <= 3)
+                  if (username.length() <= 3) // TODO: FIX ON FIBS
                     text = "Username must be at least 4-chars length";
                   else if (password.length() <= 3)
                     text = "Password must be at least 4-chars length";
@@ -642,6 +652,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   protected void onResume() {
     super.onResume();
+
+    if (adView != null)
+      adView.resume();
+
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     if (!isProVersion()) {
       adsTimer = new Timer();
@@ -650,8 +664,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         public void run() {
           runOnUiThread(new Runnable() {
             public void run() {
-              if ((!isProVersion()) && (!interstitial.isReady())) {
-                interstitial.loadAd(new AdRequest());
+              if ((!isProVersion()) && (!interstitial.isLoaded())) {
+                interstitial.loadAd(new AdRequest.Builder().build());
               }
             }
           });
@@ -664,6 +678,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   protected void onPause() {
     super.onPause();
+
+    if (adView != null)
+      adView.pause();
+
     mSensorManager.unregisterListener(this);
     if (adsTimer != null) {
       adsTimer.cancel();
@@ -706,12 +724,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void showInterstitial() {
     if (isProVersion())
       return;
-    if (interstitial.isReady()) {
-      GnuBackgammon.Instance.currentScreen.pause();
-      GnuBackgammon.Instance.interstitialVisible = true;
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (interstitial.isLoaded()) {
+          GnuBackgammon.Instance.currentScreen.pause();
+          GnuBackgammon.Instance.interstitialVisible = true;
           synchronized (this) {
             try {
               wait(700);
@@ -720,30 +738,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
             interstitial.show();
           }
         }
-      });
-    }
-  }
-
-  @Override
-  public void onDismissScreen(Ad arg0) {
-    GnuBackgammon.Instance.interstitialVisible = false;
-    GnuBackgammon.Instance.currentScreen.resume();
-  }
-
-  @Override
-  public void onReceiveAd(Ad ad) {
-  }
-
-  @Override
-  public void onLeaveApplication(Ad arg0) {
-  }
-
-  @Override
-  public void onPresentScreen(Ad arg0) {
-  }
-
-  @Override
-  public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1) {
+      }
+    });
   }
 
 
