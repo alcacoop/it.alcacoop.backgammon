@@ -914,6 +914,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
     System.out.println("---> P2P LEFT ROOM");
+    GServiceClient.getInstance().reset();
   }
 
 
@@ -939,6 +940,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onRoomCreated(int statusCode, Room room) {
+    System.out.println("---> P2P ROOM CREATED");
     if (statusCode != GamesClient.STATUS_OK) {
       hideProgressDialog();
       UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
@@ -953,6 +955,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onConnectedToRoom(Room room) {
+    System.out.println("---> P2P CONNECTED TO ROOM");
     mParticipants = room.getParticipants();
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
     updateRoom(room);
@@ -995,16 +998,19 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onPeerDeclined(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEER DECLINED");
     updateRoom(room);
   }
 
   @Override
   public void onPeerInvitedToRoom(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEER INVITED TO ROOM");
     updateRoom(room);
   }
 
   @Override
   public void onPeerJoined(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEER JOINED ROOM");
     updateRoom(room);
   }
 
@@ -1015,30 +1021,45 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       hideProgressDialog();
       gserviceResetRoom();
       UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room");
+      GServiceClient.getInstance().reset();
       updateRoom(room);
     }
   }
 
   @Override
   public void onPeersConnected(Room room, List<String> arg1) {
+    System.out.println("---> P2P PEERS DISCONNECTED");
     updateRoom(room);
   }
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
-    System.out.println("---> P2P PEER DISCONNECTED");
+    System.out.println("---> P2P PEERS DISCONNECTED");
     GServiceClient.getInstance().leaveRoom(0);
     updateRoom(room);
   }
 
   @Override
   public void onRoomAutoMatching(Room room) {
+    System.out.println("---> P2P ROOM AUTOM");
     updateRoom(room);
   }
 
   @Override
   public void onRoomConnecting(Room room) {
+    System.out.println("---> P2P ROOM CONNECTING");
     updateRoom(room);
+  }
+
+  @Override
+  public void onP2PConnected(String arg0) {
+    System.out.println("---> P2P CONNECTED");
+  }
+
+
+  @Override
+  public void onP2PDisconnected(String arg0) {
+    System.out.println("---> P2P DISCONNECTED");
   }
 
 
@@ -1390,18 +1411,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         d.show();
       }
     });
-  }
-
-
-  @Override
-  public void onP2PConnected(String arg0) {
-    System.out.println("---> P2P CONNECTED");
-  }
-
-
-  @Override
-  public void onP2PDisconnected(String arg0) {
-    System.out.println("---> P2P DISCONNECTED");
   }
 
 
