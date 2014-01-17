@@ -159,6 +159,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private boolean meSentInvitation;
 
   private int appVersionCode = 0;
+  private AlertDialog invitationDialog;
 
 
   @SuppressWarnings("deprecation")
@@ -1413,6 +1414,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public int getAppVersionCode() {
     return appVersionCode;
+  }
+
+
+  @Override
+  public void onInvitationRemoved(String arg0) {
+    System.out.println("---> INVITATION REMOVED");
+    invitationDialog.dismiss();
   }
 
 }
