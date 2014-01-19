@@ -598,7 +598,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        chatBox.setVisibility(View.VISIBLE);
+        if (chatBox.getVisibility() != View.VISIBLE)
+          chatBox.setVisibility(View.VISIBLE);
       }
     });
   }
@@ -608,10 +609,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        EditText chat = (EditText)findViewById(R.id.message);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
-        chatBox.setVisibility(View.GONE);
+        if (chatBox.getVisibility() != View.GONE) {
+          EditText chat = (EditText)findViewById(R.id.message);
+          InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+          imm.hideSoftInputFromWindow(chat.getWindowToken(), 0);
+          chatBox.setVisibility(View.GONE);
+        }
       }
     });
   }
@@ -922,7 +925,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
     System.out.println("---> P2P LEFT ROOM");
-    hideChatBox();
+    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     GServiceClient.getInstance().reset();
     hideProgressDialog();
     GnuBackgammon.fsm.state(States.TWO_PLAYERS);
@@ -1219,7 +1222,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void gserviceResetRoom() {
-    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     gConnecting = false;
     meSentInvitation = false;
     if (mRoomId != null) {
