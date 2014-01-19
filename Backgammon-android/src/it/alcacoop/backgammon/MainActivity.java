@@ -1132,27 +1132,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       public void run() {
         if (MainActivity.this == null)
           return;
-        mProgressDialog = new ProgressDialog(MainActivity.this) {
-          int clickCount = 0;
-
-          @Override
-          public void dismiss() {
-            super.dismiss();
-            clickCount = 0;
-          }
-
-          @Override
-          public boolean onKeyDown(int keyCode, KeyEvent event) {
-            clickCount++;
-            if (clickCount == 7) {
-              GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
-              // GnuBackgammon.Instance.setFSM("MENU_FSM");
-              dismiss();
-            }
-            return false;
-          }
-        };
-
+        mProgressDialog = new ProgressDialog(MainActivity.this);
         mProgressDialog.setMessage("Please wait..");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
@@ -1160,13 +1140,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           mProgressDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-              /*
-              if ((GnuBackgammon.Instance.invitationId != null) && (GnuBackgammon.Instance.invitationId != ""))
-                gHelper.getGamesClient().declineRoomInvitation(GnuBackgammon.Instance.invitationId);
-              GnuBackgammon.Instance.setFSM("MENU_FSM");
-              */
-              // GnuBackgammon.Instance.setFSM("MENU_FSM");
-              GnuBackgammon.Instance.fsm.state(MenuFSM.States.TWO_PLAYERS);
+              GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
               gServiceGameCanceled = true;
               GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
 
