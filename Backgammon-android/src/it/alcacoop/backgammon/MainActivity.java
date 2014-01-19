@@ -1448,6 +1448,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onInvitationRemoved(String arg0) {
     System.out.println("---> INVITATION REMOVED");
     invitationDialog.dismiss();
+    hideProgressDialog();
     UIDialog.getFlashDialog(Events.NOOP, "Opponent canceled invitation");
   }
 
