@@ -928,7 +928,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     GServiceClient.getInstance().reset();
     hideProgressDialog();
-    GnuBackgammon.fsm.state(States.TWO_PLAYERS);
+    if (GnuBackgammon.fsm instanceof MenuFSM)
+      GnuBackgammon.fsm.state(States.TWO_PLAYERS);
   }
 
 

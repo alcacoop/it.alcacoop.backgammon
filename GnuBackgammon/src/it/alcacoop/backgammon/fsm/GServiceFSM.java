@@ -398,6 +398,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt == Events.STOPPED) {
           MatchState.resignValue = 0;
+          System.out.println("---> FSM STOPPED");
+          GServiceClient.getInstance().reset();
           GnuBackgammon.Instance.nativeFunctions.showInterstitial();
           GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
         }
