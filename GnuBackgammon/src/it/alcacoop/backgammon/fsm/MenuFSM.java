@@ -59,26 +59,26 @@ public class MenuFSM extends BaseFSM implements Context {
   private static boolean accountCreated = false;
   private static Timer timer;
   private static long waitTime;
-  
+
   public enum States implements State {
 
     MAIN_MENU {
       @Override
       public void enterState(Context ctx) {
-        if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.Instance.menuScreen)
+        if (GnuBackgammon.Instance.currentScreen != GnuBackgammon.Instance.menuScreen)
           GnuBackgammon.Instance.goToScreen(2);
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
+        if (evt == Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("SINGLE PLAYER")) {
             MatchState.matchType = 0;
-            if (!Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").exists()) { //NO SAVED MATCH
-              Gdx.files.absolute(GnuBackgammon.Instance.fname+"sgf").delete();
+            if (!Gdx.files.absolute(GnuBackgammon.Instance.fname + "json").exists()) { // NO SAVED MATCH
+              Gdx.files.absolute(GnuBackgammon.Instance.fname + "sgf").delete();
               ctx.state(States.MATCH_OPTIONS);
-            } else { //SAVED MATCH PRESENT!
+            } else { // SAVED MATCH PRESENT!
               UIDialog.getYesNoDialog(Events.RESTORE_ANSWER, "Restore previous match?");
             }
           }
@@ -97,13 +97,13 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.APPEARANCE);
           }
           return true;
-          
-        } else if (evt==Events.RESTORE_ANSWER) {
+
+        } else if (evt == Events.RESTORE_ANSWER) {
           if ((Boolean)params) {
             GnuBackgammon.Instance.setFSM("GAME_FSM");
           } else {
-            Gdx.files.absolute(GnuBackgammon.Instance.fname+"json").delete();
-            Gdx.files.absolute(GnuBackgammon.Instance.fname+"sgf").delete();
+            Gdx.files.absolute(GnuBackgammon.Instance.fname + "json").delete();
+            Gdx.files.absolute(GnuBackgammon.Instance.fname + "sgf").delete();
             ctx.state(States.MATCH_OPTIONS);
           }
           return true;
@@ -112,7 +112,7 @@ public class MenuFSM extends BaseFSM implements Context {
       }
     },
 
-    
+
     GAME_OPTIONS {
       @Override
       public void enterState(Context ctx) {
@@ -121,7 +121,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
+        if (evt == Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
@@ -132,8 +132,7 @@ public class MenuFSM extends BaseFSM implements Context {
       }
     },
 
-    
-    
+
     FIBS {
       @Override
       public void enterState(Context ctx) {
@@ -149,11 +148,11 @@ public class MenuFSM extends BaseFSM implements Context {
         GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
         super.enterState(ctx);
       }
-      
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-          
+
           case FIBS_CONNECTED:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             timer.cancel();
@@ -165,9 +164,9 @@ public class MenuFSM extends BaseFSM implements Context {
               GnuBackgammon.Instance.nativeFunctions.fibsSignin();
             }
             break;
-          
+
           case FIBS_ERROR:
-            if (timer!=null) {
+            if (timer != null) {
               timer.cancel();
               timer.purge();
             }
@@ -176,13 +175,13 @@ public class MenuFSM extends BaseFSM implements Context {
             UIDialog.getFlashDialog(Events.NOOP, "Connection error..\nPlease retry later");
             ctx.state(States.TWO_PLAYERS);
             break;
-            
+
           case FIBS_CANCEL:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
-            
+
           case FIBS_LOGIN_ERROR:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             if (GnuBackgammon.Instance.server.equals("fibs.com")) {
@@ -197,7 +196,7 @@ public class MenuFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
-            
+
           case FIBS_LOGIN_OK:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             if (GnuBackgammon.Instance.server.equals("fibs.com")) {
@@ -211,64 +210,64 @@ public class MenuFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
             GnuBackgammon.Instance.setFSM("FIBS_FSM");
             break;
-          
-          case FIBS_NETWORK_ERROR:  
+
+          case FIBS_NETWORK_ERROR:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             UIDialog.getFlashDialog(Events.NOOP, "Sorry.. a network error occurred");
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
-          
+
           case FIBS_ACCOUNT_PRESENT:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
-            UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'"+GnuBackgammon.Instance.FibsUsername+"' is already used by someone else");
+            UIDialog.getFlashDialog(Events.NOOP, "Please use another name:\n'" + GnuBackgammon.Instance.FibsUsername + "' is already used by someone else");
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
             break;
-            
+
           case FIBS_ACCOUNT_SPAM:
             GnuBackgammon.Instance.twoplayersScreen.hideConnecting();
             UIDialog.getFlashDialog(Events.NOOP, "Too much account created from your IP..\nAre you a spammer?");
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
-            break;  
-            
+            break;
+
           case FIBS_ACCOUNT_CREATED:
             GnuBackgammon.Instance.twoplayersScreen.showConnecting("Connecting to server...");
             MenuFSM.accountCreated = true;
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.CONNECT_TO_SERVER);
             break;
-            
-          default: 
+
+          default:
             return false;
         }
         return true;
       }
-      
+
     },
-    
-    
+
+
     TWO_PLAYERS {
       @Override
       public void enterState(Context ctx) {
-        if (GnuBackgammon.Instance.currentScreen!=GnuBackgammon.Instance.twoplayersScreen)
+        if (GnuBackgammon.Instance.currentScreen != GnuBackgammon.Instance.twoplayersScreen)
           GnuBackgammon.Instance.goToScreen(9);
-        if (GnuBackgammon.Instance.invitationId!="") {
+        if (GnuBackgammon.Instance.invitationId != "") {
           MatchState.matchType = 3;
           GnuBackgammon.Instance.nativeFunctions.gserviceAcceptInvitation(GnuBackgammon.Instance.invitationId);
-          GnuBackgammon.Instance.invitationId="";
+          GnuBackgammon.Instance.invitationId = "";
         }
       }
-      
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        
-        if ((evt==Events.GSERVICE_LOGIN)&&((Boolean)params)) {
+
+        if ((evt == Events.GSERVICE_LOGIN) && ((Boolean)params)) {
           GnuBackgammon.Instance.nativeFunctions.gserviceSignIn();
         }
-        
-        if (evt==Events.BUTTON_CLICKED) {
+
+        if (evt == Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("PLAY0")) {
             MatchState.matchType = 1;
@@ -277,7 +276,7 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
           }
-          if ((params.toString().equals("PLAY1"))||(params.toString().equals("PLAY2"))) {
+          if ((params.toString().equals("PLAY1")) || (params.toString().equals("PLAY2"))) {
             if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
               MatchState.matchType = 2;
               ctx.state(States.FIBS);
@@ -299,71 +298,72 @@ public class MenuFSM extends BaseFSM implements Context {
       }
 
     },
-    
-    
-    
+
+
     GSERVICE {
       @Override
       public void enterState(Context ctx) {
-        GServiceClient.getInstance().queue.reset();
+        // GServiceClient.getInstance().queue.reset();
+        // GServiceClient.getInstance().reset();
+
         MatchState.anScore[0] = 0;
         MatchState.anScore[1] = 0;
         MatchState.nMatchTo = 1;
         GServiceClient.getInstance().connect();
-    	  //GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
-        
+        // GnuBackgammon.fsm.processEvent(Events.GSERVICE_READY, null);
+
         GServiceClient.getInstance().sendMessage("2");
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_READY);
         super.enterState(ctx);
       }
-      
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
-          
-                     
+
+
           case GSERVICE_READY:
-            GServiceClient.getInstance().sendMessage("8 "+GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
+            GServiceClient.getInstance().sendMessage("8 " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
             break;
 
           case GSERVICE_INIT_RATING:
-            double opponentRating = (Double) params;
+            double opponentRating = (Double)params;
             ELORatingManager.getInstance().setRatings(opponentRating);
 
             Random gen = new Random();
             waitTime = gen.nextLong();
-            GServiceClient.getInstance().sendMessage("3 "+waitTime+" "+GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
+            GServiceClient.getInstance().sendMessage("3 " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
+            System.out.println("---> PROTOCOL VERSION: " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
             break;
-          
+
           case GSERVICE_HANDSHAKE:
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
-            long remoteWaitTime = (Long) params;
-            if (waitTime>remoteWaitTime) {
-              int dices[] = {0,0};
-              while (dices[0]==dices[1])
+            long remoteWaitTime = (Long)params;
+            if (waitTime > remoteWaitTime) {
+              int dices[] = { 0, 0 };
+              while (dices[0] == dices[1])
                 GnubgAPI.RollDice(dices);
-              int[] p = {(dices[0]>dices[1]?1:0), dices[0], dices[1]};
-              
+              int[] p = { (dices[0] > dices[1] ? 1 : 0), dices[0], dices[1] };
+
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
-              GServiceClient.getInstance().sendMessage("4 "+(dices[0]>dices[1]?0:1)+" "+dices[0]+" "+dices[1]);
+              GServiceClient.getInstance().sendMessage("4 " + (dices[0] > dices[1] ? 0 : 1) + " " + dices[0] + " " + dices[1]);
             }
             break;
-            
+
           case GSERVICE_BYE:
             ctx.state(TWO_PLAYERS);
             break;
-            
-          default: 
+
+          default:
             return false;
         }
         return true;
       }
     },
-    
-    
-    
+
+
     MATCH_OPTIONS {
       @Override
       public void enterState(Context ctx) {
@@ -372,20 +372,20 @@ public class MenuFSM extends BaseFSM implements Context {
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
+        if (evt == Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("PLAY")) {
             GnuBackgammon.Instance.setFSM("GAME_FSM");
             ELORatingManager.getInstance().setRatings(AILevels.getAILevelELO(MatchState.currentLevel));
           }
           if (params.toString().equals("BACK")) {
-            if (MatchState.matchType==0)
+            if (MatchState.matchType == 0)
               ctx.state(States.MAIN_MENU);
             else
               ctx.state(States.TWO_PLAYERS);
           }
           return true;
-        } 
+        }
         return false;
       }
     },
@@ -398,7 +398,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.BUTTON_CLICKED) {
+        if (evt == Events.BUTTON_CLICKED) {
           GnuBackgammon.Instance.snd.playMoveStart();
           if (params.toString().equals("BACK")) {
             ctx.state(States.MAIN_MENU);
@@ -413,12 +413,18 @@ public class MenuFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
       }
-    }; 
+    };
 
-    //DEFAULT IMPLEMENTATION
-    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
-    public void enterState(Context ctx) {}
-    public void exitState(Context ctx) {}
+    // DEFAULT IMPLEMENTATION
+    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {
+      return false;
+    }
+
+    public void enterState(Context ctx) {
+    }
+
+    public void exitState(Context ctx) {
+    }
 
   };
 
@@ -428,8 +434,7 @@ public class MenuFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    if ((GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen)||
-        (GnuBackgammon.Instance.invitationId!="")||(MatchState.matchType==1))
+    if ((GnuBackgammon.Instance.currentScreen == GnuBackgammon.Instance.fibsScreen) || (GnuBackgammon.Instance.invitationId != "") || (MatchState.matchType == 1))
       state(States.TWO_PLAYERS);
     else
       state(States.MAIN_MENU);

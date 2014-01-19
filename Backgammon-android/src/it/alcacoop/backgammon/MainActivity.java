@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.FibsScreen;
@@ -800,6 +801,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    System.out.println("---> ONACTIVITY RESULT");
+    hideProgressDialog();
     if (requestCode == PrivateDataManager.RC_REQUEST) {
       if (resultCode != 10000) {
         if (isProVersion()) {
@@ -818,6 +821,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       }
     } else if (requestCode == RC_SELECT_PLAYERS) {
       if (resultCode == RESULT_OK) {
+        showProgressDialog();
         Bundle autoMatchCriteria = null;
         int minAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
         int maxAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
@@ -834,13 +838,16 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         }
         gHelper.getGamesClient().createRoom(rtmConfigBuilder.build());
-      } else {
-        hideProgressDialog();
       }
     } else if (requestCode == RC_WAITING_ROOM) {
-      if (resultCode != RESULT_OK) {
+      if (resultCode != RESULT_OK)
         gserviceResetRoom();
-        hideProgressDialog();
+      else {
+        if (mRoomId != null) {
+          showProgressDialog(true);
+        } else {
+          UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
+        }
       }
     } else {
       super.onActivityResult(requestCode, resultCode, data);
@@ -865,6 +872,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
     if (gHelper.getInvitationId() != null && gHelper.getGamesClient().isConnected()) {
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
+      showProgressDialog(true);
     }
   }
 
@@ -878,7 +886,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       }
     });
   }
-
 
   @Override
   public boolean gserviceIsSignedIn() {
@@ -899,10 +906,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onJoinedRoom(int arg0, Room room) {
     if (room == null) {
-      hideProgressDialog();
       UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation");
     } else {
-      updateRoom(room);
       gConnecting = true;
     }
   }
@@ -912,10 +917,13 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onLeftRoom(int statusCode, String roomId) {
     System.out.println("---> P2P LEFT ROOM");
     GServiceClient.getInstance().reset();
+    hideProgressDialog();
+    GnuBackgammon.fsm.state(States.TWO_PLAYERS);
   }
 
 
   private boolean gConnecting = false;
+  private boolean gServiceGameCanceled = false;
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
@@ -939,7 +947,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onRoomCreated(int statusCode, Room room) {
     System.out.println("---> P2P ROOM CREATED");
     if (statusCode != GamesClient.STATUS_OK) {
-      hideProgressDialog();
       UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
       return;
     }
@@ -953,9 +960,15 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onConnectedToRoom(Room room) {
     System.out.println("---> P2P CONNECTED TO ROOM");
+    if (gServiceGameCanceled) {
+      System.out.println("---> GAME CANCELED!!");
+      gServiceGameCanceled = false;
+      gHelper.getGamesClient().leaveRoom(this, room.getRoomId());
+    }
+    GServiceClient.getInstance().reset();
+
     mParticipants = room.getParticipants();
     mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
-    updateRoom(room);
     String me, opponent, opponent_player_id;
 
     SecureRandom rdm = new SecureRandom();
@@ -989,20 +1002,17 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onDisconnectedFromRoom(Room room) {
     System.out.println("---> P2P DISCONNECTED FROM ROOM");
-    // mRoomId = null;
   }
 
 
   @Override
   public void onPeerDeclined(Room room, List<String> arg1) {
     System.out.println("---> P2P PEER DECLINED");
-    updateRoom(room);
   }
 
   @Override
   public void onPeerInvitedToRoom(Room room, List<String> arg1) {
     System.out.println("---> P2P PEER INVITED TO ROOM");
-    updateRoom(room);
   }
 
   @Override
@@ -1015,37 +1025,30 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onPeerLeft(Room room, List<String> arg1) {
     System.out.println("---> P2P PEER LEFT");
     if (gConnecting) {
-      hideProgressDialog();
       gserviceResetRoom();
       UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room");
-      GServiceClient.getInstance().reset();
-      updateRoom(room);
     }
   }
 
   @Override
   public void onPeersConnected(Room room, List<String> arg1) {
-    System.out.println("---> P2P PEERS DISCONNECTED");
-    updateRoom(room);
+    System.out.println("---> P2P PEERS CONNECTED");
   }
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
     System.out.println("---> P2P PEERS DISCONNECTED");
     GServiceClient.getInstance().leaveRoom(0);
-    updateRoom(room);
   }
 
   @Override
   public void onRoomAutoMatching(Room room) {
     System.out.println("---> P2P ROOM AUTOM");
-    updateRoom(room);
   }
 
   @Override
   public void onRoomConnecting(Room room) {
     System.out.println("---> P2P ROOM CONNECTING");
-    updateRoom(room);
   }
 
   @Override
@@ -1063,6 +1066,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
+    GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
 
     runOnUiThread(new Runnable() {
       @Override
@@ -1077,8 +1081,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         });
         alert.setPositiveButton("Accept", null);
 
-        final AlertDialog d = alert.create();
-        d.setOnShowListener(new DialogInterface.OnShowListener() {
+        invitationDialog = alert.create();
+        invitationDialog.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
             ImageManager im = ImageManager.create(MainActivity.this);
@@ -1088,17 +1092,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
             tv.setFocusable(true);
             tv.setFocusableInTouchMode(true);
             tv.requestFocus();
-            Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button b = invitationDialog.getButton(AlertDialog.BUTTON_POSITIVE);
             b.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
                 gserviceAcceptInvitation(invitationId);
-                d.dismiss();
+                invitationDialog.dismiss();
+                showProgressDialog(true);
               }
             });
           }
         });
-        d.show();
+        invitationDialog.show();
       }
     });
   }
@@ -1111,43 +1116,64 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
     roomConfigBuilder.setRoomStatusUpdateListener(MainActivity.this);
     gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
-    showProgressDialog();
   }
 
 
   ProgressDialog mProgressDialog = null;
 
   void showProgressDialog() {
+    showProgressDialog(false);
+  }
+
+  void showProgressDialog(final boolean cancel_button) {
     runOnUiThread(new Runnable() {
+      @SuppressWarnings("deprecation")
       @Override
       public void run() {
-        if (mProgressDialog == null) {
-          if (MainActivity.this == null)
-            return;
-          mProgressDialog = new ProgressDialog(MainActivity.this) {
-            int clickCount = 0;
+        if (MainActivity.this == null)
+          return;
+        mProgressDialog = new ProgressDialog(MainActivity.this) {
+          int clickCount = 0;
 
-            @Override
-            public void dismiss() {
-              super.dismiss();
-              clickCount = 0;
-            }
+          @Override
+          public void dismiss() {
+            super.dismiss();
+            clickCount = 0;
+          }
 
-            @Override
-            public boolean onKeyDown(int keyCode, KeyEvent event) {
-              clickCount++;
-              if (clickCount == 7) {
-                GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
-                GnuBackgammon.Instance.setFSM("MENU_FSM");
-                dismiss();
-              }
-              return false;
+          @Override
+          public boolean onKeyDown(int keyCode, KeyEvent event) {
+            clickCount++;
+            if (clickCount == 7) {
+              GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+              // GnuBackgammon.Instance.setFSM("MENU_FSM");
+              dismiss();
             }
-          };
-        }
+            return false;
+          }
+        };
+
         mProgressDialog.setMessage("Please wait..");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
+        if (cancel_button) {
+          mProgressDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              /*
+              if ((GnuBackgammon.Instance.invitationId != null) && (GnuBackgammon.Instance.invitationId != ""))
+                gHelper.getGamesClient().declineRoomInvitation(GnuBackgammon.Instance.invitationId);
+              GnuBackgammon.Instance.setFSM("MENU_FSM");
+              */
+              // GnuBackgammon.Instance.setFSM("MENU_FSM");
+              GnuBackgammon.Instance.fsm.state(MenuFSM.States.TWO_PLAYERS);
+              gServiceGameCanceled = true;
+              GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+
+              mProgressDialog.dismiss();
+            }
+          });
+        }
         mProgressDialog.show();
       }
     });
@@ -1170,7 +1196,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    // System.out.println("GSERVICE RECEIVED: "+s);
+    System.out.println("---> GSERVICE RECEIVED: " + s);
     GServiceClient.getInstance().processReceivedMessage(s);
   }
 
@@ -1204,8 +1230,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void gserviceStartRoom() {
+    showProgressDialog();
     if (gHelper.getGamesClient().isConnected()) {
-      showProgressDialog();
       Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
@@ -1221,6 +1247,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     if (mRoomId != null) {
       gHelper.getGamesClient().leaveRoom(this, mRoomId);
       mRoomId = null;
+      gServiceGameCanceled = false;
     }
   }
 
@@ -1421,6 +1448,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onInvitationRemoved(String arg0) {
     System.out.println("---> INVITATION REMOVED");
     invitationDialog.dismiss();
+    UIDialog.getFlashDialog(Events.NOOP, "Opponent canceled invitation");
   }
 
 }

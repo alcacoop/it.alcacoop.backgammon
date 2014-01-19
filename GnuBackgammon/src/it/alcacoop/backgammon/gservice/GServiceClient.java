@@ -57,6 +57,12 @@ public class GServiceClient implements GServiceMessages {
     sendQueue.clear();
   }
 
+  public void debug() {
+    System.out.println("---> GSERVICE DEBUG: " + sendQueue.size());
+    System.out.println("---> NEXT: " + GServiceClient.getInstance().queue.showNext());
+    queue.debug();
+  }
+
 
   public void processReceivedMessage(String s) {
     int coockie = coockieMonster.fIBSCookie(s);
