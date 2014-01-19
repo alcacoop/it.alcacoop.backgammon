@@ -464,12 +464,15 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           public void onShow(DialogInterface arg0) {
             String usr = "";
             String pwd = "";
+            final int min_chars;
             if (GnuBackgammon.Instance.server.equals("fibs.com")) {
               usr = GnuBackgammon.Instance.fibsPrefs.getString("fusername");
               pwd = GnuBackgammon.Instance.fibsPrefs.getString("fpassword");
+              min_chars = 0;
             } else {
               usr = GnuBackgammon.Instance.fibsPrefs.getString("tusername");
               pwd = GnuBackgammon.Instance.fibsPrefs.getString("tpassword");
+              min_chars = 3;
             }
             ((EditText)myView.findViewById(R.id.username)).setText(usr);
             ((EditText)myView.findViewById(R.id.password)).setText(pwd);
@@ -485,8 +488,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
                 } else {
                   Context context = getApplicationContext();
                   CharSequence text = "";
-                  if (username.length() <= 3) // TODO: FIX ON FIBS
-                    text = "Username must be at least 4-chars length";
+                  if (username.length() <= min_chars) // TODO: FIX ON FIBS
+                    text = "Username must be at least " + (min_chars + 1) + "-chars length";
                   else if (password.length() <= 3)
                     text = "Password must be at least 4-chars length";
                   else
