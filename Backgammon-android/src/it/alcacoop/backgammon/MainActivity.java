@@ -160,6 +160,9 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private boolean meSentInvitation;
 
   private int appVersionCode = 0;
+
+  private boolean gConnecting = false;
+  private boolean gServiceGameCanceled = false;
   private AlertDialog invitationDialog;
 
 
@@ -488,7 +491,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
                 } else {
                   Context context = getApplicationContext();
                   CharSequence text = "";
-                  if (username.length() <= min_chars) // TODO: FIX ON FIBS
+                  if (username.length() <= min_chars)
                     text = "Username must be at least " + (min_chars + 1) + "-chars length";
                   else if (password.length() <= 3)
                     text = "Password must be at least 4-chars length";
@@ -919,14 +922,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
     System.out.println("---> P2P LEFT ROOM");
+    hideChatBox();
     GServiceClient.getInstance().reset();
     hideProgressDialog();
     GnuBackgammon.fsm.state(States.TWO_PLAYERS);
   }
 
-
-  private boolean gConnecting = false;
-  private boolean gServiceGameCanceled = false;
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
