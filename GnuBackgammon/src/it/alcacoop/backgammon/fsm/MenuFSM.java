@@ -195,6 +195,7 @@ public class MenuFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
             GnuBackgammon.Instance.commandDispatcher.dispatch(Command.SHUTTING_DOWN);
             ctx.state(States.TWO_PLAYERS);
+            UIDialog.getFlashDialog(Events.NOOP, "User not known or wrong password");
             break;
 
           case FIBS_LOGIN_OK:
