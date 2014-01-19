@@ -1,0 +1,34 @@
+matchinfo: [
+{
+  gameinfo: {
+    ff: 4,
+    gm: 6,
+    ca: "UTF-8",
+    ap: "BackgammonMobile:0.1",
+    mi_length: 5,
+    mi_game: 1,
+    mi_ws: 0, 
+    mi_bs: 0,
+    pw: "CPU0",
+    pb: "PLY1",
+    dt: "2013-01-21",
+    //ru: "Crawford",
+    //re: "W+1R",
+    _cr: true,
+    _cg: false,
+    _df: 5,
+    _co: 0,
+    _cv: 1,
+    _bw: "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+    _bb: "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" 
+  },
+  moves: [
+     {type: 0, c: 0, d1: 6, d2: 4, m: "xrmi"},
+     {type: 0, c: 1, d1: 1, d2: 1, m: "qrqrstst"},
+     {type: 0, c: 0, d1: 6, d2: 2, m: "ywwq"},
+     {type: 1, c: 1}, //doubling req 
+     {type: 2, c: 0}, //doubling take 
+     {type: 9, c: 1, d1: 2, d2: 6}, //wait for moving (PL) 
+  ]
+}
+]
