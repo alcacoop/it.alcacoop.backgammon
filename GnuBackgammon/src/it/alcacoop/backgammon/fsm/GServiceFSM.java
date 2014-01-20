@@ -58,6 +58,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   private static boolean isBufferedMoves = false;
   private static int moves[][];
 
+  // private static ArrayList<Integer> auto_moves = new ArrayList<Integer>();
+
   public enum States implements State {
 
     REMOTE_TURN {
@@ -110,6 +112,25 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
 
     LOCAL_TURN {
+      /*
+      @Override
+      public void enterState(Context ctx) {
+        if (GnuBackgammon.fsm.previousState == States.HUMAN_CHECKER_MOVING) {
+          Timer timer = new Timer();
+          TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+              if (auto_moves.size() > 0)
+                GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
+              else
+                GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
+            }
+          };
+          timer.schedule(task, 350);
+        }
+      }
+      */
+
       @Override
       public boolean processEvent(Context ctx, GServiceFSM.Events evt, Object params) {
 
@@ -144,6 +165,37 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case DICES_ROLLED:
             if ((moves != null) && (moves.length > 0)) {
               ctx.board().availableMoves.setMoves(moves);
+
+              /** HO MOSSE A DISPOSIZIONE.. GENERO LE MIGLIORI (AUTOPLAY FOR TESTING) **/
+              GnubgAPI.SetAILevel(5);
+              GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
+              int _dices[] = { GServiceFSM.d1, GServiceFSM.d2 };
+              int _moves[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+              GnubgAPI.EvaluateBestMove(_dices, _moves);
+              System.out.print("---> BEST MOVE: ");
+              for (int i = 0; i < 8; i++)
+                System.out.print(_moves[i] + " ");
+              System.out.println(" ");
+
+              /*
+              auto_moves.add(_moves[0]);
+              if (_moves[2] != -1)
+                auto_moves.add(_moves[2]);
+              if (_moves[4] != -1)
+                auto_moves.add(_moves[4]);
+              if (_moves[6] != -1)
+                auto_moves.add(_moves[6]);
+
+              Timer timer = new Timer();
+              TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                  GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
+                }
+              };
+              timer.schedule(task, 350);
+              /** FINE GENERAZIONE MOSSE **/
+
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
             }
@@ -249,12 +301,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 differ = true;
                 break;
               }
-
           if (differ) {
             ctx.board().initBoard(b[0], b[1]);// RESYNC!
             AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           }
-
           GnuBackgammon.fsm.back();
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);
           return true;
@@ -267,8 +317,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     SWITCH_TURN {
       public void enterState(Context ctx) {
         GServiceClient.getInstance().debug();
-
-
         for (int i = 0; i < 8; i++)
           GnuBackgammon.fsm.hmoves[i] = -1;
         GnuBackgammon.fsm.hnmove = 0;
@@ -280,11 +328,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           ctx.board().switchTurn();
           if (MatchState.fTurn == 0) {
             ctx.state(States.LOCAL_TURN);
-            if (GServiceClient.getInstance().queue.showNext() != Events.GSERVICE_ROLL)
-              System.out.println("---> FATAL ERROR");
-            GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
           } else {
-            ctx.state(States.REMOTE_TURN);
             int dices[] = { 0, 0 };
             GnubgAPI.RollDice(dices);
             GServiceClient.getInstance().sendMessage(GSERVICE_ROLL + " " + dices[0] + " " + dices[1]);
@@ -295,10 +339,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               }
             GServiceClient.getInstance().sendMessage(GSERVICE_BOARD + s);
             GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
-            GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+            ctx.state(States.REMOTE_TURN);
           }
         }
+        GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
       }
+
     },
 
 
@@ -508,9 +554,11 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   @Override
   public void processEvent(final Events evt, final Object params) {
+    System.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
+        System.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
         System.out.println("---> GSFSM: " + evt + " ON " + state());
         switch (evt) {
           case GSERVICE_CHATMSG:
@@ -551,6 +599,15 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           default:
             state().processEvent(GServiceFSM.this, evt, params);
+            /*
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+              @Override
+              public void run() {
+              }
+            };
+            timer.schedule(task, 200);
+            */
             break;
         }
       }
