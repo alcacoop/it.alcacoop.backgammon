@@ -412,7 +412,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       @Override
       public void enterState(Context ctx) {
         GServiceFSM.isBufferedMoves = false;
-        super.enterState(ctx);
       }
 
       @Override
@@ -473,9 +472,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
 
     STOPPED {
-      @Override
-      public void enterState(Context ctx) {
-      }
     };
 
     // DEFAULT IMPLEMENTATION
