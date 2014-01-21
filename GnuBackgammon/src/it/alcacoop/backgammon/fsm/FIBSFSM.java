@@ -534,7 +534,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
             GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
             rating = GnuBackgammon.Instance.fibsScreen.me.getRating();
-            System.out.println("---> RATING: " + rating);
+            //System.out.println("---> RATING: " + rating);
             break;
 
           default:

@@ -172,7 +172,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       setFSM("MENU_FSM");
       // fsm.state(MenuFSM.States.TWO_PLAYERS);
     }
-    System.out.println("+++ " + optionPrefs.getString("FIBSBOARD2", "0"));
   }
 
   public void initAssets() {

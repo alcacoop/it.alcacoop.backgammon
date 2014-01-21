@@ -208,13 +208,13 @@ public class BaseFSM implements Context {
   }
 
   public void state(final State state) {
-    System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
+    //System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
     final Context _ctx = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
-        System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
+        //System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
+        //System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
         if (currentState != null)
           currentState.exitState(_ctx);
         previousState = currentState;
