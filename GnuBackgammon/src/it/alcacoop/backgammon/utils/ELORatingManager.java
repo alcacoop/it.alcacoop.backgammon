@@ -9,7 +9,7 @@ public class ELORatingManager {
   public final static String SINGLE_BOARD = "CgkI9ZWZjusDEAIQAQ";
   public final static String MULTI_BOARD = "CgkI9ZWZjusDEAIQAg";
   public final static String TIGA_BOARD = "CgkI9ZWZjusDEAIQIg";
-  public final static String FIBS_BOARD = "CgkI9ZWZjusDEAIQFw";
+  public final static String FIBS_BOARD2 = "CgkI9ZWZjusDEAIQIw";
 
   private final static double CONVERT_ADDENDUM = 1500.00;
   private double matchValue;
@@ -45,8 +45,8 @@ public class ELORatingManager {
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0")) * 100);
     GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
 
-    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0")) * 100);
-    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, FIBS_BOARD);
+    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD2", "0")) * 100);
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, FIBS_BOARD2);
 
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0")) * 100);
     GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, TIGA_BOARD);
@@ -57,8 +57,8 @@ public class ELORatingManager {
     String kboard = TIGA_BOARD;
     String sboard = "TIGABOARD";
     if (server != 0) {
-      kboard = FIBS_BOARD;
-      sboard = "FIBSBOARD";
+      kboard = FIBS_BOARD2;
+      sboard = "FIBSBOARD2";
     }
 
     double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(sboard, "0"));
@@ -66,7 +66,7 @@ public class ELORatingManager {
     if (score < 0)
       return;
 
-    GnuBackgammon.Instance.optionPrefs.putString(sboard, score + "");
+    GnuBackgammon.Instance.optionPrefs.putString(sboard, score / 100 + "");
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, kboard);
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();

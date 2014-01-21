@@ -1242,8 +1242,8 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           board = "MULTIBOARD";
         if (board_id.equals(ELORatingManager.TIGA_BOARD))
           board = "TIGABOARD";
-        if (board_id.equals(ELORatingManager.FIBS_BOARD))
-          board = "FIBSBOARD";
+        if (board_id.equals(ELORatingManager.FIBS_BOARD2))
+          board = "FIBSBOARD2";
 
         local_score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(board, "0")) * 100);
 
@@ -1329,18 +1329,18 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     }
   }
 
-  /*  
-    private void deleteAppState() {
-      if (gHelper.isSignedIn()) {
-        gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
+  /*
+  private void deleteAppState() {
+    if (gHelper.isSignedIn()) {
+      gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
 
-          @Override
-          public void onStateDeleted(int arg0, int arg1) {
-            System.out.println("GSERVICE STATE DELETED");
-          }
-        }, APP_DATA_KEY);
-      }
+        @Override
+        public void onStateDeleted(int arg0, int arg1) {
+          System.out.println("GSERVICE STATE DELETED");
+        }
+      }, APP_DATA_KEY);
     }
+  }
   */
 
 
