@@ -74,56 +74,55 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Pool;
 
 
-
 public class GnuBackgammon extends Game implements ApplicationListener {
-  
+
   public GameScreen gameScreen;
   private MatchOptionsScreen matchOptionsScreen;
-  public  MainMenuScreen menuScreen;
+  public MainMenuScreen menuScreen;
   public TwoPlayersScreen twoplayersScreen;
   private OptionsScreen optionsScreen;
   private WelcomeScreen welcomeScreen;
   private AppearanceScreen appearanceScreen;
   public FibsScreen fibsScreen;
   public static int chatHeight = 20;
-  
+
   public int appVersionCode = 0;
-  
+
   private int resolutions[][] = {
-    {1280,740},
-    {800,480},
-    {480,320}
+      { 1280, 740 },
+      { 800, 480 },
+      { 480, 320 }
   };
   public int ss;
-  private String[] resname = {"hdpi", "mdpi", "ldpi"};
+  private String[] resname = { "hdpi", "mdpi", "ldpi" };
   public int resolution[];
-  
+
   private GameFSM gameFSM;
   private SimulationFSM simulationFSM;
   private MenuFSM menuFSM;
   private FIBSFSM fibsFSM;
   private GServiceFSM gserviceFSM;
-  
+
   public static BitmapFont font;
   public static TextureAtlas atlas;
   public static Skin skin;
   public static GnuBackgammon Instance;
   public static BaseFSM fsm;
-  
+
   public Board board;
   public BaseScreen currentScreen;
   public JSONProperties jp;
   public Preferences optionPrefs, appearancePrefs;
-  
+
   public SoundManager snd;
   public NativeFunctions nativeFunctions;
-  
+
   public Preferences fibsPrefs;
-  
+
   public MatchRecorder rec;
   public String fname;
   public String server;
-  
+
   public CommandDispatcherImpl commandDispatcher;
   public FibsNetHandler fibs;
   public String FibsUsername;
@@ -133,180 +132,185 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
   private boolean skipSplashScreen;
   public String invitationId = "";
-  
+
   public boolean interstitialVisible = false;
-  
+
   public GnuBackgammon(NativeFunctions n) {
     nativeFunctions = n;
   }
-  
+
   public void isCR() {
-    System.out.println("CR: "+Gdx.graphics.isContinuousRendering());
+    System.out.println("CR: " + Gdx.graphics.isContinuousRendering());
   }
-  
+
   private Timer transitionTimer;
-  
-  
+
+
   @Override
   public void create() {
     Instance = this;
     optionPrefs = Gdx.app.getPreferences("GameOptions");
     appearancePrefs = Gdx.app.getPreferences("Appearance");
     fibsPrefs = Gdx.app.getPreferences("FibsPreferences");
-    
-    //CHECK SCREEN DIM AND SELECT CORRECT ATLAS
+
+    // CHECK SCREEN DIM AND SELECT CORRECT ATLAS
     int pWidth = Gdx.graphics.getWidth();
-    if (pWidth<=480) ss = 2;
-    else if (pWidth<=800) ss = 1;
-    else ss = 0;
+    if (pWidth <= 480)
+      ss = 2;
+    else if (pWidth <= 800)
+      ss = 1;
+    else
+      ss = 0;
     resolution = resolutions[ss];
     transitionTimer = new Timer();
-    
-    //System.out.println("=====> GSERVICE START: "+skipSplashScreen);
+
+    // System.out.println("=====> GSERVICE START: "+skipSplashScreen);
     if (!skipSplashScreen) {
-      setScreen(new SplashScreen("data/"+resname[ss]+"/alca.png"));
+      setScreen(new SplashScreen("data/" + resname[ss] + "/alca.png"));
     } else {
       initAssets();
       setFSM("MENU_FSM");
-      //fsm.state(MenuFSM.States.TWO_PLAYERS);
+      // fsm.state(MenuFSM.States.TWO_PLAYERS);
     }
+    System.out.println("+++ " + optionPrefs.getString("FIBSBOARD", "0"));
   }
-  
+
   public void initAssets() {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
 
-    atlas = new TextureAtlas(Gdx.files.internal("data/"+resname[ss]+"/pack.atlas"));
-    
-    fibsPlayersPool = new Pool<Player>(50){
+    atlas = new TextureAtlas(Gdx.files.internal("data/" + resname[ss] + "/pack.atlas"));
+
+    fibsPlayersPool = new Pool<Player>(50) {
       @Override
       protected Player newObject() {
         return new Player();
       }
     };
-    
+
 
     snd = new SoundManager();
     rec = new MatchRecorder();
-    
-    fibs = new FibsNetHandler();
-    
-    commandDispatcher = new CommandDispatcherImpl();
-    
-    fname = nativeFunctions.getDataDir()+"/data/match.";
 
-    GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/"+GnuBackgammon.Instance.getResName()+"/pos.json"));
-    skin = new Skin(Gdx.files.internal("data/"+resname[ss]+"/myskin.json"));
-    font = new BitmapFont(Gdx.files.internal("data/"+resname[ss]+"/checker.fnt"), false);
+    fibs = new FibsNetHandler();
+
+    commandDispatcher = new CommandDispatcherImpl();
+
+    fname = nativeFunctions.getDataDir() + "/data/match.";
+
+    GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/" + GnuBackgammon.Instance.getResName() + "/pos.json"));
+    skin = new Skin(Gdx.files.internal("data/" + resname[ss] + "/myskin.json"));
+    font = new BitmapFont(Gdx.files.internal("data/" + resname[ss] + "/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    
-    BitmapFont f  = skin.getFont("default-font");
+
+    BitmapFont f = skin.getFont("default-font");
     f.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    
+
     GnuBackgammon.atlas.addRegion("board", atlas.findRegion("B1"));
     GnuBackgammon.atlas.addRegion("boardbg", atlas.findRegion("B1-BG"));
     GnuBackgammon.atlas.addRegion("cb", atlas.findRegion("CS1-B"));
     GnuBackgammon.atlas.addRegion("cw", atlas.findRegion("CS1-W"));
     GnuBackgammon.atlas.addRegion("ch", atlas.findRegion("CS1-H"));
-    
+
     board = new Board();
-    
+
     gameFSM = new GameFSM(board);
     simulationFSM = new SimulationFSM(board);
     menuFSM = new MenuFSM(board);
     fibsFSM = new FIBSFSM(board);
     gserviceFSM = new GServiceFSM(board);
-    
+
     fsm = simulationFSM;
-    
+
     gameScreen = new GameScreen();
     matchOptionsScreen = new MatchOptionsScreen();
     menuScreen = new MainMenuScreen();
-    twoplayersScreen =  new TwoPlayersScreen();
+    twoplayersScreen = new TwoPlayersScreen();
     optionsScreen = new OptionsScreen();
     welcomeScreen = new WelcomeScreen();
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
-    
+
     nativeFunctions.injectBGInstance();
   }
 
   @Override
   public void setScreen(final Screen screen) {
-    if (currentScreen!=null) {
+    if (currentScreen != null) {
       ((BaseScreen)screen).initialize();
       currentScreen.fadeOut();
       TimerTask task = new TimerTask() {
         @Override
         public void run() {
           ((BaseScreen)(screen)).fixBGImg();
-          GnuBackgammon.super.setScreen(screen);    
+          GnuBackgammon.super.setScreen(screen);
         }
       };
-      transitionTimer.schedule(task, (long)(currentScreen.animationTime*1000));
-    } else 
+      transitionTimer.schedule(task, (long)(currentScreen.animationTime * 1000));
+    } else
       super.setScreen(screen);
   }
-  
-  
+
+
   public String getResName() {
     return resname[ss];
   }
-  
+
   public void goToScreen(final int s) {
     switch (s) {
-    case 0:
-      GnuBackgammon.Instance.setScreen(welcomeScreen);
-      currentScreen = welcomeScreen;
-      break;
+      case 0:
+        GnuBackgammon.Instance.setScreen(welcomeScreen);
+        currentScreen = welcomeScreen;
+        break;
 
-    case 1:
-      setScreen(optionsScreen);
-      currentScreen = optionsScreen;
-      break;
+      case 1:
+        setScreen(optionsScreen);
+        currentScreen = optionsScreen;
+        break;
 
-    case 2:
-      setScreen(menuScreen);
-      currentScreen = menuScreen;
-      break;
+      case 2:
+        setScreen(menuScreen);
+        currentScreen = menuScreen;
+        break;
 
-    case 3:
-      setScreen(matchOptionsScreen);
-      currentScreen = matchOptionsScreen;
-      break;
+      case 3:
+        setScreen(matchOptionsScreen);
+        currentScreen = matchOptionsScreen;
+        break;
 
-    case 4:
-      setScreen(gameScreen);
-      currentScreen = gameScreen;
-      break;
+      case 4:
+        setScreen(gameScreen);
+        currentScreen = gameScreen;
+        break;
 
-    case 6:
-      setScreen(welcomeScreen);
-      currentScreen = welcomeScreen;
-      break;
+      case 6:
+        setScreen(welcomeScreen);
+        currentScreen = welcomeScreen;
+        break;
 
-    case 7:
-      setScreen(appearanceScreen);
-      currentScreen = appearanceScreen;
-      break;
+      case 7:
+        setScreen(appearanceScreen);
+        currentScreen = appearanceScreen;
+        break;
 
-    case 8:
-      setScreen(fibsScreen);
-      currentScreen = fibsScreen;
-      break;
+      case 8:
+        setScreen(fibsScreen);
+        currentScreen = fibsScreen;
+        break;
 
-    case 9:
-      setScreen(twoplayersScreen);
-      currentScreen = twoplayersScreen;
-      break;
+      case 9:
+        setScreen(twoplayersScreen);
+        currentScreen = twoplayersScreen;
+        break;
     }
   }
 
 
   public void setFSM(String type) {
-    if (fsm!=null) fsm.stop();
-    
+    if (fsm != null)
+      fsm.stop();
+
     if (type == "SIMULATED_FSM")
       fsm = simulationFSM;
     else if (type == "MENU_FSM")
@@ -321,18 +325,19 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
 
   public void appendChatMessage(String msg, boolean direction) {
-    if (MatchState.matchType==2)
-      commandDispatcher.send("tell "+FibsOpponent+" "+msg);
-    else if (MatchState.matchType==3)
-      GServiceClient.getInstance().sendMessage("90 "+msg);
-    
-    if ((FibsUsername!=null)&&(!FibsUsername.equals("")))
+    if (MatchState.matchType == 2)
+      commandDispatcher.send("tell " + FibsOpponent + " " + msg);
+    else if (MatchState.matchType == 3)
+      GServiceClient.getInstance().sendMessage("90 " + msg);
+
+    if ((FibsUsername != null) && (!FibsUsername.equals("")))
       appendChatMessage(FibsUsername, msg, direction);
     else
       appendChatMessage("You", msg, direction);
   }
+
   public void appendChatMessage(String username, String msg, boolean direction) {
     gameScreen.chatBox.appendMessage(username, msg, direction);
   }
-  
+
 }

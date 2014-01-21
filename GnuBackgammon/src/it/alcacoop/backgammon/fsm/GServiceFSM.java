@@ -517,20 +517,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     },
 
 
-    STOPPED {
-    };
+    STOPPED {};
 
     // DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, Events evt, Object params) {
       return false;
     }
-
-    public void enterState(Context ctx) {
-    }
-
-    public void exitState(Context ctx) {
-    }
-
+    public void enterState(Context ctx) {}
+    public void exitState(Context ctx) {}
   };
 
 
@@ -599,15 +593,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           default:
             state().processEvent(GServiceFSM.this, evt, params);
-            /*
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-              @Override
-              public void run() {
-              }
-            };
-            timer.schedule(task, 200);
-            */
             break;
         }
       }

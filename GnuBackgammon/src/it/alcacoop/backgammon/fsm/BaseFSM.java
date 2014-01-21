@@ -73,97 +73,98 @@ public class BaseFSM implements Context {
   public enum Events {
     NOOP,
 
-    GSERVICE_LOGIN, 
-    GSERVICE_CONNECTED, 
-    GSERVICE_READY, 
+    GSERVICE_LOGIN,
+    GSERVICE_CONNECTED,
+    GSERVICE_READY,
     GSERVICE_INIT_RATING, // params={rating}
-    GSERVICE_HANDSHAKE, 
+    GSERVICE_HANDSHAKE,
     GSERVICE_FIRSTROLL, // params={turn, dice0, dice1}
     GSERVICE_ROLL, // params={dice0, dice1}
     GSERVICE_MOVES, // params={-1,-1,-1,-1,-1,-1,-1,-1}
-    GSERVICE_BOARD, 
-    GSERVICE_BOARD_SYNCED, 
-    GSERVICE_CHATMSG, 
-    GSERVICE_ERROR, 
+    GSERVICE_BOARD,
+    GSERVICE_BOARD_SYNCED,
+    GSERVICE_CHATMSG,
+    GSERVICE_ERROR,
     GSERVICE_ABANDON, // params: 0=abandon,1=resign_single,2=resign_gammon,3=resign_bg
     GSERVICE_BYE,
 
-    FIBS_ERROR, 
-    FIBS_ACCOUNT_CREATED, 
-    FIBS_ACCOUNT_PRESENT, 
-    FIBS_ACCOUNT_SPAM, 
-    FIBS_WHO_END, 
-    FIBS_CANCEL, 
-    FIBS_CONNECTED, 
-    FIBS_DISCONNECT, 
-    FIBS_LOGIN_OK, 
-    FIBS_LOGIN_ERROR, 
-    FIBS_NETWORK_ERROR, 
-    FIBS_PLAYER_CHANGED, 
-    FIBS_PLAYER_LOGOUT, 
-    FIBS_PLAYER_LOGIN, 
-    FIBS_INVITE_RECEIVED, 
-    FIBS_INVITE_SENDED, 
-    FIBS_INVITE_DECLINED, 
-    FIBS_START_GAME, 
-    FIBS_FIRSTROLL, 
-    FIBS_RESUMEGAME, 
-    FIBS_BOARD, 
-    FIBS_BOARD_SYNCED, 
-    FIBS_MOVES, 
-    FIBS_OPPONENT_ROLLS, 
-    FIBS_YOU_ROLL, 
-    FIBS_ABANDON_GAME, 
-    FIBS_RESIGN_REQUEST, 
+    FIBS_ERROR,
+    FIBS_ACCOUNT_CREATED,
+    FIBS_ACCOUNT_PRESENT,
+    FIBS_ACCOUNT_SPAM,
+    FIBS_WHO_END,
+    FIBS_CANCEL,
+    FIBS_CONNECTED,
+    FIBS_DISCONNECT,
+    FIBS_LOGIN_OK,
+    FIBS_LOGIN_ERROR,
+    FIBS_NETWORK_ERROR,
+    FIBS_PLAYER_CHANGED,
+    FIBS_PLAYER_LOGOUT,
+    FIBS_PLAYER_LOGIN,
+    FIBS_INVITE_RECEIVED,
+    FIBS_INVITE_SENDED,
+    FIBS_INVITE_DECLINED,
+    FIBS_START_GAME,
+    FIBS_FIRSTROLL,
+    FIBS_RESUMEGAME,
+    FIBS_BOARD,
+    FIBS_BOARD_SYNCED,
+    FIBS_MOVES,
+    FIBS_OPPONENT_ROLLS,
+    FIBS_YOU_ROLL,
+    FIBS_ABANDON_GAME,
+    FIBS_RESIGN_REQUEST,
     FIBS_MATCHOVER,
 
-    ACCEPT_DOUBLE, 
-    ACCEPT_RESIGN, 
-    GET_RESIGN_VALUE, 
-    ASK_FOR_DOUBLING, 
-    ASK_FOR_RESIGNATION, 
-    EVALUATE_BEST_MOVE, 
-    INITIALIZE_ENVIRONMENT, 
-    ROLL_DICE, 
-    DICES_ROLLED, 
-    SET_BOARD, 
-    SET_GAME_TURN, 
-    SET_MATCH_SCORE, 
-    SET_MATCH_TO, 
-    UPDATE_MS_CUBEINFO, 
-    PERFORMED_MOVE, 
-    NO_MORE_MOVES, 
-    POINT_TOUCHED, 
-    GENERATE_MOVES, 
-    DICE_CLICKED, 
-    STARTING_SIMULATION, 
-    START_GAME, 
-    SIMULATED_TURN, 
-    BUTTON_CLICKED, 
-    CHECKER_RESETTED, 
-    DOUBLING_RESPONSE, 
-    CONTINUE, 
-    STOPPED, 
-    DOUBLE_REQUEST, 
-    HUMAN_DOUBLE_RESPONSE, 
-    CPU_DOUBLE_ACCEPTED, 
-    CPU_DOUBLE_NOT_ACCEPTED, 
-    SHOW_DOUBLE_DIALOG, 
-    CPU_RESIGNED, 
-    HUMAN_RESIGNED, 
-    ABANDON_MATCH, 
+    ACCEPT_DOUBLE,
+    ACCEPT_RESIGN,
+    GET_RESIGN_VALUE,
+    ASK_FOR_DOUBLING,
+    ASK_FOR_RESIGNATION,
+    EVALUATE_BEST_MOVE,
+    INITIALIZE_ENVIRONMENT,
+    ROLL_DICE,
+    DICES_ROLLED,
+    SET_BOARD,
+    SET_GAME_TURN,
+    SET_MATCH_SCORE,
+    SET_MATCH_TO,
+    UPDATE_MS_CUBEINFO,
+    PERFORMED_MOVE,
+    NO_MORE_MOVES,
+    POINT_TOUCHED,
+    GENERATE_MOVES,
+    DICE_CLICKED,
+    STARTING_SIMULATION,
+    START_GAME,
+    SIMULATED_TURN,
+    BUTTON_CLICKED,
+    CHECKER_RESETTED,
+    DOUBLING_RESPONSE,
+    CONTINUE,
+    STOPPED,
+    DOUBLE_REQUEST,
+    HUMAN_DOUBLE_RESPONSE,
+    CPU_DOUBLE_ACCEPTED,
+    CPU_DOUBLE_NOT_ACCEPTED,
+    SHOW_DOUBLE_DIALOG,
+    CPU_RESIGNED,
+    HUMAN_RESIGNED,
+    ABANDON_MATCH,
     RESTORE_ANSWER
   }
 
   public enum States implements State {
-    STOPPED {
-    };
+    STOPPED {};
 
     // DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {
       return false;
     }
+
     public void enterState(Context ctx) {}
+
     public void exitState(Context ctx) {}
   };
 
@@ -207,12 +208,12 @@ public class BaseFSM implements Context {
   }
 
   public void state(final State state) {
-    System.out.println("---> +++ ENQUEUE ST "+state+": " + Thread.currentThread().getName());
+    System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
     final Context _ctx = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        System.out.println("---> +++ EXECUTE ST "+state+": " + Thread.currentThread().getName());
+        System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
         System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
         if (currentState != null)
           currentState.exitState(_ctx);

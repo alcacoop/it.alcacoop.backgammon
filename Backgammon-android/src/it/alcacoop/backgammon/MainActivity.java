@@ -286,8 +286,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     try {
       pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
       appVersionCode = pInfo.versionCode;
-    } catch (NameNotFoundException e) {
-    }
+    } catch (NameNotFoundException e) {}
     /** APP VERSION **/
   }
 
@@ -317,8 +316,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     String[] files = null;
     try {
       files = assetManager.list("gnubg");
-    } catch (IOException e) {
-    }
+    } catch (IOException e) {}
     for (String filename : files) {
       InputStream in = null;
       OutputStream out = null;
@@ -331,8 +329,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
         out.flush();
         out.close();
         out = null;
-      } catch (IOException e) {
-      }
+      } catch (IOException e) {}
     }
   }
 
@@ -432,8 +429,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   }
 
   @Override
-  public void injectBGInstance() {
-  }
+  public void injectBGInstance() {}
 
 
   @Override
@@ -709,8 +705,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   @Override
-  public void onAccuracyChanged(Sensor arg0, int arg1) {
-  }
+  public void onAccuracyChanged(Sensor arg0, int arg1) {}
 
 
   private final float NOISE = 0.5f;
@@ -744,8 +739,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
           synchronized (this) {
             try {
               wait(700);
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
             interstitial.show();
           }
         }
@@ -869,8 +863,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   // GSERVICE STUFF...
   @Override
-  public void onSignInFailed() {
-  }
+  public void onSignInFailed() {}
 
   @Override
   public void onSignInSucceeded() {
@@ -1276,8 +1269,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
 
       @Override
-      public void onAchievementUpdated(int statusCode, String achievement_id) {
-      }
+      public void onAchievementUpdated(int statusCode, String achievement_id) {}
     }, achievement_id, increment);
   }
 
@@ -1290,8 +1282,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
 
       @Override
-      public void onAchievementUpdated(int statusCode, String arg1) {
-      }
+      public void onAchievementUpdated(int statusCode, String arg1) {}
     }, achievement_id);
   }
 
@@ -1322,9 +1313,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     if (statusCode == AppStateClient.STATUS_OK) {
       AppDataManager.getInstance().loadState(data);
       ELORatingManager.getInstance().syncLeaderboards();
-    } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {
-    } else {
-    }
+    } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {} else {}
   }
 
   @Override
