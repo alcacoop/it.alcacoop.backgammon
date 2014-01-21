@@ -18,8 +18,7 @@ public class ELORatingManager {
   private double currentRating = 0.00; // in ELO
   private double opponentRating = 0.00; // in ELO
 
-  private ELORatingManager() {
-  }
+  private ELORatingManager() {}
 
   public synchronized static ELORatingManager getInstance() {
     if (instance == null)
@@ -38,42 +37,52 @@ public class ELORatingManager {
   }
 
   public void syncLeaderboards() {
-    long score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("MULTIBOARD", "0")) * 100);
+    long score;
 
-    if (score > 0)
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, MULTI_BOARD);
+    score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("MULTIBOARD", "0")) * 100);
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, MULTI_BOARD);
 
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("SINGLEBOARD", "0")) * 100);
-    if (score > 0)
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, SINGLE_BOARD);
 
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0")) * 100);
-    if (score > 0)
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, FIBS_BOARD);
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, FIBS_BOARD);
 
     score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0")) * 100);
-    if (score > 0)
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, TIGA_BOARD);
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, TIGA_BOARD);
   }
 
 
   public void updateRating(int server, double increment) {
-    if (server == 0) { // TIGA
-      double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"));
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating((long)((start + increment) * 100), TIGA_BOARD);
-      GnuBackgammon.Instance.optionPrefs.putString("TIGABOARD", (start + increment) + "");
-    } else { // FIBS
-      double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD", "0"));
-      GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating((long)((start + increment) * 100), FIBS_BOARD);
-      GnuBackgammon.Instance.optionPrefs.putString("FIBSBOARD", (start + increment) + "");
+    String kboard = TIGA_BOARD;
+    String sboard = "TIGABOARD";
+    if (server != 0) {
+      kboard = FIBS_BOARD;
+      sboard = "FIBSBOARD";
     }
+
+    double start = Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(sboard, "0"));
+    long score = (long)((start + increment) * 100);
+    if (score < 0)
+      return;
+
+    GnuBackgammon.Instance.optionPrefs.putString(sboard, score + "");
     GnuBackgammon.Instance.optionPrefs.flush();
+    GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, kboard);
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
+    System.out.println("---> SUBMIT SCORE TO " + sboard + " START: " + start + " INCREMENT: " + increment + " SUBMITTING: " + score);
   }
 
   public void updateRating(boolean youWin) {
-    if (!youWin)
+    if (!youWin) {
+      if (MatchState.matchType == 3) {
+        GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(0, MULTI_BOARD);
+      } else if (MatchState.matchType == 0) {
+        GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(0, SINGLE_BOARD);
+      }
+      updatePreferences(0);
       return;
+    }
 
     int matchLevel = MatchState.nMatchTo;
     double wp = 1 / (Math.pow(10, (Math.abs(currentRating - opponentRating) * Math.sqrt(matchLevel) / 2000)) + 1);
