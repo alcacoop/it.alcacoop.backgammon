@@ -6,7 +6,7 @@ GnuBackgammon Mobile is an Android port of [GNU Backgammon](http://www.gnubg.org
 
 This is just the graphical GUI of the Game, look at [libgnubg-android](http://github.com/alcacoop/libgnubg-android) for the port of AI logic.
 
-A precompiled version is available at [Google Play Store](https://play.google.com/store/apps/details?id=it.alcacoop.gnubackgammon).
+A precompiled version is available at [Google Play Store](https://play.google.com/store/apps/details?id=it.alcacoop.backgammon).
 
 # LICENSE
 
