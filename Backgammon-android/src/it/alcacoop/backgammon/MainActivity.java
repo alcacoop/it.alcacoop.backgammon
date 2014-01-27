@@ -805,7 +805,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //System.out.println("---> ONACTIVITY RESULT");
+    // System.out.println("---> ONACTIVITY RESULT");
     hideProgressDialog();
     if (requestCode == PrivateDataManager.RC_REQUEST) {
       if (resultCode != 10000) {
@@ -918,7 +918,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onLeftRoom(int statusCode, String roomId) {
-    //System.out.println("---> P2P LEFT ROOM");
+    // System.out.println("---> P2P LEFT ROOM");
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     GServiceClient.getInstance().reset();
     hideProgressDialog();
@@ -937,7 +937,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   private void updateRoom(Room room) {
-    //System.out.println("---> P2P UPDATE ROOM");
+    // System.out.println("---> P2P UPDATE ROOM");
     if (room != null) {
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
@@ -947,7 +947,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onRoomCreated(int statusCode, Room room) {
-    //System.out.println("---> P2P ROOM CREATED");
+    // System.out.println("---> P2P ROOM CREATED");
     if (statusCode != GamesClient.STATUS_OK) {
       UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
       return;
@@ -961,9 +961,9 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onConnectedToRoom(Room room) {
-    //System.out.println("---> P2P CONNECTED TO ROOM");
+    // System.out.println("---> P2P CONNECTED TO ROOM");
     if (gServiceGameCanceled) {
-      //System.out.println("---> GAME CANCELED!!");
+      // System.out.println("---> GAME CANCELED!!");
       gServiceGameCanceled = false;
       gHelper.getGamesClient().leaveRoom(this, room.getRoomId());
     }
@@ -1003,29 +1003,29 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onDisconnectedFromRoom(Room room) {
-    //System.out.println("---> P2P DISCONNECTED FROM ROOM");
+    // System.out.println("---> P2P DISCONNECTED FROM ROOM");
   }
 
 
   @Override
   public void onPeerDeclined(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEER DECLINED");
+    // System.out.println("---> P2P PEER DECLINED");
   }
 
   @Override
   public void onPeerInvitedToRoom(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEER INVITED TO ROOM");
+    // System.out.println("---> P2P PEER INVITED TO ROOM");
   }
 
   @Override
   public void onPeerJoined(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEER JOINED ROOM");
+    // System.out.println("---> P2P PEER JOINED ROOM");
     updateRoom(room);
   }
 
   @Override
   public void onPeerLeft(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEER LEFT");
+    // System.out.println("---> P2P PEER LEFT");
     if (gConnecting) {
       gserviceResetRoom();
       UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room");
@@ -1034,34 +1034,34 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onPeersConnected(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEERS CONNECTED");
+    // System.out.println("---> P2P PEERS CONNECTED");
   }
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
-    //System.out.println("---> P2P PEERS DISCONNECTED");
+    // System.out.println("---> P2P PEERS DISCONNECTED");
     GServiceClient.getInstance().leaveRoom(0);
   }
 
   @Override
   public void onRoomAutoMatching(Room room) {
-    //System.out.println("---> P2P ROOM AUTOM");
+    // System.out.println("---> P2P ROOM AUTOM");
   }
 
   @Override
   public void onRoomConnecting(Room room) {
-    //System.out.println("---> P2P ROOM CONNECTING");
+    // System.out.println("---> P2P ROOM CONNECTING");
   }
 
   @Override
   public void onP2PConnected(String arg0) {
-    //System.out.println("---> P2P CONNECTED");
+    // System.out.println("---> P2P CONNECTED");
   }
 
 
   @Override
   public void onP2PDisconnected(String arg0) {
-    //System.out.println("---> P2P DISCONNECTED");
+    // System.out.println("---> P2P DISCONNECTED");
   }
 
 
@@ -1172,7 +1172,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    //System.out.println("---> GSERVICE RECEIVED: " + s);
+    // System.out.println("---> GSERVICE RECEIVED: " + s);
     GServiceClient.getInstance().processReceivedMessage(s);
   }
 
@@ -1417,7 +1417,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   public void onInvitationRemoved(String arg0) {
-    //System.out.println("---> INVITATION REMOVED");
+    // System.out.println("---> INVITATION REMOVED");
     invitationDialog.dismiss();
     hideProgressDialog();
     UIDialog.getFlashDialog(Events.NOOP, "Opponent canceled invitation");
