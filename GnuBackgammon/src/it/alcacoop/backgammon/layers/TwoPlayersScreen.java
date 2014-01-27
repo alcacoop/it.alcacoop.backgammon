@@ -67,23 +67,23 @@ public class TwoPlayersScreen extends BaseScreen {
   private Label lplay;
 
   private ScrollPane sp;
-  
-  private int variant = 0; //0=LOCAL,1=FIBS,2=TIGA,3=GPLAY
-  
-  
-  public TwoPlayersScreen(){
+
+  private int variant = 0; // 0=LOCAL,1=FIBS,2=TIGA,3=GPLAY
+
+
+  public TwoPlayersScreen() {
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         String s = ((TextButton)event.getListenerActor()).getText().toString().toUpperCase();
         if (!s.equals("BACK"))
-          s+=variant;
+          s += variant;
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, s);
       };
     };
 
     llocal = new Label("", GnuBackgammon.skin);
     llocal.setWrap(true);
-    
+
     String sl = "LOCAL\n\n" +
         "Play against human player on the same device\n" +
         "As on single player mode, you can choose from 1 to 15 points match," +
@@ -91,24 +91,35 @@ public class TwoPlayersScreen extends BaseScreen {
         "\n1. Backgammon" +
         "\n2. Nackgammon";
     llocal.setText(sl);
-    
+
     ltiga = new Label("", GnuBackgammon.skin);
     ltiga.setWrap(true);
     String st = "TIGERGAMMON\n\n" +
-        "TigerGammon is just another backgammon server like FIBS (First internet Backgammon Server).\n" +
-        "TigerGammon wants to keep the institution FIBS alive. " +
-        "TigerGammon works just like FIBS. Over time you will see features " +
-        "that exceed, what you can see on FIBS\n\n" +
-        "ANDREAS HAUSMANN features TigerGammon. He is another Fibster discontent " +
-        "with the flaws of FIBS just like so many others.\n\n" +
-        "Like FIBS, TigerGammon needs a username/password account.\nNOTE: FIBS account is " +
-        "not compatible with TigerGammon account - You must create another one, with different ranking\n\n" +
-        "Please do not forget your password. There is currently no way " +
-        "for the TigerGammon administrator to retrieve this information. If you " +
-        "forget your password then you must start again under a new username.";
+        "TigerGammon is our favorite backgammon server. It has a high performance and many features.\n\n" +
+        "You will find human players from all over the world playing on TigerGammon. And you also will " +
+        "find bots so that you will always be able to find an opponent on your favorite level of skill.\n" +
+        "For more information see http://tigergammon.com.\n\n" +
+        "To play on TigerGammon you have to chose a username and password. Please do not forget your password. " +
+        "There is currently no way to retrieve this information.\n" +
+        "Validation of the account is NOT neccessary.";
+
+    /**
+     * OLD TEXT
+     * "TigerGammon is just another backgammon server like FIBS (First internet Backgammon Server).\n" +
+     * "TigerGammon wants to keep the institution FIBS alive. " +
+     * "TigerGammon works just like FIBS. Over time you will see features " +
+     * "that exceed, what you can see on FIBS\n\n" +
+     * "ANDREAS HAUSMANN features TigerGammon. He is another Fibster discontent " +
+     * "with the flaws of FIBS just like so many others.\n\n" +
+     * "Like FIBS, TigerGammon needs a username/password account.\nNOTE: FIBS account is " +
+     * "not compatible with TigerGammon account - You must create another one, with different ranking\n\n" +
+     * "Please do not forget your password. There is currently no way " +
+     * "for the TigerGammon administrator to retrieve this information. If you " +
+     * "forget your password then you must start again under a new username.";
+     **/
     ltiga.setText(st);
-    
-    
+
+
     lfibs = new Label("", GnuBackgammon.skin);
     lfibs.setWrap(true);
     String sf = "FIBS\n\n" +
@@ -122,11 +133,11 @@ public class TwoPlayersScreen extends BaseScreen {
         "more info available at 'http://fibs.com'\n\n" +
         "Alternatively you can get a try on our primary choice: TigerGammon!";
     lfibs.setText(sf);
-    
-    
+
+
     lplay = new Label("", GnuBackgammon.skin);
     lplay.setWrap(true);
-    String sg = "Google Play Games\n\n" +
+    String sg = "GOOGLE PLAY GAMES\n\n" +
         "Play against your Google+ friends or random opponent\n\n" +
         " - Invite your Google+ friends on involving matches\n" +
         " - Keep track of your progress, trying to unlock all achievements\n" +
@@ -134,37 +145,38 @@ public class TwoPlayersScreen extends BaseScreen {
         " - Save your settings and game progress on the cloud, and share it among all your devices\n" +
         " - Share the right things with the right people, using Google+ circles!";
     lplay.setText(sg);
-    
+
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          if (UIDialog.isOpened()) return false;
+        if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if (UIDialog.isOpened())
+            return false;
           GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }
         return super.keyDown(event, keycode);
       }
     });
-    
+
     type = new FixedButtonGroup();
-    
+
     Label titleLabel = new Label("TWO PLAYERS SETTINGS", GnuBackgammon.skin);
-    
-    float height = stage.getHeight()/8.5f;
+
+    float height = stage.getHeight() / 8.5f;
     float pad = 0;
-    
+
     table = new Table();
-    table.setWidth(stage.getWidth()*0.9f);
-    table.setHeight(stage.getHeight()*0.9f);
-    table.setX((stage.getWidth()-table.getWidth())/2);
-    table.setY((stage.getHeight()-table.getHeight())/2);
-    
-    
+    table.setWidth(stage.getWidth() * 0.9f);
+    table.setHeight(stage.getHeight() * 0.9f);
+    table.setX((stage.getWidth() - table.getWidth()) / 2);
+    table.setY((stage.getHeight() - table.getHeight()) / 2);
+
+
     TextButton play = new TextButton("PLAY", GnuBackgammon.skin);
     play.addListener(cl);
     TextButton back = new TextButton("BACK", GnuBackgammon.skin);
     back.addListener(cl);
-    
+
     TextButtonStyle ts = GnuBackgammon.skin.get("toggle", TextButtonStyle.class);
     IconButton local = new IconButton("Local", GnuBackgammon.atlas.findRegion("dp"), ts);
     IconButton fibs = new IconButton("FIBS", GnuBackgammon.atlas.findRegion("mpl"), ts);
@@ -174,8 +186,8 @@ public class TwoPlayersScreen extends BaseScreen {
     type.add(fibs);
     type.add(tiga);
     type.add(gplay);
-    
-    local.addListener(new ClickListener(){
+
+    local.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -188,8 +200,8 @@ public class TwoPlayersScreen extends BaseScreen {
         GnuBackgammon.Instance.server = "";
       }
     });
-    
-    fibs.addListener(new ClickListener(){
+
+    fibs.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -202,8 +214,8 @@ public class TwoPlayersScreen extends BaseScreen {
         GnuBackgammon.Instance.server = "fibs.com";
       }
     });
-    
-    tiga.addListener(new ClickListener(){
+
+    tiga.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -216,8 +228,8 @@ public class TwoPlayersScreen extends BaseScreen {
         GnuBackgammon.Instance.server = "ti-ga.com";
       }
     });
-    
-    gplay.addListener(new ClickListener(){
+
+    gplay.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -231,36 +243,36 @@ public class TwoPlayersScreen extends BaseScreen {
           GnuBackgammon.Instance.nativeFunctions.gserviceGetSigninDialog(-1);
       }
     });
-    
+
     table.add(titleLabel).colspan(7);
-    
+
     table.row();
-    table.add().fill().expandX().colspan(7).height(height/2);
-    
+    table.add().fill().expandX().colspan(7).height(height / 2);
+
     Table t1 = new Table();
-    
-    t1.add().expandX().fill().height(height/10);
+
+    t1.add().expandX().fill().height(height / 10);
     t1.row();
     t1.add(local).fillX().expandX().height(height).padRight(pad);
     t1.row();
-    t1.add().expandX().fill().height(height/10);
+    t1.add().expandX().fill().height(height / 10);
 
     t1.row();
     t1.add(gplay).fillX().expandX().height(height).padRight(pad);
     t1.row();
-    t1.add().expandX().fill().height(height/10);
+    t1.add().expandX().fill().height(height / 10);
 
     t1.row();
     t1.add(tiga).fillX().expandX().height(height).padRight(pad);
     t1.row();
-    t1.add().expandX().fill().height(height/10);
-    
+    t1.add().expandX().fill().height(height / 10);
+
     t1.row();
     t1.add(fibs).fillX().expandX().height(height).padRight(pad);
     t1.row();
     t1.add().expand().fill();
-    
-    
+
+
     Table text = new Table();
     text.add(llocal).expandX().fillX();
     text.row();
@@ -269,72 +281,76 @@ public class TwoPlayersScreen extends BaseScreen {
     sp.setFadeScrollBars(false);
     sp.setForceOverscroll(false, false);
     sp.setOverscroll(false, false);
-    
+
     table.row();
     table.add(t1).colspan(3).fill().expand();
-    table.add(sp).colspan(4).fill().expand().padLeft(stage.getWidth()/20);
-    
+    table.add(sp).colspan(4).fill().expand().padLeft(stage.getWidth() / 20);
+
     table.row();
-    table.add().fill().expand().colspan(7).height(height/2);
-    
+    table.add().fill().expand().colspan(7).height(height / 2);
+
     table.row().height(height);
     table.add();
     table.add(back).fill().colspan(2);
     table.add();
     table.add(play).fill().colspan(2);
     table.add();
-    
+
     stage.addActor(table);
-    
+
     connecting = new Label("Connecting to server...", GnuBackgammon.skin);
     connecting.setVisible(false);
-    connecting.setX((stage.getWidth()-connecting.getWidth())/2);
-    connecting.setY(height*1.5f);
-    connecting.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.5f, 0.4f), Actions.alpha(1,  0.4f))));
+    connecting.setX((stage.getWidth() - connecting.getWidth()) / 2);
+    connecting.setY(height * 1.5f);
+    connecting.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.5f, 0.4f), Actions.alpha(1, 0.4f))));
     stage.addActor(connecting);
   }
-  
+
 
   public void hideConnecting() {
     connecting.setVisible(false);
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
   }
+
   public void showConnecting(String msg) {
     connecting.setText(msg);
-    connecting.setX((stage.getWidth()-connecting.getWidth())/2);
+    connecting.setX((stage.getWidth() - connecting.getWidth()) / 2);
     connecting.setVisible(true);
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
   }
-  
+
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0.1f, 0.45f, 0.08f, 1);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
-    if (sp.getVelocityY()!=0) Gdx.graphics.requestRendering();
+    if (sp.getVelocityY() != 0)
+      Gdx.graphics.requestRendering();
   }
 
-  
+
   @Override
   public void initialize() {
-    table.setColor(1,1,1,0);
+    table.setColor(1, 1, 1, 0);
     table.setX(-stage.getWidth());
   }
-  
-  
+
+
   @Override
   public void show() {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),
+        Actions.moveTo((stage.getWidth() - table.getWidth()) / 2, (stage.getHeight() - table.getHeight()) / 2, animationTime))));
   }
-  
+
   @Override
   public void fadeOut() {
-    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-table.getHeight())/2, animationTime))));
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),
+        Actions.moveTo(-stage.getWidth(), (stage.getHeight() - table.getHeight()) / 2, animationTime))));
   }
 }
