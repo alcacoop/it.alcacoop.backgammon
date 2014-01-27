@@ -349,7 +349,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       @Override
       public void run() {
         if (show) {
-          adView.loadAd(new AdRequest.Builder().build());
+          // adView.loadAd(new AdRequest.Builder().build());
           adView.setVisibility(View.VISIBLE);
         } else {
           adView.setVisibility(View.GONE);
@@ -684,8 +684,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   protected void onPause() {
-    super.onPause();
-
     if (adView != null)
       adView.pause();
 
@@ -701,6 +699,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
       GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
+    super.onPause();
   }
 
 
@@ -766,8 +765,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
+    if (adView != null)
+      adView.destroy();
     PrivateDataManager.destroyBillingData();
+    super.onDestroy();
   }
 
 
