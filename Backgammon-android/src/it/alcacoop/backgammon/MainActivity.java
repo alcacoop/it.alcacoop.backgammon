@@ -790,11 +790,11 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
   @Override
   protected void onStop() {
-    super.onStop();
     if (mRoomId != null) {
       GServiceClient.getInstance().leaveRoom(10000);
     }
     gHelper.onStop();
+    super.onStop();
   }
 
 
