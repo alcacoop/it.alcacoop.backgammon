@@ -1208,7 +1208,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   public void gserviceStartRoom() {
     showProgressDialog();
     if (gHelper.getGamesClient().isConnected()) {
-      Intent intent = gHelper.getGamesClient().getSelectPlayersIntent(1, 1);
+      Intent intent = gHelper.getGamesClient().getRealTimeSelectOpponentsIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
       gserviceGetSigninDialog(-1);
