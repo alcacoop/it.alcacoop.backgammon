@@ -38,12 +38,11 @@ import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.FibsScreen;
-import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.util.GServiceApplication;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
-import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
@@ -54,8 +53,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +65,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -98,50 +94,31 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.appstate.AppStateClient;
-import com.google.android.gms.appstate.OnStateLoadedListener;
-import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.GamesClient;
-import com.google.android.gms.games.achievement.OnAchievementUpdatedListener;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
-import com.google.android.gms.games.leaderboard.OnScoreSubmittedListener;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
-import com.google.android.gms.games.multiplayer.Invitation;
-import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
-import com.google.android.gms.games.multiplayer.Participant;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeReliableMessageSentListener;
-import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
-import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
-import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 
-@SuppressLint({ "SimpleDateFormat", "HandlerLeak" })
-public class MainActivity extends AndroidApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener, GServiceGameHelper.GameHelperListener,
-    RealTimeMessageReceivedListener, RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener, OnStateLoadedListener {
+@SuppressLint({ "SimpleDateFormat", "HandlerLeak", "TrulyRandom" })
+public class MainActivity extends GServiceApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener {
 
   private String data_dir;
   protected AdView adView;
   private View chatBox;
   private View gameView;
-  private GServiceGameHelper gHelper;
 
   private boolean mInitialized;
   private SensorManager mSensorManager;
@@ -149,21 +126,10 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
   private int rotation;
 
   private InterstitialAd interstitial;
-
   private Timer adsTimer;
   private TimerTask adsTask;
 
-  private String mRoomId = null;
-  private String mMyId = null;
-  ArrayList<Participant> mParticipants = null;
-  private Preferences prefs;
-  private boolean meSentInvitation;
-
   private int appVersionCode = 0;
-
-  private boolean gConnecting = false;
-  private boolean gServiceGameCanceled = false;
-  private AlertDialog invitationDialog;
 
 
   @SuppressWarnings("deprecation")
@@ -185,14 +151,12 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
-
     /** SENSOR INITIALIZATION **/
     mInitialized = false;
     mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
     mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     /** SENSOR INITIALIZATION **/
-
 
     /** ADS INITIALIZATION **/
     PrivateDataManager.initData();
@@ -220,7 +184,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
       }
     });
     /** ADS INITIALIZATION **/
-
 
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -252,7 +215,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     View s3 = findViewById(R.id.chat_content);
     ViewGroup.LayoutParams pars = s1.getLayoutParams();
     pars.width = Math.round(width * 0.15f) + 7;
-    s1.setLayoutParams(pars);
+    s1.setLayoutParams(pars);// TODO: NEED FIX ON NO MARKET DEVICES
     pars = s2.getLayoutParams();
     pars.width = Math.round(width * 0.15f) + 7;
     s2.setLayoutParams(pars);
@@ -263,7 +226,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
     EditText target = (EditText)findViewById(R.id.message);
     target.setOnEditorActionListener(this);
     /** CHATBOX DIMS **/
-
 
     /** GOOGLE API INITIALIZATION **/
     PrivateDataManager.createBillingData(this);
@@ -759,6 +721,7 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   public boolean isProVersion() {
+    // TODO: NEED FIX WITH LOCAL PROPERTIES
     return PrivateDataManager.msIsPremium;
   }
 
@@ -863,487 +826,6 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   // GSERVICE STUFF...
-  @Override
-  public void onSignInFailed() {}
-
-  @Override
-  public void onSignInSucceeded() {
-    prefs.putBoolean("ALREADY_SIGNEDIN", true);
-    prefs.flush();
-    gHelper.getGamesClient().registerInvitationListener(MainActivity.this);
-    gHelper.getAppStateClient().loadState(MainActivity.this, APP_DATA_KEY);
-
-    if (gHelper.getInvitationId() != null && gHelper.getGamesClient().isConnected()) {
-      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
-      showProgressDialog(true);
-    }
-  }
-
-
-  @Override
-  public void gserviceSignIn() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        gHelper.beginUserInitiatedSignIn();
-      }
-    });
-  }
-
-  @Override
-  public boolean gserviceIsSignedIn() {
-    return gHelper.isSignedIn();
-  }
-
-
-  @Override
-  public void onInvitationReceived(Invitation invitation) {
-    if (GnuBackgammon.Instance.currentScreen instanceof GameScreen) {
-      gHelper.getGamesClient().declineRoomInvitation(invitation.getInvitationId());
-      return;
-    }
-    gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), invitation.getInviter().getDisplayName(), invitation.getInvitationId());
-  }
-
-
-  @Override
-  public void onJoinedRoom(int arg0, Room room) {
-    if (room == null) {
-      UIDialog.getFlashDialog(Events.NOOP, "Invalid invitation");
-    } else {
-      gConnecting = true;
-    }
-  }
-
-
-  @Override
-  public void onLeftRoom(int statusCode, String roomId) {
-    // System.out.println("---> P2P LEFT ROOM");
-    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-    GServiceClient.getInstance().reset();
-    hideProgressDialog();
-    if (GnuBackgammon.fsm instanceof MenuFSM)
-      GnuBackgammon.fsm.state(States.TWO_PLAYERS);
-  }
-
-
-  @Override
-  public void onRoomConnected(int arg0, Room room) {
-    updateRoom(room);
-    MatchState.matchType = 3;
-    GnuBackgammon.fsm.state(States.GSERVICE);
-    gConnecting = false;
-  }
-
-
-  private void updateRoom(Room room) {
-    // System.out.println("---> P2P UPDATE ROOM");
-    if (room != null) {
-      mRoomId = room.getRoomId();
-      mParticipants = room.getParticipants();
-    }
-  }
-
-
-  @Override
-  public void onRoomCreated(int statusCode, Room room) {
-    // System.out.println("---> P2P ROOM CREATED");
-    if (statusCode != GamesClient.STATUS_OK) {
-      UIDialog.getFlashDialog(Events.NOOP, "Unknown error");
-      return;
-    }
-    mRoomId = room.getRoomId();
-    meSentInvitation = true;
-    Intent i = gHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
-    startActivityForResult(i, RC_WAITING_ROOM);
-  }
-
-
-  @Override
-  public void onConnectedToRoom(Room room) {
-    // System.out.println("---> P2P CONNECTED TO ROOM");
-    if (gServiceGameCanceled) {
-      // System.out.println("---> GAME CANCELED!!");
-      gServiceGameCanceled = false;
-      gHelper.getGamesClient().leaveRoom(this, room.getRoomId());
-    }
-    GServiceClient.getInstance().reset();
-
-    mParticipants = room.getParticipants();
-    mMyId = room.getParticipantId(gHelper.getGamesClient().getCurrentPlayerId());
-    String me, opponent, opponent_player_id;
-
-    SecureRandom rdm = new SecureRandom();
-    String sRdm = new BigInteger(130, rdm).toString(32);
-
-    if (mParticipants.get(0).getParticipantId() == mMyId) {
-      me = mParticipants.get(0).getDisplayName();
-      opponent = mParticipants.get(1).getDisplayName();
-
-      if (mParticipants.get(1).getPlayer() == null)
-        opponent_player_id = sRdm;
-      else
-        opponent_player_id = mParticipants.get(1).getPlayer().getPlayerId();
-
-    } else {
-      me = mParticipants.get(1).getDisplayName();
-      opponent = mParticipants.get(0).getDisplayName();
-
-      if (mParticipants.get(0).getPlayer() == null)
-        opponent_player_id = sRdm;
-      else
-        opponent_player_id = mParticipants.get(0).getPlayer().getPlayerId();
-
-    }
-    GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
-    if (meSentInvitation)
-      AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
-  }
-
-
-  @Override
-  public void onDisconnectedFromRoom(Room room) {
-    // System.out.println("---> P2P DISCONNECTED FROM ROOM");
-  }
-
-
-  @Override
-  public void onPeerDeclined(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEER DECLINED");
-  }
-
-  @Override
-  public void onPeerInvitedToRoom(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEER INVITED TO ROOM");
-  }
-
-  @Override
-  public void onPeerJoined(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEER JOINED ROOM");
-    updateRoom(room);
-  }
-
-  @Override
-  public void onPeerLeft(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEER LEFT");
-    if (gConnecting) {
-      gserviceResetRoom();
-      UIDialog.getFlashDialog(Events.NOOP, "Error: peer left the room");
-    }
-  }
-
-  @Override
-  public void onPeersConnected(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEERS CONNECTED");
-  }
-
-  @Override
-  public void onPeersDisconnected(Room room, List<String> arg1) {
-    // System.out.println("---> P2P PEERS DISCONNECTED");
-    GServiceClient.getInstance().leaveRoom(0);
-  }
-
-  @Override
-  public void onRoomAutoMatching(Room room) {
-    // System.out.println("---> P2P ROOM AUTOM");
-  }
-
-  @Override
-  public void onRoomConnecting(Room room) {
-    // System.out.println("---> P2P ROOM CONNECTING");
-  }
-
-  @Override
-  public void onP2PConnected(String arg0) {
-    // System.out.println("---> P2P CONNECTED");
-  }
-
-
-  @Override
-  public void onP2PDisconnected(String arg0) {
-    // System.out.println("---> P2P DISCONNECTED");
-  }
-
-
-  public void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
-    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    final LayoutInflater inflater = this.getLayoutInflater();
-    GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
-
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        final View myView = inflater.inflate(R.layout.dialog_invitation, null);
-        alert.setView(myView).setTitle("Invitation received").setCancelable(false).setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            gHelper.getGamesClient().declineRoomInvitation(invitationId);
-
-          }
-        });
-        alert.setPositiveButton("Accept", null);
-
-        invitationDialog = alert.create();
-        invitationDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-          @Override
-          public void onShow(DialogInterface arg0) {
-            ImageManager im = ImageManager.create(MainActivity.this);
-            im.loadImage(((ImageView)myView.findViewById(R.id.image)), imagesrc);
-            TextView tv = (TextView)myView.findViewById(R.id.text);
-            tv.setText(username + " wants to play with you...");
-            tv.setFocusable(true);
-            tv.setFocusableInTouchMode(true);
-            tv.requestFocus();
-            Button b = invitationDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            b.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                gserviceAcceptInvitation(invitationId);
-                invitationDialog.dismiss();
-                showProgressDialog(true);
-              }
-            });
-          }
-        });
-        invitationDialog.show();
-      }
-    });
-  }
-
-
-  @Override
-  public void gserviceAcceptInvitation(String invitationId) {
-    RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(MainActivity.this);
-    roomConfigBuilder.setInvitationIdToAccept(invitationId);
-    roomConfigBuilder.setMessageReceivedListener(MainActivity.this);
-    roomConfigBuilder.setRoomStatusUpdateListener(MainActivity.this);
-    gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
-  }
-
-
-  ProgressDialog mProgressDialog = null;
-
-  void showProgressDialog() {
-    showProgressDialog(false);
-  }
-
-  void showProgressDialog(final boolean cancel_button) {
-    runOnUiThread(new Runnable() {
-      @SuppressWarnings("deprecation")
-      @Override
-      public void run() {
-        if (MainActivity.this == null)
-          return;
-        mProgressDialog = new ProgressDialog(MainActivity.this);
-        mProgressDialog.setMessage("Please wait..");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        if (cancel_button) {
-          mProgressDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
-              gServiceGameCanceled = true;
-              GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
-
-              mProgressDialog.dismiss();
-            }
-          });
-        }
-        mProgressDialog.show();
-      }
-    });
-  }
-
-  @Override
-  public void hideProgressDialog() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (mProgressDialog != null) {
-          mProgressDialog.dismiss();
-          mProgressDialog = null;
-        }
-      }
-    });
-  }
-
-  @Override
-  public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-    byte[] buf = rtm.getMessageData();
-    String s = new String(buf);
-    // System.out.println("---> GSERVICE RECEIVED: " + s);
-    GServiceClient.getInstance().processReceivedMessage(s);
-  }
-
-
-  @Override
-  public void gserviceSendReliableRealTimeMessage(String msg) {
-    if ((mRoomId == null) || (mRoomId == "")) {
-      GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-    } else {
-      for (Participant p : mParticipants) {
-        if (p.getParticipantId().equals(mMyId))
-          continue;
-        if (p.getStatus() != Participant.STATUS_JOINED) {
-          continue;
-        }
-
-        gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId()); // .sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId,
-                                                                                                                   // p.getParticipantId());
-      }
-    }
-  }
-
-
-  @Override
-  public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    if (statusCode != GamesClient.STATUS_OK) {
-      GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-    }
-  }
-
-
-  @Override
-  public void gserviceStartRoom() {
-    showProgressDialog();
-    if (gHelper.getGamesClient().isConnected()) {
-      Intent intent = gHelper.getGamesClient().getRealTimeSelectOpponentsIntent(1, 1);
-      startActivityForResult(intent, RC_SELECT_PLAYERS);
-    } else {
-      gserviceGetSigninDialog(-1);
-    }
-  }
-
-  @Override
-  public void gserviceResetRoom() {
-    gConnecting = false;
-    meSentInvitation = false;
-    if (mRoomId != null) {
-      gHelper.getGamesClient().leaveRoom(this, mRoomId);
-      mRoomId = null;
-      gServiceGameCanceled = false;
-    }
-  }
-
-
-  @Override
-  public void gserviceSubmitRating(final long score, final String board_id) {
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false))
-      return;
-    gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
-
-      @Override
-      public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
-        // FIX: SYNC WITH LEADERBOARD VALUE
-        long local_score = 0;
-        long score = arg1.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME).rawScore;
-        String board = "SINGLEBOARD";
-        if (board_id.equals(ELORatingManager.MULTI_BOARD))
-          board = "MULTIBOARD";
-        if (board_id.equals(ELORatingManager.TIGA_BOARD))
-          board = "TIGABOARD";
-        if (board_id.equals(ELORatingManager.FIBS_BOARD2))
-          board = "FIBSBOARD2";
-
-        local_score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(board, "0")) * 100);
-
-        System.out.println("===> " + board + ": " + GnuBackgammon.Instance.optionPrefs.getString(board) + " " + local_score + " " + score);
-        System.out.println("===> " + (double)(score / 100.00));
-
-        if (local_score < score) {
-          GnuBackgammon.Instance.optionPrefs.putString(board, ((double)(score / 100.00)) + "");
-          GnuBackgammon.Instance.optionPrefs.flush();
-          gserviceUpdateState();
-        }
-      }
-    }, board_id, score);
-  }
-
-
-  @Override
-  public void gserviceUpdateAchievement(String achievement_id, int increment) {
-    if (achievement_id == null || achievement_id.equals("") || achievement_id == "")
-      return;
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
-      return;
-    gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
-
-      @Override
-      public void onAchievementUpdated(int statusCode, String achievement_id) {}
-    }, achievement_id, increment);
-  }
-
-  @Override
-  public void gserviceUnlockAchievement(String achievement_id) {
-    if (achievement_id == null || achievement_id.equals("") || achievement_id == "")
-      return;
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
-      return;
-    gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
-
-      @Override
-      public void onAchievementUpdated(int statusCode, String arg1) {}
-    }, achievement_id);
-  }
-
-  @Override
-  public void gserviceOpenLeaderboards() {
-    if (gserviceIsSignedIn()) {
-      startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
-    } else {
-      gserviceGetSigninDialog(FROM_SCOREBOARDS);
-    }
-  }
-
-  @Override
-  public void gserviceOpenAchievements() {
-    if (gserviceIsSignedIn()) {
-      startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
-    } else {
-      gserviceGetSigninDialog(FROM_ACHIEVEMENTS);
-    }
-  }
-
-
-  private static int APP_DATA_KEY = 0;
-
-  @Override
-  public void onStateLoaded(int statusCode, int stateKey, byte[] data) {
-
-    if (statusCode == AppStateClient.STATUS_OK) {
-      AppDataManager.getInstance().loadState(data);
-      ELORatingManager.getInstance().syncLeaderboards();
-    } else if (statusCode == AppStateClient.STATUS_NETWORK_ERROR_STALE_DATA) {} else {}
-  }
-
-  @Override
-  public void onStateConflict(int stateKey, String ver, byte[] localData, byte[] serverData) {
-    gHelper.getAppStateClient().resolveState(this, APP_DATA_KEY, ver, AppDataManager.getInstance().resolveConflict(localData, serverData));
-  }
-
-  @Override
-  public void gserviceUpdateState() {
-    if (gHelper.isSignedIn()) {
-      // deleteAppState();
-      gHelper.getAppStateClient().updateState(APP_DATA_KEY, AppDataManager.getInstance().getBytes());
-    }
-  }
-
-  /*
-  private void deleteAppState() {
-    if (gHelper.isSignedIn()) {
-      gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
-
-        @Override
-        public void onStateDeleted(int arg0, int arg1) {
-          System.out.println("GSERVICE STATE DELETED");
-        }
-      }, APP_DATA_KEY);
-    }
-  }
-  */
-
 
   private static int FROM_ACHIEVEMENTS = 1;
   private static int FROM_SCOREBOARDS = 2;
@@ -1416,11 +898,90 @@ public class MainActivity extends AndroidApplication implements NativeFunctions,
 
 
   @Override
-  public void onInvitationRemoved(String arg0) {
-    // System.out.println("---> INVITATION REMOVED");
-    invitationDialog.dismiss();
-    hideProgressDialog();
-    UIDialog.getFlashDialog(Events.NOOP, "Opponent canceled invitation");
+  protected boolean shouldShowInvitationDialog() {
+    return true;
   }
+
+
+  @Override
+  protected void onRoomConnectedBehaviour() {
+    MatchState.matchType = 3;
+    GnuBackgammon.fsm.state(States.GSERVICE);
+  }
+
+
+  @Override
+  protected void onLeftRoomBehaviour(int reason) {
+    GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
+    GServiceClient.getInstance().reset();
+    hideProgressDialog();
+    if (GnuBackgammon.fsm instanceof MenuFSM)
+      GnuBackgammon.fsm.state(States.TWO_PLAYERS);
+  }
+
+
+  @Override
+  protected void onRTMessageReceivedBehaviour(String msg) {
+    GServiceClient.getInstance().processReceivedMessage(msg);
+  }
+
+
+  @Override
+  protected void onErrorBehaviour(String msg) {
+    UIDialog.getFlashDialog(Events.NOOP, msg);
+  }
+
+
+  @Override
+  protected void onStateLoadedBehaviour(byte[] data) {
+    AppDataManager.getInstance().loadState(data);
+    ELORatingManager.getInstance().syncLeaderboards();
+  }
+
+
+  @Override
+  protected byte[] onStateConflictBehaviour(byte[] localData, byte[] serverData) {
+    return AppDataManager.getInstance().resolveConflict(localData, serverData);
+  }
+
+
+  @Override
+  protected void onDismissProgressDialogBehaviour() {
+    GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+    gserviceResetRoom();
+  }
+
+
+  @Override
+  protected void onScoreSubmittedBehaviour(String board_id, SubmitScoreResult arg1) {
+    // FIX: SYNC WITH LEADERBOARD VALUE
+    long local_score = 0;
+    // TODO: NULLPOINTEREXCEPTION IF NO NETWORK
+    long score = arg1.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME).rawScore;
+    String board = "SINGLEBOARD";
+    if (board_id.equals(ELORatingManager.MULTI_BOARD))
+      board = "MULTIBOARD";
+    if (board_id.equals(ELORatingManager.TIGA_BOARD))
+      board = "TIGABOARD";
+    if (board_id.equals(ELORatingManager.FIBS_BOARD2))
+      board = "FIBSBOARD2";
+    local_score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(board, "0")) * 100);
+
+    System.out.println("===> " + board + ": " + GnuBackgammon.Instance.optionPrefs.getString(board) + " " + local_score + " " + score);
+    System.out.println("===> " + (double)(score / 100.00));
+
+    if (local_score < score) {
+      GnuBackgammon.Instance.optionPrefs.putString(board, ((double)(score / 100.00)) + "");
+      GnuBackgammon.Instance.optionPrefs.flush();
+      gserviceUpdateState();
+    }
+  }
+
+
+  @Override
+  protected void onLeaveRoomBehaviour(int reason) {}
+
+  @Override
+  protected void onResetRoomBehaviour() {}
 
 }
