@@ -55,7 +55,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -106,10 +105,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
-import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 
 
 @SuppressLint({ "SimpleDateFormat", "HandlerLeak", "TrulyRandom" })
@@ -215,7 +212,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     View s3 = findViewById(R.id.chat_content);
     ViewGroup.LayoutParams pars = s1.getLayoutParams();
     pars.width = Math.round(width * 0.15f) + 7;
-    s1.setLayoutParams(pars);// TODO: NEED FIX ON NO MARKET DEVICES
+    s1.setLayoutParams(pars);
     pars = s2.getLayoutParams();
     pars.width = Math.round(width * 0.15f) + 7;
     s2.setLayoutParams(pars);
@@ -761,11 +758,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   }
 
 
-  private static int RC_SELECT_PLAYERS = 6000;
-  private static int RC_WAITING_ROOM = 6001;
-  private static int RC_LEADERBOARD = 6002;
-  private static int RC_ACHIEVEMENTS = 6003;
-
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     // System.out.println("---> ONACTIVITY RESULT");
@@ -786,39 +778,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         PrivateDataManager.destroyBillingData();
         PrivateDataManager.createBillingData(this);
       }
-    } else if (requestCode == RC_SELECT_PLAYERS) {
-      if (resultCode == RESULT_OK) {
-        showProgressDialog();
-        Bundle autoMatchCriteria = null;
-        int minAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
-        int maxAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
-        if (minAutoMatchPlayers > 0 || maxAutoMatchPlayers > 0) {
-          autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers, maxAutoMatchPlayers, 0);
-        }
-        final ArrayList<String> invitees = data.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
-        // create the room
-        RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
-        rtmConfigBuilder.addPlayersToInvite(invitees);
-        rtmConfigBuilder.setMessageReceivedListener(this);
-        rtmConfigBuilder.setRoomStatusUpdateListener(this);
-        if (autoMatchCriteria != null) {
-          rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
-        }
-        gHelper.getGamesClient().createRoom(rtmConfigBuilder.build());
-      }
-    } else if (requestCode == RC_WAITING_ROOM) {
-      if (resultCode != RESULT_OK)
-        gserviceResetRoom();
-      else {
-        if (mRoomId != null) {
-          showProgressDialog(true);
-        } else {
-          UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
-        }
-      }
     } else {
       super.onActivityResult(requestCode, resultCode, data);
-      gHelper.onActivityResult(requestCode, resultCode, data);
     }
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
@@ -826,69 +787,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
 
   // GSERVICE STUFF...
-
-  private static int FROM_ACHIEVEMENTS = 1;
-  private static int FROM_SCOREBOARDS = 2;
-
-  public void trySignIn(final int from) {
-    if ((from == FROM_ACHIEVEMENTS) || (from == FROM_SCOREBOARDS)) {
-      gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
-        @Override
-        public void onSignInSucceeded() {
-          gHelper.setListener(MainActivity.this);
-          MainActivity.this.onSignInSucceeded();
-          if (from == FROM_ACHIEVEMENTS)
-            startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
-          else
-            startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
-        }
-
-        @Override
-        public void onSignInFailed() {
-          UIDialog.getFlashDialog(Events.NOOP, "Login error");
-        }
-      });
-    }
-    gserviceSignIn();
-  }
-
-
-  @Override
-  public void gserviceGetSigninDialog(final int from) {
-    final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    final LayoutInflater inflater = this.getLayoutInflater();
-
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        final View myView = inflater.inflate(R.layout.dialog_gplus, null);
-        alert.setView(myView).setTitle("Signin").setCancelable(true);
-        final AlertDialog d = alert.create();
-        d.setOnShowListener(new DialogInterface.OnShowListener() {
-          @Override
-          public void onShow(DialogInterface arg0) {
-            String msg = "";
-            TextView v = (TextView)d.findViewById(R.id.login_text);
-            if (prefs.getBoolean("ALREADY_SIGNEDIN", false)) {
-              msg = "Please sign in on Google Games Services to enable this feature";
-            } else {
-              msg = "Please sign in, Google will ask you to accept requested permissions and configure " + "sharing settings up to two times. This may take few minutes..";
-            }
-            v.setText(msg);
-            com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton)d.findViewById(R.id.sign_in_button);
-            b.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                d.dismiss();
-                trySignIn(from);
-              }
-            });
-          }
-        });
-        d.show();
-      }
-    });
-  }
 
 
   @Override
@@ -947,8 +845,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onDismissProgressDialogBehaviour() {
-    GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
     gserviceResetRoom();
+    GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+    System.out.println("QUI CI SON PASSATO! " + GnuBackgammon.fsm);
   }
 
 

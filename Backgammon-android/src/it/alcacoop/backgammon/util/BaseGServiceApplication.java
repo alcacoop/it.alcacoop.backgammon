@@ -35,8 +35,10 @@ package it.alcacoop.backgammon.util;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.R;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 
 import java.math.BigInteger;
@@ -106,25 +108,15 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
   protected String invitationId = "";
 
   protected abstract boolean shouldShowInvitationDialog();
-
   protected abstract void onRoomConnectedBehaviour();
-
   protected abstract void onLeaveRoomBehaviour(int reason);
-
   protected abstract void onLeftRoomBehaviour(int reason);
-
   protected abstract void onRTMessageReceivedBehaviour(String msg);
-
   protected abstract void onErrorBehaviour(String msg);
-
   protected abstract void onStateLoadedBehaviour(byte[] data);
-
   protected abstract byte[] onStateConflictBehaviour(byte[] localData, byte[] serverData);
-
   protected abstract void onResetRoomBehaviour();
-
   protected abstract void onScoreSubmittedBehaviour(String board_id, SubmitScoreResult arg1);
-
   protected abstract void onDismissProgressDialogBehaviour();
 
 
@@ -149,7 +141,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     }
   }
 
-
   @Override
   public void onInvitationReceived(Invitation invitation) {
     if (!shouldShowInvitationDialog()) {
@@ -167,7 +158,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     hideProgressDialog();
     onErrorBehaviour("Opponent canceled invitation");
   }
-
 
   @Override
   public void onJoinedRoom(int arg0, Room room) {
@@ -193,6 +183,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     updateRoom(room);
     onRoomConnectedBehaviour();
     gConnecting = false;
+    showProgressDialog(true);
   }
 
   @Override
@@ -241,7 +232,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
       AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
 
-
   @Override
   public void onDisconnectedFromRoom(Room room) {
     System.out.println("---> P2P DISCONNECTED FROM ROOM");
@@ -277,7 +267,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
   public void onPeersConnected(Room room, List<String> arg1) {
     updateRoom(room);
   }
-
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
@@ -336,7 +325,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
           @Override
           public void onClick(DialogInterface dialog, int which) {
             gHelper.getGamesClient().declineRoomInvitation(invitationId);
-
           }
         });
         alert.setPositiveButton("Accept", null);
@@ -367,7 +355,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     });
   }
 
-
   public void _gserviceAcceptInvitation(String invitationId) {
     RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(this);
     roomConfigBuilder.setInvitationIdToAccept(invitationId);
@@ -375,10 +362,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     roomConfigBuilder.setRoomStatusUpdateListener(this);
     _gserviceResetRoom();
     gHelper.getGamesClient().joinRoom(roomConfigBuilder.build());
-    // TODO: FORSE NON SERVE!
     showProgressDialog();
   }
-
 
   private void updateRoom(Room room) {
     System.out.println("---> P2P UPDATE ROOM");
@@ -387,7 +372,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
       mParticipants = room.getParticipants();
     }
   }
-
 
   public void showProgressDialog() {
     showProgressDialog(false);
@@ -411,8 +395,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
             @Override
             public void onClick(DialogInterface dialog, int which) {
               gServiceGameCanceled = true;
-              onDismissProgressDialogBehaviour();
               mProgressDialog.dismiss();
+              onDismissProgressDialogBehaviour();
             }
           });
         }
@@ -438,12 +422,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     System.out.println("---> P2P CONNECTED");
   }
 
-
   @Override
   public void onP2PDisconnected(String arg0) {
     System.out.println("---> P2P DISCONNECTED");
   }
-
 
   @Override
   protected void onStart() {
@@ -474,11 +456,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     gHelper.onStop();
   }
 
-
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == RC_SELECT_PLAYERS) {
       if (resultCode == RESULT_OK) {
+        showProgressDialog();
         Bundle autoMatchCriteria = null;
         int minAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
         int maxAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
@@ -494,19 +476,21 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
         if (autoMatchCriteria != null) {
           rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
         }
-        _gserviceResetRoom();
         gHelper.getGamesClient().createRoom(rtmConfigBuilder.build());
-      } else {
-        hideProgressDialog();
       }
     } else if (requestCode == RC_WAITING_ROOM) {
-      if (resultCode != RESULT_OK) {
+      if (resultCode != RESULT_OK)
         _gserviceResetRoom();
-        hideProgressDialog();
+      else {
+        if (mRoomId != null) {
+          showProgressDialog(true);
+        } else {
+          UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
+        }
       }
     } else {
-      super.onActivityResult(requestCode, resultCode, data);
       gHelper.onActivityResult(requestCode, resultCode, data);
+      super.onActivityResult(requestCode, resultCode, data);
     }
   }
 
@@ -520,7 +504,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     }
     gServiceGameCanceled = false;
   }
-
 
   protected void _gserviceSignIn() {
     runOnUiThread(new Runnable() {
