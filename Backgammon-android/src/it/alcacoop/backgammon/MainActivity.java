@@ -37,39 +37,24 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.layers.FibsScreen;
+import it.alcacoop.backgammon.helpers.ADSHelpers;
+import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
+import it.alcacoop.backgammon.helpers.AndroidHelpers;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.util.ADSHelpers;
-import it.alcacoop.backgammon.util.AndroidHelpers;
 import it.alcacoop.backgammon.util.GServiceApplication;
 import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -91,18 +76,14 @@ import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 
 
-public class MainActivity extends GServiceApplication implements NativeFunctions, OnEditorActionListener, SensorEventListener {
+public class MainActivity extends GServiceApplication implements NativeFunctions, OnEditorActionListener {
 
   private View chatBox;
   private View gameView;
 
-  private AndroidHelpers aHelpers;
+  private AndroidHelpers androidHelpers;
   private ADSHelpers adsHelpers;
-
-  private boolean mSensorInitialized;
-  private SensorManager mSensorManager;
-  private Sensor mAccelerometer;
-  private int rotation;
+  private AccelerometerHelpers accelerometerHelpers;
 
 
   @Override
@@ -112,8 +93,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
 
-    aHelpers = new AndroidHelpers(this);
-
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -122,16 +101,10 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
-    /** SENSOR INITIALIZATION **/
-    mSensorInitialized = false;
-    mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-    /** SENSOR INITIALIZATION **/
-
-    /** ADS INITIALIZATION **/
-    adsHelpers = new ADSHelpers(this, aHelpers.isTablet());
-    /** ADS INITIALIZATION **/
+    // HELPERS INITIALIZATION
+    androidHelpers = new AndroidHelpers(this);
+    accelerometerHelpers = new AccelerometerHelpers(this);
+    adsHelpers = new ADSHelpers(this, androidHelpers.isTablet());
 
     RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -148,9 +121,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     setContentView(layout);
 
     /** CHATBOX DIMS **/
-    DisplayMetrics metrics = new DisplayMetrics();
-    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-    int width = metrics.widthPixels;
+    int width = androidHelpers.getScreenWidth();
     View s1 = findViewById(R.id.space1);
     View s2 = findViewById(R.id.space2);
     View s3 = findViewById(R.id.chat_content);
@@ -173,17 +144,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
-
-    /*
-    ActivityManager actvityManager = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
-    List<RunningTaskInfo> taskInfos = actvityManager.getRunningTasks(3);
-    for (RunningTaskInfo runningTaskInfo : taskInfos) {
-      if (runningTaskInfo.baseActivity.getPackageName().contains("gms")) {
-        gserviceSignIn();
-        break;
-      }
-    }
-    */
     /** GOOGLE API INITIALIZATION **/
   }
 
@@ -198,56 +158,19 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void openURL(String... urls) {
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
-    aHelpers.openURL(urls);
+    androidHelpers.openURL(urls);
   }
 
   @Override
   public String getDataDir() {
-    return aHelpers.getDataDir();
+    return androidHelpers.getDataDir();
   }
 
   @Override
   public void shareMatch(MatchRecorder rec) {
-    final Intent intent = new Intent(Intent.ACTION_SEND);
-
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
-
-    intent.setType("text/plain");
-    intent.setType("message/rfc822");
-
-    Date now = new Date();
-
-    intent.putExtra(Intent.EXTRA_SUBJECT, "Backgammon Mobile exported Match (Played on " + SimpleDateFormat.getDateTimeInstance().format(now) + ")");
-    intent
-        .putExtra(
-            Intent.EXTRA_TEXT,
-            "You can analize attached file with desktop version of GNU Backgammon\nNOTE: GNU Backgammon is available for Windows, MacOS and Linux\n\nIf you enjoyed Backgammon Mobile please help us rating it on the market");
-
-    try {
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm", Locale.getDefault());
-      String date = dateFormat.format(now);
-      File dir = new File(Environment.getExternalStorageDirectory(), "gnubg-sgf");
-      dir.mkdir();
-      final File data = new File(dir, "match-" + date + ".sgf");
-
-      FileOutputStream out = new FileOutputStream(data);
-      out.write(rec.saveSGF().getBytes());
-      out.close();
-
-      Uri uri = Uri.fromFile(data);
-      intent.putExtra(Intent.EXTRA_STREAM, uri);
-
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          startActivityForResult(Intent.createChooser(intent, "Send email..."), 1001);
-        }
-      });
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    androidHelpers.sendFile(rec.saveSGF().getBytes());
   }
 
   @Override
@@ -405,7 +328,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public boolean isNetworkUp() {
-    return aHelpers.isNetworkUp();
+    return androidHelpers.isNetworkUp();
   }
 
 
@@ -479,45 +402,17 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onResume() {
     super.onResume();
-    mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+    accelerometerHelpers.onResume();
     adsHelpers.onResume();
   }
 
   @Override
   protected void onPause() {
     adsHelpers.onPause();
-    mSensorManager.unregisterListener(this);
-    if ((GnuBackgammon.Instance != null) && (GnuBackgammon.Instance.currentScreen instanceof FibsScreen) && (!GnuBackgammon.Instance.interstitialVisible)) {
-      GnuBackgammon.Instance.commandDispatcher.send("BYE");
-      GnuBackgammon.Instance.fibsScreen.fibsInvitations.clear();
-      GnuBackgammon.Instance.fibsScreen.fibsPlayers.clear();
-      GnuBackgammon.Instance.setFSM("MENU_FSM");
-    }
+    accelerometerHelpers.onPause();
     super.onPause();
   }
 
-
-  @Override
-  public void onAccuracyChanged(Sensor arg0, int arg1) {}
-
-
-  private final float NOISE = 0.5f;
-
-  @Override
-  public void onSensorChanged(SensorEvent event) {
-    float x = event.values[1];
-    if (rotation == 3)
-      x = -x;
-    if (!mSensorInitialized) {
-      mSensorInitialized = true;
-    } else {
-      if (Math.abs(x) < NOISE)
-        return;
-      if (GnuBackgammon.Instance != null)
-        if (GnuBackgammon.Instance.currentScreen != null)
-          GnuBackgammon.Instance.currentScreen.moveBG(x);
-    }
-  }
 
   @Override
   public void showInterstitial() {
@@ -531,8 +426,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     System.loadLibrary("glib-2.0");
     System.loadLibrary("gthread-2.0");
     System.loadLibrary("gnubg");
-    aHelpers.copyAssetsIfNotExists();
-    GnubgAPI.InitializeEnvironment(aHelpers.getDataDir());
+    androidHelpers.copyAssetsIfNotExists();
+    GnubgAPI.InitializeEnvironment(androidHelpers.getDataDir());
   }
 
 
@@ -598,7 +493,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public int getAppVersionCode() {
-    return aHelpers.getAppVersionCode();
+    return androidHelpers.getAppVersionCode();
   }
 
 

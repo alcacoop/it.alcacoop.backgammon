@@ -1,4 +1,4 @@
-package it.alcacoop.backgammon.util;
+package it.alcacoop.backgammon.helpers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.PrivateDataManager;

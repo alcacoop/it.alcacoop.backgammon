@@ -1,10 +1,13 @@
-package it.alcacoop.backgammon.util;
+package it.alcacoop.backgammon.helpers;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,17 +19,22 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.DisplayMetrics;
 
 
 public class AndroidHelpers {
   private String data_dir;
   private Context context;
   private Activity activity;
+  private DisplayMetrics metrics;
 
   public AndroidHelpers(Activity activity) {
     this.activity = activity;
     context = activity.getBaseContext();
     data_dir = context.getApplicationInfo().dataDir + "/gnubg/";
+    metrics = new DisplayMetrics();
+    activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
   }
 
 
@@ -51,7 +59,6 @@ public class AndroidHelpers {
     File a4 = new File(data_dir + "gnubg.weights");
     File a5 = new File(data_dir + "gnubg.wd");
 
-    // Asset already presentsprivate
     if (a1.exists() && a2.exists() && a3.exists() && a4.exists() && a5.exists())
       return;
 
@@ -116,4 +123,55 @@ public class AndroidHelpers {
     }
   }
 
+
+  public int getScreenWidth() {
+    return metrics.widthPixels;
+  }
+
+
+  public int getScreenHeight() {
+    return metrics.heightPixels;
+  }
+
+
+  private String now() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm", Locale.getDefault());
+    return dateFormat.format(new Date());
+  }
+
+
+  public void sendFile(byte[] data) {
+    String now = now();
+    final Intent intent = new Intent(Intent.ACTION_SEND);
+    intent.setType("text/plain");
+    intent.setType("message/rfc822");
+
+    intent.putExtra(Intent.EXTRA_SUBJECT, "Backgammon Mobile exported Match (Played on " + now + ")");
+    intent.putExtra(Intent.EXTRA_TEXT,
+        "You can analize attached file with desktop version of GNU Backgammon\nNOTE:"
+            + " GNU Backgammon is available for Windows, MacOS and Linux\n\nIf you enjoyed "
+            + "Backgammon Mobile please help us rating it on the market");
+
+    try {
+      File dir = new File(Environment.getExternalStorageDirectory(), "gnubg-sgf");
+      dir.mkdir();
+      final File file = new File(dir, "match-" + now + ".sgf");
+
+      FileOutputStream out = new FileOutputStream(file);
+      out.write(data);
+      out.close();
+
+      Uri uri = Uri.fromFile(file);
+      intent.putExtra(Intent.EXTRA_STREAM, uri);
+
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.startActivityForResult(Intent.createChooser(intent, "Send email..."), 1001);
+        }
+      });
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
