@@ -37,8 +37,7 @@ import it.alcacoop.backgammon.utils.MatchRecorder;
 
 public interface NativeFunctions extends GServiceInterface {
   public void showAds(boolean show);
-  public void openURL(String url);
-  public void openURL(String url, String fallback);
+  public void openURL(String... url);
   public String getDataDir(); 
   public void shareMatch(MatchRecorder rec);
   public void injectBGInstance();

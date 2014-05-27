@@ -168,7 +168,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   }
 
   /*
-  private void deleteAppState() {
+  private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {
       gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
 

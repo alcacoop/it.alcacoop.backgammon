@@ -47,8 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -433,16 +431,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
-
-    // TODO: REMOVE THIS AND RELATED PERMISSION
-    ActivityManager actvityManager = (ActivityManager)this.getSystemService(ACTIVITY_SERVICE);
-    List<RunningTaskInfo> taskInfos = actvityManager.getRunningTasks(3);
-    for (RunningTaskInfo runningTaskInfo : taskInfos) {
-      if (runningTaskInfo.baseActivity.getPackageName().contains("gms")) {
-        _gserviceSignIn();
-        break;
-      }
-    }
 
     gHelper.onStart(this);
   }
