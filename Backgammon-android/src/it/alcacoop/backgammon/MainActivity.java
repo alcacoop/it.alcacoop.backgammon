@@ -36,15 +36,15 @@ package it.alcacoop.backgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
+import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceGameHelper;
 import it.alcacoop.backgammon.helpers.ADSHelpers;
 import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.util.GServiceApplication;
-import it.alcacoop.backgammon.util.GServiceGameHelper;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
@@ -74,6 +74,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult;
+import com.google.android.gms.games.leaderboard.SubmitScoreResult.Result;
 
 
 public class MainActivity extends GServiceApplication implements NativeFunctions, OnEditorActionListener {
@@ -553,11 +554,15 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
 
   @Override
-  protected void onScoreSubmittedBehaviour(String board_id, SubmitScoreResult arg1) {
-    // FIX: SYNC WITH LEADERBOARD VALUE
+  protected void onScoreSubmittedBehaviour(String board_id, SubmitScoreResult ssr) {
     long local_score = 0;
-    // TODO: NULLPOINTEREXCEPTION IF NO NETWORK
-    long score = arg1.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME).rawScore;
+    if (ssr == null)
+      return; // NO NETWORK OR APPSTATE ERROR
+    Result sr = ssr.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
+    if (sr == null) // NO NETWORK OR APPSTATE ERROR
+      return;
+
+    long score = sr.rawScore;
     String board = "SINGLEBOARD";
     if (board_id.equals(ELORatingManager.MULTI_BOARD))
       board = "MULTIBOARD";
