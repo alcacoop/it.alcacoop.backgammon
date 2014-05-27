@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package it.alcacoop.backgammon.util;
+package com.android.vending.billing;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;

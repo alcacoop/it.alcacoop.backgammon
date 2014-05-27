@@ -31,7 +31,7 @@
  ##################################################################
  **/
 
-package it.alcacoop.backgammon.util;
+package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GServiceInterface;
 import it.alcacoop.backgammon.gservice.GServiceClient;
@@ -90,9 +90,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
         if (p.getStatus() != Participant.STATUS_JOINED) {
           continue;
         }
-
         gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId()); // .sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId,
-                                                                                                                   // p.getParticipantId());
       }
     }
   }

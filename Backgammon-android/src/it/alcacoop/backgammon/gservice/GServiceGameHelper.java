@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package it.alcacoop.backgammon.util;
+package it.alcacoop.backgammon.gservice;
 
 import java.util.Vector;
 

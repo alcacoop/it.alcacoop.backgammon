@@ -31,7 +31,7 @@
  ##################################################################
  **/
 
-package it.alcacoop.backgammon.util;
+package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.R;
@@ -315,7 +315,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
 
     runOnUiThread(new Runnable() {
-
       @Override
       public void run() {
         final View myView = inflater.inflate(R.layout.dialog_invitation, null);
@@ -471,6 +470,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
         _gserviceResetRoom();
       else {
         if (mRoomId != null) {
+          System.out.println("FORSE LO PRENDO DI QUI???");
           showProgressDialog(true);
         } else {
           UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
