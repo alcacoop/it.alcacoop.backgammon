@@ -71,7 +71,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -82,7 +81,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -129,8 +128,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   private int appVersionCode = 0;
 
 
-  @SuppressWarnings("deprecation")
-  @SuppressLint("NewApi")
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -197,16 +194,10 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     setContentView(layout);
 
     /** CHATBOX DIMS **/
-    Display display = getWindowManager().getDefaultDisplay();
-    rotation = display.getRotation();
-    Point size = new Point();
-    try {
-      display.getSize(size);
-    } catch (java.lang.NoSuchMethodError ignore) { // Older device
-      size.x = display.getWidth();
-      size.y = display.getHeight();
-    }
-    int width = size.x;
+    DisplayMetrics metrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    int width = metrics.widthPixels;
+
     View s1 = findViewById(R.id.space1);
     View s2 = findViewById(R.id.space2);
     View s3 = findViewById(R.id.chat_content);
