@@ -38,10 +38,10 @@ import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.gservice.GServiceGameHelper;
 import it.alcacoop.backgammon.helpers.ADSHelpers;
 import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
+import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
@@ -493,6 +493,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected boolean shouldShowInvitationDialog() {
+    if (GnuBackgammon.Instance.currentScreen instanceof GameScreen) // PLAYING A GAME
+      return false;
     return true;
   }
 
