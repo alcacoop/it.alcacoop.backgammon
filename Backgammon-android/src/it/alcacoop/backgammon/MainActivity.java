@@ -94,6 +94,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
 
+    PrivateDataManager.createBillingData(this);
+
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -139,13 +141,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     EditText target = (EditText)findViewById(R.id.message);
     target.setOnEditorActionListener(this);
     /** CHATBOX DIMS **/
-
-    /** GOOGLE API INITIALIZATION **/
-    PrivateDataManager.createBillingData(this);
-    prefs = Gdx.app.getPreferences("GameOptions");
-    gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
-    gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
-    /** GOOGLE API INITIALIZATION **/
   }
 
 
@@ -458,7 +453,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onStart() {
     super.onStart();
-    gHelper.onStart(this);
   }
 
 
@@ -467,7 +461,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     if (mRoomId != null) {
       GServiceClient.getInstance().leaveRoom(10000);
     }
-    gHelper.onStop();
     super.onStop();
   }
 
