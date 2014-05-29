@@ -312,7 +312,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
     if (gHelper.getInvitationId() != null && gHelper.getGamesClient().isConnected()) {
       invitationId = gHelper.getInvitationId();
-      showProgressDialog(true);
+      System.out.println("---> INVITE FROM NOTIFICATION AREA " + invitationId);
+      GnuBackgammon.Instance.invitationId = invitationId;
     }
   }
 
