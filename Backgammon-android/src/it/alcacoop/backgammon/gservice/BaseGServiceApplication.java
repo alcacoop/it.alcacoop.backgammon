@@ -37,11 +37,11 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.R;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
-import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +78,9 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
-@SuppressLint("TrulyRandom")
-public abstract class BaseGServiceApplication extends AndroidApplication implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener,
-    RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener, OnStateLoadedListener {
+public abstract class BaseGServiceApplication extends AndroidApplication
+    implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener,
+    RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener, OnStateLoadedListener {
 
   protected Preferences prefs;
   protected GServiceGameHelper gHelper;
@@ -88,6 +88,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
   private boolean gConnecting = false;
   private boolean gServiceGameCanceled = false;
   private AlertDialog invitationDialog;
+  private SecureRandom rnd;
 
   protected String mRoomId = null;
   protected String mMyId = null;
@@ -116,6 +117,16 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
   protected abstract void onResetRoomBehaviour();
   protected abstract void onScoreSubmittedBehaviour(String board_id, SubmitScoreResult arg1);
   protected abstract void onDismissProgressDialogBehaviour();
+
+
+  @SuppressLint("TrulyRandom")
+  public BaseGServiceApplication() {
+    try {
+      rnd = SecureRandom.getInstance("SUN");
+    } catch (NoSuchAlgorithmException e) {
+      rnd = new SecureRandom();
+    }
+  }
 
 
   @Override
@@ -150,7 +161,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
 
   @Override
   public void onInvitationRemoved(String arg0) {
-    // System.out.println("---> INVITATION REMOVED");
     if (invitationDialog != null)
       invitationDialog.dismiss();
     hideProgressDialog();
@@ -176,7 +186,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
-    System.out.println("GSERVICE onRoomConnected");
+    System.out.println("---> GSERVICE onRoomConnected");
     hideProgressDialog();
     updateRoom(room);
     onRoomConnectedBehaviour();
@@ -197,11 +207,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     startActivityForResult(i, RC_WAITING_ROOM);
   }
 
-  @SuppressLint("TrulyRandom")
+
   @Override
   public void onConnectedToRoom(Room room) {
     if (gServiceGameCanceled) {
-      // System.out.println("---> GAME CANCELED!!");
       gServiceGameCanceled = false;
       gHelper.getGamesClient().leaveRoom(this, room.getRoomId());
     }
@@ -212,8 +221,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     updateRoom(room);
     String opponent_player_id;
 
-    SecureRandom rdm = new SecureRandom();
-    String sRdm = new BigInteger(130, rdm).toString(32);
+    String sRdm = new BigInteger(130, rnd).toString(32);
 
     if (mParticipants.get(0).getParticipantId() == mMyId) {
       if (mParticipants.get(1).getPlayer() == null)
@@ -288,7 +296,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    // System.out.println("GSERVICE RECEIVED: " + s);
     onRTMessageReceivedBehaviour(s);
   }
 
@@ -297,6 +304,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
 
   @Override
   public void onSignInSucceeded() {
+    System.out.println("---> SIGNIN SUCCEDED!");
     prefs.putBoolean("ALREADY_SIGNEDIN", true);
     prefs.flush();
     gHelper.getGamesClient().registerInvitationListener(this);
@@ -430,7 +438,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, prefs.getBoolean("ALREADY_SIGNEDIN", false));
     gHelper.setup(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
-
     gHelper.onStart(this);
   }
 
@@ -470,7 +477,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
         _gserviceResetRoom();
       else {
         if (mRoomId != null) {
-          System.out.println("FORSE LO PRENDO DI QUI???");
+          System.out.println("---> FORSE LO PRENDO DI QUI???");
           showProgressDialog(true);
         } else {
           UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
@@ -545,7 +552,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication impleme
         @Override
         public void onSignInSucceeded() {
           gHelper.setListener(this);
-          // MainActivity.this.onSignInSucceeded();
           if (from == FROM_ACHIEVEMENTS)
             startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
           else
