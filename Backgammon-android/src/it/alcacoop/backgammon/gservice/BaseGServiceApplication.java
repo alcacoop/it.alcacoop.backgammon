@@ -78,6 +78,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
+@SuppressLint("InflateParams")
 public abstract class BaseGServiceApplication extends AndroidApplication
     implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener,
     RoomUpdateListener, OnInvitationReceivedListener, RealTimeReliableMessageSentListener, OnStateLoadedListener {
@@ -317,10 +318,9 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
 
-  public void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
+  private void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
-    // TODO: NON MI PIACE PROPIO!
     GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
 
     runOnUiThread(new Runnable() {
