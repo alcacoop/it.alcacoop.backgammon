@@ -1,6 +1,7 @@
 package it.alcacoop.backgammon.helpers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.NativeFunctions;
 import it.alcacoop.backgammon.PrivateDataManager;
 
 import java.util.Timer;
@@ -27,8 +28,9 @@ public class ADSHelpers {
 
   public ADSHelpers(Activity activity, boolean isTablet) {
     this.activity = activity;
+    if (((NativeFunctions)activity).isProVersion())
+      return;
 
-    PrivateDataManager.initData();
     adView = new AdView(activity);
     adView.setAdUnitId(PrivateDataManager.ads_id);
 
@@ -38,7 +40,8 @@ public class ADSHelpers {
       adView.setAdSize(AdSize.BANNER);
     adView.setVisibility(View.GONE);
 
-    if (!PrivateDataManager.msIsPremium)
+
+    if (!((NativeFunctions)activity).isProVersion())
       adView.loadAd(new AdRequest.Builder().build());
 
     interstitial = new InterstitialAd(activity);
@@ -70,14 +73,14 @@ public class ADSHelpers {
     if (adView != null)
       adView.resume();
 
-    if (!PrivateDataManager.msIsPremium) {
+    if (!((NativeFunctions)activity).isProVersion()) {
       adsTimer = new Timer();
       adsTask = new TimerTask() {
         @Override
         public void run() {
           activity.runOnUiThread(new Runnable() {
             public void run() {
-              if ((!PrivateDataManager.msIsPremium) && (!interstitial.isLoaded())) {
+              if ((!((NativeFunctions)activity).isProVersion()) && (!interstitial.isLoaded())) {
                 interstitial.loadAd(new AdRequest.Builder().build());
               }
             }
@@ -95,13 +98,13 @@ public class ADSHelpers {
   }
 
 
-  public AdView getAdView() {
+  public View getAdView() {
     return adView;
   }
 
 
   public void showAds(final boolean show) {
-    if (PrivateDataManager.msIsPremium)
+    if (((NativeFunctions)activity).isProVersion())
       return;
     activity.runOnUiThread(new Runnable() {
       @Override
@@ -117,7 +120,7 @@ public class ADSHelpers {
 
 
   public void showInterstitial() {
-    if (PrivateDataManager.msIsPremium)
+    if (((NativeFunctions)activity).isProVersion())
       return;
     activity.runOnUiThread(new Runnable() {
       @Override
@@ -138,7 +141,7 @@ public class ADSHelpers {
 
 
   public void disableAllAds() {
-    if (PrivateDataManager.msIsPremium) {
+    if (((NativeFunctions)activity).isProVersion()) {
       adView.setVisibility(View.GONE);
       if (adsTimer != null) {
         adsTimer.cancel();

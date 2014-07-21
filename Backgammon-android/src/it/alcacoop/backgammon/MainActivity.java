@@ -49,6 +49,7 @@ import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -77,6 +78,7 @@ import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 import com.google.android.gms.games.leaderboard.SubmitScoreResult.Result;
 
 
+@SuppressLint("InflateParams")
 public class MainActivity extends GServiceApplication implements NativeFunctions, OnEditorActionListener {
 
   private View chatBox;
@@ -93,18 +95,16 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
-
-    PrivateDataManager.createBillingData(this);
-
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
+
     // HELPERS INITIALIZATION
+    PrivateDataManager.createBillingData(this);
     androidHelpers = new AndroidHelpers(this);
     accelerometerHelpers = new AccelerometerHelpers(this);
     adsHelpers = new ADSHelpers(this, androidHelpers.isTablet());
@@ -113,7 +113,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
     layout.addView(gameView);
-    layout.addView(adsHelpers.getAdView(), adParams);
+    View adv = adsHelpers.getAdView();
+    if (adv != null)
+      layout.addView(adv, adParams);
 
     LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     chatBox = inflater.inflate(R.layout.chat_box, null);
@@ -428,8 +430,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
 
   public boolean isProVersion() {
-    // TODO: NEED FIX WITH LOCAL PROPERTIES
-    return PrivateDataManager.msIsPremium;
+    return (PrivateDataManager.msIsPremium) || (PrivateDataManager.billingPrefs.getBoolean("msIsPremium", false));
   }
 
 
