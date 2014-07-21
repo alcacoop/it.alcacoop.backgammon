@@ -590,7 +590,7 @@ public final class UIDialog extends Table {
     
     final String gnuBgLink = "http://www.gnubg.org";
     final String gplLink = "http://www.gnu.org/licenses/gpl.html";
-    final String githubLink1 = "https://github.com/alcacoop/it.alcacoop.gnubackgammon";
+    final String githubLink1 = "https://github.com/alcacoop/it.alcacoop.backgammon";
     final String githubLink2 = "https://github.com/alcacoop/libgnubg-android";
     final String wikipediaLink = "http://en.wikipedia.org/wiki/Backgammon#Rules";
     
