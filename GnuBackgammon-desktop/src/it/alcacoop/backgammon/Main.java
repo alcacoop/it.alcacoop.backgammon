@@ -56,15 +56,14 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 
-
 public class Main implements NativeFunctions {
   private static Main instance;
   private static String data_dir;
   private static Interpreter bsh;
   private static JConsole mScriptConsole;
   private static BeanShellEditor mScriptEditor;
-  
-  
+
+
   public static void main(String[] args) {
     LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
     cfg.title = "GnuBackgammon";
@@ -72,11 +71,11 @@ public class Main implements NativeFunctions {
     cfg.height = 480;
     instance = new Main();
     new LwjglApplication(new GnuBackgammon(instance), cfg);
-    
+
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");
     data_dir = s;
-    s+="/libs/";
+    s += "/libs/";
     GnubgAPI.InitializeEnvironment(s);
 
     mScriptConsole = new JConsole();
@@ -90,19 +89,10 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void showAds(boolean show) {
-  }
-  
-  protected Object handler = new Object() {
-  };
+  public void showAds(boolean show) {}
 
+  protected Object handler = new Object() {};
 
-  @Override
-  public void openURL(String url) {
-  }
-  
-  @Override
-  public void openURL(String url, String fallback) {}
 
   @Override
   public String getDataDir() {
@@ -114,9 +104,9 @@ public class Main implements NativeFunctions {
     DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
     Date date = new Date();
     String d = dateFormat.format(date);
-    
-    String path = Gdx.files.external("data/gnubg-sgf/match-"+d+".sgf").path();
-    
+
+    String path = Gdx.files.external("data/gnubg-sgf/match-" + d + ".sgf").path();
+
     FileHandle fh = Gdx.files.absolute(path);
     Writer writer = fh.writer(false);
     try {
@@ -125,54 +115,50 @@ public class Main implements NativeFunctions {
       writer.close();
     } catch (IOException e) {}
   }
-  
-  
+
+
   /* NEW CODE */
   public static void evalBsh(String cmds) {
     try {
       bsh.eval(cmds);
-    }
-    catch (bsh.EvalError e) {}
+    } catch (bsh.EvalError e) {}
   }
 
   public static void runBsh(String filename) {
-    String bsh_text ="";
+    String bsh_text = "";
     try {
       bsh_text = getContent(filename);
     } catch (IOException e1) {}
 
-    
+
     try {
       bsh.eval(bsh_text);
-    }
-    catch (bsh.EvalError e) {}
+    } catch (bsh.EvalError e) {}
   }
 
   public static void setBsh(String where, Object what) {
     try {
-      bsh.set(where,what);
-    }
-    catch (bsh.EvalError e) {}
+      bsh.set(where, what);
+    } catch (bsh.EvalError e) {}
   }
 
-  
+
   public static String getContent(String fname) throws IOException {
     BufferedReader br = new BufferedReader(new FileReader(fname));
-    String text ="";
+    String text = "";
     try {
-        StringBuilder sb = new StringBuilder();
-        String line = br.readLine();
+      StringBuilder sb = new StringBuilder();
+      String line = br.readLine();
 
-        while (line != null) {
-            sb.append(line);
-            sb.append("\n");
-            line = br.readLine();
-        }
-        text = sb.toString();
-        
-    } catch (Exception e) {
-    } finally {
-        br.close();
+      while (line != null) {
+        sb.append(line);
+        sb.append("\n");
+        line = br.readLine();
+      }
+      text = sb.toString();
+
+    } catch (Exception e) {} finally {
+      br.close();
     }
     return text;
   }
@@ -267,5 +253,13 @@ public class Main implements NativeFunctions {
     // TODO Auto-generated method stub
     return 0;
   }
+
+  @Override
+  public String gservicePendingNotificationAreaInvitation() {
+    return null;
+  }
+
+  @Override
+  public void openURL(String... url) {}
 
 }
