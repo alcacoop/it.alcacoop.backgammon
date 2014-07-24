@@ -1,11 +1,13 @@
 package it.alcacoop.backgammon;
 
 import android.content.Context;
-import android.util.Log;
-import it.alcacoop.backgammon.util.IabHelper;
-import it.alcacoop.backgammon.util.IabResult;
-import it.alcacoop.backgammon.util.Inventory;
-import it.alcacoop.backgammon.util.Purchase;
+
+import com.android.vending.billing.IabHelper;
+import com.android.vending.billing.IabResult;
+import com.android.vending.billing.Inventory;
+import com.android.vending.billing.Purchase;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 
 public class PrivateDataManager {
 
@@ -20,18 +22,23 @@ public class PrivateDataManager {
   public static final String SKU_NOADS = "";
   public static final String SKU_DONATE = "";
   public static int RC_REQUEST = 1000001;
-  
-  
+
+  public static Preferences billingPrefs;
+
+
   public static IabHelper getHelper() {
     return mHelper;
   }
 
-  public static void initData() {}
-
-  public static void createBillingData(Context ctx) {}
-
-  public static void destroyBillingData() {
+  public static void initData() {
+    billingPrefs = Gdx.app.getPreferences("billingPrefs");
   }
+
+  public static void createBillingData(Context ctx) {
+    initData();
+  }
+
+  public static void destroyBillingData() {}
 
   public static IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
     public void onQueryInventoryFinished(IabResult result, Inventory inventory) {}
