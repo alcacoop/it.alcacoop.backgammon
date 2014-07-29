@@ -147,18 +147,17 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
     System.out.println("==> SENT.. " + statusCode + " : " + recipientParticipantId);
-    /*
+
     if (statusCode != GServiceClient.STATUS_OK) {
       onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     }
-    */
   }
 
   @Override
   public void onInvitationReceived(Invitation invitation) {
+    System.out.println("==> INVITATION RECEIVED");
     if (!shouldShowInvitationDialog()) {
-
       Games.RealTimeMultiplayer.declineInvitation(getApiClient(), invitation.getInvitationId());
       return;
     }
@@ -317,8 +316,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     prefs.putBoolean("ALREADY_SIGNEDIN", true);
     prefs.flush();
     // TODO
-    // gHelper.getGamesClient().registerInvitationListener(this);
-
+    Games.Invitations.registerInvitationListener(getApiClient(), this);
 
     AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
         new ResultCallback<AppStateManager.StateResult>() {
@@ -333,7 +331,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             }
           }
         });
-
 
     if (gHelper.getInvitationId() != null && gHelper.isSignedIn()) {
       invitationId = gHelper.getInvitationId();
