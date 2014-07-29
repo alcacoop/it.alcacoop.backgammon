@@ -38,7 +38,9 @@ import it.alcacoop.backgammon.utils.AppDataManager;
 import android.content.Intent;
 
 import com.google.android.gms.appstate.AppStateManager;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.android.gms.games.multiplayer.Participant;
 
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface {
@@ -123,16 +125,12 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceSubmitRating(long score, final String board_id) {
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false))
       return;
-    Games.Leaderboards.submitScoreImmediate(getApiClient(), board_id, score);
-    /*
-    gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
+    Games.Leaderboards.submitScoreImmediate(getApiClient(), board_id, score).setResultCallback(new ResultCallback<Leaderboards.SubmitScoreResult>() {
       @Override
-      public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
-        onScoreSubmittedBehaviour(board_id, arg1);
+      public void onResult(Leaderboards.SubmitScoreResult arg0) {
+        onScoreSubmittedBehaviour(board_id, arg0);
       }
-    }, board_id, score);
-    */
-
+    });
   }
 
   @Override
@@ -166,15 +164,15 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   /*
   private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {
-      gHelper.getAppStateClient().deleteState(new OnStateDeletedListener() {
-
+      AppStateManager.delete(getApiClient(), APP_DATA_KEY).setResultCallback(new ResultCallback<AppStateManager.StateDeletedResult>() {
         @Override
-        public void onStateDeleted(int arg0, int arg1) {
+        public void onResult(StateDeletedResult arg0) {
           System.out.println("GSERVICE STATE DELETED");
         }
-      }, APP_DATA_KEY);
+      });
     }
   }
   */
+
 
 }
