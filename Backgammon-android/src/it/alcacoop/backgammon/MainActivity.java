@@ -74,8 +74,8 @@ import android.widget.Toast;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
-import com.google.android.gms.games.leaderboard.SubmitScoreResult;
-import com.google.android.gms.games.leaderboard.SubmitScoreResult.Result;
+import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
+import com.google.android.gms.games.leaderboard.ScoreSubmissionData.Result;
 
 
 @SuppressLint("InflateParams")
@@ -91,17 +91,17 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
 
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
     cfg.useGL20 = false;
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     RelativeLayout layout = new RelativeLayout(this);
     gameView = initializeForView(new GnuBackgammon(this), cfg);
 
+    super.onCreate(savedInstanceState);
 
     // HELPERS INITIALIZATION
     PrivateDataManager.createBillingData(this);
@@ -469,6 +469,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     hideProgressDialog();
+    super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PrivateDataManager.RC_REQUEST) {
       if (resultCode != 10000) {
         adsHelpers.disableAllAds();
@@ -478,9 +479,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         PrivateDataManager.destroyBillingData();
         PrivateDataManager.createBillingData(this);
       }
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
     }
+
+
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
   }
@@ -508,7 +509,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
 
   @Override
-  protected void onLeftRoomBehaviour(int reason) {
+  protected void onLeftRoomBehaviour() {
     GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
     GServiceClient.getInstance().reset();
     hideProgressDialog();
@@ -554,11 +555,15 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     long local_score = 0;
     if (ssr == null)
       return; // NO NETWORK OR APPSTATE ERROR
-    Result sr = ssr.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
+
+    Result sr = ssr.getScoreData().getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
+    // TODO Result sr = ssr.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
+
     if (sr == null) // NO NETWORK OR APPSTATE ERROR
       return;
 
     long score = sr.rawScore;
+
     String board = "SINGLEBOARD";
     if (board_id.equals(ELORatingManager.MULTI_BOARD))
       board = "MULTIBOARD";

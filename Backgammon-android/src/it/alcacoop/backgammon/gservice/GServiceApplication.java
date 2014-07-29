@@ -34,14 +34,11 @@
 package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GServiceInterface;
-import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import android.content.Intent;
 
-import com.google.android.gms.games.GamesClient;
-import com.google.android.gms.games.achievement.OnAchievementUpdatedListener;
-import com.google.android.gms.games.leaderboard.OnScoreSubmittedListener;
-import com.google.android.gms.games.leaderboard.SubmitScoreResult;
+import com.google.android.gms.appstate.AppStateManager;
+import com.google.android.gms.games.Games;
 import com.google.android.gms.games.multiplayer.Participant;
 
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface {
@@ -65,9 +62,10 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
   @Override
   public void gserviceStartRoom() {
-    if (gHelper.getGamesClient().isConnected()) {
+    if (gHelper.isSignedIn()) {
       showProgressDialog();
-      Intent intent = gHelper.getGamesClient().getRealTimeSelectOpponentsIntent(1, 1);
+      Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 1);
+      // Intent intent = gHelper.getGamesClient().getRealTimeSelectOpponentsIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
       gserviceGetSigninDialog(-1);
@@ -81,16 +79,22 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
+    System.out.print("==> SENDING.. " + msg);
     if ((mRoomId == null) || (mRoomId == "")) {
-      GServiceClient.getInstance().leaveRoom(GamesClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+      System.out.println("KO!");
+      // Games.RealTimeMultiplayer.leave(getApiClient(), this, GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+      GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
+      System.out.println("OK!");
       for (Participant p : mParticipants) {
+        System.out.println("==> PROVO A INVIARE A: " + p.getParticipantId());
         if (p.getParticipantId().equals(mMyId))
           continue;
         if (p.getStatus() != Participant.STATUS_JOINED) {
           continue;
         }
-        gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId()); // .sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId,
+        Games.RealTimeMultiplayer.sendReliableMessage(getApiClient(), this, msg.getBytes(), mRoomId, p.getParticipantId());
+        // gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId()); // .sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId,
       }
     }
   }
@@ -103,7 +107,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceOpenLeaderboards() {
     if (gserviceIsSignedIn()) {
-      startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+      startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(getApiClient()), RC_LEADERBOARD);
+      // startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
     } else {
       gserviceGetSigninDialog(FROM_SCOREBOARDS);
     }
@@ -112,7 +117,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceOpenAchievements() {
     if (gserviceIsSignedIn()) {
-      startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
+      startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), RC_ACHIEVEMENTS);
+      // startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
     } else {
       gserviceGetSigninDialog(FROM_ACHIEVEMENTS);
     }
@@ -122,13 +128,15 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceSubmitRating(long score, final String board_id) {
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false))
       return;
+    Games.Leaderboards.submitScoreImmediate(getApiClient(), board_id, score);
+    /*
     gHelper.getGamesClient().submitScoreImmediate(new OnScoreSubmittedListener() {
-
       @Override
       public void onScoreSubmitted(int arg0, SubmitScoreResult arg1) {
         onScoreSubmittedBehaviour(board_id, arg1);
       }
     }, board_id, score);
+    */
 
   }
 
@@ -138,12 +146,16 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
       return;
-    gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
 
+    Games.Achievements.incrementImmediate(getApiClient(), achievement_id, increment);
+    /*
+    gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
       @Override
       public void onAchievementUpdated(int statusCode, String achievement_id) {}
     }, achievement_id, increment);
+    */
   }
+
 
   @Override
   public void gserviceUnlockAchievement(String achievement_id) {
@@ -151,17 +163,21 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       return;
     if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
       return;
-    gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
 
+    Games.Achievements.unlockImmediate(getApiClient(), achievement_id);
+
+    /*
+    gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
       @Override
       public void onAchievementUpdated(int statusCode, String arg1) {}
     }, achievement_id);
+    */
   }
 
   @Override
   public void gserviceUpdateState() {
     if (gHelper.isSignedIn()) {
-      gHelper.getAppStateClient().updateState(APP_DATA_KEY, AppDataManager.getInstance().getBytes());
+      AppStateManager.update(getApiClient(), APP_DATA_KEY, AppDataManager.getInstance().getBytes());
     }
   }
 
