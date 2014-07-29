@@ -557,7 +557,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       return; // NO NETWORK OR APPSTATE ERROR
 
     Result sr = ssr.getScoreData().getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
-    // TODO Result sr = ssr.getScoreResult(LeaderboardVariant.TIME_SPAN_ALL_TIME);
 
     if (sr == null) // NO NETWORK OR APPSTATE ERROR
       return;

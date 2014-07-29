@@ -65,7 +65,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     if (gHelper.isSignedIn()) {
       showProgressDialog();
       Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 1);
-      // Intent intent = gHelper.getGamesClient().getRealTimeSelectOpponentsIntent(1, 1);
       startActivityForResult(intent, RC_SELECT_PLAYERS);
     } else {
       gserviceGetSigninDialog(-1);
@@ -82,7 +81,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     System.out.print("==> SENDING.. " + msg);
     if ((mRoomId == null) || (mRoomId == "")) {
       System.out.println("KO!");
-      // Games.RealTimeMultiplayer.leave(getApiClient(), this, GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
       System.out.println("OK!");
@@ -94,7 +92,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
           continue;
         }
         Games.RealTimeMultiplayer.sendReliableMessage(getApiClient(), this, msg.getBytes(), mRoomId, p.getParticipantId());
-        // gHelper.getGamesClient().sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId, p.getParticipantId()); // .sendReliableRealTimeMessage(this, msg.getBytes(), mRoomId,
       }
     }
   }
@@ -108,7 +105,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceOpenLeaderboards() {
     if (gserviceIsSignedIn()) {
       startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(getApiClient()), RC_LEADERBOARD);
-      // startActivityForResult(gHelper.getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
     } else {
       gserviceGetSigninDialog(FROM_SCOREBOARDS);
     }
@@ -118,7 +114,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceOpenAchievements() {
     if (gserviceIsSignedIn()) {
       startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), RC_ACHIEVEMENTS);
-      // startActivityForResult(gHelper.getGamesClient().getAchievementsIntent(), RC_ACHIEVEMENTS);
     } else {
       gserviceGetSigninDialog(FROM_ACHIEVEMENTS);
     }
@@ -148,12 +143,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       return;
 
     Games.Achievements.incrementImmediate(getApiClient(), achievement_id, increment);
-    /*
-    gHelper.getGamesClient().incrementAchievementImmediate(new OnAchievementUpdatedListener() {
-      @Override
-      public void onAchievementUpdated(int statusCode, String achievement_id) {}
-    }, achievement_id, increment);
-    */
   }
 
 
@@ -165,13 +154,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       return;
 
     Games.Achievements.unlockImmediate(getApiClient(), achievement_id);
-
-    /*
-    gHelper.getGamesClient().unlockAchievementImmediate(new OnAchievementUpdatedListener() {
-      @Override
-      public void onAchievementUpdated(int statusCode, String arg1) {}
-    }, achievement_id);
-    */
   }
 
   @Override
