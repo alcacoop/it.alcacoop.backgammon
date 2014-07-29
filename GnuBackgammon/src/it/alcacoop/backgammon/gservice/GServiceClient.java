@@ -48,8 +48,7 @@ public class GServiceClient implements GServiceMessages {
   }
 
 
-  public void connect() {
-  }
+  public void connect() {}
 
   public void reset() {
     System.out.println("---> GSERVICE RESETTED");
@@ -148,8 +147,8 @@ public class GServiceClient implements GServiceMessages {
   }
 
 
-  private final static int STATUS_OK = 0;
-  private final static int STATUS_NETWORK_ERROR_OPERATION_FAILED = 6;
+  final static int STATUS_OK = 0;
+  final static int STATUS_NETWORK_ERROR_OPERATION_FAILED = 6;
 
   public void leaveRoom(int code) {
     GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
