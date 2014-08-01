@@ -89,7 +89,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   public int appVersionCode = 0;
 
   private int resolutions[][] = {
-      { 1280, 740 },
+      { 1280, 800 },
       { 800, 480 },
       { 480, 320 }
   };
