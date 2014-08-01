@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,37 +53,35 @@ public class AndroidHelpers {
     return data_dir;
   }
 
-  public void copyAssetsIfNotExists() {
-    File a1 = new File(data_dir + "g11.xml");
-    File a2 = new File(data_dir + "gnubg_os0.bd");
-    File a3 = new File(data_dir + "gnubg_ts0.bd");
-    File a4 = new File(data_dir + "gnubg.weights");
-    File a5 = new File(data_dir + "gnubg.wd");
+  private void _copyAsset(String filename) {
+    InputStream in = null;
+    OutputStream out = null;
+    AssetManager assetManager = context.getAssets();
+    try {
+      in = assetManager.open("gnubg/" + filename);
+      out = new FileOutputStream(data_dir + filename);
+      copyFile(in, out);
+      in.close();
+      in = null;
+      out.flush();
+      out.close();
+      out = null;
+    } catch (IOException e) {}
+  }
 
-    if (a1.exists() && a2.exists() && a3.exists() && a4.exists() && a5.exists())
-      return;
+  public void copyAssetsIfNotExists() {
+    String[] files = { "gnubg.weights", "gnubg.wd", "g11.xml", "gnubg_os0.bd", "gnubg_ts0.bd" };
 
     File assetDir = new File(data_dir);
-    assetDir.mkdirs();
+    if (!assetDir.exists())
+      assetDir.mkdirs();
 
-    AssetManager assetManager = context.getAssets();
-    String[] files = null;
-    try {
-      files = assetManager.list("gnubg");
-    } catch (IOException e) {}
-    for (String filename : files) {
-      InputStream in = null;
-      OutputStream out = null;
-      try {
-        in = assetManager.open("gnubg/" + filename);
-        out = new FileOutputStream(data_dir + filename);
-        copyFile(in, out);
-        in.close();
-        in = null;
-        out.flush();
-        out.close();
-        out = null;
-      } catch (IOException e) {}
+    _copyAsset(files[0]);
+    _copyAsset(files[1]);
+    for (int i = 2; i < files.length; i++) {
+      File f = new File(data_dir + files[i]);
+      if (!f.exists())
+        _copyAsset(files[i]);
     }
   }
 
@@ -110,6 +109,7 @@ public class AndroidHelpers {
   }
 
 
+  @SuppressLint("Assert")
   public void openURL(String... urls) {
     assert urls.length <= 1;
     try { // Native APP URL
