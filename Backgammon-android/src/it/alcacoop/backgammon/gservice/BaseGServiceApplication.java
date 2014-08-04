@@ -227,24 +227,35 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     room.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
     mMyId = room.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
     updateRoom(room);
-    String opponent_player_id;
+    String me, opponent, opponent_player_id;
+
 
     String sRdm = new BigInteger(130, rnd).toString(32);
 
     if (mParticipants.get(0).getParticipantId() == mMyId) {
+      me = mParticipants.get(0).getDisplayName();
+      opponent = mParticipants.get(1).getDisplayName();
+
       if (mParticipants.get(1).getPlayer() == null)
         opponent_player_id = sRdm;
       else
         opponent_player_id = mParticipants.get(1).getPlayer().getPlayerId();
     } else {
+      me = mParticipants.get(1).getDisplayName();
+      opponent = mParticipants.get(0).getDisplayName();
+
       if (mParticipants.get(0).getPlayer() == null)
         opponent_player_id = sRdm;
       else
         opponent_player_id = mParticipants.get(0).getPlayer().getPlayerId();
     }
+
+    GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
+
     if (meSentInvitation)
       AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
+
   @Override
   public void onDisconnectedFromRoom(Room room) {
     System.out.println("---> P2P DISCONNECTED FROM ROOM");
