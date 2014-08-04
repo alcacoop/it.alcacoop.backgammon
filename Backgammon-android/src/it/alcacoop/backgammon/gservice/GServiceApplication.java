@@ -65,11 +65,9 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceStartRoom() {
     if (gHelper.isSignedIn()) {
-      showProgressDialog();
-      Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 1);
-      startActivityForResult(intent, RC_SELECT_PLAYERS);
+      rcSelectPlayers();
     } else {
-      gserviceGetSigninDialog(-1);
+      gserviceGetSigninDialog(FROM_NEWGAME);
     }
   }
 

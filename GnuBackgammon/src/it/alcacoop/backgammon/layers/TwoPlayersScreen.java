@@ -239,8 +239,6 @@ public class TwoPlayersScreen extends BaseScreen {
         text.add().fill().expand();
         sp.setWidget(text);
         variant = 3;
-        if (!GnuBackgammon.Instance.nativeFunctions.gserviceIsSignedIn())
-          GnuBackgammon.Instance.nativeFunctions.gserviceGetSigninDialog(-1);
       }
     });
 

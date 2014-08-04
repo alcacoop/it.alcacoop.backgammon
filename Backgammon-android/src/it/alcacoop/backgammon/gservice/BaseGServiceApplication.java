@@ -105,8 +105,9 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   protected static int RC_LEADERBOARD = 6002;
   protected static int RC_ACHIEVEMENTS = 6003;
 
-  protected static int FROM_ACHIEVEMENTS = 1;
-  protected static int FROM_SCOREBOARDS = 2;
+  public static int FROM_ACHIEVEMENTS = 1;
+  public static int FROM_SCOREBOARDS = 2;
+  public static int FROM_NEWGAME = 3;
 
   protected String invitationId = "";
 
@@ -585,16 +586,27 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     });
   }
 
+
+  protected void rcSelectPlayers() {
+    showProgressDialog();
+    Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(getApiClient(), 1, 1);
+    startActivityForResult(intent, RC_SELECT_PLAYERS);
+  }
+
   protected void trySignIn(final int from) {
-    if ((from == FROM_ACHIEVEMENTS) || (from == FROM_SCOREBOARDS)) {
+    if ((from == FROM_ACHIEVEMENTS) || (from == FROM_SCOREBOARDS) || (from == FROM_NEWGAME)) {
       gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
         @Override
         public void onSignInSucceeded() {
+          GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
+          GnuBackgammon.Instance.optionPrefs.flush();
           gHelper.setListener(this);
           if (from == FROM_ACHIEVEMENTS)
             startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), RC_ACHIEVEMENTS);
-          else
+          else if (from == FROM_SCOREBOARDS)
             startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(getApiClient()), RC_LEADERBOARD);
+          else
+            rcSelectPlayers();
         }
         @Override
         public void onSignInFailed() {
