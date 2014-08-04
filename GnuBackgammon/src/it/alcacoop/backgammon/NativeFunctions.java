@@ -38,10 +38,10 @@ import it.alcacoop.backgammon.utils.MatchRecorder;
 public interface NativeFunctions extends GServiceInterface {
   public void showAds(boolean show);
   public void openURL(String... url);
-  public String getDataDir(); 
+  public String getDataDir();
   public void shareMatch(MatchRecorder rec);
   public void injectBGInstance();
-  
+
   public void fibsSignin();
   public void fibsRegistration();
   public boolean isNetworkUp();
@@ -49,11 +49,12 @@ public interface NativeFunctions extends GServiceInterface {
   public void showChatBox();
   public void showInterstitial();
   public void initEngine();
-  
+
   public boolean isProVersion();
   public void inAppBilling();
-  
+
   public void hideProgressDialog();
-  
+
   public int getAppVersionCode();
+  public void beginGoogleSignIn();
 }

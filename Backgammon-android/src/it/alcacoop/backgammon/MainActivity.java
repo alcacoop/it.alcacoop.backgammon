@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceGameHelper;
 import it.alcacoop.backgammon.helpers.ADSHelpers;
 import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
@@ -478,6 +479,12 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     hideProgressDialog();
+    if (requestCode == GServiceGameHelper.RC_RESOLVE && resultCode == 0) {
+      // PRIMO LOGIN RIFIUTATO
+      GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", false);
+      GnuBackgammon.Instance.optionPrefs.flush();
+    }
+
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PrivateDataManager.RC_REQUEST) {
       if (resultCode != 10000) {
@@ -604,5 +611,11 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
     adjustFocus();
+  }
+
+
+  @Override
+  public void beginGoogleSignIn() {
+    gHelper.beginUserInitiatedSignIn();
   }
 }

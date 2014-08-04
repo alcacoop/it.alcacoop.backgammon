@@ -325,9 +325,9 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   @Override
   public void onSignInSucceeded() {
     System.out.println("---> SIGNIN SUCCEDED!");
-    prefs.putBoolean("ALREADY_SIGNEDIN", true);
+    GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
     prefs.flush();
-    // TODO
+
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
     AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
@@ -472,7 +472,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
     gHelper.setup(this);
-    gHelper.enableDebugLog(true);
+    gHelper.setConnectOnStart(false);
   }
 
   @Override
@@ -565,11 +565,9 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           public void onShow(DialogInterface arg0) {
             String msg = "";
             TextView v = (TextView)d.findViewById(R.id.login_text);
-            if (prefs.getBoolean("ALREADY_SIGNEDIN", false)) {
-              msg = "Please sign in on Google Play Game Services to enable this feature";
-            } else {
-              msg = "Please sign in, Google will ask you to accept requested permissions and configure " + "sharing settings up to two times. This may take few minutes..";
-            }
+            msg = "Please sign in on Google Play Game Services to enable this feature";
+            // msg = "Please sign in, Google will ask you to accept requested permissions and configure " +
+            // "sharing settings up to two times. This may take few minutes..";
             v.setText(msg);
             com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton)d.findViewById(R.id.sign_in_button);
             b.setOnClickListener(new View.OnClickListener() {
@@ -616,7 +614,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
     _gserviceSignIn();
   }
-
   public GoogleApiClient getApiClient() {
     return gHelper.getApiClient();
   }

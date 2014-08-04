@@ -250,7 +250,6 @@ public class Main implements NativeFunctions {
 
   @Override
   public int getAppVersionCode() {
-    // TODO Auto-generated method stub
     return 0;
   }
 
@@ -261,5 +260,8 @@ public class Main implements NativeFunctions {
 
   @Override
   public void openURL(String... url) {}
+
+  @Override
+  public void beginGoogleSignIn() {}
 
 }

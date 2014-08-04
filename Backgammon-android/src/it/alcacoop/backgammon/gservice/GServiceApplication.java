@@ -35,7 +35,6 @@ package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GServiceInterface;
 import it.alcacoop.backgammon.utils.AppDataManager;
-import android.content.Intent;
 
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
@@ -121,7 +120,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
   @Override
   public void gserviceSubmitRating(long score, final String board_id) {
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false))
+    if (!gHelper.isSignedIn())
       return;
     Games.Leaderboards.submitScoreImmediate(getApiClient(), board_id, score).setResultCallback(new ResultCallback<Leaderboards.SubmitScoreResult>() {
       @Override
@@ -135,7 +134,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceUpdateAchievement(String achievement_id, int increment) {
     if (achievement_id == null || achievement_id.equals("") || achievement_id == "")
       return;
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
+    if (!gHelper.isSignedIn())
       return;
 
     Games.Achievements.incrementImmediate(getApiClient(), achievement_id, increment);
@@ -146,7 +145,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   public void gserviceUnlockAchievement(String achievement_id) {
     if (achievement_id == null || achievement_id.equals("") || achievement_id == "")
       return;
-    if (!prefs.getBoolean("ALREADY_SIGNEDIN", false) || (!gHelper.isSignedIn()))
+    if (!gHelper.isSignedIn())
       return;
 
     Games.Achievements.unlockImmediate(getApiClient(), achievement_id);

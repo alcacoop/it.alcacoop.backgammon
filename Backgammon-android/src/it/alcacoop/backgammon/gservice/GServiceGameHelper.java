@@ -103,7 +103,7 @@ public class GServiceGameHelper implements GoogleApiClient.ConnectionCallbacks,
 
   // Request code we use when invoking other Activities to complete the
   // sign-in flow.
-  final static int RC_RESOLVE = 9001;
+  final public static int RC_RESOLVE = 9001;
 
   // Request code when invoking Activities whose result we don't care about.
   final static int RC_UNUSED = 9002;

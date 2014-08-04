@@ -51,21 +51,22 @@ public class SplashScreen implements Screen {
 
   private Stage stage;
   private final Image alca;
-  //private final Image gnu;
-  
-  public SplashScreen(String img){
+
+  // private final Image gnu;
+
+  public SplashScreen(String img) {
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    
-    
+
+
     Texture r = new Texture(Gdx.files.internal(img));
     r.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    
+
     alca = new Image(r);
-    alca.setX((stage.getWidth()-alca.getWidth())/2);
-    alca.setY((stage.getHeight()-alca.getHeight())/2);
-    alca.setColor(1,1,1,0);
-    
+    alca.setX((stage.getWidth() - alca.getWidth()) / 2);
+    alca.setY((stage.getHeight() - alca.getHeight()) / 2);
+    alca.setColor(1, 1, 1, 0);
+
     /*
     r = GnuBackgammon.atlas.findRegion("gnu");
     gnu = new Image(r);
@@ -74,7 +75,7 @@ public class SplashScreen implements Screen {
     gnu.setColor(1,1,1,0);
     */
     stage.addActor(alca);
-    //stage.addActor(gnu);
+    // stage.addActor(gnu);
   }
 
 
@@ -88,23 +89,24 @@ public class SplashScreen implements Screen {
 
 
   @Override
-  public void resize(int width, int height) {
-  }
+  public void resize(int width, int height) {}
 
-  
+
   @Override
   public void show() {
     Action r2 = Actions.run(new Runnable() {
       @Override
       public void run() {
-        if (GnuBackgammon.Instance.invitationId!="") {
+        if (GnuBackgammon.Instance.optionPrefs.getBoolean("WANTS_GOOGLE_SIGNIN", true))
+          GnuBackgammon.Instance.nativeFunctions.beginGoogleSignIn();
+        if (GnuBackgammon.Instance.invitationId != "") {
           GnuBackgammon.Instance.setFSM("MENU_FSM");
         } else {
           GnuBackgammon.Instance.goToScreen(6);
         }
       }
     });
-    
+
     alca.addAction(MyActions.sequence(
         Actions.delay(0.2f),
         Actions.fadeIn(0.8f),
@@ -123,12 +125,10 @@ public class SplashScreen implements Screen {
   }
 
   @Override
-  public void hide() {
-  }
+  public void hide() {}
 
   @Override
-  public void pause() {
-  }
+  public void pause() {}
 
   @Override
   public void resume() {
@@ -136,6 +136,5 @@ public class SplashScreen implements Screen {
   }
 
   @Override
-  public void dispose() {
-  }
+  public void dispose() {}
 }
