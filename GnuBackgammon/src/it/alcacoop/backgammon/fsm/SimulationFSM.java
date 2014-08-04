@@ -56,10 +56,10 @@ public class SimulationFSM extends BaseFSM implements Context {
   public enum States implements State {
     STARTING_SIMULATION {
       int resetted;
-      
+
       public void enterState(Context ctx) {
         resetted = 0;
-        
+
         ctx.setMoves(0);
         ctx.board().initBoard(2);
         MatchState.SetGameVariant(0);
@@ -69,25 +69,26 @@ public class SimulationFSM extends BaseFSM implements Context {
           public void run() {
             GnuBackgammon.Instance.board.animate(0.6f);
           }
-        }); 
+        });
         seqAction = MyActions.sequence(
             Actions.delay(0.8f),
             runAction
-        );
+            );
         ctx.board().addAction(seqAction);
       };
-     
+
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt==Events.CHECKER_RESETTED) {
+        if (evt == Events.CHECKER_RESETTED) {
           resetted++;
-          if (resetted==30) ctx.state(SIMULATED_TURN);
+          if (resetted == 30)
+            ctx.state(SIMULATED_TURN);
           return true;
         }
         return false;
       }
     },
-    
+
     SIMULATED_TURN {
       @Override
       public void enterState(Context ctx) {
@@ -96,10 +97,10 @@ public class SimulationFSM extends BaseFSM implements Context {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         switch (evt) {
           case SET_GAME_TURN:
-            ctx.setMoves(ctx.getMoves()+1);
+            ctx.setMoves(ctx.getMoves() + 1);
             if (MatchState.fMove == 0)
               AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
-            else 
+            else
               AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             break;
           case SET_BOARD:
@@ -126,37 +127,39 @@ public class SimulationFSM extends BaseFSM implements Context {
       }
     },
 
-    
+
     CHECK_WIN {
       public void enterState(Context ctx) {
-        if (ctx.board().gameFinished()||ctx.getMoves()==10) {
+        if (ctx.board().gameFinished() || ctx.getMoves() == 20) {
           ctx.state(States.STARTING_SIMULATION);
         } else {
           ctx.state(States.SIMULATED_TURN);
         }
       }
     },
-    
+
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        if (seqAction!=null) {
+        if (seqAction != null) {
           seqAction.reset();
           seqAction = null;
         }
-        if (runAction!=null) {
+        if (runAction != null) {
           runAction.reset();
           runAction = null;
         }
         ctx.board().stopCheckers();
       }
     };
-    
-    //DEFAULT IMPLEMENTATION
-    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {return false;}
+
+    // DEFAULT IMPLEMENTATION
+    public boolean processEvent(Context ctx, BaseFSM.Events evt, Object params) {
+      return false;
+    }
     public void enterState(Context ctx) {}
     public void exitState(Context ctx) {}
-    
+
   };
 
 
@@ -165,16 +168,16 @@ public class SimulationFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    MatchState.SetAILevel(AILevels.BEGINNER);
+    MatchState.SetAILevel(AILevels.GRANDMASTER);
     state(States.STARTING_SIMULATION);
   }
 
   public void stop() {
     state(States.STOPPED);
   }
-  
+
   public Board board() {
     return board;
   }
-  
+
 }
