@@ -381,6 +381,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     return false;
   }
 
+  @SuppressLint("InlinedApi")
   public void adjustFocus() {
     gameView.setFocusableInTouchMode(true);
     gameView.requestFocus();
