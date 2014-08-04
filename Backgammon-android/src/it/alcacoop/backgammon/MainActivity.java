@@ -346,6 +346,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        adjustFocus();
         if (chatBox.getVisibility() != View.GONE) {
           EditText chat = (EditText)findViewById(R.id.message);
           InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
