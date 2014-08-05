@@ -319,6 +319,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     onRTMessageReceivedBehaviour(s);
   }
 
+
   @Override
   public void onSignInFailed() {}
 

@@ -431,8 +431,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   public void initEngine() {
     Gdx.app.log("INITIALIZATION", "LOADING..");
-    // System.loadLibrary("glib-2.0");
-    // System.loadLibrary("gthread-2.0");
     System.loadLibrary("gnubg");
     androidHelpers.copyAssetsIfNotExists();
     GnubgAPI.InitializeEnvironment(androidHelpers.getDataDir());

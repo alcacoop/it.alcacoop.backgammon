@@ -263,5 +263,4 @@ public class Main implements NativeFunctions {
 
   @Override
   public void beginGoogleSignIn() {}
-
 }
