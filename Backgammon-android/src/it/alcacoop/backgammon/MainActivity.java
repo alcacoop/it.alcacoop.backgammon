@@ -38,7 +38,6 @@ import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.gservice.GServiceGameHelper;
 import it.alcacoop.backgammon.helpers.ADSHelpers;
 import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
@@ -348,6 +347,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       @Override
       public void run() {
         adjustFocus();
+        enterImmersiveMode();
         if (chatBox.getVisibility() != View.GONE) {
           EditText chat = (EditText)findViewById(R.id.message);
           InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -374,6 +374,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       GnuBackgammon.Instance.appendChatMessage(msg.toString(), true);
     }
     adjustFocus();
+    enterImmersiveMode();
   }
 
   @Override
@@ -383,17 +384,23 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   }
 
   @SuppressLint("InlinedApi")
-  public void adjustFocus() {
-    gameView.setFocusableInTouchMode(true);
-    gameView.requestFocus();
+  public void enterImmersiveMode() {
     getWindow().getDecorView().setSystemUiVisibility(
         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            | View.INVISIBLE);
   }
+
+
+  public void adjustFocus() {
+    gameView.setFocusableInTouchMode(true);
+    gameView.requestFocus();
+  }
+
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -401,11 +408,13 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         || (GnuBackgammon.Instance.getScreen() instanceof SplashScreen))
       return super.onKeyDown(keyCode, event);
     if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+      enterImmersiveMode();
       adjustFocus();
       GnuBackgammon.Instance.gameScreen.chatBox.hide();
     }
     return super.onKeyDown(keyCode, event);
   }
+
 
   @Override
   protected void onResume() {
@@ -434,6 +443,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     System.loadLibrary("gnubg");
     androidHelpers.copyAssetsIfNotExists();
     GnubgAPI.InitializeEnvironment(androidHelpers.getDataDir());
+    enterImmersiveMode();
   }
 
 
@@ -462,6 +472,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onStart() {
     super.onStart();
+    enterImmersiveMode();
   }
 
 
@@ -476,28 +487,24 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    hideProgressDialog();
-    if (requestCode == GServiceGameHelper.RC_RESOLVE && resultCode == 0) {
-      // PRIMO LOGIN RIFIUTATO
-      GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", false);
-      GnuBackgammon.Instance.optionPrefs.flush();
-    }
-
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == PrivateDataManager.RC_REQUEST) {
-      if (resultCode != 10000) {
-        adsHelpers.disableAllAds();
-        GnuBackgammon.Instance.menuScreen.redraw();
-      } else { // ERROR!
-        System.out.println("BILLING: 10000");
-        PrivateDataManager.destroyBillingData();
-        PrivateDataManager.createBillingData(this);
-      }
-    }
+    hideProgressDialog();
 
+    switch (requestCode) {
+      case PrivateDataManager.RC_REQUEST: // RETURN FROM IN APP BILLING
+        if (resultCode != 10000) {
+          adsHelpers.disableAllAds();
+          GnuBackgammon.Instance.menuScreen.redraw();
+        } else { // ERROR!
+          PrivateDataManager.destroyBillingData();
+          PrivateDataManager.createBillingData(this);
+        }
+        break;
+    }
 
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
+    enterImmersiveMode();
   }
 
 
@@ -604,16 +611,11 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   protected void onResetRoomBehaviour() {}
 
 
-  @SuppressLint("InlinedApi")
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
-    super.onWindowFocusChanged(hasFocus);
+    // super.onWindowFocusChanged(hasFocus);
     adjustFocus();
   }
 
 
-  @Override
-  public void beginGoogleSignIn() {
-    gHelper.beginUserInitiatedSignIn();
-  }
 }
