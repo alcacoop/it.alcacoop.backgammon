@@ -513,7 +513,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    hideProgressDialog();
+
+    if (resultCode != RESULT_OK)
+      hideProgressDialog();
 
     switch (requestCode) {
       case PrivateDataManager.INAPP_BILLING_REQUEST: // RETURN FROM IN APP BILLING

@@ -301,6 +301,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     GServiceClient.getInstance().leaveRoom(0);
     onLeftRoomBehaviour();
     updateRoom(room);
+    hideProgressDialog();
   }
 
   @Override
