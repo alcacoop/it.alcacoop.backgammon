@@ -201,6 +201,14 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         alert.setPositiveButton("Login", null);
 
         final AlertDialog d = alert.create();
+
+        d.setOnDismissListener(new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+            enterImmersiveMode();
+          }
+        });
+
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
@@ -246,7 +254,11 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
             });
           }
         });
+
+        d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         d.show();
+        d.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
+        d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
       }
     });
   }
@@ -271,6 +283,12 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         }).setPositiveButton("Create", null);
 
         final AlertDialog d = alert.create();
+        d.setOnDismissListener(new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+            enterImmersiveMode();
+          }
+        });
         d.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
@@ -315,11 +333,17 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         popupBuilder.setCancelable(false).setView(myMsg).setTitle("Info").setPositiveButton("OK", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
+            d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
             d.show();
+            d.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
+            d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
           }
         });
-        popupBuilder.show();
-
+        AlertDialog popup = popupBuilder.create();
+        popup.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        popup.show();
+        popup.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
+        popup.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
       }
     });
   }
@@ -421,6 +445,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     super.onResume();
     accelerometerHelpers.onResume();
     adsHelpers.onResume();
+    enterImmersiveMode();
   }
 
   @Override
@@ -610,11 +635,18 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onResetRoomBehaviour() {}
 
-
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
-    // super.onWindowFocusChanged(hasFocus);
+    super.onWindowFocusChanged(hasFocus);
     adjustFocus();
+  }
+
+
+  @Override
+  public void beginGoogleSignIn() {
+    if (!prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true))
+      gHelper.setConnectOnStart(false);
+    gHelper.onStart(this);
   }
 
 
