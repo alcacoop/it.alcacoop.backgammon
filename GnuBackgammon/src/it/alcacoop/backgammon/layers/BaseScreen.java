@@ -13,28 +13,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class BaseScreen implements Screen{
+public class BaseScreen implements Screen {
 
   protected Stage stage;
   protected Image bgImg;
   public float animationTime = 0.2f;
   protected static float lastBGX;
-  private float width; 
+  private float width;
   private Image alca, top;
   private TextButton alcaBtn;
-  
+
   public BaseScreen() {
-    //STAGE DIM = SCREEN RES
+    // STAGE DIM = SCREEN RES
     stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    //VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
+    // VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
     stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
-    width = stage.getWidth()*1.2f;
-    
+    width = stage.getWidth() * 1.2f;
+
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");
     bgImg = new Image(bgRegion);
     bgImg.setWidth(width);
     bgImg.setHeight(stage.getHeight());
-    lastBGX = (stage.getWidth()-width)/2;
+    lastBGX = (stage.getWidth() - width) / 2;
     bgImg.setPosition(lastBGX, 0);
 
 
@@ -46,8 +46,8 @@ public class BaseScreen implements Screen{
     alca = new Image(patch);
     alca.setWidth(stage.getWidth());
     alca.setPosition(0, 0);
-    
-    
+
+
     NinePatch patch2 = null;
     TextureRegion r2 = GnuBackgammon.atlas.findRegion("topborder");
     splits = ((AtlasRegion)r2).splits;
@@ -55,21 +55,21 @@ public class BaseScreen implements Screen{
 
     top = new Image(patch2);
     top.setWidth(stage.getWidth());
-    top.setPosition(0, stage.getHeight()-top.getHeight());
-    
-    
+    top.setPosition(0, stage.getHeight() - top.getHeight());
+
+
     alcaBtn = new TextButton("", GnuBackgammon.skin);
     alcaBtn.setWidth(alca.getHeight());
     alcaBtn.setHeight(alca.getHeight());
-    alcaBtn.setX(stage.getWidth()-alcaBtn.getHeight());
-    alcaBtn.setColor(0,0,0,0);
-    alcaBtn.addListener(new ClickListener(){
+    alcaBtn.setX(stage.getWidth() - alcaBtn.getHeight());
+    alcaBtn.setColor(0, 0, 0, 0);
+    alcaBtn.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.nativeFunctions.openURL("market://search?q=pub:Alca Soc. Coop.");
       }
     });
-    
+
     stage.addActor(bgImg);
     stage.addActor(alca);
     stage.addActor(top);
@@ -77,61 +77,71 @@ public class BaseScreen implements Screen{
 
   @Override
   public void resize(int width, int height) {
-    bgImg.setWidth(stage.getWidth()*1.2f);
+    bgImg.setWidth(stage.getWidth() * 1.2f);
     bgImg.setHeight(stage.getHeight());
   }
 
   @Override
   public void show() {
     if (this instanceof GameScreen) {
-      alca.setColor(0,0,0,0);
-      top.setColor(0,0,0,0);
-      if (alcaBtn.hasParent()) alcaBtn.remove();
+      alca.setColor(0, 0, 0, 0);
+      top.setColor(0, 0, 0, 0);
+      if (alcaBtn.hasParent())
+        alcaBtn.remove();
     } else {
-      alca.setColor(1,1,1,1);
-      top.setColor(1,1,1,1);
+      alca.setColor(1, 1, 1, 1);
+      top.setColor(1, 1, 1, 1);
       stage.addActor(alcaBtn);
     }
-    if (lastBGX>0) lastBGX = 0;
-    if (lastBGX<(stage.getWidth()-width)) lastBGX=stage.getWidth()-width;
+    if (lastBGX > 0)
+      lastBGX = 0;
+    if (lastBGX < (stage.getWidth() - width))
+      lastBGX = stage.getWidth() - width;
     bgImg.setX(lastBGX);
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
+
     GnuBackgammon.Instance.nativeFunctions.beginGoogleSignIn();
   }
-  
+
   public void initialize() {}
-  
+
   public void moveBG(float x) {
     float _x = lastBGX;
-    float newx = _x+x*2;
-    if (newx>0) newx = 0;
-    if (newx<(stage.getWidth()-width)) newx=stage.getWidth()-width;
-    if (lastBGX!=newx) {
+    float newx = _x + x * 2;
+    if (newx > 0)
+      newx = 0;
+    if (newx < (stage.getWidth() - width))
+      newx = stage.getWidth() - width;
+    if (lastBGX != newx) {
       bgImg.setX(newx);
       Gdx.graphics.requestRendering();
     }
     lastBGX = newx;
   }
 
-  
+
+  @Override
+  public void resume() {
+    GnuBackgammon.Instance.nativeFunctions.beginGoogleSignIn();
+  }
+
+
   public void fixBGImg() {
     bgImg.setX(lastBGX);
   }
-  
+
   public Stage getStage() {
     return stage;
   }
 
   public void fadeOut() {}
-  
+
   @Override
   public void render(float delta) {}
   @Override
   public void hide() {}
   @Override
   public void pause() {}
-  @Override
-  public void resume() {}
   @Override
   public void dispose() {}
 }
