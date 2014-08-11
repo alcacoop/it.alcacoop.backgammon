@@ -97,8 +97,6 @@ public class SplashScreen implements Screen {
     Action r2 = Actions.run(new Runnable() {
       @Override
       public void run() {
-        if (GnuBackgammon.Instance.optionPrefs.getBoolean("WANTS_GOOGLE_SIGNIN", true))
-          GnuBackgammon.Instance.nativeFunctions.beginGoogleSignIn();
         if (GnuBackgammon.Instance.invitationId != "") {
           GnuBackgammon.Instance.setFSM("MENU_FSM");
         } else {

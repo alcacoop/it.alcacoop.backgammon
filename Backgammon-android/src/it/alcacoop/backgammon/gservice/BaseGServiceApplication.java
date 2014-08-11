@@ -328,7 +328,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   @Override
   public void onSignInSucceeded() {
     System.out.println("---> SIGNIN SUCCEDED!");
-    GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
+    prefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
     prefs.flush();
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
@@ -347,10 +347,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           }
         });
 
-    if (gHelper.getInvitationId() != null && gHelper.isSignedIn()) {
+    if (gHelper.hasInvitation()) {
       invitationId = gHelper.getInvitationId();
-      System.out.println("---> INVITE FROM NOTIFICATION AREA " + invitationId);
       GnuBackgammon.Instance.invitationId = invitationId;
+      GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
   }
   void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
@@ -483,13 +483,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     prefs = Gdx.app.getPreferences("GameOptions");
     gHelper = new GServiceGameHelper(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
     gHelper.setup(this);
-    gHelper.setConnectOnStart(false);
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    gHelper.onStart(this);
   }
 
   @Override
@@ -625,14 +618,15 @@ public abstract class BaseGServiceApplication extends AndroidApplication
       gHelper.setListener(new GServiceGameHelper.GameHelperListener() {
         @Override
         public void onSignInSucceeded() {
-          GnuBackgammon.Instance.optionPrefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
-          GnuBackgammon.Instance.optionPrefs.flush();
-          gHelper.setListener(this);
+          prefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
+          prefs.flush();
+
+          gHelper.setListener(BaseGServiceApplication.this);
           if (from == FROM_ACHIEVEMENTS)
             startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), RC_ACHIEVEMENTS);
           else if (from == FROM_SCOREBOARDS)
             startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(getApiClient()), RC_LEADERBOARD);
-          else
+          else if (from == FROM_NEWGAME)
             rcSelectPlayers();
         }
         @Override

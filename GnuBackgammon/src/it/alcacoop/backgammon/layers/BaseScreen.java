@@ -96,6 +96,7 @@ public class BaseScreen implements Screen{
     if (lastBGX<(stage.getWidth()-width)) lastBGX=stage.getWidth()-width;
     bgImg.setX(lastBGX);
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
+    GnuBackgammon.Instance.nativeFunctions.beginGoogleSignIn();
   }
   
   public void initialize() {}
