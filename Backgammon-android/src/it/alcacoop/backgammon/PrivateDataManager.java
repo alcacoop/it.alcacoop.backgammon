@@ -21,7 +21,7 @@ public class PrivateDataManager {
   public static String TAG = "BILLING";
   public static final String SKU_NOADS = "";
   public static final String SKU_DONATE = "";
-  public static int RC_REQUEST = 1000001;
+  public static final int INAPP_BILLING_REQUEST = 1000001;
 
   public static Preferences billingPrefs;
 

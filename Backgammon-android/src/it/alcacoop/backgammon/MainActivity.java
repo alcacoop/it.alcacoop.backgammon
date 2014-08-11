@@ -490,7 +490,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     Gdx.graphics.setContinuousRendering(true);
     Gdx.graphics.requestRendering();
     Intent myIntent = new Intent(this, PurchaseActivity.class);
-    startActivityForResult(myIntent, PrivateDataManager.RC_REQUEST);
+    startActivityForResult(myIntent, PrivateDataManager.INAPP_BILLING_REQUEST);
   }
 
 
@@ -516,7 +516,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     hideProgressDialog();
 
     switch (requestCode) {
-      case PrivateDataManager.RC_REQUEST: // RETURN FROM IN APP BILLING
+      case PrivateDataManager.INAPP_BILLING_REQUEST: // RETURN FROM IN APP BILLING
         if (resultCode != 10000) {
           adsHelpers.disableAllAds();
           GnuBackgammon.Instance.menuScreen.redraw();

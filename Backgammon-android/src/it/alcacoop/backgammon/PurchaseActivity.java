@@ -28,7 +28,7 @@ public class PurchaseActivity extends Activity {
 
   private void purchase(String sku) {
     IabHelper h = PrivateDataManager.getHelper();
-    int ret = h.launchPurchaseFlow(this, sku, PrivateDataManager.RC_REQUEST, mPurchaseFinishedListener, PrivateDataManager.verifyCode);
+    int ret = h.launchPurchaseFlow(this, sku, PrivateDataManager.INAPP_BILLING_REQUEST, mPurchaseFinishedListener, PrivateDataManager.verifyCode);
     if (ret == 0) {
       System.out.println("BILLING: RET=" + ret);
       _toast("Application error: transaction not completed");
