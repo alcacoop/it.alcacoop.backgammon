@@ -100,14 +100,15 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   protected boolean meSentInvitation;
 
   ProgressDialog mProgressDialog = null;
-  protected static int RC_SELECT_PLAYERS = 6000;
-  protected static int RC_WAITING_ROOM = 6001;
-  protected static int RC_LEADERBOARD = 6002;
-  protected static int RC_ACHIEVEMENTS = 6003;
+  protected final static int RC_SELECT_PLAYERS = 6000;
+  protected final static int RC_WAITING_ROOM = 6001;
+  protected final static int RC_LEADERBOARD = 6002;
+  protected final static int RC_ACHIEVEMENTS = 6003;
+  protected final static int RC_RESOLVE = GServiceGameHelper.RC_RESOLVE;
 
-  public static int FROM_ACHIEVEMENTS = 1;
-  public static int FROM_SCOREBOARDS = 2;
-  public static int FROM_NEWGAME = 3;
+  public final static int FROM_ACHIEVEMENTS = 1;
+  public final static int FROM_SCOREBOARDS = 2;
+  public final static int FROM_NEWGAME = 3;
 
   protected String invitationId = "";
 
@@ -495,39 +496,54 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     gHelper.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == RC_SELECT_PLAYERS) {
-      if (resultCode == RESULT_OK) {
-        showProgressDialog();
-        Bundle autoMatchCriteria = null;
-        int minAutoMatchPlayers = data.getIntExtra(Multiplayer.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
-        int maxAutoMatchPlayers = data.getIntExtra(Multiplayer.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
-        if (minAutoMatchPlayers > 0 || maxAutoMatchPlayers > 0) {
-          autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers, maxAutoMatchPlayers, 0);
-        }
-        final ArrayList<String> invitees = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
 
-        // create the room
-        RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
-        rtmConfigBuilder.addPlayersToInvite(invitees);
-        rtmConfigBuilder.setMessageReceivedListener(this);
-        rtmConfigBuilder.setRoomStatusUpdateListener(this);
-        if (autoMatchCriteria != null) {
-          rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
+    switch (requestCode) {
+      case RC_SELECT_PLAYERS:
+        if (resultCode == RESULT_OK) {
+          showProgressDialog();
+          Bundle autoMatchCriteria = null;
+          int minAutoMatchPlayers = data.getIntExtra(Multiplayer.EXTRA_MIN_AUTOMATCH_PLAYERS, 0);
+          int maxAutoMatchPlayers = data.getIntExtra(Multiplayer.EXTRA_MAX_AUTOMATCH_PLAYERS, 0);
+          if (minAutoMatchPlayers > 0 || maxAutoMatchPlayers > 0) {
+            autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+          }
+          final ArrayList<String> invitees = data.getStringArrayListExtra(Games.EXTRA_PLAYER_IDS);
+
+          // create the room
+          RoomConfig.Builder rtmConfigBuilder = RoomConfig.builder(this);
+          rtmConfigBuilder.addPlayersToInvite(invitees);
+          rtmConfigBuilder.setMessageReceivedListener(this);
+          rtmConfigBuilder.setRoomStatusUpdateListener(this);
+          if (autoMatchCriteria != null) {
+            rtmConfigBuilder.setAutoMatchCriteria(autoMatchCriteria);
+          }
+          Games.RealTimeMultiplayer.create(getApiClient(), rtmConfigBuilder.build());
         }
-        Games.RealTimeMultiplayer.create(getApiClient(), rtmConfigBuilder.build());
-      }
-    } else if (requestCode == RC_WAITING_ROOM) {
-      if (resultCode != RESULT_OK)
-        _gserviceResetRoom();
-      else {
-        if (mRoomId != null) {
-          System.out.println("---> FORSE LO PRENDO DI QUI???");
-          showProgressDialog(true);
-        } else {
-          UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
+        break;
+
+      case RC_WAITING_ROOM:
+        if (resultCode != RESULT_OK)
+          _gserviceResetRoom();
+        else {
+          if (mRoomId != null) {
+            System.out.println("---> FORSE LO PRENDO DI QUI???");
+            showProgressDialog(true);
+          } else {
+            UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
+          }
         }
-      }
+        break;
+
+      case RC_RESOLVE: // RETURN FROM GMS LOGIN
+        if (resultCode != RESULT_OK) {
+          // PRIMO LOGIN RIFIUTATO
+          prefs.putBoolean("WANTS_GOOGLE_SIGNIN", false);
+          prefs.flush();
+          onSignInFailed();
+        }
+        break;
     }
+
   }
 
   public void _gserviceResetRoom() {
