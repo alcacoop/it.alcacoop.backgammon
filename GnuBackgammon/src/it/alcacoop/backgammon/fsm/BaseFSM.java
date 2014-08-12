@@ -131,6 +131,7 @@ public class BaseFSM implements Context {
     SET_MATCH_SCORE,
     SET_MATCH_TO,
     UPDATE_MS_CUBEINFO,
+    GREEDY_MOVE,
     PERFORMED_MOVE,
     NO_MORE_MOVES,
     POINT_TOUCHED,

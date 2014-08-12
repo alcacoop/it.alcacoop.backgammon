@@ -48,6 +48,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
+  private int[] greedyMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
 
 
   public enum States implements State {
@@ -217,9 +218,16 @@ public class GameFSM extends BaseFSM implements Context {
           case GENERATE_MOVES:
             int moves[][] = (int[][])params;
 
-            if (moves != null) {
+            if (moves != null) { // PLAYER HAS MOVES
               ctx.board().availableMoves.setMoves((int[][])params);
-            } else { // player (human) has no more moves
+
+              if ((moves.length <= 2) &&
+                  (ctx.board().bearingOff() >= 0) &&
+                  GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY BEAROFF
+                ((GameFSM)ctx).greedyMoves = moves[0];
+                ctx.state(GREEDY_BEAROFF);
+              }
+            } else { // PAYER HASN'T ANY MOVE
               ctx.state(DIALOG_HANDLER);
 
               int[] d = ctx.board().dices.get();
@@ -230,6 +238,7 @@ public class GameFSM extends BaseFSM implements Context {
             }
             ctx.board().dices.animating = false;
             break;
+
 
           case POINT_TOUCHED:
             if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
@@ -246,7 +255,7 @@ public class GameFSM extends BaseFSM implements Context {
                 GnuBackgammon.fsm.hnmove++;
 
                 ctx.board().availableMoves.dropDice(orig - dest);
-                ctx.state(HUMAN_CHECKER_MOVING);
+                ctx.state(States.HUMAN_CHECKER_MOVING);
                 ctx.board().humanMove(m);
               }
             } else {
@@ -281,6 +290,58 @@ public class GameFSM extends BaseFSM implements Context {
             return false;
         }
         return true;
+      }
+    },
+
+    GREEDY_BEAROFF {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case GREEDY_MOVE:
+            int idx = GnuBackgammon.fsm.hnmove;
+            int orig = (Integer)params;
+
+            int m[] = { orig, -1, -1, -1, -1, -1, -1, -1 };
+            GnuBackgammon.fsm.hmoves[idx * 2] = orig;
+            GnuBackgammon.fsm.hmoves[idx * 2 + 1] = -1;
+            GnuBackgammon.fsm.hnmove++;
+            ctx.board().availableMoves.dropDice(orig + 1);
+            ctx.board().humanMove(m);
+            break;
+
+          case PERFORMED_MOVE:
+            ctx.board().updatePInfo();
+            int or = -1;
+            for (int i = 0; i < 4; i++) {
+              if (((GameFSM)ctx).greedyMoves[i * 2] != -1) {
+                or = ((GameFSM)ctx).greedyMoves[i * 2];
+                ((GameFSM)ctx).greedyMoves[i * 2] = -1;
+                break;
+              }
+            }
+
+            if (or != -1)
+              processEvent(ctx, Events.GREEDY_MOVE, or);
+            else
+              processEvent(ctx, Events.NO_MORE_MOVES, null);
+            break;
+
+          case NO_MORE_MOVES:
+            int[] d = ctx.board().dices.get();
+            GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], GnuBackgammon.fsm.hmoves);
+            ctx.board().dices.clear();
+            ctx.state(CHECK_WIN);
+            break;
+
+          default:
+            return false;
+        }
+        return true;
+      }
+
+      @Override
+      public void enterState(Context ctx) {
+        processEvent(ctx, Events.PERFORMED_MOVE, null);
       }
     },
 
