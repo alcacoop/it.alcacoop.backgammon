@@ -43,12 +43,12 @@ import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
 import it.alcacoop.backgammon.helpers.AndroidHelpers;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
+import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.backgammon.utils.MatchRecorder;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -467,7 +467,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     Gdx.app.log("INITIALIZATION", "LOADING..");
     System.loadLibrary("gnubg");
     androidHelpers.copyAssetsIfNotExists();
-    GnubgAPI.InitializeEnvironment(androidHelpers.getDataDir());
+    AICalls.InitializeEnvironment(androidHelpers.getDataDir());
     enterImmersiveMode();
   }
 

@@ -168,7 +168,7 @@ public class SimulationFSM extends BaseFSM implements Context {
   }
 
   public void start() {
-    MatchState.SetAILevel(AILevels.GRANDMASTER);
+    MatchState.SetAILevel(AILevels.EXPERT);
     state(States.STARTING_SIMULATION);
   }
 

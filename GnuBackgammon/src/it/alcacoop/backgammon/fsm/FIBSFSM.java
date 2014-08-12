@@ -44,7 +44,6 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 
@@ -78,7 +77,7 @@ public class FIBSFSM extends BaseFSM implements Context {
           case DICES_ROLLED:
             ctx.board().dices.animating = false;
             dices = (int[])params;
-            int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
+            int mv[][] = AICalls.Locking.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
             if ((mv == null) || (mv.length == 0)) {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
             } else {
@@ -534,7 +533,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
             GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
             rating = GnuBackgammon.Instance.fibsScreen.me.getRating();
-            //System.out.println("---> RATING: " + rating);
+            // System.out.println("---> RATING: " + rating);
             break;
 
           default:

@@ -45,7 +45,6 @@ import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 
@@ -78,7 +77,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case DICES_ROLLED:
             ctx.board().dices.animating = false;
             dices = (int[])params;
-            int mv[][] = GnubgAPI.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
+            int mv[][] = AICalls.Locking.GenerateMoves(ctx.board()._board[0], ctx.board()._board[1], dices[0], dices[1]);
             if ((mv == null) || (mv.length == 0)) {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
             } else {
@@ -166,35 +165,38 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             if ((moves != null) && (moves.length > 0)) {
               ctx.board().availableMoves.setMoves(moves);
 
-              /** HO MOSSE A DISPOSIZIONE.. GENERO LE MIGLIORI (AUTOPLAY FOR TESTING) *
-              GnubgAPI.SetAILevel(5);
-              GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
-              int _dices[] = { GServiceFSM.d1, GServiceFSM.d2 };
-              int _moves[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-              GnubgAPI.EvaluateBestMove(_dices, _moves);
-              System.out.print("---> BEST MOVE: ");
-              for (int i = 0; i < 8; i++)
-                System.out.print(_moves[i] + " ");
-              System.out.println(" ");
-
-              /*
-              auto_moves.add(_moves[0]);
-              if (_moves[2] != -1)
-                auto_moves.add(_moves[2]);
-              if (_moves[4] != -1)
-                auto_moves.add(_moves[4]);
-              if (_moves[6] != -1)
-                auto_moves.add(_moves[6]);
-
-              Timer timer = new Timer();
-              TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                  GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
-                }
-              };
-              timer.schedule(task, 350);
-              /** FINE GENERAZIONE MOSSE **/
+              /**
+               * HO MOSSE A DISPOSIZIONE.. GENERO LE MIGLIORI (AUTOPLAY FOR TESTING)
+               * AICalls.Locking.SetAILevel(5);
+               * AICalls.Locking.SetBoard(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
+               * int _dices[] = { GServiceFSM.d1, GServiceFSM.d2 };
+               * int _moves[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+               * AICalls.Locking.EvaluateBestMove(_dices, _moves);
+               * System.out.print("---> BEST MOVE: ");
+               * for (int i = 0; i < 8; i++)
+               * System.out.print(_moves[i] + " ");
+               * System.out.println(" ");
+               * 
+               * 
+               * auto_moves.add(_moves[0]);
+               * if (_moves[2] != -1)
+               * auto_moves.add(_moves[2]);
+               * if (_moves[4] != -1)
+               * auto_moves.add(_moves[4]);
+               * if (_moves[6] != -1)
+               * auto_moves.add(_moves[6]);
+               * 
+               * Timer timer = new Timer();
+               * TimerTask task = new TimerTask() {
+               * 
+               * @Override
+               *           public void run() {
+               *           GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
+               *           }
+               *           };
+               *           timer.schedule(task, 350);
+               *           /** FINE GENERAZIONE MOSSE
+               **/
 
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
@@ -316,7 +318,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
     SWITCH_TURN {
       public void enterState(Context ctx) {
-        //GServiceClient.getInstance().debug();
+        // GServiceClient.getInstance().debug();
         for (int i = 0; i < 8; i++)
           GnuBackgammon.fsm.hmoves[i] = -1;
         GnuBackgammon.fsm.hnmove = 0;
@@ -329,8 +331,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           if (MatchState.fTurn == 0) {
             ctx.state(States.LOCAL_TURN);
           } else {
-            int dices[] = { 0, 0 };
-            GnubgAPI.RollDice(dices);
+            int dices[] = AICalls.Locking.RollDice();
             GServiceClient.getInstance().sendMessage(GSERVICE_ROLL + " " + dices[0] + " " + dices[1]);
             String s = "";
             for (int i = 1; i >= 0; i--)
@@ -368,7 +369,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_FIRSTROLL:
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
-            GnubgAPI.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            AICalls.Locking.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
 
             int pars[] = (int[])params;
             int dices[] = { pars[1], pars[2] };
@@ -377,7 +378,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             MatchState.fMove = turn;
             MatchState.fTurn = turn;
             MatchState.nMatchTo = 1;
-            GnubgAPI.SetGameTurn(turn, turn);
+            AICalls.Locking.SetGameTurn(turn, turn);
             GameMenuPopup.setDisabledButtons();
 
             if (turn == 0) {
@@ -444,7 +445,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt == Events.STOPPED) {
           MatchState.resignValue = 0;
-          //System.out.println("---> FSM STOPPED");
+          // System.out.println("---> FSM STOPPED");
           GServiceClient.getInstance().reset();
           GnuBackgammon.Instance.nativeFunctions.showInterstitial();
           GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
@@ -548,12 +549,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   @Override
   public void processEvent(final Events evt, final Object params) {
-    //System.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
+    // System.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        //System.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
-        //System.out.println("---> GSFSM: " + evt + " ON " + state());
+        // System.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
+        // System.out.println("---> GSFSM: " + evt + " ON " + state());
         switch (evt) {
           case GSERVICE_CHATMSG:
             GnuBackgammon.Instance.snd.playMessage();

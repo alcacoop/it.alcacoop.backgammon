@@ -47,7 +47,6 @@ import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -250,7 +249,7 @@ public class GameScreen extends BaseScreen {
 
     MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
     board.initBoard(2);
-    GnubgAPI.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
+    AICalls.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
 
     MatchState.SetMatchTo("" + gi.get("mi_length"));
 
@@ -287,7 +286,7 @@ public class GameScreen extends BaseScreen {
         GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
       MatchState.SetGameTurn(0, 0);
     } else {
-      GnubgAPI.SetGameTurn(0, 0);
+      AICalls.Locking.SetGameTurn(0, 0);
       MatchState.fMove = 0;
       MatchState.fTurn = 0;
 
