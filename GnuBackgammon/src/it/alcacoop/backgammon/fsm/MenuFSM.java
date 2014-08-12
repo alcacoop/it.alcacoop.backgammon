@@ -37,12 +37,12 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.fibs.CommandDispatcher.Command;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import java.util.Random;
 import java.util.Timer;
@@ -85,8 +85,7 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("TWO PLAYERS")) {
             ctx.state(States.TWO_PLAYERS);
           }
-          if (params.toString().equals("STATISTICS")) {
-          }
+          if (params.toString().equals("STATISTICS")) {}
           if (params.toString().equals("OPTIONS")) {
             ctx.state(States.GAME_OPTIONS);
           }
@@ -340,7 +339,7 @@ public class MenuFSM extends BaseFSM implements Context {
             if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])
-                GnubgAPI.RollDice(dices);
+                dices = AICalls.Locking.RollDice();
               int[] p = { (dices[0] > dices[1] ? 1 : 0), dices[0], dices[1] };
 
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
@@ -407,8 +406,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
     STOPPED {
       @Override
-      public void enterState(Context ctx) {
-      }
+      public void enterState(Context ctx) {}
     };
 
     // DEFAULT IMPLEMENTATION
@@ -416,11 +414,9 @@ public class MenuFSM extends BaseFSM implements Context {
       return false;
     }
 
-    public void enterState(Context ctx) {
-    }
+    public void enterState(Context ctx) {}
 
-    public void exitState(Context ctx) {
-    }
+    public void exitState(Context ctx) {}
 
   };
 

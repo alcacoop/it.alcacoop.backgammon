@@ -40,8 +40,10 @@ import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.badlogic.gdx.Gdx;
 
@@ -52,6 +54,130 @@ public class AICalls {
     dispatchExecutor = Executors.newSingleThreadExecutor();
   }
 
+
+  /* LOCKING IMPLEMENTATIONS */
+  public static class Locking {
+
+    public static int SetAILevel(final int l) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetAILevel(l);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int SetBoard(final int b1[], final int b2[]) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetBoard(b1, b2);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int UpdateMSCubeInfo(final int nCube, final int fCubeOwner) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.UpdateMSCubeInfo(nCube, fCubeOwner);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int SetMatchScore(final int AIScore, final int HumanScore) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetMatchScore(AIScore, HumanScore);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int SetGameTurn(final int fTurn, final int fMove) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetGameTurn(fTurn, fMove);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int[] RollDice() {
+      Future<int[]> f = dispatchExecutor.submit(new Callable<int[]>() {
+        @Override
+        public int[] call() throws Exception {
+          int[] ds = { 0, 0 };
+          GnubgAPI.RollDice(ds);
+          return ds;
+        }
+      });
+      int d[] = { 0, 0 };
+      try {
+        d = f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return d;
+    }
+
+    public static int[][] GenerateMoves(final int b1[], final int b2[], final int d1, final int d2) {
+      Future<int[][]> f = dispatchExecutor.submit(new Callable<int[][]>() {
+        @Override
+        public int[][] call() throws Exception {
+          int[][] mv = GnubgAPI.GenerateMoves(b1, b2, d1, d2);
+          return mv;
+        }
+      });
+      int mv[][] = { {}, {} };
+      try {
+        mv = f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return mv;
+    }
+  }
+
+  /* END LOCKING IMPLEMENTATIONS */
+
+
+  /* MESSAGE SENDING IMPLEMENTATIONS */
 
   public static void SetAILevel(final AILevels l) {
     dispatchExecutor.submit(new Runnable() {
@@ -310,4 +436,54 @@ public class AICalls {
       }
     });
   }
+
+
+  public static void InitializeEnvironment(final String s) {
+    dispatchExecutor.submit(new Runnable() {
+      @Override
+      public void run() {
+        GnubgAPI.InitializeEnvironment(s);
+      }
+    });
+  }
+
+  public static void SetGameVariant(final int type) {
+    dispatchExecutor.submit(new Runnable() {
+      @Override
+      public void run() {
+        GnubgAPI.SetGameVariant(type);
+      }
+    });
+  }
+
+
+  public static void SetMatchTo(final int nMatchTo) {
+    dispatchExecutor.submit(new Runnable() {
+      @Override
+      public void run() {
+        GnubgAPI.SetMatchTo(nMatchTo);
+      }
+    });
+  }
+
+
+  public static void SetCubeUse(final int fCubeUse) {
+    dispatchExecutor.submit(new Runnable() {
+      @Override
+      public void run() {
+        GnubgAPI.SetCubeUse(fCubeUse);
+      }
+    });
+  }
+
+
+  public static void SetCrawford(final int fCrawford) {
+    dispatchExecutor.submit(new Runnable() {
+      @Override
+      public void run() {
+        GnubgAPI.SetCrawford(fCrawford);
+      }
+    });
+  }
+
 }

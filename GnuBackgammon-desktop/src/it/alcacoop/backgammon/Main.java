@@ -34,9 +34,9 @@
 package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.MatchRecorder;
-import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -76,7 +76,7 @@ public class Main implements NativeFunctions {
     String s = System.getProperty("user.dir");
     data_dir = s;
     s += "/libs/";
-    GnubgAPI.InitializeEnvironment(s);
+    AICalls.InitializeEnvironment(s);
 
     mScriptConsole = new JConsole();
     bsh = new Interpreter(mScriptConsole);
