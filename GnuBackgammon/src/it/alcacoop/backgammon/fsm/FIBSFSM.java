@@ -144,6 +144,12 @@ public class FIBSFSM extends BaseFSM implements Context {
           case DICES_ROLLED:
             if ((moves != null) && (moves.length > 0)) {
               ctx.board().availableMoves.setMoves(moves);
+              // START GREEDY EVALUATION
+              int greedyMoves[] = ctx.board().getGreedyBearoffMove(moves);
+              if (greedyMoves[0] != -1) {
+                GnuBackgammon.fsm.greedyMoves = greedyMoves;
+                ctx.state(GREEDY_BEAROFF);
+              }// END GREEDY EVALUATION
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
             }
@@ -222,6 +228,52 @@ public class FIBSFSM extends BaseFSM implements Context {
             return false;
         }
 
+        return true;
+      }
+    },
+
+
+    GREEDY_BEAROFF {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case GREEDY_MOVE:
+            int idx = GnuBackgammon.fsm.hnmove;
+            int gm[] = (int[])params;
+            int m[] = { gm[0], gm[1], -1, -1, -1, -1, -1, -1 };
+            GnuBackgammon.fsm.hmoves[idx * 2] = gm[0];
+            GnuBackgammon.fsm.hmoves[idx * 2 + 1] = gm[1];
+            GnuBackgammon.fsm.hnmove++;
+            ctx.board().availableMoves.dropDice(gm[0] - gm[1]);
+            ctx.board().humanMove(m);
+            break;
+
+          case PERFORMED_MOVE:
+            ctx.board().updatePInfo();
+            int mv[] = { -1, -1 };
+            for (int i = 0; i < 4; i++) {
+              if (GnuBackgammon.fsm.greedyMoves[i * 2] != -1) {
+                mv[0] = GnuBackgammon.fsm.greedyMoves[i * 2];
+                mv[1] = GnuBackgammon.fsm.greedyMoves[(i * 2) + 1];
+                GnuBackgammon.fsm.greedyMoves[i * 2] = -1;
+                GnuBackgammon.fsm.greedyMoves[(i * 2) + 1] = -1;
+                break;
+              }
+            }
+            if (mv[0] != -1)
+              GnuBackgammon.fsm.processEvent(Events.GREEDY_MOVE, mv);
+            else
+              GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
+            break;
+
+          case NO_MORE_MOVES:
+            GnuBackgammon.fsm.state(LOCAL_TURN);
+            GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
+            break;
+
+          default:
+            return false;
+        }
         return true;
       }
     },

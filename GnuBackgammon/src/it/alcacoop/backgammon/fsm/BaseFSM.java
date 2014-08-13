@@ -43,13 +43,9 @@ import com.badlogic.gdx.Gdx;
 
 interface Context {
   Board board();
-
   int getMoves();
-
   void setMoves(int n);
-
   State state();
-
   void state(State state);
 }
 
@@ -66,6 +62,7 @@ interface State {
 public class BaseFSM implements Context {
 
   private int nMoves;
+  public int[] greedyMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   public int[] hmoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   public int hnmove = 0;
   public boolean helpShown = false;
@@ -131,6 +128,7 @@ public class BaseFSM implements Context {
     SET_MATCH_SCORE,
     SET_MATCH_TO,
     UPDATE_MS_CUBEINFO,
+    GREEDY_MOVE,
     PERFORMED_MOVE,
     NO_MORE_MOVES,
     POINT_TOUCHED,
@@ -208,13 +206,13 @@ public class BaseFSM implements Context {
   }
 
   public void state(final State state) {
-    //System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
+    // System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
     final Context _ctx = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        //System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
-        //System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
+        // System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
+        // System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
         if (currentState != null)
           currentState.exitState(_ctx);
         previousState = currentState;
