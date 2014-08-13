@@ -267,7 +267,7 @@ public class FIBSFSM extends BaseFSM implements Context {
 
           if (differ) {
             ctx.board().initBoard(b.board[0], b.board[1]);// RESYNC!
-            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            AICalls.Locking.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           }
 
           GnuBackgammon.fsm.back();
@@ -326,7 +326,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             for (int i = 0; i < 25; i++) {
               MatchState.board[4][i] = b.board[0][i];
               MatchState.board[5][i] = b.board[1][i];
-              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+              AICalls.Locking.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
             }
             ctx.board().initBoard(2);
             MatchState.SetGameVariant(0);
@@ -335,7 +335,7 @@ public class FIBSFSM extends BaseFSM implements Context {
             gs.pInfo[1].setName(GnuBackgammon.Instance.fibsScreen.username); // PRIMO NOME => NERO
             gs.pInfo[0].setName(b.p2);
             ctx.board().updatePInfo();
-            AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+            AICalls.Locking.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
             MatchState.FibsDirection = b.direction;
             MatchState.FibsColor = b.color;
 
