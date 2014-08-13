@@ -221,9 +221,9 @@ public class GameFSM extends BaseFSM implements Context {
             if (moves != null) { // PLAYER HAS MOVES
               ctx.board().availableMoves.setMoves((int[][])params);
 
-              if ((moves.length <= 2) &&
-                  (ctx.board().bearingOff() >= 0) &&
-                  GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY BEAROFF
+              if ((!ctx.board().hasContact()) && // NO CONTACT
+                  (ctx.board().bearingOff() >= 0) && // BEARING OFF
+                  GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY YES
                 ((GameFSM)ctx).greedyMoves = moves[0];
                 ctx.state(GREEDY_BEAROFF);
               }
