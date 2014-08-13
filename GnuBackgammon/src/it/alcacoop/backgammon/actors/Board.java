@@ -480,6 +480,23 @@ public class Board extends Group {
   }
 
 
+  public boolean hasContact() {
+    int myMaxPoint = 0;
+    int opMinPoint = 24;
+    for (int i = 0; i < 25; i++) {
+      if (_board[0][i] > 0) {
+        myMaxPoint = i > myMaxPoint ? i : myMaxPoint;
+      }
+      if (_board[1][24 - i] > 0) {
+        opMinPoint = i < opMinPoint ? i : opMinPoint;
+      }
+    }
+    opMinPoint--;
+    System.out.println("HASCONTACT: " + myMaxPoint + " - " + opMinPoint + " " + (opMinPoint < myMaxPoint));
+    return opMinPoint < myMaxPoint;
+  }
+
+
   public int bearingOff() {
     int count = 0;
     for (int i = 6; i < 25; i++) {
