@@ -498,7 +498,8 @@ public class Board extends Group {
           bestMove = i;
         }
       }
-      m = moves[bestMove];
+      if (noff > 0)
+        m = moves[bestMove];
     }
     return m;
   }
