@@ -300,7 +300,6 @@ public class GameFSM extends BaseFSM implements Context {
           case GREEDY_MOVE:
             int idx = GnuBackgammon.fsm.hnmove;
             int orig = (Integer)params;
-
             int m[] = { orig, -1, -1, -1, -1, -1, -1, -1 };
             GnuBackgammon.fsm.hmoves[idx * 2] = orig;
             GnuBackgammon.fsm.hmoves[idx * 2 + 1] = -1;
@@ -319,18 +318,15 @@ public class GameFSM extends BaseFSM implements Context {
                 break;
               }
             }
-
             if (or != -1)
-              processEvent(ctx, Events.GREEDY_MOVE, or);
+              GnuBackgammon.fsm.processEvent(Events.GREEDY_MOVE, or);
             else
-              processEvent(ctx, Events.NO_MORE_MOVES, null);
+              GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
             break;
 
           case NO_MORE_MOVES:
-            int[] d = ctx.board().dices.get();
-            GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], GnuBackgammon.fsm.hmoves);
-            ctx.board().dices.clear();
-            ctx.state(CHECK_WIN);
+            GnuBackgammon.fsm.state(HUMAN_TURN);
+            GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
             break;
 
           default:
@@ -341,7 +337,7 @@ public class GameFSM extends BaseFSM implements Context {
 
       @Override
       public void enterState(Context ctx) {
-        processEvent(ctx, Events.PERFORMED_MOVE, null);
+        GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
       }
     },
 
@@ -475,7 +471,7 @@ public class GameFSM extends BaseFSM implements Context {
           UIDialog.getHelpDialog(true);
           GnuBackgammon.fsm.helpShown = true;
         } else {
-          processEvent(ctx, Events.NOOP, null);
+          GnuBackgammon.fsm.processEvent(Events.NOOP, null);
         }
       }
 
@@ -496,7 +492,7 @@ public class GameFSM extends BaseFSM implements Context {
                 dices = AICalls.Locking.RollDice();
               }
             }
-            processEvent(ctx, Events.ROLL_DICE, dices);
+            GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, dices);
             break;
 
           case ROLL_DICE:
