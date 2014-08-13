@@ -276,6 +276,11 @@ public class FIBSFSM extends BaseFSM implements Context {
         }
         return true;
       }
+
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
+      }
     },
 
     HUMAN_CHECKER_MOVING { // HERE ALL TOUCH EVENTS ARE IGNORED!
