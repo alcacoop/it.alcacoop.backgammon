@@ -480,6 +480,29 @@ public class Board extends Group {
   }
 
 
+  public int[] getGreedyBearoffMove(int[][] moves) {
+    int m[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+    if ((!hasContact()) && // NO CONTACT
+        (bearingOff() >= 0) && // BEARING OFF
+        GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY YES
+      int noff = 0;
+      int bestMove = 0;
+      for (int i = 0; i < moves.length / 2; i++) {
+        int _noff = 0;
+        for (int j = 0; j < 4; j++) {
+          if ((moves[i][j * 2] != -1) && (moves[i][(j * 2) + 1] == -1))
+            _noff++;
+        }
+        if (_noff >= noff) {
+          noff = _noff;
+          bestMove = i;
+        }
+      }
+      m = moves[bestMove];
+    }
+    return m;
+  }
+
   public boolean hasContact() {
     int myMaxPoint = 0;
     int opMinPoint = 24;

@@ -48,7 +48,6 @@ public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
-  private int[] greedyMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
 
 
   public enum States implements State {
@@ -219,21 +218,18 @@ public class GameFSM extends BaseFSM implements Context {
             int moves[][] = (int[][])params;
 
             if (moves != null) { // PLAYER HAS MOVES
-              ctx.board().availableMoves.setMoves((int[][])params);
-
-              if ((!ctx.board().hasContact()) && // NO CONTACT
-                  (ctx.board().bearingOff() >= 0) && // BEARING OFF
-                  GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY YES
-                ((GameFSM)ctx).greedyMoves = moves[0];
+              ctx.board().availableMoves.setMoves(moves);
+              // START GREEDY EVALUATION
+              int greedyMoves[] = ctx.board().getGreedyBearoffMove(moves);
+              if (greedyMoves[0] != -1) {
+                GnuBackgammon.fsm.greedyMoves = greedyMoves;
                 ctx.state(GREEDY_BEAROFF);
-              }
+              }// END GREEDY EVALUATION
             } else { // PAYER HASN'T ANY MOVE
               ctx.state(DIALOG_HANDLER);
-
               int[] d = ctx.board().dices.get();
               int[] m = { -1, -1, -1, -1, -1, -1, -1, -1 };
               GnuBackgammon.Instance.rec.addMove(0, d[0], d[1], m);
-
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
             }
             ctx.board().dices.animating = false;
@@ -299,27 +295,29 @@ public class GameFSM extends BaseFSM implements Context {
         switch (evt) {
           case GREEDY_MOVE:
             int idx = GnuBackgammon.fsm.hnmove;
-            int orig = (Integer)params;
-            int m[] = { orig, -1, -1, -1, -1, -1, -1, -1 };
-            GnuBackgammon.fsm.hmoves[idx * 2] = orig;
-            GnuBackgammon.fsm.hmoves[idx * 2 + 1] = -1;
+            int gm[] = (int[])params;
+            int m[] = { gm[0], gm[1], -1, -1, -1, -1, -1, -1 };
+            GnuBackgammon.fsm.hmoves[idx * 2] = gm[0];
+            GnuBackgammon.fsm.hmoves[idx * 2 + 1] = gm[1];
             GnuBackgammon.fsm.hnmove++;
-            ctx.board().availableMoves.dropDice(orig + 1);
+            ctx.board().availableMoves.dropDice(gm[0] - gm[1]);
             ctx.board().humanMove(m);
             break;
 
           case PERFORMED_MOVE:
             ctx.board().updatePInfo();
-            int or = -1;
+            int mv[] = { -1, -1 };
             for (int i = 0; i < 4; i++) {
-              if (((GameFSM)ctx).greedyMoves[i * 2] != -1) {
-                or = ((GameFSM)ctx).greedyMoves[i * 2];
-                ((GameFSM)ctx).greedyMoves[i * 2] = -1;
+              if (GnuBackgammon.fsm.greedyMoves[i * 2] != -1) {
+                mv[0] = GnuBackgammon.fsm.greedyMoves[i * 2];
+                mv[1] = GnuBackgammon.fsm.greedyMoves[(i * 2) + 1];
+                GnuBackgammon.fsm.greedyMoves[i * 2] = -1;
+                GnuBackgammon.fsm.greedyMoves[(i * 2) + 1] = -1;
                 break;
               }
             }
-            if (or != -1)
-              GnuBackgammon.fsm.processEvent(Events.GREEDY_MOVE, or);
+            if (mv[0] != -1)
+              GnuBackgammon.fsm.processEvent(Events.GREEDY_MOVE, mv);
             else
               GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
             break;
@@ -333,11 +331,6 @@ public class GameFSM extends BaseFSM implements Context {
             return false;
         }
         return true;
-      }
-
-      @Override
-      public void enterState(Context ctx) {
-        GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
       }
     },
 
