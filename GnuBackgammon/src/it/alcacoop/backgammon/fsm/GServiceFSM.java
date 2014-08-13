@@ -111,24 +111,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
 
     LOCAL_TURN {
-      /*
-      @Override
-      public void enterState(Context ctx) {
-        if (GnuBackgammon.fsm.previousState == States.HUMAN_CHECKER_MOVING) {
-          Timer timer = new Timer();
-          TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-              if (auto_moves.size() > 0)
-                GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
-              else
-                GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
-            }
-          };
-          timer.schedule(task, 350);
-        }
-      }
-      */
 
       @Override
       public boolean processEvent(Context ctx, GServiceFSM.Events evt, Object params) {
@@ -164,40 +146,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case DICES_ROLLED:
             if ((moves != null) && (moves.length > 0)) {
               ctx.board().availableMoves.setMoves(moves);
-
-              /**
-               * HO MOSSE A DISPOSIZIONE.. GENERO LE MIGLIORI (AUTOPLAY FOR TESTING)
-               * AICalls.Locking.SetAILevel(5);
-               * AICalls.Locking.SetBoard(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
-               * int _dices[] = { GServiceFSM.d1, GServiceFSM.d2 };
-               * int _moves[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-               * AICalls.Locking.EvaluateBestMove(_dices, _moves);
-               * System.out.print("---> BEST MOVE: ");
-               * for (int i = 0; i < 8; i++)
-               * System.out.print(_moves[i] + " ");
-               * System.out.println(" ");
-               * 
-               * 
-               * auto_moves.add(_moves[0]);
-               * if (_moves[2] != -1)
-               * auto_moves.add(_moves[2]);
-               * if (_moves[4] != -1)
-               * auto_moves.add(_moves[4]);
-               * if (_moves[6] != -1)
-               * auto_moves.add(_moves[6]);
-               * 
-               * Timer timer = new Timer();
-               * TimerTask task = new TimerTask() {
-               * 
-               * @Override
-               *           public void run() {
-               *           GnuBackgammon.fsm.processEvent(Events.POINT_TOUCHED, auto_moves.remove(0));
-               *           }
-               *           };
-               *           timer.schedule(task, 350);
-               *           /** FINE GENERAZIONE MOSSE
-               **/
-
+              // START GREEDY EVALUATION
+              int greedyMoves[] = ctx.board().getGreedyBearoffMove(moves);
+              if (greedyMoves[0] != -1) {
+                GnuBackgammon.fsm.greedyMoves = greedyMoves;
+                ctx.state(GREEDY_BEAROFF);
+              }// END GREEDY EVALUATION
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
             }
@@ -266,6 +220,57 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         return true;
       }
     },
+
+    GREEDY_BEAROFF {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case GREEDY_MOVE:
+            int idx = GnuBackgammon.fsm.hnmove;
+            int gm[] = (int[])params;
+            int m[] = { gm[0], gm[1], -1, -1, -1, -1, -1, -1 };
+            GnuBackgammon.fsm.hmoves[idx * 2] = gm[0];
+            GnuBackgammon.fsm.hmoves[idx * 2 + 1] = gm[1];
+            GnuBackgammon.fsm.hnmove++;
+            ctx.board().availableMoves.dropDice(gm[0] - gm[1]);
+            ctx.board().humanMove(m);
+            break;
+
+          case PERFORMED_MOVE:
+            ctx.board().updatePInfo();
+            int mv[] = { -1, -1 };
+            for (int i = 0; i < 4; i++) {
+              if (GnuBackgammon.fsm.greedyMoves[i * 2] != -1) {
+                mv[0] = GnuBackgammon.fsm.greedyMoves[i * 2];
+                mv[1] = GnuBackgammon.fsm.greedyMoves[(i * 2) + 1];
+                GnuBackgammon.fsm.greedyMoves[i * 2] = -1;
+                GnuBackgammon.fsm.greedyMoves[(i * 2) + 1] = -1;
+                break;
+              }
+            }
+            if (mv[0] != -1)
+              GnuBackgammon.fsm.processEvent(Events.GREEDY_MOVE, mv);
+            else
+              GnuBackgammon.fsm.processEvent(Events.NO_MORE_MOVES, null);
+            break;
+
+          case NO_MORE_MOVES:
+            GnuBackgammon.fsm.state(LOCAL_TURN);
+            GnuBackgammon.fsm.processEvent(Events.DICE_CLICKED, null);
+            break;
+
+          default:
+            return false;
+        }
+        return true;
+      }
+
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.fsm.processEvent(Events.PERFORMED_MOVE, null);
+      }
+    },
+
 
     HUMAN_CHECKER_MOVING { // HERE ALL TOUCH EVENTS ARE IGNORED!
       @Override
