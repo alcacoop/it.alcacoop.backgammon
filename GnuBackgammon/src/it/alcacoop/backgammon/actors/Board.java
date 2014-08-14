@@ -486,6 +486,7 @@ public class Board extends Group {
 
     int ds[] = dices.get();
     int cMoves = ds[0] == ds[1] ? 4 : 2;
+    cMoves = Math.min(cMoves, (15 - bearedOff[MatchState.fMove]));
 
     for (int i = 0; i < moves.length; i++) {
       for (int iMove = 0; iMove < cMoves; iMove++) {
