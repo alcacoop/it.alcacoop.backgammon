@@ -57,6 +57,21 @@ public class AICalls {
 
   /* LOCKING IMPLEMENTATIONS */
   public static class Locking {
+    public static int InitRNG(final int type) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.InitRNG(type);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
 
     public static int SetAILevel(final int l) {
       Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {

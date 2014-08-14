@@ -36,6 +36,8 @@ package it.alcacoop.backgammon.ui;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.FixedButtonGroup;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -276,13 +278,20 @@ public class GameOptionsTable extends Table {
     GnuBackgammon.Instance.optionPrefs.putString("AMOVES", amoves);
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("LMOVES", lmoves);
-    String manualdices = ((TextButton)this.mdices.getChecked()).getText().toString();
-    GnuBackgammon.Instance.optionPrefs.putString("DICESG", manualdices);
+    String dicegenerator = ((TextButton)this.mdices.getChecked()).getText().toString();
+    GnuBackgammon.Instance.optionPrefs.putString("DICESG", dicegenerator);
     String greedy = ((TextButton)this.mgreedy.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("GREEDY", greedy);
 
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
+
+    // CHANGE DICE GENERATOR
+    if (dicegenerator.equals("MER-TWS"))
+      AICalls.Locking.InitRNG(MatchState.RNG_MERSENNE);
+    else
+      AICalls.Locking.InitRNG(MatchState.RNG_ISAAC);
+
   }
 
 
