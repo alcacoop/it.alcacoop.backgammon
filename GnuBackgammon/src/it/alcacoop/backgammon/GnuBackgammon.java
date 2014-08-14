@@ -51,7 +51,6 @@ import it.alcacoop.backgammon.layers.OptionsScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.layers.TwoPlayersScreen;
 import it.alcacoop.backgammon.layers.WelcomeScreen;
-import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.utils.FibsNetHandler;
 import it.alcacoop.backgammon.utils.JSONProperties;
@@ -165,12 +164,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
     transitionTimer = new Timer();
 
-    // INITIALIZING DICE GENERATOR
-    if (optionPrefs.getString("DICESG", "MER-TWS").equals("MER-TWS"))
-      AICalls.Locking.InitRNG(MatchState.RNG_MERSENNE);
-    else
-      AICalls.Locking.InitRNG(MatchState.RNG_ISAAC);
-
     if (!skipSplashScreen) {
       setScreen(new SplashScreen("data/" + resname[ss] + "/alca.png"));
     } else {
@@ -178,6 +171,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       setFSM("MENU_FSM");
     }
   }
+
+
   public void initAssets() {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
