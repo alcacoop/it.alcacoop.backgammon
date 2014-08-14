@@ -196,7 +196,7 @@ public class GameOptionsTable extends Table {
 
     row().spaceBottom(height * 0.1f);
     add().fill().height(height * 1.05f).expandX();
-    add(new Label("Manual dices:", GnuBackgammon.skin)).right().spaceRight(6);
+    add(new Label("Manual Dices:", GnuBackgammon.skin)).right().spaceRight(6);
     add(md1).height(height * 1.3f).width(width);
     add(md2).height(height * 1.3f).width(width);
     add().fill().expandX();
@@ -256,7 +256,7 @@ public class GameOptionsTable extends Table {
     this.lmoves.setChecked(lmoves);
     String manualdices = GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No");
     this.mdices.setChecked(manualdices);
-    String greedy = GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes");
+    String greedy = GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "No");
     this.mgreedy.setChecked(greedy);
 
   }

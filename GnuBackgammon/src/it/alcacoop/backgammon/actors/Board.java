@@ -481,28 +481,24 @@ public class Board extends Group {
 
 
   public int[] getGreedyBearoffMove(int[][] moves) {
-    int m[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-    if ((!hasContact()) && // NO CONTACT
-        (bearingOff() >= 0) && // BEARING OFF
-        GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("Yes")) { // GREEDY YES
-      int noff = 0;
-      int bestMove = 0;
-      for (int i = 0; i < moves.length / 2; i++) {
-        int _noff = 0;
-        for (int j = 0; j < 4; j++) {
-          if ((moves[i][j * 2] != -1) && (moves[i][(j * 2) + 1] == -1))
-            _noff++;
-        }
-        if (_noff >= noff) {
-          noff = _noff;
-          bestMove = i;
+    if (hasContact() || (bearingOff() < 0) || GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "No").equals("No"))
+      return null;
+
+    int ds[] = dices.get();
+    int cMoves = ds[0] == ds[1] ? 4 : 2;
+
+    for (int i = 0; i < moves.length; i++) {
+      for (int iMove = 0; iMove < cMoves; iMove++) {
+        if ((moves[i][iMove * 2] < 0) || (moves[i][(iMove * 2) + 1] != -1)) {
+          break;
+        } else if (iMove == cMoves - 1) {
+          return moves[i];
         }
       }
-      if (noff > 0)
-        m = moves[bestMove];
     }
-    return m;
+    return null;
   }
+
 
   public boolean hasContact() {
     int myMaxPoint = 0;

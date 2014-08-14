@@ -146,12 +146,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case DICES_ROLLED:
             if ((moves != null) && (moves.length > 0)) {
               ctx.board().availableMoves.setMoves(moves);
-              // START GREEDY EVALUATION
-              int greedyMoves[] = ctx.board().getGreedyBearoffMove(moves);
-              if (greedyMoves[0] != -1) {
-                GnuBackgammon.fsm.greedyMoves = greedyMoves;
-                ctx.state(GREEDY_BEAROFF);
-              }// END GREEDY EVALUATION
+
+              if ((GnuBackgammon.fsm.greedyMoves = ctx.board().getGreedyBearoffMove(moves)) != null)
+                ctx.state(GREEDY_BEAROFF); // START GREEDY BEAROFF
+
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
             }
