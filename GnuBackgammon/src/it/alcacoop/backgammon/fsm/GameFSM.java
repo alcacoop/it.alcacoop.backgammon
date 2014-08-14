@@ -219,12 +219,10 @@ public class GameFSM extends BaseFSM implements Context {
 
             if (moves != null) { // PLAYER HAS MOVES
               ctx.board().availableMoves.setMoves(moves);
-              // START GREEDY EVALUATION
-              int greedyMoves[] = ctx.board().getGreedyBearoffMove(moves);
-              if (greedyMoves[0] != -1) {
-                GnuBackgammon.fsm.greedyMoves = greedyMoves;
-                ctx.state(GREEDY_BEAROFF);
-              }// END GREEDY EVALUATION
+
+              if ((GnuBackgammon.fsm.greedyMoves = ctx.board().getGreedyBearoffMove(moves)) != null)
+                ctx.state(GREEDY_BEAROFF); // START GREEDY BEAROFF
+
             } else { // PAYER HASN'T ANY MOVE
               ctx.state(DIALOG_HANDLER);
               int[] d = ctx.board().dices.get();
