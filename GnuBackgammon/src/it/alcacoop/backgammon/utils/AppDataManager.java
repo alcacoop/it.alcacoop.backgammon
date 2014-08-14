@@ -35,7 +35,7 @@ public class AppDataManager {
     app_data.put("amoves", GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap"));
     app_data.put("lmoves", GnuBackgammon.Instance.optionPrefs.getString("LMOVES", "Yes"));
     app_data.put("mdices", GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No"));
-    app_data.put("greedy", GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes"));
+    app_data.put("greedy", GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "No"));
 
     app_data.put("board", GnuBackgammon.Instance.appearancePrefs.getString("BOARD", "B1"));
     app_data.put("checkers", GnuBackgammon.Instance.appearancePrefs.getString("CHECKERS", "CS1"));

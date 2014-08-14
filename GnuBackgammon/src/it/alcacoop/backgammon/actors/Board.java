@@ -481,7 +481,7 @@ public class Board extends Group {
 
 
   public int[] getGreedyBearoffMove(int[][] moves) {
-    if (hasContact() || (bearingOff() < 0) || GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "Yes").equals("No"))
+    if (hasContact() || (bearingOff() < 0) || GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "No").equals("No"))
       return null;
 
     int ds[] = dices.get();
