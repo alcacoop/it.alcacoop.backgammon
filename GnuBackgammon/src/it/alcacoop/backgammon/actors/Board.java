@@ -164,7 +164,7 @@ public class Board extends Group {
         Board.this.rollBtn.remove();
         Board.this.doubleBtn.remove();
         if (MatchState.matchType < 2)
-          if (GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No").equals("No")) {
+          if (!GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) {
             Board.this.rollDices();
           } else {
             UIDialog.getDicesDialog(false);

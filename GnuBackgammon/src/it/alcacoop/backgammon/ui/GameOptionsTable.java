@@ -101,10 +101,12 @@ public class GameOptionsTable extends Table {
     lm2.addListener(cls);
 
     mdices = new FixedButtonGroup();
-    TextButton md1 = new TextButton("Yes", ts);
-    TextButton md2 = new TextButton("No", ts);
+    TextButton md1 = new TextButton("MER-TWS", ts);
+    TextButton md2 = new TextButton("ISAAC", ts);
+    TextButton md3 = new TextButton("Manual", ts);
     mdices.add(md1);
     mdices.add(md2);
+    mdices.add(md3);
 
     mgreedy = new FixedButtonGroup();
     TextButton mg1 = new TextButton("Yes", ts);
@@ -150,7 +152,7 @@ public class GameOptionsTable extends Table {
 
     Label l = new Label("Animation Speed:", GnuBackgammon.skin);
 
-    float width = l.getWidth() * 0.9f;
+    float width = l.getWidth() * 1.4f;
     float height = l.getHeight() * 1.8f;
 
 
@@ -197,8 +199,12 @@ public class GameOptionsTable extends Table {
     row().spaceBottom(height * 0.1f);
     add().fill().height(height * 1.05f).expandX();
     add(new Label("Manual Dices:", GnuBackgammon.skin)).right().spaceRight(6);
-    add(md1).height(height * 1.3f).width(width);
-    add(md2).height(height * 1.3f).width(width);
+    Table t = new Table();
+    add(t).height(height * 1.3f).width(width * 2).colspan(2).fillY();
+    // add(md2).height(height * 1.3f).width(width);
+    t.add(md1).width(width * 2 / 3).fillY().expandY();
+    t.add(md2).width(width * 2 / 3).fillY().expandY();
+    t.add(md3).width(width * 2 / 3).fillY().expandY();
     add().fill().expandX();
 
     row().spaceBottom(height * 0.1f);
@@ -254,7 +260,7 @@ public class GameOptionsTable extends Table {
 
     String lmoves = GnuBackgammon.Instance.optionPrefs.getString("LMOVES", "Yes");
     this.lmoves.setChecked(lmoves);
-    String manualdices = GnuBackgammon.Instance.optionPrefs.getString("MDICES", "No");
+    String manualdices = GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS");
     this.mdices.setChecked(manualdices);
     String greedy = GnuBackgammon.Instance.optionPrefs.getString("GREEDY", "No");
     this.mgreedy.setChecked(greedy);
@@ -271,7 +277,7 @@ public class GameOptionsTable extends Table {
     String lmoves = ((TextButton)this.lmoves.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("LMOVES", lmoves);
     String manualdices = ((TextButton)this.mdices.getChecked()).getText().toString();
-    GnuBackgammon.Instance.optionPrefs.putString("MDICES", manualdices);
+    GnuBackgammon.Instance.optionPrefs.putString("DICESG", manualdices);
     String greedy = ((TextButton)this.mgreedy.getChecked()).getText().toString();
     GnuBackgammon.Instance.optionPrefs.putString("GREEDY", greedy);
 

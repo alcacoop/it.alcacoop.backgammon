@@ -52,29 +52,28 @@ public class OptionsScreen extends BaseScreen {
 
   private Table table;
   private final GameOptionsTable opts;
-  
-  
-  public OptionsScreen(){
+
+
+  public OptionsScreen() {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+        if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           opts.savePrefs();
           GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
         }
         return super.keyDown(event, keycode);
       }
     });
-    
+
     table = new Table();
     table.setWidth(stage.getWidth());
-    table.setHeight(stage.getHeight());
+    table.setHeight(stage.getHeight() * 0.95f);
     opts = new GameOptionsTable(true, null);
     table.add(opts).expand().fill();
     stage.addActor(table);
   }
-  
-  
+
 
   @Override
   public void render(float delta) {
@@ -88,23 +87,25 @@ public class OptionsScreen extends BaseScreen {
   @Override
   public void initialize() {
     opts.initFromPrefs();
-    table.setColor(1,1,1,0);
+    table.setColor(1, 1, 1, 0);
     table.setX(-stage.getWidth());
-    table.setY((stage.getHeight()-table.getHeight())/2);
+    table.setY((stage.getHeight() - table.getHeight()) / 2);
   }
-  
+
   @Override
   public void show() {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),Actions.moveTo((stage.getWidth()-table.getWidth())/2, (stage.getHeight()-table.getHeight())/2, animationTime))));
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(animationTime),
+        Actions.moveTo((stage.getWidth() - table.getWidth()) / 2, (stage.getHeight() - table.getHeight()) / 2, animationTime))));
   }
 
-  
+
   @Override
   public void fadeOut() {
-    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-table.getHeight())/2, animationTime))));
+    table.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(animationTime),
+        Actions.moveTo(-stage.getWidth(), (stage.getHeight() - table.getHeight()) / 2, animationTime))));
   }
 
   @Override
