@@ -49,6 +49,9 @@ public class MatchState {
       { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },// ALL BEARED OFF
   };
 
+  public static final int RNG_MERSENNE = 0;
+  public static final int RNG_ISAAC = 1;
+
   /* NOTE: ON NATIVE API HUMAN=1 AND PC=0 */
   public static AILevels currentLevel = AILevels.EXPERT;
   public static int fMove = 1; // CHI HA I DADI IN MANO (1=PC 0=HUMAN)

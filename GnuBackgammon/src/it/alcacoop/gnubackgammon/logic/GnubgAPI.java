@@ -35,6 +35,7 @@ package it.alcacoop.gnubackgammon.logic;
 
 public class GnubgAPI {
   public static native void InitializeEnvironment(String str);
+  public static native void InitRNG(int type);
   public static native void SetAILevel(int level);
   public static native void RollDice(int d[]);
   public static native void SetBoard(int b1[], int b2[]);
