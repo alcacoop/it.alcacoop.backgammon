@@ -70,6 +70,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Pool;
 
@@ -144,6 +145,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
 
   private Timer transitionTimer;
+  public Image iconMe, iconOpponent;
 
 
   @Override

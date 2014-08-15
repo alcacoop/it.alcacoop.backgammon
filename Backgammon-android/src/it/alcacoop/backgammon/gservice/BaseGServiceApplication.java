@@ -236,11 +236,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
 
     String sRdm = new BigInteger(130, rnd).toString(32);
-
     if (mParticipants.get(0).getParticipantId() == mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
-
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 0);
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 1);
       if (mParticipants.get(1).getPlayer() == null)
         opponent_player_id = sRdm;
       else
@@ -248,7 +248,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
-
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 1);
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 0);
       if (mParticipants.get(0).getPlayer() == null)
         opponent_player_id = sRdm;
       else

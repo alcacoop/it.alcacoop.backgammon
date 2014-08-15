@@ -54,6 +54,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Gravity;
@@ -73,6 +79,10 @@ import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.leaderboard.ScoreSubmissionData.Result;
@@ -87,6 +97,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   private AndroidHelpers androidHelpers;
   private ADSHelpers adsHelpers;
   private AccelerometerHelpers accelerometerHelpers;
+
+  private ImageManager imgMgr;
 
 
   @Override
@@ -143,6 +155,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     EditText target = (EditText)findViewById(R.id.message);
     target.setOnEditorActionListener(this);
     /** CHATBOX DIMS **/
+
+    imgMgr = ImageManager.create(getApplicationContext());
   }
 
 
@@ -648,6 +662,34 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void beginGoogleSignIn() {
     gHelper.setConnectOnStart(prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true));
     gHelper.onStart(this);
+  }
+
+
+  @Override
+  public void loadImageFromIconURI(Object iconURI, final int playerIndex) {
+
+    System.out.println("===> URI: " + iconURI);
+
+    Uri uri = (Uri)iconURI;
+    imgMgr.loadImage(new ImageManager.OnImageLoadedListener() {
+      @Override
+      public void onImageLoaded(Uri uri, final Drawable drawable, boolean arg2) {
+        Gdx.app.postRunnable(new Runnable() {
+          @Override
+          public void run() {
+            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+            Texture tex = new Texture(128, 128, Format.RGBA8888);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, tex.getTextureObjectHandle());
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+            if (playerIndex == 0)
+              GnuBackgammon.Instance.iconMe = new Image(tex);
+            else
+              GnuBackgammon.Instance.iconOpponent = new Image(tex);
+          }
+        });
+      }
+    }, uri, R.drawable.gplayer);
   }
 
 
