@@ -208,27 +208,6 @@ public class AICalls {
   }
 
 
-  public static void SetBoard(final int b1[], final int b2[]) {
-    dispatchExecutor.submit(new Runnable() {
-      BaseFSM fsm = GnuBackgammon.fsm;
-
-      @Override
-      public void run() {
-        if (fsm != GnuBackgammon.fsm)
-          return;
-        GnubgAPI.SetBoard(b1, b2);
-        Gdx.app.postRunnable(new Runnable() {
-          @Override
-          public void run() {
-            if (fsm == GnuBackgammon.fsm)
-              GnuBackgammon.fsm.processEvent(GameFSM.Events.SET_BOARD, 1);
-          }
-        });
-      }
-    });
-  }
-
-
   public static void GetResignValue(final int b1[], final int b2[]) {
     dispatchExecutor.submit(new Runnable() {
       BaseFSM fsm = GnuBackgammon.fsm;

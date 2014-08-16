@@ -308,7 +308,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               }
           if (differ) {
             ctx.board().initBoard(b[0], b[1]);// RESYNC!
-            AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
+            AICalls.Locking.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
           }
           GnuBackgammon.fsm.back();
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);

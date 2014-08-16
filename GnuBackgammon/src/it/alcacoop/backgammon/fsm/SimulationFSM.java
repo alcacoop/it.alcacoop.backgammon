@@ -99,11 +99,9 @@ public class SimulationFSM extends BaseFSM implements Context {
           case SET_GAME_TURN:
             ctx.setMoves(ctx.getMoves() + 1);
             if (MatchState.fMove == 0)
-              AICalls.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
+              AICalls.Locking.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
             else
-              AICalls.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
-            break;
-          case SET_BOARD:
+              AICalls.Locking.SetBoard(ctx.board()._board[1], ctx.board()._board[0]);
             ctx.board().rollDices();
             break;
           case DICES_ROLLED:
