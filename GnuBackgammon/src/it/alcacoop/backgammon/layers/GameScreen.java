@@ -194,9 +194,15 @@ public class GameScreen extends BaseScreen {
 
   @Override
   public void initialize() {
+    // INITIALIZING DICE GENERATOR
+    if (GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("MER-TWS"))
+      AICalls.Locking.InitRNG(MatchState.RNG_MERSENNE);
+    else
+      AICalls.Locking.InitRNG(MatchState.RNG_ISAAC);
     loadTextures();
     initTable();
     table.setY(stage.getHeight());
+
     if ((Gdx.files.absolute(GnuBackgammon.Instance.fname + "json").exists()) && (MatchState.matchType == 0))
       restoreOldMatch();
     else
