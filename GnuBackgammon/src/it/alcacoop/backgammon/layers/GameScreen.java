@@ -249,7 +249,7 @@ public class GameScreen extends BaseScreen {
 
     MatchState.setBoardFromString((String)gi.get("_bb"), (String)gi.get("_bw"));
     board.initBoard(2);
-    AICalls.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
+    AICalls.Locking.SetBoard(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
 
     MatchState.SetMatchTo("" + gi.get("mi_length"));
 
