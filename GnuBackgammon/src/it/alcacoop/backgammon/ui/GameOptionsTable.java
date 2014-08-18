@@ -200,10 +200,9 @@ public class GameOptionsTable extends Table {
 
     row().spaceBottom(height * 0.1f);
     add().fill().height(height * 1.05f).expandX();
-    add(new Label("Manual Dices:", GnuBackgammon.skin)).right().spaceRight(6);
+    add(new Label("Dice Generator:", GnuBackgammon.skin)).right().spaceRight(6);
     Table t = new Table();
     add(t).height(height * 1.3f).width(width * 2).colspan(2).fillY();
-    // add(md2).height(height * 1.3f).width(width);
     t.add(md1).width(width * 2 / 3).fillY().expandY();
     t.add(md2).width(width * 2 / 3).fillY().expandY();
     t.add(md3).width(width * 2 / 3).fillY().expandY();
