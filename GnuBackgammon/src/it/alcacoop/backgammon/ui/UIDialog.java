@@ -71,8 +71,6 @@ public final class UIDialog extends Table {
   private TextButton bExport;
   private TextButton bAccept;
   private TextButton bReject;
-  private TextButton bPlayAgain;
-  private TextButton bLeaveMatch;
 
   private Label label;
   private Label diceLabel;
@@ -96,7 +94,6 @@ public final class UIDialog extends Table {
   static {
     instance = new UIDialog();
     instance.setSkin(GnuBackgammon.skin);
-    instance.debug();
   }
 
   private UIDialog() {
@@ -244,11 +241,6 @@ public final class UIDialog extends Table {
       }
     });
 
-
-    bPlayAgain = new TextButton("Play Again", tl);
-    bLeaveMatch = new TextButton("Abandon Match", tl);
-    bPlayAgain.addListener(cl);
-    bLeaveMatch.addListener(cl);
 
     background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
@@ -963,97 +955,7 @@ public final class UIDialog extends Table {
     instance.bExport.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
     instance.bAccept.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
     instance.bReject.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
-    instance.bLeaveMatch.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
-    instance.bPlayAgain.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
     instance.opts.setButtonsStyle(b);
-  }
-
-
-  public static void getReturnGameDialog(int winner) { // TODO
-    Stage stage = GnuBackgammon.Instance.currentScreen.getStage();
-    instance.visible = true;
-    instance.evt = Events.NOOP;
-    instance.quitWindow = false;
-    instance.optionsWindow = false;
-    instance.leaveWindow = false;
-    instance.remove();
-    instance.setText("TEST IMMAGINI G+");
-
-    float height = stage.getHeight() * 0.85f;
-    float width = stage.getWidth() * 0.8f;
-
-    instance.clear();
-    instance.setWidth(width);
-    instance.setHeight(height);
-    instance.setX((stage.getWidth() - width) / 2);
-    instance.setY((stage.getHeight() - height) / 2);
-
-
-    instance.row().padTop(width / 30);
-    instance.add(new Label("GAME TERMINATED", GnuBackgammon.skin)).colspan(5);
-
-    instance.row();
-    instance.add().colspan(5).expand().fill();
-
-    String s0 = "", s1 = "";
-    if (winner == 0)
-      s0 = "WINNER!";
-    else
-      s1 = "WINNER!";
-
-
-    Table pl0 = new Table();
-    pl0.setBackground(GnuBackgammon.skin.getDrawable("list"));
-    pl0.add().expand().fill();
-    pl0.row();
-    pl0.add(new Label(s0, GnuBackgammon.skin)).expand();
-    pl0.row();
-    Table t0 = new Table();
-    t0.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t0.add(GnuBackgammon.Instance.iconMe);
-    pl0.add(t0);
-    pl0.row();
-    pl0.add(new Label(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName(), GnuBackgammon.skin)).align(Align.center).center();
-    pl0.row();
-    pl0.add().expand().fill();
-
-
-    Table pl1 = new Table();
-    pl1.setBackground(GnuBackgammon.skin.getDrawable("list"));
-    pl1.add().expand().fill();
-    pl1.row();
-    pl1.add(new Label(s1, GnuBackgammon.skin)).expand();
-    pl1.row();
-    Table t1 = new Table();
-    t1.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t1.add(GnuBackgammon.Instance.iconOpponent);
-    pl1.add(t1);
-    pl1.row();
-    pl1.add(new Label(GnuBackgammon.Instance.gameScreen.pInfo[0].getPName(), GnuBackgammon.skin)).align(Align.center).center();
-    pl1.row();
-    pl1.add().expand().fill();
-
-    instance.row();
-    instance.add();
-    instance.add(pl0).width(width / 3).fill().expand();
-    instance.add();
-    instance.add(pl1).fill().width(width / 3).fill().expand();
-    instance.add();
-
-    instance.row();
-    instance.add().colspan(5).expand().fill();
-
-    instance.row().padBottom(width / 30);;
-    instance.add();
-    instance.add(instance.bLeaveMatch).width(width / 3).height(height * 0.13f);
-    instance.add();
-    instance.add(instance.bPlayAgain).fill().width(width / 3).height(height * 0.13f);
-    instance.add();
-
-    stage.addActor(instance);
-    instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f),
-        Actions.moveTo((stage.getWidth() - width) / 2, (stage.getHeight() - height) / 2, 0.2f))));
   }
 
 

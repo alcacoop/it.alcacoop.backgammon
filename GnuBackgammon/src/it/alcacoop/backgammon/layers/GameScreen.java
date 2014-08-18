@@ -45,6 +45,7 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.ui.EndGameLayer;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
 
@@ -74,6 +75,7 @@ public class GameScreen extends BaseScreen {
   private GameMenuPopup menuPopup;
   private ImageButton menu;
   private TextureRegionDrawable wheel;
+  public EndGameLayer endLayer;
 
   public ChatBox chatBox;
 
@@ -81,7 +83,7 @@ public class GameScreen extends BaseScreen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if (UIDialog.isOpened())
+        if (UIDialog.isOpened() || endLayer.isVisible())
           return false;
 
         if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
@@ -120,9 +122,8 @@ public class GameScreen extends BaseScreen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    menuPopup = new GameMenuPopup(stage);
-    wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel"));
 
+    wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel"));
     ImageButtonStyle ibs = new ImageButtonStyle(
         GnuBackgammon.skin.getDrawable("button"),
         GnuBackgammon.skin.getDrawable("button-down"),
@@ -131,19 +132,24 @@ public class GameScreen extends BaseScreen {
         wheel,
         null
         );
-
     menu = new ImageButton(ibs);
     menu.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        menuPopup.toggle();
+        // menuPopup.toggle();
+        endLayer.show(0);
       }
     });
 
+    menuPopup = new GameMenuPopup(stage);
     stage.addActor(menuPopup);
+
     chatBox = new ChatBox(stage);
     stage.addActor(chatBox);
+
+    endLayer = new EndGameLayer(stage);
+    stage.addActor(endLayer);
   }
 
 

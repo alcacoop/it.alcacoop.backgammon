@@ -75,6 +75,10 @@ public class BaseScreen implements Screen {
     stage.addActor(top);
   }
 
+  public float getBGX() {
+    return bgImg.getX();
+  }
+
   @Override
   public void resize(int width, int height) {
     bgImg.setWidth(stage.getWidth() * 1.2f);
