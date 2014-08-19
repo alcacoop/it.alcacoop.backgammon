@@ -330,10 +330,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (MatchState.matchType == 3)
       GServiceClient.getInstance().sendMessage("90 " + msg);
 
-    if ((FibsUsername != null) && (!FibsUsername.equals("")))
-      appendChatMessage(FibsUsername, msg, direction);
-    else
-      appendChatMessage("You", msg, direction);
+    appendChatMessage(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName(), msg, direction);
   }
 
   public void appendChatMessage(String username, String msg, boolean direction) {
