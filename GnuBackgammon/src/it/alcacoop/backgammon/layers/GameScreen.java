@@ -341,6 +341,7 @@ public class GameScreen extends BaseScreen {
     board.stopCheckers();
     UIDialog.setButtonsStyle("B1"); // RESTORE STANDARD THEME
     menuPopup.immediateHide();
+    endLayer.hide();
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
 

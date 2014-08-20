@@ -2,13 +2,14 @@ package it.alcacoop.backgammon.ui;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
-import it.alcacoop.backgammon.fsm.GameFSM;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,13 +25,27 @@ public class EndGameLayer extends Table {
   private TextButton bPlayAgain;
   private TextButton bLeaveMatch;
   private Label l1, l2;
-  private int winner = -1;
+  private Table pl0, pl1;
+  private Group info;
+  private Label waiting, abandoned;
 
   public EndGameLayer(Stage _stage) {
+    // debug();
     stage = _stage;
-    int winner = 0;
     float width = stage.getWidth() / 1.3f;
     float height = stage.getHeight();
+
+    abandoned = new Label("Opponent abandoned the match", GnuBackgammon.skin);
+    waiting = new Label("Waiting for opponent response..", GnuBackgammon.skin);
+    waiting.addAction(MyActions.forever(MyActions.sequence(Actions.fadeOut(0.5f), Actions.fadeIn(0.4f))));
+    waiting.setVisible(false);
+    abandoned.setVisible(false);
+
+    info = new Group();
+    info.addActor(waiting);
+    info.addActor(abandoned);
+    info.setWidth(waiting.getWidth());
+    info.setHeight(waiting.getHeight());
 
     setWidth(stage.getWidth());
     setHeight(stage.getHeight());
@@ -62,14 +77,15 @@ public class EndGameLayer extends Table {
 
 
     TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
-    bPlayAgain = new TextButton("Play Again", tl);
+    bPlayAgain = new TextButton("PLAY AGAIN", tl);
     bPlayAgain.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.fsm.processEvent(GameFSM.Events.GSERVICE_RETURN_GAME, EndGameLayer.this.winner);
+        // GnuBackgammon.fsm.processEvent(GameFSM.Events.GSERVICE_RETURN_GAME, EndGameLayer.this.winner);
+        waitForOpponent();
       }
     });
-    bLeaveMatch = new TextButton("Leave Match", tl);
+    bLeaveMatch = new TextButton("LEAVE MATCH", tl);
     bLeaveMatch.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -77,22 +93,53 @@ public class EndGameLayer extends Table {
       }
     });
 
+    pl0 = new Table();
+    pl0.setBackground(GnuBackgammon.skin.getDrawable("list"));
+
+    pl1 = new Table();
+    pl1.setBackground(GnuBackgammon.skin.getDrawable("list"));
+
 
     row().padTop(width / 20);
     add(new Label("GAME TERMINATED", GnuBackgammon.skin)).colspan(5);
 
     row();
-    add().colspan(5).expand().fill();
+    add().width(width / 9).expand();
+    add().width(width / 3).expand();
+    add().width(width / 9).expand();
+    add().width(width / 3).expand();
+    add().width(width / 9).expand();
 
+    row();
+    add();
+    add(pl0).expand().fill();
+    add(new Label("VS", GnuBackgammon.skin));
+    add(pl1).expand().fill();
+    add();
+
+    row();
+    add(info).colspan(5).expandY();
+
+    row().height(height * 0.13f).padBottom(width / 20);;
+    add();
+    add(bLeaveMatch).fill().expandX();
+    add();
+    add(bPlayAgain).fill().expandX();
+    add();
+
+    setVisible(false);
+    setY(stage.getHeight());
+  }
+  private void _updatePli(int winner) {
+    pl0.clear();
+    pl1.clear();
     String s0 = "", s1 = "";
     if (winner == 0)
       s0 = "WINNER!";
     else
       s1 = "WINNER!";
 
-
-    Table pl0 = new Table();
-    pl0.setBackground(GnuBackgammon.skin.getDrawable("list"));
+    pl0.setWidth(stage.getWidth());
     pl0.add().expand().fill();
     pl0.row();
     pl0.add(new Label(s0, GnuBackgammon.skin)).expand();
@@ -107,9 +154,7 @@ public class EndGameLayer extends Table {
     pl0.row();
     pl0.add().expand().fill();
 
-
-    Table pl1 = new Table();
-    pl1.setBackground(GnuBackgammon.skin.getDrawable("list"));
+    pl1.setWidth(stage.getWidth());
     pl1.add().expand().fill();
     pl1.row();
     pl1.add(new Label(s1, GnuBackgammon.skin)).expand();
@@ -123,41 +168,40 @@ public class EndGameLayer extends Table {
     pl1.add(l2).align(Align.center).center();
     pl1.row();
     pl1.add().expand().fill();
-
-    row();
-    add();
-    add(pl0).width(width / 3.5f).fill().expand();
-    add(new Label("VS", GnuBackgammon.skin)).fill();
-    add(pl1).fill().width(width / 3.5f).fill().expand();
-    add();
-
-    row();
-    add().colspan(5).expand().fill();
-
-    row().padBottom(width / 20);
-    add();
-    add(bLeaveMatch).width(width / 3).height(height * 0.13f);
-    add();
-    add(bPlayAgain).fill().width(width / 3).height(height * 0.13f);
-    add();
-
-    setVisible(false);
-    setY(stage.getHeight());
   }
 
   public void show(int _winner) {
-    winner = _winner;
-    l1.setText(GnuBackgammon.Instance.gameScreen.pInfo[0].getPName());
-    l2.setText(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName());
+    GnuBackgammon.Instance.nativeFunctions.showAds(false);
+    _updatePli(_winner);
+    l1.setText(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName());
+    l2.setText(GnuBackgammon.Instance.gameScreen.pInfo[0].getPName());
     bgImg.setX(GnuBackgammon.Instance.gameScreen.getBGX());
     visible = true;
     addAction(MyActions.moveTo(0, 0, 0.3f));
   }
 
+  public void opponentAbandoned() {
+    bPlayAgain.setColor(1, 1, 1, 0.4f);
+    bPlayAgain.setDisabled(true);
+    waiting.setVisible(false);
+    abandoned.setVisible(true);
+  }
+
+  public void waitForOpponent() {
+    bPlayAgain.setColor(1, 1, 1, 0.4f);
+    bPlayAgain.setDisabled(true);
+    waiting.setVisible(true);
+    abandoned.setVisible(false);
+  }
+
   public void hide() {
+    GnuBackgammon.Instance.nativeFunctions.showAds(true);
     visible = false;
-    winner = -1;
     setY(stage.getHeight());
+    bPlayAgain.setDisabled(false);
+    bPlayAgain.setColor(1, 1, 1, 1);
+    waiting.setVisible(false);
+    abandoned.setVisible(false);
   }
 
   public boolean isVisible() {
