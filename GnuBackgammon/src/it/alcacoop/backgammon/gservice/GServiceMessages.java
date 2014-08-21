@@ -9,7 +9,9 @@ public interface GServiceMessages {
   final static int GSERVICE_MOVE = 6;
   final static int GSERVICE_BOARD = 7;
   final static int GSERVICE_INIT_RATING = 8;
-  
+
+  final static int GSERVICE_PLAY_AGAIN = 20;
+
   final static int GSERVICE_PING = 70;
   final static int GSERVICE_CHATMSG = 90;
   final static int GSERVICE_ABANDON = 97;

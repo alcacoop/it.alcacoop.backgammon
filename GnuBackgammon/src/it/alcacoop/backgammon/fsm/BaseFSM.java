@@ -84,6 +84,8 @@ public class BaseFSM implements Context {
     GSERVICE_ERROR,
     GSERVICE_ABANDON, // params: 0=abandon,1=resign_single,2=resign_gammon,3=resign_bg
     GSERVICE_BYE,
+    GSERVICE_RETURN_GAME,
+    GSERVICE_PLAY_AGAIN,
 
     FIBS_ERROR,
     FIBS_ACCOUNT_CREATED,

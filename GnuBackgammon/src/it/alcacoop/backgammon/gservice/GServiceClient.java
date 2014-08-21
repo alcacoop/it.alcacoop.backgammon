@@ -116,6 +116,9 @@ public class GServiceClient implements GServiceMessages {
         s = s.replace("90 ", "");
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_CHATMSG, s);
         break;
+      case GSERVICE_PLAY_AGAIN:
+        chunks = s.split(" ");
+        GnuBackgammon.fsm.processEvent(Events.GSERVICE_PLAY_AGAIN, Integer.parseInt(chunks[1]));
       case GSERVICE_ABANDON:
         chunks = s.split(" ");
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));
