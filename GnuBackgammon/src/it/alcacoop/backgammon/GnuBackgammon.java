@@ -70,6 +70,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Pool;
 
@@ -144,6 +145,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
 
   private Timer transitionTimer;
+  public Image iconMe, iconOpponent;
 
 
   @Override
@@ -328,10 +330,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     else if (MatchState.matchType == 3)
       GServiceClient.getInstance().sendMessage("90 " + msg);
 
-    if ((FibsUsername != null) && (!FibsUsername.equals("")))
-      appendChatMessage(FibsUsername, msg, direction);
-    else
-      appendChatMessage("You", msg, direction);
+    appendChatMessage(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName(), msg, direction);
   }
 
   public void appendChatMessage(String username, String msg, boolean direction) {

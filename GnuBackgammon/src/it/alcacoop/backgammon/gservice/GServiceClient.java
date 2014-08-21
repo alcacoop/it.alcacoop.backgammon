@@ -81,7 +81,8 @@ public class GServiceClient implements GServiceMessages {
       case GSERVICE_HANDSHAKE:
         chunks = s.split(" ");
         pingCount = 0;
-        queue.post(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
+        long lp[] = { Long.parseLong(chunks[1]), Long.parseLong(chunks[2]) };
+        queue.post(Events.GSERVICE_HANDSHAKE, lp);
         // GnuBackgammon.fsm.processEvent(Events.GSERVICE_HANDSHAKE, Long.parseLong(chunks[1]));
         break;
       case GSERVICE_OPENING_ROLL:
@@ -116,6 +117,9 @@ public class GServiceClient implements GServiceMessages {
         s = s.replace("90 ", "");
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_CHATMSG, s);
         break;
+      case GSERVICE_PLAY_AGAIN:
+        chunks = s.split(" ");
+        GnuBackgammon.fsm.processEvent(Events.GSERVICE_PLAY_AGAIN, Integer.parseInt(chunks[1]));
       case GSERVICE_ABANDON:
         chunks = s.split(" ");
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, Integer.parseInt(chunks[1]));

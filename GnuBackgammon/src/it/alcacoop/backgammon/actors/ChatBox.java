@@ -137,7 +137,7 @@ public class ChatBox extends Table {
             tchat.add(new Image(GnuBackgammon.skin.getDrawable("separator"))).colspan(2).fillX().height(6).expandX();
           }
           tchat.row();
-          tchat.add(new Label(user + " says: ", ls)).colspan(2).fillX();
+          tchat.add(new Label(user + ":", ls)).colspan(2).fillX();
           lastSender = user;
         }
 

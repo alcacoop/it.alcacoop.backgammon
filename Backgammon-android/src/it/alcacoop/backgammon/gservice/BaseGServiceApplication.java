@@ -51,6 +51,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -68,6 +69,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.ImageManager;
+import com.google.android.gms.common.images.ImageManager.OnImageLoadedListener;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -234,11 +236,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
 
     String sRdm = new BigInteger(130, rnd).toString(32);
-
     if (mParticipants.get(0).getParticipantId() == mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
-
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 0);
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 1);
       if (mParticipants.get(1).getPlayer() == null)
         opponent_player_id = sRdm;
       else
@@ -246,7 +248,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
-
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 1);
+      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 0);
       if (mParticipants.get(0).getPlayer() == null)
         opponent_player_id = sRdm;
       else
@@ -254,7 +257,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
 
     GnuBackgammon.Instance.gameScreen.updatePInfo(opponent, me);
-
     if (meSentInvitation)
       AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
@@ -355,6 +357,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
   void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
+
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
     GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
@@ -375,8 +378,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
         invitationDialog.setOnShowListener(new DialogInterface.OnShowListener() {
           @Override
           public void onShow(DialogInterface arg0) {
-            ImageManager im = ImageManager.create(getApplicationContext());
-            im.loadImage(((ImageView)myView.findViewById(R.id.image)), imagesrc);
             TextView tv = (TextView)myView.findViewById(R.id.text);
             tv.setText(username + " wants to play with you...");
             tv.setFocusable(true);
@@ -393,13 +394,22 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           }
         });
 
-        invitationDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        invitationDialog.show();
-        invitationDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
-        invitationDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        ImageManager im = ImageManager.create(getApplicationContext());
+        im.loadImage(new OnImageLoadedListener() {
+          @Override
+          public void onImageLoaded(Uri arg0, Drawable drawable, boolean arg2) {
+            ImageView iv = ((ImageView)myView.findViewById(R.id.image));
+            iv.setImageDrawable(drawable);
+            invitationDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            invitationDialog.show();
+            invitationDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
+            invitationDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+          }
+        }, imagesrc, R.drawable.gplayer);
       }
     });
   }
+
 
   public void _gserviceAcceptInvitation(String invitationId) {
     RoomConfig.Builder roomConfigBuilder = RoomConfig.builder(this);

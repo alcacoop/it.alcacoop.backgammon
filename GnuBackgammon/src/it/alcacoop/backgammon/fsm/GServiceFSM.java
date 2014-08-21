@@ -41,10 +41,13 @@ import it.alcacoop.backgammon.gservice.GServiceMessages;
 import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.ui.EndGameLayer;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
+
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 
@@ -52,12 +55,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   private Board board;
   public State currentState;
+  public static boolean noEndGameLayer = false;
+  private static long waitTime;
   private static int d1, d2;
   private static int[] bufferedMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   private static boolean isBufferedMoves = false;
   private static int moves[][];
-
-  // private static ArrayList<Integer> auto_moves = new ArrayList<Integer>();
 
   public enum States implements State {
 
@@ -404,54 +407,103 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
+
+        if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
+          return;
+
+        System.out.println("===> ENTER INTO MATCH_OVER");
         GnuBackgammon.Instance.FibsOpponent = "";
-        String msg = "";
-        if (MatchState.resignValue > 0) {
-          switch (MatchState.resignValue) {
-            case 1:
-              msg = "Opponent resigned the game";
-              break;
-            case 2:
-              msg = "Opponent resigned a gammon game";
-              break;
-            case 3:
-              msg = "Opponent resigned a backgammon game";
-              break;
-            case 4:
-              msg = "Opponent abandoned the match";
-              break;
-          }
-        } else {
-          msg = "Match terminated";
-        }
 
-        if (MatchState.resignValue < 5) {
-          GnuBackgammon.Instance.gameScreen.chatBox.hide();
-          UIDialog.getFlashDialog(Events.STOPPED, msg);
-        } else {
-          GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-          GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
-        }
+        if (MatchState.resignValue > 10)
+          MatchState.resignValue -= 10; // NORMALIZE RESIGN VALUE!
 
-        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue == 1) || (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) {
-          // YOU WIN
+        GServiceClient.instance.reset();
+        GnuBackgammon.Instance.gameScreen.chatBox.hide();
+        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue > 0)) { // YOU WIN!
+
+          int nPoints = MatchState.nCube * MatchState.resignValue;
+          if (MatchState.resignValue == 0)
+            nPoints = MatchState.nCube * ctx.board().gameScore(0);
+
+          MatchState.anScore[0] += nPoints;
+          GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
+
+
           AchievementsManager.getInstance().checkAchievements(true);
           ELORatingManager.getInstance().updateRating(true);
-        } else {
+          GnuBackgammon.Instance.gameScreen.endLayer.show(0, nPoints);
+        } else if ((ctx.board().getPIPS(0) > 0) && (MatchState.resignValue <= 0)) {
+
+          int nPoints = MatchState.nCube * -MatchState.resignValue;
+          if (MatchState.resignValue == 0)
+            nPoints = MatchState.nCube * ctx.board().gameScore(1);
+
+          MatchState.anScore[1] += nPoints;
+          GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
+
           AchievementsManager.getInstance().checkAchievements(false);
+          GnuBackgammon.Instance.gameScreen.endLayer.show(1, nPoints);
         }
 
-        GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+        MatchState.resignValue = 0;
       }
 
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
-        if (evt == Events.STOPPED) {
-          MatchState.resignValue = 0;
-          // System.out.println("---> FSM STOPPED");
-          GServiceClient.getInstance().reset();
-          GnuBackgammon.Instance.nativeFunctions.showInterstitial();
-          GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
+        EndGameLayer endLayer = ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer;
+        System.out.println("===> RECEIVED: " + evt);
+        switch (evt) {
+
+          case GSERVICE_PLAY_AGAIN:
+            int response = (Integer)params;
+            System.out.println("===> RESPONSE: " + response);
+            if (response == 0) {
+              endLayer.opponentAbandoned();
+            } else {
+              if (endLayer.isWaiting()) {
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
+                endLayer.hide();
+              } else
+                endLayer.opponentAvailable();
+            }
+
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).initNewMatch();
+            GServiceClient.getInstance().reset();
+            break;
+
+          case GSERVICE_RETURN_GAME:
+            GServiceClient.getInstance().sendMessage(GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
+            break;
+
+          case GSERVICE_INIT_RATING:
+            double opponentRating = (Double)params;
+            ELORatingManager.getInstance().setRatings(opponentRating);
+
+            Random gen = new Random();
+            waitTime = gen.nextLong();
+            GServiceClient.getInstance().sendMessage(GSERVICE_HANDSHAKE + " " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
+            break;
+
+          case GSERVICE_HANDSHAKE:
+            long _params[] = (long[])params;
+            long remoteWaitTime = _params[0];
+            ctx.state(OPENING_ROLL);
+            if (waitTime > remoteWaitTime) {
+              int dices[] = { 0, 0 };
+              while (dices[0] == dices[1])
+                dices = AICalls.Locking.RollDice();
+              int[] p = { (dices[0] > dices[1] ? 1 : 0), dices[0], dices[1] };
+
+              GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
+              GServiceClient.getInstance().sendMessage(GSERVICE_OPENING_ROLL + " " + (dices[0] > dices[1] ? 0 : 1) + " " + dices[0] + " " + dices[1]);
+            }
+            break;
+
+          default:
+            return false;
+
         }
         return true;
       }
@@ -477,9 +529,15 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             if ((Boolean)params) { // ABANDON
               GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
               if (ctx.board().getPIPS(0) > ctx.board().getPIPS(1)) {
-                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 3");// FUCK YOU DROPPER!
+                if (GServiceFSM.noEndGameLayer)
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 3");// FUCK YOU DROPPER!
+                else
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 13");// FUCK YOU DROPPER!
               } else {
-                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 0");
+                if (GServiceFSM.noEndGameLayer)
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 0");
+                else
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 11");
               }
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
             } else { // CANCEL
@@ -505,12 +563,13 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case HUMAN_RESIGNED:
             if ((Boolean)params) {
               GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " " + MatchState.resignValue);
-              MatchState.resignValue = 5;
+              if (GServiceFSM.noEndGameLayer)
+                ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
               ctx.state(MATCH_OVER);
             } else {
-              MatchState.resignValue = 0;
               GnuBackgammon.fsm.back();
             }
+            MatchState.resignValue = -MatchState.resignValue;
             break;
 
           default:
@@ -561,7 +620,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
           case GSERVICE_CHATMSG:
             GnuBackgammon.Instance.snd.playMessage();
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage("Opponent", (String)params, false);
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).chatBox.appendMessage(
+                GnuBackgammon.Instance.gameScreen.pInfo[0].getPName(), (String)params, false);
             break;
 
           case GSERVICE_ERROR:
@@ -578,18 +638,30 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 message = "Match stopped. You have to reinvite!";
                 break;
             }
-            UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
+            if (!((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.isVisible()) {
+              if (errorCode != 0) {
+                UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
+              } else {
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, 11);
+              }
+            }
             break;
 
           case GSERVICE_ABANDON:
             int status = (Integer)params;
             MatchState.resignValue = status;
-            if (status == 0)
-              MatchState.resignValue = 4;
             state(States.MATCH_OVER);
+            if ((status >= 10) || (GServiceFSM.noEndGameLayer))
+              ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
             break;
 
           case GSERVICE_BYE:
+            GServiceFSM.noEndGameLayer = false;
+            MatchState.resignValue = 0;
+            GServiceClient.getInstance().reset();
+            GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
+            GnuBackgammon.Instance.nativeFunctions.showAds(false);
+            GnuBackgammon.Instance.nativeFunctions.showInterstitial();
             GnuBackgammon.Instance.setFSM("MENU_FSM");
             GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
             GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();

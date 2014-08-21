@@ -14,11 +14,11 @@ public class GServiceCookieMonster implements GServiceMessages {
   }
 
   private LinkedList<CookieDough> numericBatch;
-  
+
   public GServiceCookieMonster() {
     prepareBatches();
   }
-  
+
   public int fIBSCookie(String message) {
     int result = 0;
     Iterator<GServiceCookieMonster.CookieDough> iter;
@@ -33,8 +33,9 @@ public class GServiceCookieMonster implements GServiceMessages {
       }
     }
 
-    if (result == 0) return(0);
-    
+    if (result == 0)
+      return (0);
+
     String[] ss = ptr.regex.split(message, 2);
     if (ss.length > 1 && ss[1].length() > 0) {
       if (DEBUG) {
@@ -43,12 +44,12 @@ public class GServiceCookieMonster implements GServiceMessages {
         System.out.println("Leftover = '" + ss[1] + "'");
       }
     }
-    return(result);
+    return (result);
   }
 
 
-
   LinkedList<CookieDough> currentBatchBuild;
+
   private void addDough(int msg, String re) {
     CookieDough newDough = new CookieDough();
     newDough.regex = Pattern.compile(re);
@@ -59,19 +60,20 @@ public class GServiceCookieMonster implements GServiceMessages {
 
   private void prepareBatches() {
     currentBatchBuild = new LinkedList<CookieDough>();
-    addDough(GSERVICE_CONNECTED, "^"+GSERVICE_CONNECTED+"$");
-    addDough(GSERVICE_READY, "^"+GSERVICE_READY+"$");
-    addDough(GSERVICE_INIT_RATING, "^"+GSERVICE_INIT_RATING+" ");
-    addDough(GSERVICE_HANDSHAKE, "^"+GSERVICE_HANDSHAKE+" ");
-    addDough(GSERVICE_OPENING_ROLL, "^"+GSERVICE_OPENING_ROLL+" ");
-    addDough(GSERVICE_ROLL, "^"+GSERVICE_ROLL+" ");
-    addDough(GSERVICE_MOVE, "^"+GSERVICE_MOVE+" ");
-    addDough(GSERVICE_BOARD, "^"+GSERVICE_BOARD+" ");
-    addDough(GSERVICE_PING, "^"+GSERVICE_PING+" ");
-    addDough(GSERVICE_CHATMSG, "^"+GSERVICE_CHATMSG+" ");
-    addDough(GSERVICE_ABANDON, "^"+GSERVICE_ABANDON+" ");
-    addDough(GSERVICE_ERROR, "^"+GSERVICE_ERROR+"$");
-    addDough(GSERVICE_BYE, "^"+GSERVICE_BYE+"$");
+    addDough(GSERVICE_CONNECTED, "^" + GSERVICE_CONNECTED + "$");
+    addDough(GSERVICE_READY, "^" + GSERVICE_READY + "$");
+    addDough(GSERVICE_INIT_RATING, "^" + GSERVICE_INIT_RATING + " ");
+    addDough(GSERVICE_HANDSHAKE, "^" + GSERVICE_HANDSHAKE + " ");
+    addDough(GSERVICE_OPENING_ROLL, "^" + GSERVICE_OPENING_ROLL + " ");
+    addDough(GSERVICE_PLAY_AGAIN, "^" + GSERVICE_PLAY_AGAIN + " ");
+    addDough(GSERVICE_ROLL, "^" + GSERVICE_ROLL + " ");
+    addDough(GSERVICE_MOVE, "^" + GSERVICE_MOVE + " ");
+    addDough(GSERVICE_BOARD, "^" + GSERVICE_BOARD + " ");
+    addDough(GSERVICE_PING, "^" + GSERVICE_PING + " ");
+    addDough(GSERVICE_CHATMSG, "^" + GSERVICE_CHATMSG + " ");
+    addDough(GSERVICE_ABANDON, "^" + GSERVICE_ABANDON + " ");
+    addDough(GSERVICE_ERROR, "^" + GSERVICE_ERROR + "$");
+    addDough(GSERVICE_BYE, "^" + GSERVICE_BYE + "$");
     this.numericBatch = this.currentBatchBuild;
   }
 }

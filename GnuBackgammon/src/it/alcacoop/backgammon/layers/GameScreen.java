@@ -45,6 +45,7 @@ import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.ui.EndGameLayer;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
 
@@ -74,6 +75,7 @@ public class GameScreen extends BaseScreen {
   private GameMenuPopup menuPopup;
   private ImageButton menu;
   private TextureRegionDrawable wheel;
+  public EndGameLayer endLayer;
 
   public ChatBox chatBox;
 
@@ -81,7 +83,7 @@ public class GameScreen extends BaseScreen {
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if (UIDialog.isOpened())
+        if (UIDialog.isOpened() || endLayer.isVisible())
           return false;
 
         if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
@@ -120,9 +122,8 @@ public class GameScreen extends BaseScreen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    menuPopup = new GameMenuPopup(stage);
-    wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel"));
 
+    wheel = new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("wheel"));
     ImageButtonStyle ibs = new ImageButtonStyle(
         GnuBackgammon.skin.getDrawable("button"),
         GnuBackgammon.skin.getDrawable("button-down"),
@@ -131,7 +132,6 @@ public class GameScreen extends BaseScreen {
         wheel,
         null
         );
-
     menu = new ImageButton(ibs);
     menu.addListener(new ClickListener() {
       @Override
@@ -141,9 +141,14 @@ public class GameScreen extends BaseScreen {
       }
     });
 
+    menuPopup = new GameMenuPopup(stage);
     stage.addActor(menuPopup);
+
     chatBox = new ChatBox(stage);
     stage.addActor(chatBox);
+
+    endLayer = new EndGameLayer(stage);
+    stage.addActor(endLayer);
   }
 
 
@@ -194,9 +199,15 @@ public class GameScreen extends BaseScreen {
 
   @Override
   public void initialize() {
+    // INITIALIZING DICE GENERATOR
+    if (GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("MER-TWS"))
+      AICalls.Locking.InitRNG(MatchState.RNG_MERSENNE);
+    else
+      AICalls.Locking.InitRNG(MatchState.RNG_ISAAC);
     loadTextures();
     initTable();
     table.setY(stage.getHeight());
+
     if ((Gdx.files.absolute(GnuBackgammon.Instance.fname + "json").exists()) && (MatchState.matchType == 0))
       restoreOldMatch();
     else
@@ -329,6 +340,7 @@ public class GameScreen extends BaseScreen {
     board.stopCheckers();
     UIDialog.setButtonsStyle("B1"); // RESTORE STANDARD THEME
     menuPopup.immediateHide();
+    endLayer.hide();
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
   }
 

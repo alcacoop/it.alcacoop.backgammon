@@ -241,6 +241,7 @@ public final class UIDialog extends Table {
       }
     });
 
+
     background = GnuBackgammon.skin.getDrawable("default-window");
     setBackground(background);
 

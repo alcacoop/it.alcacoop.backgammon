@@ -1,8 +1,6 @@
 package it.alcacoop.backgammon.layers;
 
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.logic.AICalls;
-import it.alcacoop.backgammon.logic.MatchState;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -77,6 +75,10 @@ public class BaseScreen implements Screen {
     stage.addActor(top);
   }
 
+  public float getBGX() {
+    return bgImg.getX();
+  }
+
   @Override
   public void resize(int width, int height) {
     bgImg.setWidth(stage.getWidth() * 1.2f);
@@ -86,11 +88,6 @@ public class BaseScreen implements Screen {
   @Override
   public void show() {
     if (this instanceof GameScreen) {
-      // INITIALIZING DICE GENERATOR
-      if (GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("MER-TWS"))
-        AICalls.Locking.InitRNG(MatchState.RNG_MERSENNE);
-      else
-        AICalls.Locking.InitRNG(MatchState.RNG_ISAAC);
       alca.setColor(0, 0, 0, 0);
       top.setColor(0, 0, 0, 0);
       if (alcaBtn.hasParent())

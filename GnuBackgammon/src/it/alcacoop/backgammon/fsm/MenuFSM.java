@@ -329,13 +329,21 @@ public class MenuFSM extends BaseFSM implements Context {
             Random gen = new Random();
             waitTime = gen.nextLong();
             GServiceClient.getInstance().sendMessage("3 " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
-            System.out.println("---> PROTOCOL VERSION: " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
             break;
 
           case GSERVICE_HANDSHAKE:
             GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
-            long remoteWaitTime = (Long)params;
+            long _params[] = (long[])params;
+            long remoteWaitTime = _params[0];
+            long localVersion = GnuBackgammon.Instance.nativeFunctions.getAppVersionCode();
+            long remoteVersion = _params[1];
+            System.out.println("===> LOCAL PROTOCOL VERSION: " + localVersion);
+            System.out.println("===> REMOTE PROTOCOL VERSION: " + remoteVersion);
+            if (remoteVersion < 270)
+              GServiceFSM.noEndGameLayer = true;
+            else
+              GServiceFSM.noEndGameLayer = false;
             if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])

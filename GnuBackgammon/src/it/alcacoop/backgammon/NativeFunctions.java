@@ -57,4 +57,6 @@ public interface NativeFunctions extends GServiceInterface {
 
   public int getAppVersionCode();
   public void beginGoogleSignIn();
+
+  public void loadImageFromIconURI(Object iconURI, int playerIndex);
 }
