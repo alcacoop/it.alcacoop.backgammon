@@ -311,6 +311,9 @@ public class GameOptionsTable extends Table {
     a = mdices.getButtons();
     for (int i = 0; i < a.size; i++)
       a.get(i).setStyle(GnuBackgammon.skin.get("toggle-" + b, TextButtonStyle.class));
+    a = mgreedy.getButtons();
+    for (int i = 0; i < a.size; i++)
+      a.get(i).setStyle(GnuBackgammon.skin.get("toggle-" + b, TextButtonStyle.class));
 
     ok.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
   }
