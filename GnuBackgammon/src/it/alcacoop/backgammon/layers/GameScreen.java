@@ -137,8 +137,7 @@ public class GameScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        // menuPopup.toggle();
-        endLayer.show(0);
+        menuPopup.toggle();
       }
     });
 
