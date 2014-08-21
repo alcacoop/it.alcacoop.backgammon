@@ -61,10 +61,10 @@ public class GServiceNetHandler {
 
 
   private class Dispatcher implements Runnable {
-    private Events evt;
+    private Events[] evt;
     private boolean found;
 
-    public Dispatcher(Events _evt) {
+    public Dispatcher(Events... _evt) {
       evt = _evt;
       found = false;
       eventRequest++;
@@ -80,19 +80,23 @@ public class GServiceNetHandler {
             if (e.e != null)
               break;
           }
-        } catch (InterruptedException e1) {
-        }
+        } catch (InterruptedException e1) {}
 
-        if (evt == Events.CONTINUE) {
+        if (evt[0] == Events.CONTINUE) {
           found = true; // FOR CLEAR PURPOSE
-        } else if ((evt == Events.FIBS_BOARD) && (e.o == null)) {
-          found = true; // FOR CLEAR PURPOSE
+          continue;
         } else if (evt == null) { // PASSO IL PRIMO DISPONIBILE
           GnuBackgammon.fsm.processEvent(e.e, e.o);
           found = true;
-        } else if (evt == e.e) { // PASSO IL PRIMO RICHIESTO DISPONIBILE
-          GnuBackgammon.fsm.processEvent(e.e, e.o);
-          found = true;
+          continue;
+        }
+
+        for (int i = 0; i < evt.length; i++) {
+          if (evt[i] == e.e) { // PASSO IL PRIMO DISPONIBILE TRA QUELLI RICHIESTI
+            GnuBackgammon.fsm.processEvent(e.e, e.o);
+            found = true;
+            break;
+          }
         }
       }
       eventRequest--;
@@ -109,10 +113,10 @@ public class GServiceNetHandler {
 
   // VORREI UN EVT DI TIPO evt...
   public synchronized void pull() {
-    pull(null);
+    pull();
   }
 
-  public synchronized void pull(Events evt) {
+  public synchronized void pull(Events... evt) {
     System.out.println("---> PULL REQUEST: " + evt);
     dispatchExecutor.submit(new Dispatcher(evt));
   }
