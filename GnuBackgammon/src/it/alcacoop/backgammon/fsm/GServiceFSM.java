@@ -407,56 +407,45 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
-        GnuBackgammon.Instance.FibsOpponent = "";
+
         if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
           return;
 
         System.out.println("===> ENTER INTO MATCH_OVER");
-        /*
         GnuBackgammon.Instance.FibsOpponent = "";
-        String msg = "";
-        if (MatchState.resignValue > 0) {
-          switch (MatchState.resignValue) {
-            case 1:
-              msg = "Opponent resigned the game";
-              break;
-            case 2:
-              msg = "Opponent resigned a gammon game";
-              break;
-            case 3:
-            case 13:
-              msg = "Opponent resigned a backgammon game";
-              break;
-            case 10:
-              msg = "Opponent abandoned the match";
-              break;
-          }
-        } else {
-          msg = "Match terminated";
-        }
 
-        /*
-        if (MatchState.resignValue < 5) {
-          GnuBackgammon.Instance.gameScreen.chatBox.hide();
-          UIDialog.getFlashDialog(Events.STOPPED, msg);
-        } else {
-          GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
-          GnuBackgammon.fsm.processEvent(Events.STOPPED, null);
-        }
-        */
+        if (MatchState.resignValue > 10)
+          MatchState.resignValue -= 10; // NORMALIZE RESIGN VALUE!
 
         GServiceClient.instance.reset();
         GnuBackgammon.Instance.gameScreen.chatBox.hide();
-        if ((ctx.board().getPIPS(0) <= 0) ||
-            (MatchState.resignValue > 0)) {
-          // YOU WIN
+        if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue > 0)) { // YOU WIN!
+
+          int nPoints = MatchState.nCube * MatchState.resignValue;
+          if (MatchState.resignValue == 0)
+            nPoints = MatchState.nCube * ctx.board().gameScore(0);
+
+          MatchState.anScore[0] += nPoints;
+          GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
+
+
           AchievementsManager.getInstance().checkAchievements(true);
           ELORatingManager.getInstance().updateRating(true);
-          GnuBackgammon.Instance.gameScreen.endLayer.show(0);
-        } else {
+          GnuBackgammon.Instance.gameScreen.endLayer.show(0, nPoints);
+        } else if ((ctx.board().getPIPS(0) > 0) && (MatchState.resignValue <= 0)) {
+
+          int nPoints = MatchState.nCube * -MatchState.resignValue;
+          if (MatchState.resignValue == 0)
+            nPoints = MatchState.nCube * ctx.board().gameScore(1);
+
+          MatchState.anScore[1] += nPoints;
+          GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
+
           AchievementsManager.getInstance().checkAchievements(false);
-          GnuBackgammon.Instance.gameScreen.endLayer.show(1);
+          GnuBackgammon.Instance.gameScreen.endLayer.show(1, nPoints);
         }
+
+        MatchState.resignValue = 0;
       }
 
       @Override
@@ -548,7 +537,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 if (GServiceFSM.noEndGameLayer)
                   GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 0");
                 else
-                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 10");
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 11");
               }
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
             } else { // CANCEL
@@ -578,9 +567,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
               ctx.state(MATCH_OVER);
             } else {
-              MatchState.resignValue = 0;
               GnuBackgammon.fsm.back();
             }
+            MatchState.resignValue = -MatchState.resignValue;
             break;
 
           default:

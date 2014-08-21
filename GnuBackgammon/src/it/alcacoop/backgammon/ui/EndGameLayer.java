@@ -33,6 +33,7 @@ public class EndGameLayer extends Table {
   private Label waiting, abandoned, available;
   private boolean isWaiting = false;
   private boolean isAvailable = false;
+  private int nPoints = 0;
 
   public EndGameLayer(Stage _stage) {
     stage = _stage;
@@ -148,9 +149,9 @@ public class EndGameLayer extends Table {
     pl1.clear();
     String s0 = "", s1 = "";
     if (winner == 0)
-      s0 = "WINNER!";
+      s0 = "WINNER! (" + nPoints + (nPoints > 1 ? "Pts)" : "Pt)");
     else
-      s1 = "WINNER!";
+      s1 = "WINNER! (" + nPoints + (nPoints > 1 ? "Pts)" : "Pt)");
 
     pl0.setWidth(stage.getWidth());
     pl0.add().expand().fill();
@@ -182,9 +183,9 @@ public class EndGameLayer extends Table {
     pl1.row();
     pl1.add().expand().fill();
   }
-
-  public void show(int _winner) {
+  public void show(int _winner, int nPoints) {
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
+    this.nPoints = nPoints;
     _updatePli(_winner);
     l1.setText(GnuBackgammon.Instance.gameScreen.pInfo[1].getPName());
     l2.setText(GnuBackgammon.Instance.gameScreen.pInfo[0].getPName());
@@ -218,16 +219,21 @@ public class EndGameLayer extends Table {
   }
 
   public void hide() {
-    isAvailable = false;
     GnuBackgammon.Instance.nativeFunctions.showAds(true);
+    isAvailable = false;
     visible = false;
     isWaiting = false;
+    nPoints = 0;
     setY(stage.getHeight());
     bPlayAgain.setDisabled(false);
     bPlayAgain.setColor(1, 1, 1, 1);
     waiting.setVisible(false);
     abandoned.setVisible(false);
     available.setVisible(false);
+  }
+
+  public int getPoints() {
+    return nPoints;
   }
 
   public boolean isVisible() {
