@@ -53,6 +53,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   private Board board;
   public State currentState;
+  public static boolean noEndGameLayer = false;
   private static int d1, d2;
   private static int[] bufferedMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   private static boolean isBufferedMoves = false;
@@ -520,9 +521,15 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             if ((Boolean)params) { // ABANDON
               GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
               if (ctx.board().getPIPS(0) > ctx.board().getPIPS(1)) {
-                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 13");// FUCK YOU DROPPER!
+                if (GServiceFSM.noEndGameLayer)
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 3");// FUCK YOU DROPPER!
+                else
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 13");// FUCK YOU DROPPER!
               } else {
-                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 10");
+                if (GServiceFSM.noEndGameLayer)
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 0");
+                else
+                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 10");
               }
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
             } else { // CANCEL
@@ -548,6 +555,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case HUMAN_RESIGNED:
             if ((Boolean)params) {
               GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " " + MatchState.resignValue);
+              if (GServiceFSM.noEndGameLayer)
+                ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
               ctx.state(MATCH_OVER);
             } else {
               MatchState.resignValue = 0;
@@ -629,11 +638,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             int status = (Integer)params;
             MatchState.resignValue = status;
             state(States.MATCH_OVER);
-            if (status >= 10)
+            if ((status >= 10) || (GServiceFSM.noEndGameLayer))
               ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
             break;
 
           case GSERVICE_BYE:
+            GServiceFSM.noEndGameLayer = false;
             MatchState.resignValue = 0;
             GServiceClient.getInstance().reset();
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
