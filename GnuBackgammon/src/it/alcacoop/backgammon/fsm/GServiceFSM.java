@@ -638,8 +638,13 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 message = "Match stopped. You have to reinvite!";
                 break;
             }
-            if (!((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.isVisible())
-              UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
+            if (!((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.isVisible()) {
+              if (errorCode != 0) {
+                UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
+              } else {
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, 11);
+              }
+            }
             break;
 
           case GSERVICE_ABANDON:
