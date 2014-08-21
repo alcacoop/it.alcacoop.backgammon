@@ -47,6 +47,8 @@ import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 
 public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
@@ -54,6 +56,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   private Board board;
   public State currentState;
   public static boolean noEndGameLayer = false;
+  private static long waitTime;
   private static int d1, d2;
   private static int[] bufferedMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   private static boolean isBufferedMoves = false;
@@ -469,7 +472,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               endLayer.opponentAbandoned();
             } else {
               if (endLayer.isWaiting()) {
-                GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, 1);
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
                 endLayer.hide();
               } else
                 endLayer.opponentAvailable();
@@ -480,16 +483,32 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             break;
 
           case GSERVICE_RETURN_GAME:
-            System.out.println("===> EVENT RETURN_GAME");
+            GServiceClient.getInstance().sendMessage(GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
+            break;
+
+          case GSERVICE_INIT_RATING:
+            double opponentRating = (Double)params;
+            ELORatingManager.getInstance().setRatings(opponentRating);
+
+            Random gen = new Random();
+            waitTime = gen.nextLong();
+            GServiceClient.getInstance().sendMessage(GSERVICE_HANDSHAKE + " " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
+            GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
+            break;
+
+          case GSERVICE_HANDSHAKE:
+            long _params[] = (long[])params;
+            long remoteWaitTime = _params[0];
             ctx.state(OPENING_ROLL);
-            if ((Integer)params == 0) {
+            if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])
                 dices = AICalls.Locking.RollDice();
               int[] p = { (dices[0] > dices[1] ? 1 : 0), dices[0], dices[1] };
 
               GServiceClient.getInstance().queue.post(Events.GSERVICE_FIRSTROLL, p);
-              GServiceClient.getInstance().sendMessage("4 " + (dices[0] > dices[1] ? 0 : 1) + " " + dices[0] + " " + dices[1]);
+              GServiceClient.getInstance().sendMessage(GSERVICE_OPENING_ROLL + " " + (dices[0] > dices[1] ? 0 : 1) + " " + dices[0] + " " + dices[1]);
             }
             break;
 

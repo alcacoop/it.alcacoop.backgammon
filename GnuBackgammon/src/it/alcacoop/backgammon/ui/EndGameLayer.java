@@ -35,7 +35,6 @@ public class EndGameLayer extends Table {
   private boolean isAvailable = false;
 
   public EndGameLayer(Stage _stage) {
-    // debug();
     stage = _stage;
     float width = stage.getWidth() / 1.3f;
     float height = stage.getHeight();
@@ -91,7 +90,7 @@ public class EndGameLayer extends Table {
       public void clicked(InputEvent event, float x, float y) {
         GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_PLAY_AGAIN + " 1");
         if (isAvailable) {
-          GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, 0);
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
           hide();
         } else
           waitForOpponent();
