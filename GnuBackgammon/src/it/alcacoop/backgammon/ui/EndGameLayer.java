@@ -2,6 +2,9 @@ package it.alcacoop.backgammon.ui;
 
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceMessages;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -27,7 +30,9 @@ public class EndGameLayer extends Table {
   private Label l1, l2;
   private Table pl0, pl1;
   private Group info;
-  private Label waiting, abandoned;
+  private Label waiting, abandoned, available;
+  private boolean isWaiting = false;
+  private boolean isAvailable = false;
 
   public EndGameLayer(Stage _stage) {
     // debug();
@@ -37,13 +42,16 @@ public class EndGameLayer extends Table {
 
     abandoned = new Label("Opponent abandoned the match", GnuBackgammon.skin);
     waiting = new Label("Waiting for opponent response..", GnuBackgammon.skin);
+    available = new Label("Opponent wants to play again..", GnuBackgammon.skin);
     waiting.addAction(MyActions.forever(MyActions.sequence(Actions.fadeOut(0.5f), Actions.fadeIn(0.4f))));
     waiting.setVisible(false);
     abandoned.setVisible(false);
+    available.setVisible(false);
 
     info = new Group();
     info.addActor(waiting);
     info.addActor(abandoned);
+    info.addActor(available);
     info.setWidth(waiting.getWidth());
     info.setHeight(waiting.getHeight());
 
@@ -81,14 +89,20 @@ public class EndGameLayer extends Table {
     bPlayAgain.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        // GnuBackgammon.fsm.processEvent(GameFSM.Events.GSERVICE_RETURN_GAME, EndGameLayer.this.winner);
-        waitForOpponent();
+        GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_PLAY_AGAIN + " 1");
+        if (isAvailable) {
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, 0);
+          hide();
+        } else
+          waitForOpponent();
       }
     });
     bLeaveMatch = new TextButton("LEAVE MATCH", tl);
     bLeaveMatch.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_PLAY_AGAIN + " 0");
+        GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
         hide();
       }
     });
@@ -184,27 +198,45 @@ public class EndGameLayer extends Table {
     bPlayAgain.setColor(1, 1, 1, 0.4f);
     bPlayAgain.setDisabled(true);
     waiting.setVisible(false);
+    available.setVisible(false);
     abandoned.setVisible(true);
   }
 
+  public void opponentAvailable() {
+    isAvailable = true;
+    waiting.setVisible(false);
+    abandoned.setVisible(false);
+    available.setVisible(true);
+  }
+
   public void waitForOpponent() {
+    isWaiting = true;
     bPlayAgain.setColor(1, 1, 1, 0.4f);
     bPlayAgain.setDisabled(true);
     waiting.setVisible(true);
     abandoned.setVisible(false);
+    available.setVisible(false);
   }
 
   public void hide() {
+    isAvailable = false;
     GnuBackgammon.Instance.nativeFunctions.showAds(true);
     visible = false;
+    isWaiting = false;
     setY(stage.getHeight());
     bPlayAgain.setDisabled(false);
     bPlayAgain.setColor(1, 1, 1, 1);
     waiting.setVisible(false);
     abandoned.setVisible(false);
+    available.setVisible(false);
   }
 
   public boolean isVisible() {
     return visible;
   }
+
+  public boolean isWaiting() {
+    return isWaiting;
+  }
+
 }
