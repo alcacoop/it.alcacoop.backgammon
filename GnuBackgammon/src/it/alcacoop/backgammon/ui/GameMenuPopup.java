@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
+import it.alcacoop.backgammon.fsm.OldGServiceFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
 
@@ -64,141 +65,157 @@ public final class GameMenuPopup extends Table {
   private TextButton options;
   private Actor a;
   private boolean visible;
-  
-  
-  
+
+
   public GameMenuPopup(Stage stage) {
     setWidth(stage.getWidth());
-    setHeight(stage.getHeight()/(6.3f-GnuBackgammon.Instance.ss));
+    setHeight(stage.getHeight() / (6.3f - GnuBackgammon.Instance.ss));
     setX(0);
     setY(-getHeight());
-    
+
     background = GnuBackgammon.skin.getDrawable("popup-region");
     setBackground(background);
-    
+
     a = new Actor();
-    a.addListener(new InputListener(){
+    a.addListener(new InputListener() {
       @Override
       public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         hide();
         return true;
       }
     });
-    
+
     t1 = new Table();
     t1.setFillParent(true);
-    
+
     TextButtonStyle tl = GnuBackgammon.skin.get("button", TextButtonStyle.class);
-    
+
     undo = new TextButton("Undo Move", tl);
-    undo.addListener(new ClickListener(){
+    undo.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        hide(new Runnable(){
-        @Override
-        public void run() {
-          if (undo.isDisabled()) return;
-          GnuBackgammon.Instance.board.undoMove();
-        }});
-      }
-    });
-    
-    resign = new TextButton("Resign Game", tl);
-    resign.addListener(new ClickListener(){
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.Instance.snd.playMoveStart();
-        hide(new Runnable(){
+        hide(new Runnable() {
           @Override
           public void run() {
-            if (resign.isDisabled()) return;
-            if (MatchState.matchType==2)
-              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
-            else if (MatchState.matchType==3)
-              GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
-            else
-              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+            if (undo.isDisabled())
+              return;
+            GnuBackgammon.Instance.board.undoMove();
+          }
+        });
+      }
+    });
 
-            if (MatchState.fTurn==0)
+    resign = new TextButton("Resign Game", tl);
+    resign.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        hide(new Runnable() {
+          @Override
+          public void run() {
+            if (resign.isDisabled())
+              return;
+
+            if (GnuBackgammon.fsm instanceof FIBSFSM)
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof GameFSM)
+              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof GServiceFSM)
+              GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof OldGServiceFSM)
+              GnuBackgammon.fsm.state(OldGServiceFSM.States.DIALOG_HANDLER);
+
+            if (MatchState.fTurn == 0)
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[1], GnuBackgammon.Instance.board._board[0]);
             else
               AICalls.GetResignValue(GnuBackgammon.Instance.board._board[0], GnuBackgammon.Instance.board._board[1]);
-        }});
-        
+          }
+        });
+
       }
     });
-    
+
     abandon = new TextButton("Abandon Match", tl);
-    abandon.addListener(new ClickListener(){@Override
-    public void clicked(InputEvent event, float x, float y) {
-      GnuBackgammon.Instance.snd.playMoveStart();
-      hide(new Runnable(){
+    abandon.addListener(new ClickListener() {
       @Override
-      public void run() {
-        if (abandon.isDisabled()) return;
-        if (MatchState.matchType==2)
-          GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
-        else if (MatchState.matchType==3)
-          GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
-        else
-          GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-        
-        if (MatchState.matchType==0)
-          UIDialog.getLeaveDialog(Events.ABANDON_MATCH);
-        else
-          UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?");
-      }});
-    }});
-    
-    options = new TextButton("Options", tl);
-    options.addListener(new ClickListener(){@Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
-        hide(new Runnable(){
-        @Override
-        public void run() {
-          UIDialog.getOptionsDialog();
-        }});
-      }});
-    
-    float pad = getHeight()/15;
-    float w = getWidth()/3.3f - pad;
-    
+        hide(new Runnable() {
+          @Override
+          public void run() {
+            if (abandon.isDisabled())
+              return;
+
+            if (GnuBackgammon.fsm instanceof FIBSFSM)
+              GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof GameFSM)
+              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof GServiceFSM)
+              GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof OldGServiceFSM)
+              GnuBackgammon.fsm.state(OldGServiceFSM.States.DIALOG_HANDLER);
+
+            if (MatchState.matchType == 0)
+              UIDialog.getLeaveDialog(Events.ABANDON_MATCH);
+            else
+              UIDialog.getYesNoDialog(Events.ABANDON_MATCH, "Really leave current match?");
+          }
+        });
+      }
+    });
+
+    options = new TextButton("Options", tl);
+    options.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        GnuBackgammon.Instance.snd.playMoveStart();
+        hide(new Runnable() {
+          @Override
+          public void run() {
+            UIDialog.getOptionsDialog();
+          }
+        });
+      }
+    });
+
+    float pad = getHeight() / 15;
+    float w = getWidth() / 3.3f - pad;
+
     add(undo).fill().expand().pad(pad).width(w);
     add(resign).fill().expand().pad(pad).width(w);
     add(abandon).fill().expand().pad(pad).width(w);
     add(options).fill().expand().pad(pad).width(w);
-    
+
     visible = false;
     addActor(t1);
   }
 
   public static void setDisabledButtons() {
-    if ((MatchState.matchType==0) && (MatchState.fMove==1)) { //CPU IS PLAYING
+    if ((MatchState.matchType == 0) && (MatchState.fMove == 1)) { // CPU IS PLAYING
       undo.setDisabled(true);
       resign.setDisabled(true);
       abandon.setDisabled(true);
-      undo.setColor(1,1,1,0.4f);
-      resign.setColor(1,1,1,0.4f);
-      abandon.setColor(1,1,1,0.4f);
-    } else if ((MatchState.matchType>=2) && (MatchState.fMove==1)) { //REMOTE TURN 
+      undo.setColor(1, 1, 1, 0.4f);
+      resign.setColor(1, 1, 1, 0.4f);
+      abandon.setColor(1, 1, 1, 0.4f);
+    } else if ((MatchState.matchType >= 2) && (MatchState.fMove == 1)) { // REMOTE TURN
       undo.setDisabled(true);
       resign.setDisabled(true);
       abandon.setDisabled(false);
-      undo.setColor(1,1,1,0.4f);
-      resign.setColor(1,1,1,0.4f);
-      abandon.setColor(1,1,1,1);
+      undo.setColor(1, 1, 1, 0.4f);
+      resign.setColor(1, 1, 1, 0.4f);
+      abandon.setColor(1, 1, 1, 1);
     } else {
       undo.setDisabled(false);
       resign.setDisabled(false);
       abandon.setDisabled(false);
-      undo.setColor(1,1,1,1);
-      resign.setColor(1,1,1,1);
-      abandon.setColor(1,1,1,1);
+      undo.setColor(1, 1, 1, 1);
+      resign.setColor(1, 1, 1, 1);
+      abandon.setColor(1, 1, 1, 1);
     }
   }
-  
+
   private void show() {
     visible = true;
     addAction(MyActions.moveTo(0, 0, 0.1f));
@@ -214,39 +231,41 @@ public final class GameMenuPopup extends Table {
   private void hide(Runnable r) {
     visible = false;
     addAction(MyActions.sequence(
-      Actions.moveTo(0, -getHeight(), 0.1f),
-      Actions.run(r)
-    ));
+        Actions.moveTo(0, -getHeight(), 0.1f),
+        Actions.run(r)
+        ));
   }
-  
+
   public void toggle() {
-    if (visible) hide();
+    if (visible)
+      hide();
     else {
       GnuBackgammon.Instance.board.points.reset();
-      if (GnuBackgammon.Instance.board.selected!=null) 
+      if (GnuBackgammon.Instance.board.selected != null)
         GnuBackgammon.Instance.board.selected.highlight(false);
       show();
     }
   }
-  
-  
-  public Actor hit (float x, float y, boolean touchable) {
+
+
+  public Actor hit(float x, float y, boolean touchable) {
     Actor hit = super.hit(x, y, touchable);
     if (visible) {
-      if (hit != null) return hit;
+      if (hit != null)
+        return hit;
       else {
         return a;
       }
-      
+
     } else {
-      return hit;  
+      return hit;
     }
   }
 
   public void setButtonsStyle(String b) {
-    undo.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
-    resign.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
-    abandon.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
-    options.setStyle(GnuBackgammon.skin.get("button-"+b, TextButtonStyle.class));
+    undo.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
+    resign.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
+    abandon.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
+    options.setStyle(GnuBackgammon.skin.get("button-" + b, TextButtonStyle.class));
   }
 }

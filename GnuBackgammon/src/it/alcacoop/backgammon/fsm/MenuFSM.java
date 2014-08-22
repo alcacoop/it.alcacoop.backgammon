@@ -340,9 +340,12 @@ public class MenuFSM extends BaseFSM implements Context {
             long remoteVersion = _params[1];
             System.out.println("===> LOCAL PROTOCOL VERSION: " + localVersion);
             System.out.println("===> REMOTE PROTOCOL VERSION: " + remoteVersion);
-            // GnuBackgammon.Instance.setGServiceFSM(remoteVersion);
 
-            GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
+            if (remoteVersion < 270)
+              GnuBackgammon.Instance.setFSM("OLD_GSERVICE_FSM");
+            else
+              GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
+
             if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])
