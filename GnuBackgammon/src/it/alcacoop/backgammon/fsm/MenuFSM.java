@@ -37,6 +37,7 @@ package it.alcacoop.backgammon.fsm;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.gservice.GServiceMessages;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -308,7 +309,7 @@ public class MenuFSM extends BaseFSM implements Context {
         MatchState.nMatchTo = 1;
         GServiceClient.getInstance().connect();
 
-        GServiceClient.getInstance().sendMessage("2");
+        GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_READY);
       }
 
@@ -318,7 +319,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
 
           case GSERVICE_READY:
-            GServiceClient.getInstance().sendMessage("8 " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
             break;
 
@@ -328,22 +329,20 @@ public class MenuFSM extends BaseFSM implements Context {
 
             Random gen = new Random();
             waitTime = gen.nextLong();
-            GServiceClient.getInstance().sendMessage("3 " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_HANDSHAKE + " " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
             break;
 
           case GSERVICE_HANDSHAKE:
-            GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
             long _params[] = (long[])params;
             long remoteWaitTime = _params[0];
             long localVersion = GnuBackgammon.Instance.nativeFunctions.getAppVersionCode();
             long remoteVersion = _params[1];
             System.out.println("===> LOCAL PROTOCOL VERSION: " + localVersion);
             System.out.println("===> REMOTE PROTOCOL VERSION: " + remoteVersion);
-            if (remoteVersion < 270)
-              GServiceFSM.noEndGameLayer = true;
-            else
-              GServiceFSM.noEndGameLayer = false;
+            // GnuBackgammon.Instance.setGServiceFSM(remoteVersion);
+
+            GnuBackgammon.Instance.setFSM("GSERVICE_FSM");
             if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])

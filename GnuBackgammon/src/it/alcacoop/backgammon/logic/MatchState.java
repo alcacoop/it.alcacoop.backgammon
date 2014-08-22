@@ -147,12 +147,12 @@ public class MatchState {
 
   public static void SetCubeUse(int fCubeUse) {
     MatchState.fCubeUse = fCubeUse;
-    AICalls.SetCubeUse(fCubeUse);
+    AICalls.Locking.SetCubeUse(fCubeUse);
   }
 
   public static void SetCrawford(int fCrawford) {
     MatchState.fCrawford = fCrawford;
-    AICalls.SetCrawford(fCrawford);
+    AICalls.Locking.SetCrawford(fCrawford);
   }
 
   public static void setBoardFromString(String sbb, String sbw) {

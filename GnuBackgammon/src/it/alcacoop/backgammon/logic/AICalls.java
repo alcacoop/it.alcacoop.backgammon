@@ -187,6 +187,38 @@ public class AICalls {
       }
       return mv;
     }
+
+    public static int SetCubeUse(final int fCubeUse) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetCubeUse(fCubeUse);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int SetCrawford(final int fCrawford) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetCrawford(fCrawford);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
   }
 
   /* END LOCKING IMPLEMENTATIONS */

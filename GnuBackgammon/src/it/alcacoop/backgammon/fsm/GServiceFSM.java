@@ -102,7 +102,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           case NO_MORE_MOVES: // END TURN
             GnuBackgammon.Instance.board.dices.clear();
-            ctx.state(States.SWITCH_TURN);
+            GnuBackgammon.fsm.state(SWITCH_TURN);
             break;
 
           default:
@@ -119,11 +119,24 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public boolean processEvent(Context ctx, GServiceFSM.Events evt, Object params) {
 
         switch (evt) {
+          case ROLL_DICE:
+            int dices[] = AICalls.Locking.RollDice();
+            GServiceClient.getInstance().sendMessage(GSERVICE_ROLL + " " + dices[0] + " " + dices[1]);
+            /*
+            String s = "";
+            for (int i = 1; i >= 0; i--)
+              for (int j = 0; j < 25; j++) {
+                s += " " + ctx.board()._board[i][j];
+              }
+            GServiceClient.getInstance().sendMessage(GSERVICE_BOARD + s);
+            */
+            GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
+            break;
 
           case GSERVICE_ROLL:
             GServiceFSM.d1 = 0;
             GServiceFSM.d2 = 0;
-            int[] dices = (int[])params;
+            dices = (int[])params;
             GServiceFSM.d1 = Math.max(dices[0], dices[1]);
             GServiceFSM.d2 = Math.min(dices[0], dices[1]);
             AICalls.GenerateMoves(ctx.board(), GServiceFSM.d1, GServiceFSM.d2);
@@ -131,6 +144,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
 
           case GENERATE_MOVES:
+            /*
             moves = (int[][])params;
             if ((moves != null) && (moves.length > 0) && (ctx.board().getPIPS(0) != 167)) {
               GnuBackgammon.fsm.state(BOARD_SYNC);
@@ -138,7 +152,11 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               // NO WAY TO SYNC
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);
             }
+            */
+            moves = (int[][])params;
+            GnuBackgammon.fsm.processEvent(Events.GSERVICE_BOARD_SYNCED, null);
             break;
+
 
           case GSERVICE_BOARD_SYNCED:
             GnuBackgammon.Instance.snd.playRoll();
@@ -151,7 +169,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               ctx.board().availableMoves.setMoves(moves);
 
               if ((GnuBackgammon.fsm.greedyMoves = ctx.board().getGreedyBearoffMove(moves)) != null)
-                ctx.state(GREEDY_BEAROFF); // START GREEDY BEAROFF
+                GnuBackgammon.fsm.state(GREEDY_BEAROFF); // START GREEDY BEAROFF
 
             } else {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "No legal moves available", 0.8f);
@@ -175,7 +193,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 GnuBackgammon.fsm.hnmove++;
 
                 ctx.board().availableMoves.dropDice(orig - dest);
-                ctx.state(HUMAN_CHECKER_MOVING);
+                GnuBackgammon.fsm.state(HUMAN_CHECKER_MOVING);
                 ctx.board().humanMove(m);
               }
             } else { // TAP MODE
@@ -189,7 +207,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 GnuBackgammon.fsm.hmoves[idx * 2 + 1] = dest;
                 GnuBackgammon.fsm.hnmove++;
 
-                ctx.state(HUMAN_CHECKER_MOVING);
+                GnuBackgammon.fsm.state(HUMAN_CHECKER_MOVING);
                 ctx.board().humanMove(m);
                 ctx.board().availableMoves.dropDice(origin - dest);
               } else { // SELECT NEW CHECKER
@@ -201,7 +219,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           case NO_MORE_MOVES:
             ctx.board().dices.clear();
-            ctx.state(SWITCH_TURN);
+            GnuBackgammon.fsm.state(SWITCH_TURN);
             break;
 
           case DICE_CLICKED:
@@ -211,7 +229,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               m += " " + GnuBackgammon.fsm.hmoves[i];
 
             GServiceClient.getInstance().sendMessage(m);
-            ctx.state(SWITCH_TURN);
+            GnuBackgammon.fsm.state(SWITCH_TURN);
             break;
 
           default:
@@ -280,7 +298,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           case PERFORMED_MOVE:
             ctx.board().updatePInfo();
-            ctx.state(LOCAL_TURN);
+            GnuBackgammon.fsm.state(LOCAL_TURN);
             break;
 
           default:
@@ -291,6 +309,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     },
 
 
+    /*
     BOARD_SYNC {
       @Override
       public void enterState(Context ctx) {
@@ -320,7 +339,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         return false;
       }
     },
-
+    */
 
     SWITCH_TURN {
       public void enterState(Context ctx) {
@@ -330,13 +349,20 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         GnuBackgammon.fsm.hnmove = 0;
 
         if (ctx.board().gameFinished()) {
-          ctx.state(MATCH_OVER);
+          GnuBackgammon.fsm.state(MATCH_OVER);
         } else {
           // SWITCH TURN
           ctx.board().switchTurn();
           if (MatchState.fTurn == 0) {
-            ctx.state(States.LOCAL_TURN);
+            GnuBackgammon.fsm.state(LOCAL_TURN);
+
+            // if ((MatchState.fCubeOwner == -1) || (MatchState.fCubeOwner == MatchState.fMove)) {// AVAILABLE CUBE
+            ctx.board().addActor(ctx.board().rollBtn);
+            // ctx.board().addActor(ctx.board().doubleBtn);
+            // }
+
           } else {
+            /*
             int dices[] = AICalls.Locking.RollDice();
             GServiceClient.getInstance().sendMessage(GSERVICE_ROLL + " " + dices[0] + " " + dices[1]);
             String s = "";
@@ -346,7 +372,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               }
             GServiceClient.getInstance().sendMessage(GSERVICE_BOARD + s);
             GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
-            ctx.state(States.REMOTE_TURN);
+            */
+            GnuBackgammon.fsm.state(REMOTE_TURN);
           }
         }
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
@@ -373,6 +400,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
 
           case GSERVICE_FIRSTROLL:
+            MatchState.SetCubeUse(1);
+            MatchState.UpdateMSCubeInfo(1, -1);
             ctx.board().initBoard(0);
             MatchState.SetGameVariant(0);
             AICalls.Locking.SetBoard(ctx.board()._board[0], ctx.board()._board[1]);
@@ -388,9 +417,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             GameMenuPopup.setDisabledButtons();
 
             if (turn == 0) {
-              ctx.state(LOCAL_TURN);
+              GnuBackgammon.fsm.state(LOCAL_TURN);
             } else {
-              ctx.state(REMOTE_TURN);
+              GnuBackgammon.fsm.state(REMOTE_TURN);
             }
             GnuBackgammon.fsm.processEvent(Events.GSERVICE_ROLL, dices);
             break;
@@ -489,7 +518,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_HANDSHAKE:
             long _params[] = (long[])params;
             long remoteWaitTime = _params[0];
-            ctx.state(OPENING_ROLL);
+            GnuBackgammon.fsm.state(OPENING_ROLL);
             if (waitTime > remoteWaitTime) {
               int dices[] = { 0, 0 };
               while (dices[0] == dices[1])
@@ -529,15 +558,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             if ((Boolean)params) { // ABANDON
               GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
               if (ctx.board().getPIPS(0) > ctx.board().getPIPS(1)) {
-                if (GServiceFSM.noEndGameLayer)
-                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 3");// FUCK YOU DROPPER!
-                else
-                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 13");// FUCK YOU DROPPER!
+                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 13");// FUCK YOU DROPPER!
               } else {
-                if (GServiceFSM.noEndGameLayer)
-                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 0");
-                else
-                  GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 11");
+                GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " 11");
               }
               GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
             } else { // CANCEL
@@ -563,9 +586,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case HUMAN_RESIGNED:
             if ((Boolean)params) {
               GServiceClient.getInstance().sendMessage(GSERVICE_ABANDON + " " + MatchState.resignValue);
-              if (GServiceFSM.noEndGameLayer)
-                ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
-              ctx.state(MATCH_OVER);
+              GnuBackgammon.fsm.state(MATCH_OVER);
             } else {
               GnuBackgammon.fsm.back();
             }
@@ -611,12 +632,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   @Override
   public void processEvent(final Events evt, final Object params) {
-    // System.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
+    System.out.println("===> +++ PROCESS " + evt);
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        // System.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
-        // System.out.println("---> GSFSM: " + evt + " ON " + state());
         switch (evt) {
           case GSERVICE_CHATMSG:
             GnuBackgammon.Instance.snd.playMessage();
@@ -626,6 +645,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           case GSERVICE_ERROR:
             int errorCode = (Integer)params;
+            System.out.println("===> ERROR " + errorCode);
             String message = "";
             switch (errorCode) {
               case 0:
@@ -650,13 +670,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_ABANDON:
             int status = (Integer)params;
             MatchState.resignValue = status;
-            state(States.MATCH_OVER);
-            if ((status >= 10) || (GServiceFSM.noEndGameLayer))
+            GnuBackgammon.fsm.state(GServiceFSM.States.MATCH_OVER);
+            if (status >= 10)
               ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
             break;
 
           case GSERVICE_BYE:
-            GServiceFSM.noEndGameLayer = false;
             MatchState.resignValue = 0;
             GServiceClient.getInstance().reset();
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
@@ -674,4 +693,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       }
     });
   }
+
+
 }
