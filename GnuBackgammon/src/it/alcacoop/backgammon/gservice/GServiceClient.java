@@ -90,6 +90,13 @@ public class GServiceClient implements GServiceMessages {
         int p[] = { Integer.parseInt(chunks[1]), Integer.parseInt(chunks[2]), Integer.parseInt(chunks[3]) };
         queue.post(Events.GSERVICE_FIRSTROLL, p);
         break;
+      case GSERVICE_DOUBLE:
+        queue.post(Events.GSERVICE_DOUBLE, null);
+        break;
+      case GSERVICE_ACCEPT:
+        chunks = s.split(" ");
+        queue.post(Events.GSERVICE_FIRSTROLL, Integer.parseInt(chunks[1]));
+        break;
       case GSERVICE_ROLL:
         chunks = s.split(" ");
         int dices[] = { 0, 0 };

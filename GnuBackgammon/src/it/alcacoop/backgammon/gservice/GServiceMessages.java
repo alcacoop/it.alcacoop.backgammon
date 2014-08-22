@@ -9,6 +9,8 @@ public interface GServiceMessages {
   final static int GSERVICE_MOVE = 6;
   final static int GSERVICE_BOARD = 7;
   final static int GSERVICE_INIT_RATING = 8;
+  final static int GSERVICE_DOUBLE = 9;
+  final static int GSERVICE_ACCEPT = 10;
 
   final static int GSERVICE_PLAY_AGAIN = 20;
 
