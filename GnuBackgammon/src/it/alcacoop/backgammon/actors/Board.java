@@ -66,6 +66,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class Board extends Group {
 
   private Label thinking;
+  private Label waiting;
   private DoublingCube doublingCube;
   private BaseFSM fsm;
 
@@ -147,6 +148,13 @@ public class Board extends Group {
     thinking.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
     thinking.setVisible(false);
     addActor(thinking);
+
+    waiting = new Label("... Wait ...", GnuBackgammon.skin);
+    waiting.setX(getX() + (boardbg.getWidth() - waiting.getWidth()) / 2);
+    waiting.setY(getY() + (boardbg.getHeight() - waiting.getHeight()) / 2);
+    waiting.addAction(Actions.forever(Actions.sequence(Actions.alpha(0.7f, 0.4f), Actions.alpha(1, 0.5f))));
+    waiting.setVisible(false);
+    addActor(waiting);
 
     larrow = new Image(GnuBackgammon.atlas.findRegion("larrow"));
     rarrow = new Image(GnuBackgammon.atlas.findRegion("rarrow"));
@@ -659,6 +667,16 @@ public class Board extends Group {
 
   public void thinking(boolean v) {
     thinking.setVisible(v);
+    Gdx.graphics.requestRendering();
+    if (v)
+      Gdx.graphics.setContinuousRendering(true);
+    else if (v)
+      Gdx.graphics.setContinuousRendering(false);
+    Gdx.graphics.requestRendering();
+  }
+
+  public void waiting(boolean v) {
+    waiting.setVisible(v);
     Gdx.graphics.requestRendering();
     if (v)
       Gdx.graphics.setContinuousRendering(true);

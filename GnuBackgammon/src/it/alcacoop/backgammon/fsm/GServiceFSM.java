@@ -91,6 +91,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
 
           case GSERVICE_MOVES:
+            ctx.board().waiting(false);
             int moves[] = (int[])params;
             ctx.board().setMoves(moves);
             break;
@@ -101,6 +102,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             break;
 
           case NO_MORE_MOVES: // END TURN
+            ctx.board().waiting(false);
             GnuBackgammon.Instance.board.dices.clear();
             GnuBackgammon.fsm.state(SWITCH_TURN);
             break;
@@ -360,7 +362,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             ctx.board().addActor(ctx.board().rollBtn);
             // ctx.board().addActor(ctx.board().doubleBtn);
             // }
-
           } else {
             /*
             int dices[] = AICalls.Locking.RollDice();
@@ -374,6 +375,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
             */
             GnuBackgammon.fsm.state(REMOTE_TURN);
+            ctx.board().waiting(true);
           }
         }
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
@@ -420,6 +422,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               GnuBackgammon.fsm.state(LOCAL_TURN);
             } else {
               GnuBackgammon.fsm.state(REMOTE_TURN);
+              ctx.board().waiting(true);
             }
             GnuBackgammon.fsm.processEvent(Events.GSERVICE_ROLL, dices);
             break;
@@ -601,7 +604,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     },
 
 
-    STOPPED {};
+    STOPPED {
+      @Override
+      public void enterState(Context ctx) {
+        // TODO Auto-generated method stub
+        super.enterState(ctx);
+        ctx.board().waiting(false);
+      }
+    };
 
     // DEFAULT IMPLEMENTATION
     public boolean processEvent(Context ctx, Events evt, Object params) {
