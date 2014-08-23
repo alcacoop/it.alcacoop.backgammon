@@ -36,7 +36,8 @@ package it.alcacoop.backgammon.actors;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.GameFSM.States;
+import it.alcacoop.backgammon.fsm.GServiceFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AvailableMoves;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -192,7 +193,10 @@ public class Board extends Group {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         Board.this.doubleBtn.remove();
-        GnuBackgammon.fsm.state(States.DIALOG_HANDLER);
+        if (GnuBackgammon.fsm instanceof GameFSM)
+          GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+        else if (GnuBackgammon.fsm instanceof GServiceFSM)
+          GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
         GnuBackgammon.fsm.processEvent(Events.DOUBLE_REQUEST, null);
       }
     });
@@ -386,7 +390,7 @@ public class Board extends Group {
       c.moveTo(m.to);
       lastMoved = c;
     } else {
-      GnuBackgammon.fsm.state(States.HUMAN_TURN);
+      GnuBackgammon.fsm.state(GameFSM.States.HUMAN_TURN);
     }
   }
 
