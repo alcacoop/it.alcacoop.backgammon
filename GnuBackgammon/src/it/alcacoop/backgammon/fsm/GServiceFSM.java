@@ -72,6 +72,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             GnuBackgammon.fsm.board().waiting(true);
             System.out.println("===> ACCEPT!");
             boolean resp = (Boolean)params;
+            if (resp) {
+              MatchState.UpdateMSCubeInfo(MatchState.nCube * 2, 0);
+              ctx.board().doubleCube();
+            }
             GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_ACCEPT + " " + (resp ? 1 : 0));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
             break;
@@ -135,6 +139,9 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             int resp = (Integer)params;
             ctx.board().waiting(false);
             if (resp == 1) {
+              MatchState.UpdateMSCubeInfo(MatchState.nCube * 2, 1);
+              ctx.board().doubleCube();
+
               GnuBackgammon.fsm.state(States.LOCAL_TURN);
               UIDialog.getFlashDialog(Events.ROLL_DICE, "Your opponent accepted double");
             } else {
@@ -390,10 +397,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           if (MatchState.fTurn == 0) {
             GnuBackgammon.fsm.state(States.LOCAL_TURN);
 
-            // if ((MatchState.fCubeOwner == -1) || (MatchState.fCubeOwner == MatchState.fMove)) {// AVAILABLE CUBE
-            ctx.board().addActor(ctx.board().rollBtn);
-            ctx.board().addActor(ctx.board().doubleBtn);
-            // }
+            if ((MatchState.fCubeOwner == -1) || (MatchState.fCubeOwner == 0)) {// AVAILABLE CUBE
+              ctx.board().addActor(ctx.board().rollBtn);
+              ctx.board().addActor(ctx.board().doubleBtn);
+            } else {
+              GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, null);
+            }
           } else {
             /*
             int dices[] = AICalls.Locking.RollDice();
@@ -418,6 +427,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        ctx.board().waiting(false);
         GnuBackgammon.Instance.nativeFunctions.hideProgressDialog();
         ctx.board().rollBtn.remove();
         ctx.board().doubleBtn.remove();
@@ -470,7 +480,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
-
+        ctx.board().waiting(false);
         if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
           return;
 
