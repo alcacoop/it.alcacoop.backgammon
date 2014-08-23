@@ -75,9 +75,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             if (resp) {
               MatchState.UpdateMSCubeInfo(MatchState.nCube * 2, 0);
               ctx.board().doubleCube();
+              GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
+            } else {
+              MatchState.resignValue = -1;
+              GnuBackgammon.fsm.state(States.MATCH_OVER);
             }
             GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_ACCEPT + " " + (resp ? 1 : 0));
-            GServiceClient.getInstance().queue.pull(Events.GSERVICE_ROLL);
             break;
 
           case GSERVICE_ROLL:
@@ -145,9 +148,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               GnuBackgammon.fsm.state(States.LOCAL_TURN);
               UIDialog.getFlashDialog(Events.ROLL_DICE, "Your opponent accepted double");
             } else {
-              GnuBackgammon.fsm.state(States.LOCAL_TURN);
-              UIDialog.getFlashDialog(Events.ROLL_DICE, "Double not accepted");
+              UIDialog.getFlashDialog(Events.CPU_DOUBLE_NOT_ACCEPTED, "Double not accepted");
             }
+            break;
+          case CPU_DOUBLE_NOT_ACCEPTED:
+            MatchState.resignValue = 1;
+            GnuBackgammon.fsm.state(States.MATCH_OVER);
             break;
           default:
             return false;
@@ -404,17 +410,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               GnuBackgammon.fsm.processEvent(Events.ROLL_DICE, null);
             }
           } else {
-            /*
-            int dices[] = AICalls.Locking.RollDice();
-            GServiceClient.getInstance().sendMessage(GSERVICE_ROLL + " " + dices[0] + " " + dices[1]);
-            String s = "";
-            for (int i = 1; i >= 0; i--)
-              for (int j = 0; j < 25; j++) {
-                s += " " + ctx.board()._board[i][j];
-              }
-            GServiceClient.getInstance().sendMessage(GSERVICE_BOARD + s);
-            GServiceClient.getInstance().queue.post(Events.GSERVICE_ROLL, dices);
-            */
             GnuBackgammon.fsm.state(States.REMOTE_TURN);
             ctx.board().waiting(true);
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_DOUBLE, Events.GSERVICE_ROLL);
