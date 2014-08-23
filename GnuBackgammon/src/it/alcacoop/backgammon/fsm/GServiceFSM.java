@@ -486,7 +486,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           MatchState.resignValue -= 10; // NORMALIZE RESIGN VALUE!
 
         GServiceClient.instance.reset();
-        GnuBackgammon.Instance.gameScreen.chatBox.hide();
+        GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
         if ((ctx.board().getPIPS(0) <= 0) || (MatchState.resignValue > 0)) { // YOU WIN!
 
           int nPoints = MatchState.nCube * MatchState.resignValue;
