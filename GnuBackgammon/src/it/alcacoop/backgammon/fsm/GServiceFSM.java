@@ -491,7 +491,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           int nPoints = MatchState.nCube * MatchState.resignValue;
           if (MatchState.resignValue == 0)
-            nPoints = MatchState.nCube * ctx.board().gameScore(0);
+            nPoints = MatchState.nCube * ctx.board().gameScore(1);
 
           MatchState.anScore[0] += nPoints;
           GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
@@ -504,7 +504,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           int nPoints = MatchState.nCube * -MatchState.resignValue;
           if (MatchState.resignValue == 0)
-            nPoints = MatchState.nCube * ctx.board().gameScore(1);
+            nPoints = MatchState.nCube * ctx.board().gameScore(0);
 
           MatchState.anScore[1] += nPoints;
           GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
