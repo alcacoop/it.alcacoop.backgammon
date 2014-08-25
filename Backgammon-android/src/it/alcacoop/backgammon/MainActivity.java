@@ -659,8 +659,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
-    super.onWindowFocusChanged(hasFocus);
     adjustFocus();
+    if (hasFocus)
+      enterImmersiveMode();
   }
 
 
@@ -668,6 +669,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void beginGoogleSignIn() {
     gHelper.setConnectOnStart(prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true));
     gHelper.onStart(this);
+    enterImmersiveMode();
   }
 
 
