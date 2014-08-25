@@ -39,6 +39,7 @@ import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.backgammon.fsm.MenuFSM;
+import it.alcacoop.backgammon.fsm.OldGServiceFSM;
 import it.alcacoop.backgammon.fsm.SimulationFSM;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.AppearanceScreen;
@@ -103,6 +104,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private MenuFSM menuFSM;
   private FIBSFSM fibsFSM;
   private GServiceFSM gserviceFSM;
+  private OldGServiceFSM oldGserviceFSM;
 
   public static BitmapFont font;
   public static TextureAtlas atlas;
@@ -220,6 +222,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     menuFSM = new MenuFSM(board);
     fibsFSM = new FIBSFSM(board);
     gserviceFSM = new GServiceFSM(board);
+    oldGserviceFSM = new OldGServiceFSM(board);
 
     fsm = simulationFSM;
 
@@ -321,6 +324,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       fsm = fibsFSM;
     else if (type == "GSERVICE_FSM")
       fsm = gserviceFSM;
+    else if (type == "OLD_GSERVICE_FSM")
+      fsm = oldGserviceFSM;
     fsm.start();
   }
 

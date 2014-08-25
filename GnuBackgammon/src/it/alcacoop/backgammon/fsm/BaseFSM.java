@@ -77,6 +77,8 @@ public class BaseFSM implements Context {
     GSERVICE_HANDSHAKE,
     GSERVICE_FIRSTROLL, // params={turn, dice0, dice1}
     GSERVICE_ROLL, // params={dice0, dice1}
+    GSERVICE_DOUBLE,
+    GSERVICE_ACCEPT,
     GSERVICE_MOVES, // params={-1,-1,-1,-1,-1,-1,-1,-1}
     GSERVICE_BOARD,
     GSERVICE_BOARD_SYNCED,

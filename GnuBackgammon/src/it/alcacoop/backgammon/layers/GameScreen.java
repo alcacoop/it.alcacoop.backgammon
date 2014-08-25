@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
 import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
+import it.alcacoop.backgammon.fsm.OldGServiceFSM;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
@@ -91,12 +92,15 @@ public class GameScreen extends BaseScreen {
             chatBox.hide();
           } else
           if ((MatchState.fMove == 0) || (MatchState.matchType > 0)) { // HUMAN IS PLAYING OR FIBS OR TWO PLS
-            if (MatchState.matchType < 2)
-              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
-            else if (MatchState.matchType == 2)
+
+            if (GnuBackgammon.fsm instanceof FIBSFSM)
               GnuBackgammon.fsm.state(FIBSFSM.States.DIALOG_HANDLER);
-            else
+            if (GnuBackgammon.fsm instanceof GameFSM)
+              GnuBackgammon.fsm.state(GameFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof GServiceFSM)
               GnuBackgammon.fsm.state(GServiceFSM.States.DIALOG_HANDLER);
+            if (GnuBackgammon.fsm instanceof OldGServiceFSM)
+              GnuBackgammon.fsm.state(OldGServiceFSM.States.DIALOG_HANDLER);
 
             if (MatchState.matchType == 0)
               UIDialog.getLeaveDialog(Events.ABANDON_MATCH);
@@ -235,12 +239,15 @@ public class GameScreen extends BaseScreen {
           Actions.run(new Runnable() {
             @Override
             public void run() {
-              if (MatchState.matchType < 2)
-                GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
-              else if (MatchState.matchType == 2)
+
+              if (GnuBackgammon.fsm instanceof FIBSFSM)
                 GnuBackgammon.fsm.state(FIBSFSM.States.OPENING_ROLL);
-              else
+              if (GnuBackgammon.fsm instanceof GameFSM)
+                GnuBackgammon.fsm.state(GameFSM.States.OPENING_ROLL);
+              if (GnuBackgammon.fsm instanceof GServiceFSM)
                 GnuBackgammon.fsm.state(GServiceFSM.States.OPENING_ROLL);
+              if (GnuBackgammon.fsm instanceof OldGServiceFSM)
+                GnuBackgammon.fsm.state(OldGServiceFSM.States.OPENING_ROLL);
             }
           })
           ));

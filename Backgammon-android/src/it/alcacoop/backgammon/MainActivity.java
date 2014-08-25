@@ -35,7 +35,6 @@ package it.alcacoop.backgammon;
 
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
-import it.alcacoop.backgammon.fsm.MenuFSM.States;
 import it.alcacoop.backgammon.gservice.GServiceApplication;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.helpers.ADSHelpers;
@@ -81,6 +80,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
@@ -189,6 +189,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void injectBGInstance() {}
 
 
+  @SuppressLint("NewApi")
   @Override
   public void fibsSignin() {
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -277,6 +278,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     });
   }
 
+  @SuppressLint("NewApi")
   @Override
   public void fibsRegistration() {
 
@@ -421,7 +423,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     return false;
   }
 
-  @SuppressLint("InlinedApi")
+  @SuppressLint({ "InlinedApi", "NewApi" })
   public void enterImmersiveMode() {
     runOnUiThread(new Runnable() {
       @Override
@@ -572,7 +574,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   @Override
   protected void onRoomConnectedBehaviour() {
     MatchState.matchType = 3;
-    GnuBackgammon.fsm.state(States.GSERVICE);
+    GnuBackgammon.fsm.state(MenuFSM.States.GSERVICE);
   }
 
 
@@ -582,7 +584,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     GServiceClient.getInstance().reset();
     hideProgressDialog();
     if (GnuBackgammon.fsm instanceof MenuFSM)
-      GnuBackgammon.fsm.state(States.TWO_PLAYERS);
+      GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
   }
 
 
@@ -687,6 +689,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
           public void run() {
             Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
             Texture tex = new Texture(128, 128, Format.RGBA8888);
+            tex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, tex.getTextureObjectHandle());
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
@@ -699,6 +702,5 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       }
     }, uri, R.drawable.gplayer);
   }
-
 
 }

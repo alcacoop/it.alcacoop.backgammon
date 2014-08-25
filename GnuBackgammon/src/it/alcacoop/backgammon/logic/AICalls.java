@@ -36,7 +36,6 @@ package it.alcacoop.backgammon.logic;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM;
-import it.alcacoop.backgammon.fsm.GServiceFSM;
 import it.alcacoop.backgammon.fsm.GameFSM;
 import it.alcacoop.gnubackgammon.logic.GnubgAPI;
 
@@ -186,6 +185,38 @@ public class AICalls {
         e.printStackTrace();
       }
       return mv;
+    }
+
+    public static int SetCubeUse(final int fCubeUse) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetCubeUse(fCubeUse);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+    public static int SetCrawford(final int fCrawford) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetCrawford(fCrawford);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
     }
   }
 
@@ -392,15 +423,13 @@ public class AICalls {
         if (fsm != GnuBackgammon.fsm)
           return;
         GnubgAPI.SetGameTurn(fTurn, fMove);
-        if (!(GnuBackgammon.fsm instanceof GServiceFSM)) {
-          Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-              if (fsm == GnuBackgammon.fsm)
-                GnuBackgammon.fsm.processEvent(GameFSM.Events.SET_GAME_TURN, 1);
-            }
-          });
-        }
+        Gdx.app.postRunnable(new Runnable() {
+          @Override
+          public void run() {
+            if (fsm == GnuBackgammon.fsm)
+              GnuBackgammon.fsm.processEvent(GameFSM.Events.SET_GAME_TURN, 1);
+          }
+        });
       }
     });
   }
