@@ -600,7 +600,6 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
 
           default:
             state().processEvent(OldGServiceFSM.this, evt, params);
-            System.out.println("===> DEFAULT");
             break;
         }
       }

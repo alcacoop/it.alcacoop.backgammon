@@ -550,7 +550,6 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   
   
   public void parseMove(String s) {
-    //Gdx.app.log("===> PARSEMOVE", s);
     s = s.replaceAll("-", " ");
     s = s.replaceAll("\\.", "");
     

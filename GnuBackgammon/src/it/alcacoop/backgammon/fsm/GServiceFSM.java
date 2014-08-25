@@ -70,7 +70,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
           case GSERVICE_ACCEPT:
             GnuBackgammon.fsm.board().waiting(true);
-            System.out.println("===> ACCEPT!");
             boolean resp = (Boolean)params;
             if (resp) {
               MatchState.UpdateMSCubeInfo(MatchState.nCube * 2, 0);
@@ -133,7 +132,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       public void enterState(Context ctx) {
         ctx.board().removeActor(ctx.board().rollBtn);
         ctx.board().waiting(true);
-        System.out.println("===> PULL ACCEPT...");
       }
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -479,7 +477,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
           return;
 
-        System.out.println("===> ENTER INTO MATCH_OVER");
         GnuBackgammon.Instance.FibsOpponent = "";
 
         if (MatchState.resignValue > 10)
@@ -519,12 +516,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
         EndGameLayer endLayer = ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer;
-        System.out.println("===> RECEIVED: " + evt);
         switch (evt) {
 
           case GSERVICE_PLAY_AGAIN:
             int response = (Integer)params;
-            System.out.println("===> RESPONSE: " + response);
             if (response == 0) {
               endLayer.opponentAbandoned();
             } else {
@@ -684,7 +679,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   @Override
   public void processEvent(final Events evt, final Object params) {
-    System.out.println("===> +++ PROCESS " + evt);
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
@@ -702,7 +696,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
           case GSERVICE_ERROR:
             int errorCode = (Integer)params;
-            System.out.println("===> ERROR " + errorCode);
             String message = "";
             switch (errorCode) {
               case 0:
