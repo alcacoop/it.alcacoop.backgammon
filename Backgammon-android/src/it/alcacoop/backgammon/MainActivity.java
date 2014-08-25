@@ -80,6 +80,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
@@ -688,6 +689,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
           public void run() {
             Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
             Texture tex = new Texture(128, 128, Format.RGBA8888);
+            tex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, tex.getTextureObjectHandle());
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
@@ -700,6 +702,5 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       }
     }, uri, R.drawable.gplayer);
   }
-
 
 }
