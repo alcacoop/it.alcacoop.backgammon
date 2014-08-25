@@ -423,14 +423,20 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @SuppressLint("InlinedApi")
   public void enterImmersiveMode() {
-    getWindow().getDecorView().setSystemUiVisibility(
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            | View.INVISIBLE);
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.INVISIBLE);
+      }
+    });
+
   }
 
 
@@ -653,8 +659,9 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
-    super.onWindowFocusChanged(hasFocus);
     adjustFocus();
+    if (hasFocus)
+      enterImmersiveMode();
   }
 
 
@@ -662,6 +669,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   public void beginGoogleSignIn() {
     gHelper.setConnectOnStart(prefs.getBoolean("WANTS_GOOGLE_SIGNIN", true));
     gHelper.onStart(this);
+    enterImmersiveMode();
   }
 
 
