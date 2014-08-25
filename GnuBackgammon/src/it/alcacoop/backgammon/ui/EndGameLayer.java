@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class EndGameLayer extends Table {
@@ -128,7 +127,7 @@ public class EndGameLayer extends Table {
     add().width(width / 3).expand();
     add().width(width / 9).expand();
 
-    row();
+    row().height(stage.getHeight() / 2);
     add();
     add(pl0).expand().fill();
     add(new Label("VS", GnuBackgammon.skin));
@@ -151,41 +150,43 @@ public class EndGameLayer extends Table {
   private void _updatePli(int winner) {
     pl0.clear();
     pl1.clear();
-    String s0 = "", s1 = "";
+    String s0 = " ", s1 = " ";
     if (winner == 0)
       s0 = "WINNER! (" + nPoints + (nPoints > 1 ? "Pts)" : "Pt)");
     else
       s1 = "WINNER! (" + nPoints + (nPoints > 1 ? "Pts)" : "Pt)");
 
+    Label _l0 = new Label(s0, GnuBackgammon.skin);
+    Label _l1 = new Label(s1, GnuBackgammon.skin);
+
     pl0.setWidth(stage.getWidth());
-    pl0.add().expand().fill();
-    pl0.row();
-    pl0.add(new Label(s0, GnuBackgammon.skin)).expand();
+
+    float imgDim = stage.getHeight() / 2 - _l0.getHeight() * 3.5f;
+
+
+    pl0.add(_l0).expandX();
     pl0.row();
     Table t0 = new Table();
     t0.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t0.add(GnuBackgammon.Instance.iconMe);
+    t0.add(GnuBackgammon.Instance.iconMe).height(imgDim).width(imgDim);
     pl0.add(t0);
     pl0.row();
     l1 = new Label("YOU", GnuBackgammon.skin);
-    pl0.add(l1).align(Align.center).center();
-    pl0.row();
-    pl0.add().expand().fill();
+    pl0.add(l1).expandX();
+
 
     pl1.setWidth(stage.getWidth());
-    pl1.add().expand().fill();
-    pl1.row();
-    pl1.add(new Label(s1, GnuBackgammon.skin)).expand();
+
+    pl1.add(_l1).expandX();
     pl1.row();
     Table t1 = new Table();
     t1.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t1.add(GnuBackgammon.Instance.iconOpponent);
+    t1.add(GnuBackgammon.Instance.iconOpponent).height(imgDim).width(imgDim);
     pl1.add(t1);
     pl1.row();
     l2 = new Label("OPPONENT", GnuBackgammon.skin);
-    pl1.add(l2).align(Align.center).center();
-    pl1.row();
-    pl1.add().expand().fill();
+    pl1.add(l2).expandX();
+
   }
   public void show(int _winner, int nPoints) {
     GnuBackgammon.Instance.nativeFunctions.showAds(false);
