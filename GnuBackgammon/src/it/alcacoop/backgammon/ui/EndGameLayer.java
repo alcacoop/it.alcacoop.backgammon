@@ -89,6 +89,8 @@ public class EndGameLayer extends Table {
     bPlayAgain.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        if (bPlayAgain.isDisabled())
+          return;
         GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_PLAY_AGAIN + " 1");
         if (isAvailable) {
           GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
@@ -101,6 +103,8 @@ public class EndGameLayer extends Table {
     bLeaveMatch.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
+        if (bLeaveMatch.isDisabled())
+          return;
         GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_PLAY_AGAIN + " 0");
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_BYE, null);
         hide();
