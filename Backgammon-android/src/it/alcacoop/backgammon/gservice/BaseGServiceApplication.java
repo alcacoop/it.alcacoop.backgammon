@@ -84,7 +84,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
-@SuppressLint("InflateParams")
+@SuppressLint({ "InflateParams", "NewApi" })
 public abstract class BaseGServiceApplication extends AndroidApplication
     implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener,
     RoomUpdateListener, OnInvitationReceivedListener, RealTimeMultiplayer.ReliableMessageSentCallback {
@@ -400,10 +400,14 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           public void onImageLoaded(Uri arg0, Drawable drawable, boolean arg2) {
             ImageView iv = ((ImageView)myView.findViewById(R.id.image));
             iv.setImageDrawable(drawable);
-            invitationDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            invitationDialog.show();
-            invitationDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
-            invitationDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            if (android.os.Build.VERSION.SDK_INT >= 11) {
+              invitationDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+              invitationDialog.show();
+              invitationDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
+              invitationDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            } else {
+              invitationDialog.show();
+            }
           }
         }, imagesrc, R.drawable.gplayer);
       }
@@ -457,10 +461,14 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           });
         }
 
-        mProgressDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        mProgressDialog.show();
-        mProgressDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
-        mProgressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+          mProgressDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+          mProgressDialog.show();
+          mProgressDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
+          mProgressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        } else {
+          mProgressDialog.show();
+        }
       }
     });
   }
@@ -609,10 +617,14 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             });
           }
         });
-        d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        d.show();
-        d.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
-        d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+          d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+          d.show();
+          d.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
+          d.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        } else {
+          d.show();
+        }
       }
     });
   }
