@@ -61,6 +61,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   private static int[] bufferedMoves = { -1, -1, -1, -1, -1, -1, -1, -1 };
   private static boolean isBufferedMoves = false;
   private static int moves[][];
+  private static int obPlayAgain;
+
 
   public enum States implements State {
 
@@ -420,6 +422,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     OPENING_ROLL {
       @Override
       public void enterState(Context ctx) {
+        GServiceFSM.obPlayAgain = -1;
         ctx.board().waiting(false);
         GnuBackgammon.Instance.nativeFunctions.hideProgressDialog();
         ctx.board().rollBtn.remove();
@@ -511,6 +514,10 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         }
 
         MatchState.resignValue = 0;
+        if (GServiceFSM.obPlayAgain != -1) {
+          GnuBackgammon.fsm.processEvent(Events.GSERVICE_PLAY_AGAIN, GServiceFSM.obPlayAgain);
+          GServiceFSM.obPlayAgain = -1;
+        }
       }
 
       @Override
@@ -683,6 +690,15 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
       @Override
       public void run() {
         switch (evt) {
+          case GSERVICE_PLAY_AGAIN:
+            if (GnuBackgammon.fsm.currentState == States.MATCH_OVER) {
+              GServiceFSM.obPlayAgain = -1;
+              state().processEvent(GServiceFSM.this, evt, params);
+            } else {
+              GServiceFSM.obPlayAgain = (Integer)params;
+            }
+            break;
+
           case GSERVICE_DOUBLE:
             UIDialog.getYesNoDialog(Events.GSERVICE_ACCEPT, "Opponent is asking for double. Accept?");
             GnuBackgammon.fsm.board().waiting(false);
@@ -695,6 +711,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
             break;
 
           case GSERVICE_ERROR:
+            EndGameLayer endLayer = ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer;
             int errorCode = (Integer)params;
             String message = "";
             switch (errorCode) {
@@ -708,12 +725,17 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
                 message = "Match stopped. You have to reinvite!";
                 break;
             }
-            if (!((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.isVisible()) {
-              if (errorCode != 0) {
-                UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
+            if (errorCode != 0) { // LOCAL ERROR
+              if (endLayer.isVisible()) {
+                processEvent(Events.GSERVICE_BYE, null);
               } else {
-                GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, 11);
+                UIDialog.getFlashDialog(Events.GSERVICE_BYE, message);
               }
+            } else { // REMOTE ERROR
+              if (endLayer.isVisible())
+                endLayer.opponentAbandoned();
+              else
+                GnuBackgammon.fsm.processEvent(Events.GSERVICE_ABANDON, 11);
             }
             break;
 

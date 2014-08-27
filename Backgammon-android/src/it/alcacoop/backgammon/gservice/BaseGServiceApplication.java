@@ -151,8 +151,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    System.out.println("==> SENT.. " + statusCode + " : " + recipientParticipantId);
-
     if (statusCode != GServiceClient.STATUS_OK) {
       onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
@@ -161,7 +159,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onInvitationReceived(Invitation invitation) {
-    System.out.println("==> INVITATION RECEIVED");
     if (!shouldShowInvitationDialog()) {
       Games.RealTimeMultiplayer.declineInvitation(getApiClient(), invitation.getInvitationId());
       return;
@@ -179,9 +176,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onJoinedRoom(int arg0, Room room) {
-    System.out.println("---> JOIN ROOM");
     if (room == null) {
-      System.out.println("---> 2 LEFT ROOM");
       hideProgressDialog();
       onErrorBehaviour("Invalid invitation");
     } else {
@@ -192,13 +187,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onLeftRoom(int arg0, String arg1) {
-    System.out.println("---> P2P LEFT ROOM");
     onLeftRoomBehaviour();
   }
 
   @Override
   public void onRoomConnected(int arg0, Room room) {
-    System.out.println("---> GSERVICE onRoomConnected");
     hideProgressDialog();
     updateRoom(room);
     onRoomConnectedBehaviour();
@@ -262,9 +255,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
 
   @Override
-  public void onDisconnectedFromRoom(Room room) {
-    System.out.println("---> P2P DISCONNECTED FROM ROOM");
-  }
+  public void onDisconnectedFromRoom(Room room) {}
 
   @Override
   public void onPeerDeclined(Room room, List<String> arg1) {
@@ -283,7 +274,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onPeerLeft(Room room, List<String> arg1) {
-    System.out.println("---> P2P PEER LEFT");
     if (gConnecting) {
       hideProgressDialog();
       _gserviceResetRoom();
@@ -299,7 +289,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onPeersDisconnected(Room room, List<String> arg1) {
-    System.out.println("---> P2P PEER DISCONNECTED");
     GServiceClient.getInstance().leaveRoom(0);
     onLeftRoomBehaviour();
     updateRoom(room);
@@ -320,7 +309,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public void onRealTimeMessageReceived(RealTimeMessage rtm) {
     byte[] buf = rtm.getMessageData();
     String s = new String(buf);
-    System.out.print("==> RECEIVED.. " + s);
     onRTMessageReceivedBehaviour(s);
   }
 
@@ -330,7 +318,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onSignInSucceeded() {
-    System.out.println("---> SIGNIN SUCCEDED!");
     prefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
     prefs.flush();
 
@@ -426,7 +413,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
 
   private void updateRoom(Room room) {
-    System.out.println("---> P2P UPDATE ROOM " + room.getRoomId());
     if (room != null) {
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
@@ -486,14 +472,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
 
   @Override
-  public void onP2PConnected(String arg0) {
-    System.out.println("---> P2P CONNECTED");
-  }
+  public void onP2PConnected(String arg0) {}
 
   @Override
-  public void onP2PDisconnected(String arg0) {
-    System.out.println("---> P2P DISCONNECTED");
-  }
+  public void onP2PDisconnected(String arg0) {}
 
 
   @Override
@@ -547,7 +529,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           _gserviceResetRoom();
         else {
           if (mRoomId != null) {
-            System.out.println("---> FORSE LO PRENDO DI QUI???");
             showProgressDialog(true);
           } else {
             UIDialog.getFlashDialog(Events.NOOP, "Opponent abandoned game");
