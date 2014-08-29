@@ -63,6 +63,15 @@ public class StatManager {
     }
   }
 
+
+  public int getGameStat(int level, int who) {
+    if (who == 0) { // HUMAN
+      return stats[level].general.HUMAN;
+    } else { // CPU
+      return stats[level].general.CPU;
+    }
+  }
+
   // SAVE STATS ON PREFS AND SYNC ON GMS
   public void commit() {
     int curLev = MatchState.currentLevel.ordinal();
