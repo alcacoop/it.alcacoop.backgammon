@@ -58,48 +58,51 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class MainMenuScreen extends BaseScreen {
 
   private Group g;
-  private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro;
+  private IconButton onePlayer, twoPlayers, options, appearance, howtoplay, about, rate, getpro, stats;
   private ImageButton scoreboards, achievements, gplus, twitter, facebook;
   private Image logo;
   private Table buttonGroup;
-  
-  public MainMenuScreen(){
+
+  public MainMenuScreen() {
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
-        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED,((IconButton)event.getListenerActor()).getText().toString().toUpperCase());
+        GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, ((IconButton)event.getListenerActor()).getText().toString().toUpperCase());
       };
     };
-    
+
     stage.addListener(new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
-        if(Gdx.input.isKeyPressed(Keys.BACK)||Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-          if (UIDialog.isOpened()) return false;
+        if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+          if (UIDialog.isOpened())
+            return false;
           UIDialog.getQuitDialog();
         }
         return super.keyDown(event, keycode);
       }
     });
-    
+
     String l = "logo";
     TextureRegion r = GnuBackgammon.atlas.findRegion(l);
     logo = new Image(r);
-    
-    
+
+
     TextButtonStyle tl = GnuBackgammon.skin.get("mainmenu", TextButtonStyle.class);
-    
+
     onePlayer = new IconButton("Single Player", GnuBackgammon.atlas.findRegion("sp"), tl);
     onePlayer.addListener(cl);
     twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
     twoPlayers.addListener(cl);
+    stats = new IconButton("Stats", GnuBackgammon.atlas.findRegion("opt"), tl);
+    stats.addListener(cl);
     options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
     options.addListener(cl);
-    
-    appearance = new IconButton("Appearance", GnuBackgammon.atlas.findRegion("app"), tl);
+
+    appearance = new IconButton("Look", GnuBackgammon.atlas.findRegion("app"), tl);
     appearance.addListener(cl);
-    
+
     howtoplay = new IconButton("How To Play", GnuBackgammon.atlas.findRegion("how"), tl);
-    howtoplay.addListener(new ClickListener(){
+    howtoplay.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -107,7 +110,7 @@ public class MainMenuScreen extends BaseScreen {
       }
     });
     about = new IconButton("About", GnuBackgammon.atlas.findRegion("abt"), tl);
-    about.addListener(new ClickListener(){
+    about.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -118,7 +121,7 @@ public class MainMenuScreen extends BaseScreen {
     rate.addListener(cl);
 
     getpro = new IconButton("Remove Ads", GnuBackgammon.atlas.findRegion("pro"), tl);
-    getpro.addListener(new ClickListener(){
+    getpro.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -126,12 +129,12 @@ public class MainMenuScreen extends BaseScreen {
         super.clicked(event, x, y);
       }
     });
-    
+
     g = new Group();
-    g.setColor(1,1,1,0);
-    
+    g.setColor(1, 1, 1, 0);
+
     scoreboards = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("leaderboards")));
-    scoreboards.addListener(new ClickListener(){
+    scoreboards.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
@@ -139,41 +142,47 @@ public class MainMenuScreen extends BaseScreen {
       }
     });
     achievements = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("achievements")));
-    achievements.addListener(new ClickListener(){
+    achievements.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.Instance.snd.playMoveStart();
         GnuBackgammon.Instance.nativeFunctions.gserviceOpenAchievements();
       }
     });
-    
+
     gplus = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("gplus")));
     twitter = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("twitter")));
     facebook = new ImageButton(new TextureRegionDrawable(GnuBackgammon.atlas.findRegion("facebook")));
-    
-    gplus.addListener(new ClickListener(){@Override
+
+    gplus.addListener(new ClickListener() {
+      @Override
       public void clicked(InputEvent event, float x, float y) {
-      GnuBackgammon.Instance.snd.playMoveStart();
-      GnuBackgammon.Instance.nativeFunctions.openURL("https://plus.google.com/104812306723791936806/posts");
-    }});
-    twitter.addListener(new ClickListener(){@Override
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.openURL("https://plus.google.com/104812306723791936806/posts");
+      }
+    });
+    twitter.addListener(new ClickListener() {
+      @Override
       public void clicked(InputEvent event, float x, float y) {
-      GnuBackgammon.Instance.snd.playMoveStart();
-      GnuBackgammon.Instance.nativeFunctions.openURL("twitter://user?screen_name=alcamobile", "http://mobile.twitter.com/alcamobile");
-    }});
-    facebook.addListener(new ClickListener(){@Override
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.openURL("twitter://user?screen_name=alcamobile", "http://mobile.twitter.com/alcamobile");
+      }
+    });
+    facebook.addListener(new ClickListener() {
+      @Override
       public void clicked(InputEvent event, float x, float y) {
-      GnuBackgammon.Instance.snd.playMoveStart();
-      GnuBackgammon.Instance.nativeFunctions.openURL("fb://page/145621258977312", "https://m.facebook.com/BackgammonMobile");
-    }});
-    
+        GnuBackgammon.Instance.snd.playMoveStart();
+        GnuBackgammon.Instance.nativeFunctions.openURL("fb://page/145621258977312", "https://m.facebook.com/BackgammonMobile");
+      }
+    });
+
     buttonGroup = new Table();
     buttonGroup.setWidth(gplus.getWidth());
-    buttonGroup.setHeight(gplus.getHeight()*6);
+    buttonGroup.setHeight(gplus.getHeight() * 6);
     buttonGroup.add(achievements).width(gplus.getWidth()).height(gplus.getHeight()).fill();
     buttonGroup.row().spaceTop(0);
     buttonGroup.add(scoreboards).width(gplus.getWidth()).height(gplus.getHeight()).fill();
-    buttonGroup.row().spaceTop(gplus.getHeight()/2);
+    buttonGroup.row().spaceTop(gplus.getHeight() / 2);
     buttonGroup.add(gplus).width(gplus.getWidth()).height(gplus.getHeight()).fill();
     buttonGroup.row().spaceTop(0);
     buttonGroup.add(twitter).width(gplus.getWidth()).height(gplus.getHeight()).fill();
@@ -182,64 +191,74 @@ public class MainMenuScreen extends BaseScreen {
     buttonGroup.setPosition(0, -stage.getHeight());
     stage.addActor(buttonGroup);
   }
-  
-  
+
+
   private void createMenu() {
-    g.setColor(1,1,1,0);
+    g.setColor(1, 1, 1, 0);
     Table table = new Table();
     table.setFillParent(true);
-    
+
     table.add(logo).colspan(2);
-    
+
     table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    
-    
+
+
     table.row().pad(1);
     table.add(onePlayer).expand().fill().colspan(2);
     table.row().pad(1);
     table.add(twoPlayers).expand().fill().colspan(2);
-    
+
     table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    
+
     table.row().pad(1);
-    table.add(options).expand().fill().width(table.getWidth()/2);
-    table.add(appearance).expand().fill().width(table.getWidth()/2);
-    
+    Table t = new Table();
+    t.add(options).expand().fill().width(table.getWidth() / 3);
+    t.add(appearance).expand().fill().width(table.getWidth() / 3);
+    t.add(stats).expand().fill().width(table.getWidth() / 3);
+
+    table.add(t).expand().fill().colspan(2);
+    // table.add(options).expand().fill().width(table.getWidth() / 2);
+    // table.add(appearance).expand().fill().width(table.getWidth() / 2);
+
     table.row().pad(1);
     table.add().colspan(2).fill().expand();
-    
-    
+
+
     if (GnuBackgammon.Instance.nativeFunctions.isProVersion()) {
       table.row().pad(1);
       table.add(howtoplay).colspan(2).expand().fill();
 
       table.row().pad(1);
-      table.add(rate).expand().fill().width(table.getWidth()/2);
-      table.add(about).expand().fill().width(table.getWidth()/2);
+      table.add(rate).expand().fill().width(table.getWidth() / 2);
+      table.add(about).expand().fill().width(table.getWidth() / 2);
     } else {
       table.row().pad(1);
-      table.add(howtoplay).expand().fill().width(table.getWidth()/2);
-      table.add(about).expand().fill().width(table.getWidth()/2);
-      
+      table.add(howtoplay).expand().fill().width(table.getWidth() / 2);
+      table.add(about).expand().fill().width(table.getWidth() / 2);
+
       table.row().pad(1);
-      table.add(rate).expand().fill().width(table.getWidth()/2);
-      table.add(getpro).expand().fill().width(table.getWidth()/2);
+      table.add(rate).expand().fill().width(table.getWidth() / 2);
+      table.add(getpro).expand().fill().width(table.getWidth() / 2);
     }
-    
+
     g.clear();
-    
-    g.setWidth(stage.getWidth()*0.65f);
-    g.setHeight(stage.getHeight()*0.85f);
+
+    float w = 0.7f;
+    if (GnuBackgammon.Instance.ss != 0)
+      w = 0.74f;
+
+    g.setWidth(stage.getWidth() * w);
+    g.setHeight(stage.getHeight() * 0.88f);
     g.addActor(table);
-    
+
     g.setX(-g.getWidth());
-    g.setY((stage.getHeight()-g.getHeight())/2);
-    
+    g.setY((stage.getHeight() - g.getHeight()) / 2);
+
     stage.addActor(g);
   }
-  
+
 
   @Override
   public void render(float delta) {
@@ -255,28 +274,27 @@ public class MainMenuScreen extends BaseScreen {
     createMenu();
   }
 
-  
+
   public void redraw() {
     createMenu();
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-buttonGroup.getHeight())/2, 0.2f))));
-    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight() - buttonGroup.getHeight()) / 2, 0.2f))));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth() - g.getWidth()) / 2, (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
-  
-  
-  
+
+
   @Override
   public void show() {
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight()-buttonGroup.getHeight())/2, 0.2f))));
-    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth()-g.getWidth())/2, (stage.getHeight()-g.getHeight())/2, 0.2f))));
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo(0, (stage.getHeight() - buttonGroup.getHeight()) / 2, 0.2f))));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeIn(0.2f), Actions.moveTo((stage.getWidth() - g.getWidth()) / 2, (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
-  
+
   @Override
   public void fadeOut() {
-    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f),Actions.moveTo(0,-stage.getHeight(), 0.2f))));
-    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f),Actions.moveTo(-stage.getWidth(), (stage.getHeight()-g.getHeight())/2, 0.2f))));
+    buttonGroup.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f), Actions.moveTo(0, -stage.getHeight(), 0.2f))));
+    g.addAction(MyActions.sequence(Actions.parallel(Actions.fadeOut(0.2f), Actions.moveTo(-stage.getWidth(), (stage.getHeight() - g.getHeight()) / 2, 0.2f))));
   }
 
 }
