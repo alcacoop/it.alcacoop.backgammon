@@ -1,4 +1,4 @@
-package it.alcacoop.backgammon.logic;
+package it.alcacoop.backgammon.stats;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,7 +40,7 @@ public class Statistics implements Serializable {
 
   public class General implements Serializable {
     private static final long serialVersionUID = 8639932045227909953L;
-    public int YOU = 0;
+    public int HUMAN = 0;
     public int CPU = 0;
   }
 
