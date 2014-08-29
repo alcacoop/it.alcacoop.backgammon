@@ -86,15 +86,17 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("TWO PLAYERS")) {
             ctx.state(States.TWO_PLAYERS);
           }
-          if (params.toString().equals("STATISTICS")) {}
           if (params.toString().equals("OPTIONS")) {
             ctx.state(States.GAME_OPTIONS);
           }
           if (params.toString().equals("RATE IT!")) {
             GnuBackgammon.Instance.nativeFunctions.openURL("https://play.google.com/store/apps/details?id=it.alcacoop.backgammon");
           }
-          if (params.toString().equals("APPEARANCE")) {
+          if (params.toString().equals("LOOK")) {
             ctx.state(States.APPEARANCE);
+          }
+          if (params.toString().equals("STATS")) {
+            ctx.state(States.STATISTICS);
           }
           return true;
 
@@ -389,6 +391,37 @@ public class MenuFSM extends BaseFSM implements Context {
           return true;
         }
         return false;
+      }
+    },
+
+
+    STATISTICS {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.goToScreen(10);
+      }
+
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case BUTTON_CLICKED:
+            GnuBackgammon.Instance.snd.playMoveStart();
+            if (params.toString().equals("BACK")) {
+              ctx.state(States.MAIN_MENU);
+            } else if (params.toString().equals("RESET")) {
+              UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset game results statistics?");
+            } else if (params.toString().equals("DICE STATS")) {
+              GnuBackgammon.Instance.goToScreen(11);
+            }
+            break;
+
+          case RESET_STATS:
+            break;
+          default:
+            return false;
+        }
+
+        return true;
       }
     },
 
