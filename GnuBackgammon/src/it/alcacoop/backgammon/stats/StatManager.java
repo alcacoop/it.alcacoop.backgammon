@@ -13,6 +13,8 @@ public class StatManager {
 
   private StatManager() {
     prefs = GnuBackgammon.Instance.optionPrefs;
+    stats = new Statistics[9];
+
     for (int i = 0; i < 9; i++) {
       String strStat = prefs.getString("STAT_" + i, "");
       if (strStat == "") {
