@@ -271,16 +271,23 @@ d6
   orig: 30, 30
   offset: 0, 0
   index: -1
-d2
+reset
   rotate: false
   xy: 965, 852
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
-d5
+d2
   rotate: false
   xy: 965, 820
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+d5
+  rotate: false
+  xy: 965, 788
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
@@ -294,7 +301,7 @@ app
   index: -1
 sp
   rotate: false
-  xy: 965, 794
+  xy: 965, 762
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -308,7 +315,7 @@ gpl
   index: -1
 dp
   rotate: false
-  xy: 965, 768
+  xy: 965, 736
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -322,7 +329,7 @@ abt
   index: -1
 ply
   rotate: false
-  xy: 965, 742
+  xy: 965, 710
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -343,84 +350,84 @@ CS3-W
   index: -1
 ready
   rotate: false
-  xy: 965, 724
+  xy: 965, 692
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 playing
   rotate: false
-  xy: 965, 706
+  xy: 965, 674
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 busy
   rotate: false
-  xy: 965, 688
+  xy: 965, 656
   size: 27, 16
   orig: 27, 16
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 965, 666
+  xy: 965, 634
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 965, 644
+  xy: 965, 612
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 965, 644
+  xy: 965, 612
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 965, 622
+  xy: 965, 590
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 965, 600
+  xy: 965, 568
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 965, 578
+  xy: 965, 546
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 965, 556
+  xy: 965, 524
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 ireceived
   rotate: false
-  xy: 965, 538
+  xy: 965, 506
   size: 18, 16
   orig: 18, 16
   offset: 0, 0
   index: -1
 isended
   rotate: false
-  xy: 965, 520
+  xy: 965, 488
   size: 18, 16
   orig: 18, 16
   offset: 0, 0
@@ -448,7 +455,7 @@ rarrow
   index: -1
 larrow
   rotate: false
-  xy: 965, 510
+  xy: 965, 478
   size: 15, 8
   orig: 15, 8
   offset: 0, 0

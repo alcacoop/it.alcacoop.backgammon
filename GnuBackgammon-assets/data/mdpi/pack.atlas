@@ -243,6 +243,13 @@ d5
   orig: 44, 44
   offset: 0, 0
   index: -1
+reset
+  rotate: false
+  xy: 1879, 1698
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
 ready
   rotate: false
   xy: 1170, 1073
@@ -266,147 +273,147 @@ busy
   index: -1
 mpl
   rotate: false
-  xy: 1879, 1708
+  xy: 189, 191
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 opt
   rotate: false
-  xy: 189, 191
+  xy: 1550, 1497
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 how
   rotate: false
-  xy: 1550, 1497
+  xy: 1795, 1569
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 pro
   rotate: false
-  xy: 1795, 1569
+  xy: 1924, 1753
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 str
   rotate: false
-  xy: 1924, 1753
+  xy: 714, 829
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 app
   rotate: false
-  xy: 714, 829
+  xy: 954, 1010
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 sp
   rotate: false
-  xy: 954, 1010
+  xy: 1, 33
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 gpl
   rotate: false
-  xy: 1, 33
+  xy: 471, 263
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 dp
   rotate: false
-  xy: 471, 263
+  xy: 1427, 1327
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 abt
   rotate: false
-  xy: 1427, 1327
+  xy: 1879, 1664
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ply
   rotate: false
-  xy: 1879, 1674
+  xy: 1584, 1497
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 CS1-W
   rotate: false
-  xy: 1584, 1499
+  xy: 1829, 1571
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS3-W
   rotate: false
-  xy: 1829, 1571
+  xy: 714, 797
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 714, 797
+  xy: 988, 1012
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 988, 1012
+  xy: 1, 1
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 988, 1012
+  xy: 1, 1
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 1, 1
+  xy: 505, 265
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 505, 265
+  xy: 1427, 1295
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 1427, 1295
+  xy: 1879, 1632
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 1879, 1642
+  xy: 1618, 1499
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 wheel
   rotate: false
-  xy: 1616, 1501
+  xy: 714, 767
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
