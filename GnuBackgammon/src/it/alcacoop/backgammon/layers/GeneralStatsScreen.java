@@ -37,6 +37,7 @@ package it.alcacoop.backgammon.layers;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
@@ -148,6 +149,7 @@ public class GeneralStatsScreen extends BaseScreen {
 
 
   public void initTable() {
+    StatManager mgr = StatManager.getInstance();
     table.clear();
 
     table.setWidth(stage.getWidth() * 0.9f);
@@ -169,8 +171,8 @@ public class GeneralStatsScreen extends BaseScreen {
     for (int i = 0; i < levels.length; i++) {
       data_table.row();
       data_table.add(new Label(levels[i], GnuBackgammon.skin)).right();
-      data_table.add(new Label("0", GnuBackgammon.skin));
-      data_table.add(new Label("0", GnuBackgammon.skin));
+      data_table.add(new Label("" + mgr.getGameStat(i, 0), GnuBackgammon.skin));
+      data_table.add(new Label("" + mgr.getGameStat(i, 1), GnuBackgammon.skin));
     }
 
     data_table.row();
@@ -178,8 +180,8 @@ public class GeneralStatsScreen extends BaseScreen {
 
     data_table.row();
     data_table.add(new Label("TOTALS", GnuBackgammon.skin)).right();
-    data_table.add(new Label("0", GnuBackgammon.skin));
-    data_table.add(new Label("0", GnuBackgammon.skin));
+    data_table.add(new Label("" + mgr.getGameStat(8, 0), GnuBackgammon.skin));
+    data_table.add(new Label("" + mgr.getGameStat(8, 1), GnuBackgammon.skin));
 
     // DIRTY LAYOUT HACK
     Table wrapper = new Table();
