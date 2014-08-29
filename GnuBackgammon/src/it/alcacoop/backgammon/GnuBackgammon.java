@@ -44,8 +44,10 @@ import it.alcacoop.backgammon.fsm.SimulationFSM;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.layers.AppearanceScreen;
 import it.alcacoop.backgammon.layers.BaseScreen;
+import it.alcacoop.backgammon.layers.DiceStatsScreen;
 import it.alcacoop.backgammon.layers.FibsScreen;
 import it.alcacoop.backgammon.layers.GameScreen;
+import it.alcacoop.backgammon.layers.GeneralStatsScreen;
 import it.alcacoop.backgammon.layers.MainMenuScreen;
 import it.alcacoop.backgammon.layers.MatchOptionsScreen;
 import it.alcacoop.backgammon.layers.OptionsScreen;
@@ -85,6 +87,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   private OptionsScreen optionsScreen;
   private WelcomeScreen welcomeScreen;
   private AppearanceScreen appearanceScreen;
+  private GeneralStatsScreen generalStatsScreen;
+  private DiceStatsScreen diceStatsScreen;
   public FibsScreen fibsScreen;
   public static int chatHeight = 20;
 
@@ -234,6 +238,8 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     welcomeScreen = new WelcomeScreen();
     appearanceScreen = new AppearanceScreen();
     fibsScreen = new FibsScreen();
+    generalStatsScreen = new GeneralStatsScreen();
+    diceStatsScreen = new DiceStatsScreen();
 
     nativeFunctions.injectBGInstance();
   }
@@ -305,6 +311,16 @@ public class GnuBackgammon extends Game implements ApplicationListener {
       case 9:
         setScreen(twoplayersScreen);
         currentScreen = twoplayersScreen;
+        break;
+
+      case 10:
+        setScreen(generalStatsScreen);
+        currentScreen = generalStatsScreen;
+        break;
+
+      case 11:
+        setScreen(diceStatsScreen);
+        currentScreen = diceStatsScreen;
         break;
     }
   }
