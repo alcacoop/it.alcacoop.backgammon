@@ -154,7 +154,8 @@ public class BaseFSM implements Context {
     CPU_RESIGNED,
     HUMAN_RESIGNED,
     ABANDON_MATCH,
-    RESTORE_ANSWER
+    RESTORE_ANSWER,
+    RESET_STATS
   }
 
   public enum States implements State {
