@@ -1,0 +1,80 @@
+package it.alcacoop.backgammon.logic;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+import com.badlogic.gdx.utils.Base64Coder;
+
+
+public class Statistics implements Serializable {
+  private static final long serialVersionUID = -4403320414647151275L;
+
+  public Dices dices;
+  public General general;
+
+  public class Dices implements Serializable {
+    private static final long serialVersionUID = -5564345208265926744L;
+    public int[] ROLLS = { 0, 0 };
+    public int[] DOUBLES = { 0, 0 };
+    public float[] AVG_PIPS = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT = { 0, 0 };
+    public int[] BAR_ENTER = { 0, 0 };
+    public int[] DOUBLES_ROW_1 = { 0, 0 };
+    public int[] DOUBLES_ROW_2 = { 0, 0 };
+    public int[] DOUBLES_ROW_3 = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT_P1 = { 0, 0 };
+    public int[] BAR_ENTER_P1 = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT_P2 = { 0, 0 };
+    public int[] BAR_ENTER_P2 = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT_P3 = { 0, 0 };
+    public int[] BAR_ENTER_P3 = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT_P4 = { 0, 0 };
+    public int[] BAR_ENTER_P4 = { 0, 0 };
+    public int[] BAR_ENTER_ATTEMPT_P5 = { 0, 0 };
+    public int[] BAR_ENTER_P5 = { 0, 0 };
+  }
+
+  public class General implements Serializable {
+    private static final long serialVersionUID = 8639932045227909953L;
+    public int YOU = 0;
+    public int CPU = 0;
+  }
+
+
+  public Statistics() {
+    general = new General();
+    dices = new Dices();
+  }
+
+  public String serialize() {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ObjectOutputStream oos;
+    try {
+      oos = new ObjectOutputStream(baos);
+      oos.writeObject(this);
+      oos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return new String(Base64Coder.encode(baos.toByteArray()));
+  }
+
+  public static Statistics deserialize(String s) {
+    byte[] data = Base64Coder.decode(s);
+    ObjectInputStream ois;
+    try {
+      ois = new ObjectInputStream(new ByteArrayInputStream(data));
+      Object o = ois.readObject();
+      ois.close();
+      return (Statistics)o;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+
+  }
+}
