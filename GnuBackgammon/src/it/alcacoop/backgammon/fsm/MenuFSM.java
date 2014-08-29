@@ -38,9 +38,11 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.gservice.GServiceMessages;
+import it.alcacoop.backgammon.layers.GeneralStatsScreen;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 import it.alcacoop.fibs.CommandDispatcher.Command;
@@ -416,6 +418,11 @@ public class MenuFSM extends BaseFSM implements Context {
             break;
 
           case RESET_STATS:
+            boolean resp = (Boolean)params;
+            if (resp) {
+              StatManager.getInstance().resetGameStats();
+              ((GeneralStatsScreen)(GnuBackgammon.Instance.currentScreen)).initTable();
+            }
             break;
           default:
             return false;
