@@ -37,6 +37,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
@@ -409,8 +410,10 @@ public class GameFSM extends BaseFSM implements Context {
         if (MatchState.matchType == 0) {
           if (MatchState.fMove == 1) {
             gameString = "CPU WON " + game_score + " POINT!";
+            StatManager.getInstance().addGame(1);
           } else {
             gameString = "YOU WON " + game_score + " POINT!";
+            StatManager.getInstance().addGame(0);
           }
           score1 = "CPU: " + MatchState.anScore[1];
           score2 = "YOU: " + MatchState.anScore[0];
