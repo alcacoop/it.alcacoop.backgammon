@@ -17,15 +17,21 @@ public class Statistics implements Serializable {
   public General general;
 
   public class Dices implements Serializable {
+    // FOR STAT INFO: http://www.gammonsite.com/dice2.asp
     private static final long serialVersionUID = -5564345208265926744L;
+
     public int[] ROLLS = { 0, 0 };
     public int[] DOUBLES = { 0, 0 };
-    public float[] AVG_PIPS = { 0, 0 };
+    public float[] AVG_PIPS = { 0.0f, 0.0f };
+
     public int[] BAR_ENTER_ATTEMPT = { 0, 0 };
     public int[] BAR_ENTER = { 0, 0 };
+
     public int[] DOUBLES_ROW_1 = { 0, 0 };
     public int[] DOUBLES_ROW_2 = { 0, 0 };
     public int[] DOUBLES_ROW_3 = { 0, 0 };
+    public int[] DOUBLES_ROW_4 = { 0, 0 };
+
     public int[] BAR_ENTER_ATTEMPT_P1 = { 0, 0 };
     public int[] BAR_ENTER_P1 = { 0, 0 };
     public int[] BAR_ENTER_ATTEMPT_P2 = { 0, 0 };
