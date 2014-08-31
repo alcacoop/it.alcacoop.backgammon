@@ -20,6 +20,11 @@ public class Statistics implements Serializable {
     // FOR STAT INFO: http://www.gammonsite.com/dice2.asp
     private static final long serialVersionUID = -5564345208265926744L;
 
+    public byte[][] DOUBLE_HISTORY = {
+        { 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0 }
+    };
+
     public int[] ROLLS = { 0, 0 };
     public int[] DOUBLES = { 0, 0 };
     public float[] AVG_PIPS = { 0.0f, 0.0f };

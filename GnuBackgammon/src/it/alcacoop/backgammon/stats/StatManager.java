@@ -3,6 +3,8 @@ package it.alcacoop.backgammon.stats;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.logic.MatchState;
 
+import java.util.Arrays;
+
 import com.badlogic.gdx.Preferences;
 
 public class StatManager {
@@ -56,10 +58,42 @@ public class StatManager {
       stats[8].dices.DOUBLES[player]++;
     }
 
+    // DOUBLES_IN_ROW
+    byte d = dices[0] == dices[1] ? (byte)1 : (byte)0;
+    for (int i = 5; i > 0; i--) {
+      stats[curLev].dices.DOUBLE_HISTORY[player][i] = stats[curLev].dices.DOUBLE_HISTORY[player][i - 1];
+    }
+    stats[curLev].dices.DOUBLE_HISTORY[player][0] = d;
+
+    String test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 3));
+    if (test.equals("010")) {
+      stats[curLev].dices.DOUBLES_ROW_1[player]++;
+      stats[8].dices.DOUBLES_ROW_1[player]++;
+    }
+
+    test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 4));
+    if (test.equals("0110")) {
+      stats[curLev].dices.DOUBLES_ROW_2[player]++;
+      stats[8].dices.DOUBLES_ROW_2[player]++;
+    }
+
+    test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 5));
+    if (test.equals("01110")) {
+      stats[curLev].dices.DOUBLES_ROW_3[player]++;
+      stats[8].dices.DOUBLES_ROW_3[player]++;
+    }
+
+    test = getBitStr(stats[curLev].dices.DOUBLE_HISTORY[player]);
+    if (test.equals("011110")) {
+      stats[curLev].dices.DOUBLES_ROW_4[player]++;
+      stats[8].dices.DOUBLES_ROW_4[player]++;
+    }
+
 
     commit();
     System.out.println(" AVG_PIPS: " + stats[curLev].dices.AVG_PIPS[player] + " FOR " + player);
   }
+
 
   // ADD GAME RESULT TO STATS (CURRENT AI LEVEL AND TOTAL)
   public void addGame(int winner) {
@@ -72,6 +106,14 @@ public class StatManager {
       stats[8].general.CPU++;
     }
     commit();
+  }
+
+
+  private String getBitStr(byte[] bitmap) {
+    String s = "";
+    for (int i = 0; i < bitmap.length; i++)
+      s += bitmap[i] == 1 ? "1" : "0";
+    return s;
   }
 
 
@@ -111,10 +153,16 @@ public class StatManager {
         break;
 
       case 4: // 1 DOUBLES IN A ROW
+        ret = round2((float)(((float)stats[level].dices.DOUBLES_ROW_1[who] / (float)stats[level].dices.ROLLS[who]) * 100.00)) + "%";
+        break;
       case 5: // 2 DOUBLES IN A ROW
+        ret = round2((float)(((float)stats[level].dices.DOUBLES_ROW_2[who] / (float)stats[level].dices.ROLLS[who]) * 100.00)) + "%";
+        break;
       case 6: // 3 DOUBLES IN A ROW
+        ret = round2((float)(((float)stats[level].dices.DOUBLES_ROW_3[who] / (float)stats[level].dices.ROLLS[who]) * 100.00)) + "%";
+        break;
       case 7: // 4 DOUBLES IN A ROW
-        ret = 0.0 + "%";
+        ret = round2((float)(((float)stats[level].dices.DOUBLES_ROW_4[who] / (float)stats[level].dices.ROLLS[who]) * 100.00)) + "%";
         break;
 
       case 8: // ENTER AGAINST 1P
