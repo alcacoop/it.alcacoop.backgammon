@@ -38,6 +38,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.gservice.GServiceMessages;
+import it.alcacoop.backgammon.layers.DiceStatsScreen;
 import it.alcacoop.backgammon.layers.GeneralStatsScreen;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.AILevels;
@@ -98,7 +99,7 @@ public class MenuFSM extends BaseFSM implements Context {
             ctx.state(States.APPEARANCE);
           }
           if (params.toString().equals("STATS")) {
-            ctx.state(States.STATISTICS);
+            ctx.state(States.GENERAL_STATISTICS);
           }
           return true;
 
@@ -397,7 +398,7 @@ public class MenuFSM extends BaseFSM implements Context {
     },
 
 
-    STATISTICS {
+    GENERAL_STATISTICS {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.goToScreen(10);
@@ -413,7 +414,7 @@ public class MenuFSM extends BaseFSM implements Context {
             } else if (params.toString().equals("RESET")) {
               UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset game results statistics?");
             } else if (params.toString().equals("DICE STATS")) {
-              GnuBackgammon.Instance.goToScreen(11);
+              ctx.state(DICE_STATISTICS);
             }
             break;
 
@@ -423,6 +424,40 @@ public class MenuFSM extends BaseFSM implements Context {
               StatManager.getInstance().resetGameStats();
               ((GeneralStatsScreen)(GnuBackgammon.Instance.currentScreen)).initTable();
             }
+            break;
+          default:
+            return false;
+        }
+
+        return true;
+      }
+    },
+
+    DICE_STATISTICS {
+      @Override
+      public void enterState(Context ctx) {
+        GnuBackgammon.Instance.goToScreen(11);
+      }
+
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        switch (evt) {
+          case BUTTON_CLICKED:
+            GnuBackgammon.Instance.snd.playMoveStart();
+            if (params.toString().equals("BACK")) {
+              ctx.state(States.MAIN_MENU);
+            } else if (params.toString().equals("RESET")) {
+              UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset game results statistics?");
+            }
+            break;
+
+          case RESET_STATS:
+            boolean resp = (Boolean)params;
+            if (resp) {
+              StatManager.getInstance().resetRollStats();
+              ((DiceStatsScreen)(GnuBackgammon.Instance.currentScreen)).initTable();
+            }
+            Gdx.graphics.setContinuousRendering(true);
             break;
           default:
             return false;
