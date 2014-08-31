@@ -53,6 +53,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -190,20 +191,28 @@ public class DiceStatsScreen extends BaseScreen {
     table.setX((stage.getWidth() - table.getWidth()) / 2);
     table.setY((stage.getHeight() - table.getHeight()) / 2);
 
-    table.add(new Label("DICE STATISTICS", GnuBackgammon.skin)).colspan(6);
+    table.add(new Label("DICE STATISTICS", GnuBackgammon.skin));
 
     table.row();
-    table.add().fill().expand().colspan(6).height(stage.getHeight() / 40);
+    table.add().fill().expand().height(stage.getHeight() / 40);
 
 
     Table controls = new Table();
+    if (GnuBackgammon.Instance.ss != 2)
+      controls.setBackground(GnuBackgammon.skin.getDrawable("list"));
     controls.row();
-    controls.add(new Label("SELECT LEVEL:", GnuBackgammon.skin));
-    controls.add(sb).padLeft(stage.getWidth() / 50);
+    controls.add(new Label("SELECT LEVEL:", GnuBackgammon.skin)).fill();
+    controls.add(sb).fill().padLeft(stage.getWidth() / 85);
+    if (GnuBackgammon.Instance.ss != 2) {
+      Label note = new Label("For less than 2000 rolls data have\n large variation from expected values", GnuBackgammon.skin);
+      note.setAlignment(Align.right, Align.right);
+      controls.add(note).expand().fill();
+    }
 
 
     table.row();
-    table.add(controls).expand().colspan(6);
+    table.add(controls).left().fill().expand();
+
 
     Table data_table = new Table();
     data_table.row().width(w1 + 3 * w2);
@@ -283,12 +292,12 @@ public class DiceStatsScreen extends BaseScreen {
     resetBtn.setPosition(table.getWidth() - 1.5f * resetBtn.getWidth(), resetBtn.getHeight() / 2);
 
     table.row();
-    table.add(wrapper).colspan(6).expand().fill();
+    table.add(wrapper).expand().fill();
 
     table.row();
-    table.add().fill().expand().colspan(6).height(stage.getHeight() / 40);
+    table.add().fill().expand().height(stage.getHeight() / 40);
 
     table.row();
-    table.add(backBtn).colspan(6).width(stage.getWidth() / 4).fill().expand().height(stage.getHeight() / 8);
+    table.add(backBtn).width(stage.getWidth() / 4).fill().expand().height(stage.getHeight() / 8);
   }
 }
