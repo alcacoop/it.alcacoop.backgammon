@@ -159,7 +159,8 @@ public class DiceStatsScreen extends BaseScreen {
 
   @Override
   public void show() {
-    statLevel = 0;
+    statLevel = 8;
+    sb.setSelection(statLevel);
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
