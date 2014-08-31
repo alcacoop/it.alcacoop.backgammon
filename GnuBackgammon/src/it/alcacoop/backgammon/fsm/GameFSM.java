@@ -52,7 +52,6 @@ public class GameFSM extends BaseFSM implements Context {
 
 
   public enum States implements State {
-
     CPU_TURN {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -131,8 +130,12 @@ public class GameFSM extends BaseFSM implements Context {
           case DICES_ROLLED:
             ctx.board().dices.animating = false;
             int dices[] = (int[])params;
-            if (MatchState.matchType == 0)
-              StatManager.getInstance().addRoll(1, dices);
+
+            // STATS MANAGEMENT
+            if (MatchState.matchType == 0) {
+              StatManager.getInstance().addRoll(MatchState.fMove, dices, ctx.board()._board);
+            }
+
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -207,8 +210,12 @@ public class GameFSM extends BaseFSM implements Context {
             if (MatchState.fCubeUse == 1)
               ctx.board().removeActor(ctx.board().doubleBtn);
             int dices[] = (int[])params;
-            if (MatchState.matchType == 0)
-              StatManager.getInstance().addRoll(0, dices);
+
+            // STATS MANAGEMENT
+            if (MatchState.matchType == 0) {
+              StatManager.getInstance().addRoll(MatchState.fMove, dices, ctx.board()._board);
+            }
+
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -501,11 +508,11 @@ public class GameFSM extends BaseFSM implements Context {
             if (dices[0] > dices[1]) {// START HUMAN
               MatchState.SetGameTurn(0, 0);
               if (MatchState.matchType == 0)
-                StatManager.getInstance().addRoll(0, dices);
+                StatManager.getInstance().addRoll(0, dices, ctx.board()._board);
             } else if (dices[0] < dices[1]) {// START CPU
               MatchState.SetGameTurn(1, 1);
               if (MatchState.matchType == 0)
-                StatManager.getInstance().addRoll(1, dices);
+                StatManager.getInstance().addRoll(1, dices, ctx.board()._board);
             }
             ctx.board().showArrow();
             ctx.board().rollDices(dices[0], dices[1]);

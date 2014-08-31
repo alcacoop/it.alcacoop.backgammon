@@ -78,10 +78,10 @@ public class DiceStatsScreen extends BaseScreen {
   };
 
   private String dataStrings[][] = {
-      { "# Rolls", " - " },
+      { "Rolls", " - " },
       { "Doubles", "(16.7%)" },
       { "Average PIPS", "(8.17)" },
-      { "Enter from the bar", " - " },
+      { "Enter from the bar", "(~ 68%)" },
 
       { "1 In a row", "(11.6%)" },
       { "2 In a row", "(1.93%)" },

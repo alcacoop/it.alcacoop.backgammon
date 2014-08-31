@@ -37,7 +37,7 @@ public class StatManager {
 
 
   // ADD ROLL TO STATS (CURRENT AI LEVEL AND TOTAL)
-  public void addRoll(int player, int[] dices) {
+  public void addRoll(int player, int[] dices, int[][] board) {
     int curLev = MatchState.currentLevel.ordinal();
     System.out.println("ROLLED: " + dices[0] + "/" + dices[1] + " BY " + player);
 
@@ -64,36 +64,96 @@ public class StatManager {
       stats[curLev].dices.DOUBLE_HISTORY[player][i] = stats[curLev].dices.DOUBLE_HISTORY[player][i - 1];
     }
     stats[curLev].dices.DOUBLE_HISTORY[player][0] = d;
-
     String test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 3));
     if (test.equals("010")) {
       stats[curLev].dices.DOUBLES_ROW_1[player]++;
       stats[8].dices.DOUBLES_ROW_1[player]++;
     }
-
     test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 4));
     if (test.equals("0110")) {
       stats[curLev].dices.DOUBLES_ROW_2[player]++;
       stats[8].dices.DOUBLES_ROW_2[player]++;
     }
-
     test = getBitStr(Arrays.copyOfRange(stats[curLev].dices.DOUBLE_HISTORY[player], 0, 5));
     if (test.equals("01110")) {
       stats[curLev].dices.DOUBLES_ROW_3[player]++;
       stats[8].dices.DOUBLES_ROW_3[player]++;
     }
-
     test = getBitStr(stats[curLev].dices.DOUBLE_HISTORY[player]);
     if (test.equals("011110")) {
       stats[curLev].dices.DOUBLES_ROW_4[player]++;
       stats[8].dices.DOUBLES_ROW_4[player]++;
     }
 
+    // ENTER ATTEMPT
+    if (board[player][24] > 0) {
+      int fOpponent = player == 1 ? 0 : 1;
+      String boardAgainst = "";
+      int nAgainst = 0;
+      for (int i = 0; i < 6; i++) {
+        if (board[fOpponent][i] >= 2) {
+          boardAgainst += "1";
+          nAgainst++;
+        } else {
+          boardAgainst += "0";
+        }
+      }
+      boolean entered = (boardAgainst.charAt(dices[0] - 1) == '0') || (boardAgainst.charAt(dices[1] - 1) == '0');
+
+      System.out.println(" ATTEMPT ENTER AGAINST: " + boardAgainst + " POINTS: " + nAgainst + " ENTERED: " + entered);
+      stats[curLev].dices.BAR_ENTER_ATTEMPT[player]++;
+      stats[8].dices.BAR_ENTER_ATTEMPT[player]++;
+      if (entered) {
+        stats[curLev].dices.BAR_ENTER[player]++;
+        stats[8].dices.BAR_ENTER[player]++;
+      }
+
+      switch (nAgainst) {
+        case 1:
+          stats[curLev].dices.BAR_ENTER_ATTEMPT_P1[player]++;
+          stats[8].dices.BAR_ENTER_ATTEMPT_P1[player]++;
+          if (entered) {
+            stats[curLev].dices.BAR_ENTER_P1[player]++;
+            stats[8].dices.BAR_ENTER_P1[player]++;
+          }
+          break;
+        case 2:
+          stats[curLev].dices.BAR_ENTER_ATTEMPT_P2[player]++;
+          stats[8].dices.BAR_ENTER_ATTEMPT_P2[player]++;
+          if (entered) {
+            stats[curLev].dices.BAR_ENTER_P2[player]++;
+            stats[8].dices.BAR_ENTER_P2[player]++;
+          }
+          break;
+        case 3:
+          stats[curLev].dices.BAR_ENTER_ATTEMPT_P3[player]++;
+          stats[8].dices.BAR_ENTER_ATTEMPT_P3[player]++;
+          if (entered) {
+            stats[curLev].dices.BAR_ENTER_P3[player]++;
+            stats[8].dices.BAR_ENTER_P3[player]++;
+          }
+          break;
+        case 4:
+          stats[curLev].dices.BAR_ENTER_ATTEMPT_P4[player]++;
+          stats[8].dices.BAR_ENTER_ATTEMPT_P4[player]++;
+          if (entered) {
+            stats[curLev].dices.BAR_ENTER_P4[player]++;
+            stats[8].dices.BAR_ENTER_P4[player]++;
+          }
+          break;
+        case 5:
+          stats[curLev].dices.BAR_ENTER_ATTEMPT_P5[player]++;
+          stats[8].dices.BAR_ENTER_ATTEMPT_P5[player]++;
+          if (entered) {
+            stats[curLev].dices.BAR_ENTER_P5[player]++;
+            stats[8].dices.BAR_ENTER_P5[player]++;
+          }
+          break;
+      }
+    }
 
     commit();
-    System.out.println(" AVG_PIPS: " + stats[curLev].dices.AVG_PIPS[player] + " FOR " + player);
   }
-
 
   // ADD GAME RESULT TO STATS (CURRENT AI LEVEL AND TOTAL)
   public void addGame(int winner) {
@@ -106,14 +166,6 @@ public class StatManager {
       stats[8].general.CPU++;
     }
     commit();
-  }
-
-
-  private String getBitStr(byte[] bitmap) {
-    String s = "";
-    for (int i = 0; i < bitmap.length; i++)
-      s += bitmap[i] == 1 ? "1" : "0";
-    return s;
   }
 
 
@@ -149,7 +201,7 @@ public class StatManager {
         ret = round2(stats[level].dices.AVG_PIPS[who]) + "";
         break;
       case 3: // ENTER FROM BAR
-        ret = 0.0 + "%";
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT[who]) * 100.00)) + "%";
         break;
 
       case 4: // 1 DOUBLES IN A ROW
@@ -166,22 +218,24 @@ public class StatManager {
         break;
 
       case 8: // ENTER AGAINST 1P
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P1[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P1[who]) * 100.00)) + "%";
+        break;
       case 9: // ENTER AGAINST 2P
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P2[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P2[who]) * 100.00)) + "%";
+        break;
       case 10: // ENTER AGAINST 3P
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P3[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P3[who]) * 100.00)) + "%";
+        break;
       case 11: // ENTER AGAINST 4P
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P4[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P4[who]) * 100.00)) + "%";
+        break;
       case 12: // ENTER AGAINST 5P
-        ret = 0.0 + "%";
+        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P5[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P5[who]) * 100.00)) + "%";
         break;
     }
     return ret;
   }
 
-
-  private float round2(float n) {
-    if (Float.isNaN(n))
-      return 0;
-    return (float)Math.round(n * 100) / 100;
-  }
 
   public int getGameStat(int level, int who) {
     if (who == 0) { // HUMAN
@@ -189,6 +243,19 @@ public class StatManager {
     } else { // CPU
       return stats[level].general.CPU;
     }
+  }
+
+  // PRIVATE HELPERS
+  private String getBitStr(byte[] bitmap) {
+    String s = "";
+    for (int i = 0; i < bitmap.length; i++)
+      s += bitmap[i] == 1 ? "1" : "0";
+    return s;
+  }
+  private float round2(float n) {
+    if (Float.isNaN(n))
+      return 0;
+    return (float)Math.round(n * 100) / 100;
   }
 
   // SAVE STATS ON PREFS AND SYNC ON GMS
