@@ -131,6 +131,8 @@ public class GameFSM extends BaseFSM implements Context {
           case DICES_ROLLED:
             ctx.board().dices.animating = false;
             int dices[] = (int[])params;
+            if (MatchState.matchType == 0)
+              StatManager.getInstance().addRoll(1, dices);
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -205,6 +207,8 @@ public class GameFSM extends BaseFSM implements Context {
             if (MatchState.fCubeUse == 1)
               ctx.board().removeActor(ctx.board().doubleBtn);
             int dices[] = (int[])params;
+            if (MatchState.matchType == 0)
+              StatManager.getInstance().addRoll(0, dices);
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -496,8 +500,12 @@ public class GameFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], dices[0] > dices[1]);
             if (dices[0] > dices[1]) {// START HUMAN
               MatchState.SetGameTurn(0, 0);
+              if (MatchState.matchType == 0)
+                StatManager.getInstance().addRoll(0, dices);
             } else if (dices[0] < dices[1]) {// START CPU
               MatchState.SetGameTurn(1, 1);
+              if (MatchState.matchType == 0)
+                StatManager.getInstance().addRoll(1, dices);
             }
             ctx.board().showArrow();
             ctx.board().rollDices(dices[0], dices[1]);
