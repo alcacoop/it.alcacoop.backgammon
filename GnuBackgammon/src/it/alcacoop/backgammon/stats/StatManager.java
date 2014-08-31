@@ -43,6 +43,8 @@ public class StatManager {
     int pips = dices[0] == dices[1] ? dices[0] * 4 : dices[0] + dices[1];
     stats[curLev].dices.AVG_PIPS[player] =
         ((stats[curLev].dices.AVG_PIPS[player] * (float)stats[curLev].dices.ROLLS[player]) + (float)pips) / (stats[curLev].dices.ROLLS[player] + 1);
+    stats[8].dices.AVG_PIPS[player] =
+        ((stats[8].dices.AVG_PIPS[player] * (float)stats[8].dices.ROLLS[player]) + (float)pips) / (stats[8].dices.ROLLS[player] + 1);
 
     // ROLLS
     stats[curLev].dices.ROLLS[player]++;
