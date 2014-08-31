@@ -107,11 +107,6 @@ public class GeneralStatsScreen extends BaseScreen {
   }
 
 
-  public void initFromPrefs() {
-    // String sBoard = prefs.getString("BOARD", "B1");
-  }
-
-
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0.1f, 0.45f, 0.08f, 1);
@@ -125,7 +120,6 @@ public class GeneralStatsScreen extends BaseScreen {
   @Override
   public void initialize() {
     initTable();
-    initFromPrefs();
     table.setColor(1, 1, 1, 0);
     table.setX(-stage.getWidth());
   }
@@ -157,7 +151,7 @@ public class GeneralStatsScreen extends BaseScreen {
     table.setX((stage.getWidth() - table.getWidth()) / 2);
     table.setY((stage.getHeight() - table.getHeight()) / 2);
 
-    table.add(new Label("GAME RESULTS", GnuBackgammon.skin)).colspan(6);
+    table.add(new Label("WON GAMES STATISTICS", GnuBackgammon.skin)).colspan(6);
 
     table.row();
     table.add().fill().expand().colspan(6);
@@ -199,7 +193,7 @@ public class GeneralStatsScreen extends BaseScreen {
     table.add().fill().expand().colspan(6);
 
     table.row();
-    table.add(backBtn).colspan(3).width(stage.getWidth() / 4).fill().expand();
-    table.add(diceStatsBtn).colspan(3).width(stage.getWidth() / 4).fill().expand();
+    table.add(backBtn).colspan(3).width(stage.getWidth() / 4).fill().expand().height(stage.getHeight() / 8);
+    table.add(diceStatsBtn).colspan(3).width(stage.getWidth() / 4).fill().expand().height(stage.getHeight() / 8);
   }
 }
