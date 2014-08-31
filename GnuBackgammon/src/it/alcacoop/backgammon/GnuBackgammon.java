@@ -175,8 +175,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     if (!skipSplashScreen) {
       setScreen(new SplashScreen("data/" + resname[ss] + "/alca.png"));
     } else {
-      initAssets();
-      setFSM("MENU_FSM");
+      GnuBackgammon.Instance.nativeFunctions.initEngine();
+      GnuBackgammon.Instance.initAssets();
+      GnuBackgammon.Instance.goToScreen(6);
     }
   }
 
