@@ -208,23 +208,16 @@ d6
   orig: 64, 64
   offset: 0, 0
   index: -1
-reset
+d2
   rotate: false
   xy: 1105, 1082
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-d2
-  rotate: false
-  xy: 1105, 1016
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 d5
   rotate: false
-  xy: 1105, 950
+  xy: 1105, 1016
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -259,56 +252,56 @@ CS1-W
   index: -1
 CS3-W
   rotate: false
-  xy: 1105, 902
+  xy: 1105, 968
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS3-H
   rotate: false
-  xy: 1105, 854
+  xy: 1105, 920
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-H
   rotate: false
-  xy: 1105, 806
+  xy: 1105, 872
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS1-H
   rotate: false
-  xy: 1105, 806
+  xy: 1105, 872
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS3-B
   rotate: false
-  xy: 1105, 758
+  xy: 1105, 824
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS1-B
   rotate: false
-  xy: 1105, 710
+  xy: 1105, 776
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-B
   rotate: false
-  xy: 1105, 662
+  xy: 1105, 728
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
   index: -1
 CS2-W
   rotate: false
-  xy: 1105, 614
+  xy: 1105, 680
   size: 46, 46
   orig: 46, 46
   offset: 0, 0
@@ -322,70 +315,84 @@ mpl
   index: -1
 opt
   rotate: false
-  xy: 1105, 572
+  xy: 1105, 638
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 how
   rotate: false
-  xy: 1105, 530
+  xy: 1105, 596
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+stats
+  rotate: false
+  xy: 1105, 554
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 pro
   rotate: false
-  xy: 1105, 488
+  xy: 1105, 512
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 str
   rotate: false
-  xy: 1105, 446
+  xy: 1105, 470
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 app
   rotate: false
-  xy: 1105, 404
+  xy: 1105, 428
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 sp
   rotate: false
-  xy: 1105, 362
+  xy: 1105, 386
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 gpl
   rotate: false
-  xy: 1105, 320
+  xy: 1105, 344
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 dp
   rotate: false
-  xy: 1105, 278
+  xy: 1105, 302
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
+reset
+  rotate: false
+  xy: 1517, 1686
+  size: 34, 46
+  orig: 34, 46
+  offset: 0, 0
+  index: -1
 abt
   rotate: false
-  xy: 1105, 236
+  xy: 1105, 260
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 ply
   rotate: false
-  xy: 1105, 194
+  xy: 1105, 218
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -406,7 +413,7 @@ isended
   index: -1
 wheel
   rotate: false
-  xy: 1517, 1696
+  xy: 1105, 180
   size: 36, 36
   orig: 36, 36
   offset: 0, 0

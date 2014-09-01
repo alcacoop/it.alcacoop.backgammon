@@ -93,7 +93,7 @@ public class MainMenuScreen extends BaseScreen {
     onePlayer.addListener(cl);
     twoPlayers = new IconButton("Two Players", GnuBackgammon.atlas.findRegion("dp"), tl);
     twoPlayers.addListener(cl);
-    stats = new IconButton("Stats", GnuBackgammon.atlas.findRegion("opt"), tl);
+    stats = new IconButton("Stats", GnuBackgammon.atlas.findRegion("stats"), tl);
     stats.addListener(cl);
     options = new IconButton("Options", GnuBackgammon.atlas.findRegion("opt"), tl);
     options.addListener(cl);

@@ -289,7 +289,7 @@ public class DiceStatsScreen extends BaseScreen {
     wrapper.add(sp).expand().fill();
     wrapper.add().expand().fill();
     wrapper.addActor(resetBtn);
-    resetBtn.setPosition(table.getWidth() - 1.5f * resetBtn.getWidth(), resetBtn.getHeight() / 2);
+    resetBtn.setPosition(table.getWidth() - 1.8f * resetBtn.getWidth(), resetBtn.getHeight() / 2);
 
     table.row();
     table.add(wrapper).expand().fill();
