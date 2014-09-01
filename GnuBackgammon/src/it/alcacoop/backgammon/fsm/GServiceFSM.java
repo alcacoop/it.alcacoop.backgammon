@@ -580,6 +580,17 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     },
 
 
+    ABANDON_MATCH {
+      @Override
+      public boolean processEvent(Context ctx, Events evt, Object params) {
+        if (evt == Events.HUMAN_RESIGNED) {
+          GnuBackgammon.fsm.state(States.MATCH_OVER);
+        }
+        return true;
+      }
+    },
+
+
     DIALOG_HANDLER {
       @Override
       public void enterState(Context ctx) {
@@ -744,9 +755,33 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_ABANDON:
             int status = (Integer)params;
             MatchState.resignValue = status;
-            GnuBackgammon.fsm.state(States.MATCH_OVER);
-            if (status >= 10)
-              ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
+
+            String msg = "";
+            if (MatchState.resignValue > 0) {
+              switch (MatchState.resignValue) {
+                case 1:
+                  msg = "Opponent resigned the game";
+                  state(States.ABANDON_MATCH);
+                  UIDialog.getFlashDialog(Events.HUMAN_RESIGNED, msg);
+                  break;
+                case 2:
+                  msg = "Opponent resigned a gammon game";
+                  state(States.ABANDON_MATCH);
+                  UIDialog.getFlashDialog(Events.HUMAN_RESIGNED, msg);
+                  break;
+                case 3:
+                  msg = "Opponent resigned a backgammon game";
+                  state(States.ABANDON_MATCH);
+                  UIDialog.getFlashDialog(Events.HUMAN_RESIGNED, msg);
+                  break;
+
+                case 11:
+                case 13:
+                  ((GameScreen)GnuBackgammon.Instance.currentScreen).endLayer.opponentAbandoned();
+                  GnuBackgammon.fsm.state(States.MATCH_OVER);
+                  break;
+              }
+            }
             break;
 
           case GSERVICE_BYE:
