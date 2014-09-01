@@ -98,57 +98,58 @@ public class StatManager {
           boardAgainst += "0";
         }
       }
-      boolean entered = (boardAgainst.charAt(dices[0] - 1) == '0') || (boardAgainst.charAt(dices[1] - 1) == '0');
+      if (nAgainst < 6) { // IF 6 NO ROLL!
+        boolean entered = (boardAgainst.charAt(dices[0] - 1) == '0') || (boardAgainst.charAt(dices[1] - 1) == '0');
 
-      System.out.println(" ATTEMPT ENTER AGAINST: " + boardAgainst + " POINTS: " + nAgainst + " ENTERED: " + entered);
-      stats[curLev].dices.BAR_ENTER_ATTEMPT[player]++;
-      stats[8].dices.BAR_ENTER_ATTEMPT[player]++;
-      if (entered) {
-        stats[curLev].dices.BAR_ENTER[player]++;
-        stats[8].dices.BAR_ENTER[player]++;
-      }
+        stats[curLev].dices.BAR_ENTER_ATTEMPT[player]++;
+        stats[8].dices.BAR_ENTER_ATTEMPT[player]++;
+        if (entered) {
+          stats[curLev].dices.BAR_ENTER[player]++;
+          stats[8].dices.BAR_ENTER[player]++;
+        }
 
-      switch (nAgainst) {
-        case 1:
-          stats[curLev].dices.BAR_ENTER_ATTEMPT_P1[player]++;
-          stats[8].dices.BAR_ENTER_ATTEMPT_P1[player]++;
-          if (entered) {
-            stats[curLev].dices.BAR_ENTER_P1[player]++;
-            stats[8].dices.BAR_ENTER_P1[player]++;
-          }
-          break;
-        case 2:
-          stats[curLev].dices.BAR_ENTER_ATTEMPT_P2[player]++;
-          stats[8].dices.BAR_ENTER_ATTEMPT_P2[player]++;
-          if (entered) {
-            stats[curLev].dices.BAR_ENTER_P2[player]++;
-            stats[8].dices.BAR_ENTER_P2[player]++;
-          }
-          break;
-        case 3:
-          stats[curLev].dices.BAR_ENTER_ATTEMPT_P3[player]++;
-          stats[8].dices.BAR_ENTER_ATTEMPT_P3[player]++;
-          if (entered) {
-            stats[curLev].dices.BAR_ENTER_P3[player]++;
-            stats[8].dices.BAR_ENTER_P3[player]++;
-          }
-          break;
-        case 4:
-          stats[curLev].dices.BAR_ENTER_ATTEMPT_P4[player]++;
-          stats[8].dices.BAR_ENTER_ATTEMPT_P4[player]++;
-          if (entered) {
-            stats[curLev].dices.BAR_ENTER_P4[player]++;
-            stats[8].dices.BAR_ENTER_P4[player]++;
-          }
-          break;
-        case 5:
-          stats[curLev].dices.BAR_ENTER_ATTEMPT_P5[player]++;
-          stats[8].dices.BAR_ENTER_ATTEMPT_P5[player]++;
-          if (entered) {
-            stats[curLev].dices.BAR_ENTER_P5[player]++;
-            stats[8].dices.BAR_ENTER_P5[player]++;
-          }
-          break;
+        switch (nAgainst) {
+          case 1:
+            stats[curLev].dices.BAR_ENTER_ATTEMPT_P1[player]++;
+            stats[8].dices.BAR_ENTER_ATTEMPT_P1[player]++;
+            if (entered) {
+              stats[curLev].dices.BAR_ENTER_P1[player]++;
+              stats[8].dices.BAR_ENTER_P1[player]++;
+            }
+            break;
+          case 2:
+            stats[curLev].dices.BAR_ENTER_ATTEMPT_P2[player]++;
+            stats[8].dices.BAR_ENTER_ATTEMPT_P2[player]++;
+            if (entered) {
+              stats[curLev].dices.BAR_ENTER_P2[player]++;
+              stats[8].dices.BAR_ENTER_P2[player]++;
+            }
+            break;
+          case 3:
+            stats[curLev].dices.BAR_ENTER_ATTEMPT_P3[player]++;
+            stats[8].dices.BAR_ENTER_ATTEMPT_P3[player]++;
+            if (entered) {
+              stats[curLev].dices.BAR_ENTER_P3[player]++;
+              stats[8].dices.BAR_ENTER_P3[player]++;
+            }
+            break;
+          case 4:
+            stats[curLev].dices.BAR_ENTER_ATTEMPT_P4[player]++;
+            stats[8].dices.BAR_ENTER_ATTEMPT_P4[player]++;
+            if (entered) {
+              stats[curLev].dices.BAR_ENTER_P4[player]++;
+              stats[8].dices.BAR_ENTER_P4[player]++;
+            }
+            break;
+          case 5:
+            stats[curLev].dices.BAR_ENTER_ATTEMPT_P5[player]++;
+            stats[8].dices.BAR_ENTER_ATTEMPT_P5[player]++;
+            if (entered) {
+              stats[curLev].dices.BAR_ENTER_P5[player]++;
+              stats[8].dices.BAR_ENTER_P5[player]++;
+            }
+            break;
+        }
       }
     }
 
