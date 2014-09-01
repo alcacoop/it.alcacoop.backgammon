@@ -503,7 +503,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     Gdx.app.log("INITIALIZATION", "LOADING..");
     System.loadLibrary("gnubg");
     androidHelpers.copyAssetsIfNotExists();
-    AICalls.InitializeEnvironment(androidHelpers.getDataDir());
+    AICalls.Locking.InitializeEnvironment(androidHelpers.getDataDir());
     enterImmersiveMode();
   }
 

@@ -76,7 +76,7 @@ public class Main implements NativeFunctions {
     String s = System.getProperty("user.dir");
     data_dir = s;
     s += "/libs/";
-    AICalls.InitializeEnvironment(s);
+    AICalls.Locking.InitializeEnvironment(s);
 
     mScriptConsole = new JConsole();
     bsh = new Interpreter(mScriptConsole);
