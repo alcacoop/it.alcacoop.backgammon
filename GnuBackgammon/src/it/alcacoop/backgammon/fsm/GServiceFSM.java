@@ -672,6 +672,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
   public void start() {
     super.start();
+    MatchState.SetCubeUse(1);
+    MatchState.UpdateMSCubeInfo(1, -1);
     GnuBackgammon.Instance.goToScreen(4);
   }
 
