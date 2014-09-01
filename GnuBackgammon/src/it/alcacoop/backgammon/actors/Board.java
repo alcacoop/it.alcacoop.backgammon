@@ -297,7 +297,6 @@ public class Board extends Group {
     points.resetBoff();
     larrow.setVisible(false);
     rarrow.setVisible(false);
-    doublingCube.reset();
     MatchState.resignValue = 0;
     MatchState.fMove = 0;
     MatchState.fTurn = 0;
@@ -310,9 +309,14 @@ public class Board extends Group {
         doublingCube.setVisible(false);
     }
 
-    initBoard(MatchState.board[MatchState.bgv * 2], MatchState.board[MatchState.bgv * 2 + 1]);
+    if (MatchState.matchType == 3) { // ALWAYS USING CUBE ON GSERVICE GAMES...
+      doublingCube.setVisible(true);
+      AICalls.Locking.SetCubeUse(1);
+    }
 
+    doublingCube.reset();
     MatchState.UpdateMSCubeInfo(1, -1);
+    initBoard(MatchState.board[MatchState.bgv * 2], MatchState.board[MatchState.bgv * 2 + 1]);
   }
 
 
