@@ -327,58 +327,72 @@ how
   orig: 40, 40
   offset: 0, 0
   index: -1
-pro
+stats
   rotate: false
   xy: 1105, 554
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-str
+pro
   rotate: false
   xy: 1105, 512
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-app
+str
   rotate: false
   xy: 1105, 470
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-sp
+app
   rotate: false
   xy: 1105, 428
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-gpl
+sp
   rotate: false
   xy: 1105, 386
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-dp
+gpl
   rotate: false
   xy: 1105, 344
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-abt
+dp
   rotate: false
   xy: 1105, 302
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-ply
+reset
+  rotate: false
+  xy: 1517, 1686
+  size: 34, 46
+  orig: 34, 46
+  offset: 0, 0
+  index: -1
+abt
   rotate: false
   xy: 1105, 260
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+ply
+  rotate: false
+  xy: 1105, 218
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -399,7 +413,7 @@ isended
   index: -1
 wheel
   rotate: false
-  xy: 1517, 1696
+  xy: 1105, 180
   size: 36, 36
   orig: 36, 36
   offset: 0, 0

@@ -525,7 +525,6 @@ public class Board extends Group {
       }
     }
     opMinPoint--;
-    System.out.println("HASCONTACT: " + myMaxPoint + " - " + opMinPoint + " " + (opMinPoint < myMaxPoint));
     return opMinPoint < myMaxPoint;
   }
 

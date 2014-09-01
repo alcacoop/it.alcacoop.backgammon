@@ -37,6 +37,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
@@ -51,7 +52,6 @@ public class GameFSM extends BaseFSM implements Context {
 
 
   public enum States implements State {
-
     CPU_TURN {
       @Override
       public boolean processEvent(Context ctx, Events evt, Object params) {
@@ -130,6 +130,12 @@ public class GameFSM extends BaseFSM implements Context {
           case DICES_ROLLED:
             ctx.board().dices.animating = false;
             int dices[] = (int[])params;
+
+            // STATS MANAGEMENT
+            if (MatchState.matchType == 0) {
+              StatManager.getInstance().addRoll(MatchState.fMove, dices, ctx.board()._board);
+            }
+
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -204,6 +210,12 @@ public class GameFSM extends BaseFSM implements Context {
             if (MatchState.fCubeUse == 1)
               ctx.board().removeActor(ctx.board().doubleBtn);
             int dices[] = (int[])params;
+
+            // STATS MANAGEMENT
+            if (MatchState.matchType == 0) {
+              StatManager.getInstance().addRoll(MatchState.fMove, dices, ctx.board()._board);
+            }
+
             if ((GnuBackgammon.Instance.optionPrefs.getString("DICESG", "MER-TWS").equals("Manual")) && (MatchState.matchType < 2)) {
               ctx.board().rollDices(dices[0], dices[1]);
             }
@@ -409,8 +421,10 @@ public class GameFSM extends BaseFSM implements Context {
         if (MatchState.matchType == 0) {
           if (MatchState.fMove == 1) {
             gameString = "CPU WON " + game_score + " POINT!";
+            StatManager.getInstance().addGame(1);
           } else {
             gameString = "YOU WON " + game_score + " POINT!";
+            StatManager.getInstance().addGame(0);
           }
           score1 = "CPU: " + MatchState.anScore[1];
           score2 = "YOU: " + MatchState.anScore[0];
@@ -493,8 +507,12 @@ public class GameFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.rec.addDices(dices[0], dices[1], dices[0] > dices[1]);
             if (dices[0] > dices[1]) {// START HUMAN
               MatchState.SetGameTurn(0, 0);
+              if (MatchState.matchType == 0)
+                StatManager.getInstance().addRoll(0, dices, ctx.board()._board);
             } else if (dices[0] < dices[1]) {// START CPU
               MatchState.SetGameTurn(1, 1);
+              if (MatchState.matchType == 0)
+                StatManager.getInstance().addRoll(1, dices, ctx.board()._board);
             }
             ctx.board().showArrow();
             ctx.board().rollDices(dices[0], dices[1]);

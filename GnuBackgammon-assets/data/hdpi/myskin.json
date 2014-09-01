@@ -9,6 +9,17 @@ com.badlogic.gdx.graphics.Color: {
 	brown: { a: 1, b: 0.24, g: 0.42, r: 0.54 },
 },
 
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: default-font, 
+    fontColor: white, 
+    background: selectbox,
+    listBackground: selectbox-show,
+    listSelection: even
+	}
+
+},
+
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
 	mainmenu: { down: check-selected, up: check, font: default-font, fontColor: white, downFontColor: white},
