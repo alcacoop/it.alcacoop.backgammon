@@ -13,6 +13,5 @@ public interface GServiceInterface {
   public void gserviceUpdateAchievement(String achievement_id, int increment);
   public void gserviceUnlockAchievement(String achiev_id);
   public void gserviceUpdateState();
-  public String gservicePendingNotificationAreaInvitation();
   public void gserviceGetSigninDialog(int from);
 }

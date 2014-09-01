@@ -253,10 +253,6 @@ public class Main implements NativeFunctions {
     return 0;
   }
 
-  @Override
-  public String gservicePendingNotificationAreaInvitation() {
-    return null;
-  }
 
   @Override
   public void openURL(String... url) {}
