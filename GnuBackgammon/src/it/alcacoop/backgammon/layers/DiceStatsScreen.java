@@ -152,6 +152,8 @@ public class DiceStatsScreen extends BaseScreen {
 
   @Override
   public void initialize() {
+    statLevel = 8;
+    sb.setSelection(statLevel);
     initTable();
     table.setColor(1, 1, 1, 0);
     table.setX(-stage.getWidth());
@@ -160,8 +162,6 @@ public class DiceStatsScreen extends BaseScreen {
 
   @Override
   public void show() {
-    statLevel = 8;
-    sb.setSelection(statLevel);
     super.show();
     Gdx.input.setInputProcessor(stage);
     Gdx.input.setCatchBackKey(true);
