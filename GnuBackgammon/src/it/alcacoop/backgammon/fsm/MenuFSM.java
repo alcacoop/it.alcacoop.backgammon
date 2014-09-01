@@ -445,7 +445,7 @@ public class MenuFSM extends BaseFSM implements Context {
           case BUTTON_CLICKED:
             GnuBackgammon.Instance.snd.playMoveStart();
             if (params.toString().equals("BACK")) {
-              ctx.state(States.MAIN_MENU);
+              ctx.state(States.GENERAL_STATISTICS);
             } else if (params.toString().equals("RESET")) {
               UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset game results statistics?");
             }
