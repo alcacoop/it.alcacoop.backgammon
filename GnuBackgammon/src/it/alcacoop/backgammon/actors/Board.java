@@ -303,10 +303,13 @@ public class Board extends Group {
 
     if (MatchState.fCubeUse == 0) { // NOT DOUBLING
       doublingCube.setVisible(false);
+      doubleBtn.remove();
     } else {
       doublingCube.setVisible(true);
-      if ((MatchState.fCrawford == 1) && (MatchState.fCrafwordGame))
+      if ((MatchState.fCrawford == 1) && (MatchState.fCrafwordGame)) {
         doublingCube.setVisible(false);
+        doubleBtn.remove();
+      }
     }
 
     if (MatchState.matchType == 3) { // ALWAYS USING CUBE ON GSERVICE GAMES...
