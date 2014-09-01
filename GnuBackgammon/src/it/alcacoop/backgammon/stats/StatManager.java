@@ -190,7 +190,7 @@ public class StatManager {
 
 
   public String getRollStat(int statType, int level, int who) {
-    String ret = "";
+    String ret = "-";
     switch (statType) {
       case 0: // # ROLLS
         ret = stats[level].dices.ROLLS[who] + "";
@@ -202,7 +202,8 @@ public class StatManager {
         ret = round2(stats[level].dices.AVG_PIPS[who]) + "";
         break;
       case 3: // ENTER FROM BAR
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT[who]) * 100.00)) + "%";
         break;
 
       case 4: // 1 DOUBLES IN A ROW
@@ -219,25 +220,28 @@ public class StatManager {
         break;
 
       case 8: // ENTER AGAINST 1P
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P1[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P1[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT_P1[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P1[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P1[who]) * 100.00)) + "%";
         break;
       case 9: // ENTER AGAINST 2P
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P2[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P2[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT_P2[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P2[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P2[who]) * 100.00)) + "%";
         break;
       case 10: // ENTER AGAINST 3P
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P3[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P3[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT_P3[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P3[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P3[who]) * 100.00)) + "%";
         break;
       case 11: // ENTER AGAINST 4P
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P4[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P4[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT_P4[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P4[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P4[who]) * 100.00)) + "%";
         break;
       case 12: // ENTER AGAINST 5P
-        ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P5[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P5[who]) * 100.00)) + "%";
+        if (stats[level].dices.BAR_ENTER_ATTEMPT_P5[who] > 0)
+          ret = round2((float)(((float)stats[level].dices.BAR_ENTER_P5[who] / (float)stats[level].dices.BAR_ENTER_ATTEMPT_P5[who]) * 100.00)) + "%";
         break;
     }
     return ret;
   }
-
-
   public int getGameStat(int level, int who) {
     if (who == 0) { // HUMAN
       return stats[level].general.HUMAN;
