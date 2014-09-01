@@ -39,7 +39,6 @@ public class StatManager {
   // ADD ROLL TO STATS (CURRENT AI LEVEL AND TOTAL)
   public void addRoll(int player, int[] dices, int[][] board) {
     int curLev = MatchState.currentLevel.ordinal();
-    System.out.println("ROLLED: " + dices[0] + "/" + dices[1] + " BY " + player);
 
     // AVG_PIPS
     int pips = dices[0] == dices[1] ? dices[0] * 4 : dices[0] + dices[1];
