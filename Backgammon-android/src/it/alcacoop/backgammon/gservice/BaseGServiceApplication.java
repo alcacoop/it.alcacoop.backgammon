@@ -113,8 +113,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public final static int FROM_SCOREBOARDS = 2;
   public final static int FROM_NEWGAME = 3;
 
-  protected String invitationId = "";
-
   protected abstract boolean shouldShowInvitationDialog();
   protected abstract void onRoomConnectedBehaviour();
   protected abstract void onLeaveRoomBehaviour(int reason);
@@ -161,9 +159,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public void onInvitationReceived(Invitation invitation) {
     if (!shouldShowInvitationDialog()) {
       Games.RealTimeMultiplayer.declineInvitation(getApiClient(), invitation.getInvitationId());
-      return;
+    } else {
+      gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), invitation.getInviter().getDisplayName(), invitation.getInvitationId());
     }
-    gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), invitation.getInviter().getDisplayName(), invitation.getInvitationId());
+    gHelper.clearInvitation();
   }
 
   @Override
@@ -338,8 +337,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
         });
 
     if (gHelper.hasInvitation()) {
-      invitationId = gHelper.getInvitationId();
-      GnuBackgammon.Instance.invitationId = invitationId;
+      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
+      gHelper.clearInvitation();
       GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
   }
