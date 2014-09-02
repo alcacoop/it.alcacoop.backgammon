@@ -45,13 +45,6 @@ import com.google.android.gms.games.multiplayer.Participant;
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface {
 
   @Override
-  public String gservicePendingNotificationAreaInvitation() {
-    String tmp = invitationId;
-    invitationId = "";
-    return tmp;
-  };
-
-  @Override
   public boolean gserviceIsSignedIn() {
     return gHelper.isSignedIn();
   }

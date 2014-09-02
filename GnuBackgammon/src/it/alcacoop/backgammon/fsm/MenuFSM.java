@@ -312,6 +312,8 @@ public class MenuFSM extends BaseFSM implements Context {
         MatchState.anScore[0] = 0;
         MatchState.anScore[1] = 0;
         MatchState.nMatchTo = 1;
+        MatchState.SetCubeUse(1);
+        MatchState.UpdateMSCubeInfo(1, -1);
         GServiceClient.getInstance().connect();
 
         GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");

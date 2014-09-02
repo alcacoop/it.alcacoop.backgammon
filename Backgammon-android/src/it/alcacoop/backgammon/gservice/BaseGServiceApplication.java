@@ -113,8 +113,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public final static int FROM_SCOREBOARDS = 2;
   public final static int FROM_NEWGAME = 3;
 
-  protected String invitationId = "";
-
   protected abstract boolean shouldShowInvitationDialog();
   protected abstract void onRoomConnectedBehaviour();
   protected abstract void onLeaveRoomBehaviour(int reason);
@@ -161,9 +159,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public void onInvitationReceived(Invitation invitation) {
     if (!shouldShowInvitationDialog()) {
       Games.RealTimeMultiplayer.declineInvitation(getApiClient(), invitation.getInvitationId());
-      return;
+    } else {
+      gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), invitation.getInviter().getDisplayName(), invitation.getInvitationId());
     }
-    gserviceInvitationReceived(invitation.getInviter().getIconImageUri(), invitation.getInviter().getDisplayName(), invitation.getInvitationId());
+    gHelper.clearInvitation();
   }
 
   @Override
@@ -338,8 +337,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
         });
 
     if (gHelper.hasInvitation()) {
-      invitationId = gHelper.getInvitationId();
-      GnuBackgammon.Instance.invitationId = invitationId;
+      GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
+      gHelper.clearInvitation();
       GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
   }
@@ -387,7 +386,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           public void onImageLoaded(Uri arg0, Drawable drawable, boolean arg2) {
             ImageView iv = ((ImageView)myView.findViewById(R.id.image));
             iv.setImageDrawable(drawable);
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
               invitationDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
               invitationDialog.show();
               invitationDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
@@ -447,7 +446,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           });
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
           mProgressDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
           mProgressDialog.show();
           mProgressDialog.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());
@@ -598,7 +597,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             });
           }
         });
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
           d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
           d.show();
           d.getWindow().getDecorView().setSystemUiVisibility(BaseGServiceApplication.this.getWindow().getDecorView().getSystemUiVisibility());

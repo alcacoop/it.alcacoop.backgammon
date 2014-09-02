@@ -218,27 +218,81 @@ public class AICalls {
         return 0;
       }
     }
+
+
+    public static int SetAILevel(final AILevels l) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetAILevel(l.ordinal());
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+
+    public static int InitializeEnvironment(final String s) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.InitializeEnvironment(s);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+
+    public static int SetGameVariant(final int type) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetGameVariant(type);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
+
+    public static int SetMatchTo(final int nMatchTo) {
+      Future<Integer> f = dispatchExecutor.submit(new Callable<Integer>() {
+        @Override
+        public Integer call() throws Exception {
+          GnubgAPI.SetMatchTo(nMatchTo);
+          return 1;
+        }
+      });
+      try {
+        return f.get();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+
   }
 
   /* END LOCKING IMPLEMENTATIONS */
 
 
   /* MESSAGE SENDING IMPLEMENTATIONS */
-
-  public static void SetAILevel(final AILevels l) {
-    dispatchExecutor.submit(new Runnable() {
-      BaseFSM fsm = GnuBackgammon.fsm;
-
-      @Override
-      public void run() {
-        if (fsm != GnuBackgammon.fsm)
-          return;
-        GnubgAPI.SetAILevel(l.ordinal());
-      }
-    });
-  }
-
-
   public static void GetResignValue(final int b1[], final int b2[]) {
     dispatchExecutor.submit(new Runnable() {
       BaseFSM fsm = GnuBackgammon.fsm;
@@ -460,53 +514,5 @@ public class AICalls {
     });
   }
 
-
-  public static void InitializeEnvironment(final String s) {
-    dispatchExecutor.submit(new Runnable() {
-      @Override
-      public void run() {
-        GnubgAPI.InitializeEnvironment(s);
-      }
-    });
-  }
-
-  public static void SetGameVariant(final int type) {
-    dispatchExecutor.submit(new Runnable() {
-      @Override
-      public void run() {
-        GnubgAPI.SetGameVariant(type);
-      }
-    });
-  }
-
-
-  public static void SetMatchTo(final int nMatchTo) {
-    dispatchExecutor.submit(new Runnable() {
-      @Override
-      public void run() {
-        GnubgAPI.SetMatchTo(nMatchTo);
-      }
-    });
-  }
-
-
-  public static void SetCubeUse(final int fCubeUse) {
-    dispatchExecutor.submit(new Runnable() {
-      @Override
-      public void run() {
-        GnubgAPI.SetCubeUse(fCubeUse);
-      }
-    });
-  }
-
-
-  public static void SetCrawford(final int fCrawford) {
-    dispatchExecutor.submit(new Runnable() {
-      @Override
-      public void run() {
-        GnubgAPI.SetCrawford(fCrawford);
-      }
-    });
-  }
 
 }

@@ -98,7 +98,7 @@ public class MatchState {
 
   public static void SetGameVariant(int type) {
     MatchState.bgv = type;
-    AICalls.SetGameVariant(type);
+    AICalls.Locking.SetGameVariant(type);
   }
 
   public static void UpdateMSCubeInfo(int cubeValue, int owner) {
@@ -109,7 +109,7 @@ public class MatchState {
 
   public static void SetMatchTo(String sMatchTo) {
     MatchState.nMatchTo = Integer.parseInt(sMatchTo);
-    AICalls.SetMatchTo(MatchState.nMatchTo);
+    AICalls.Locking.SetMatchTo(MatchState.nMatchTo);
   }
 
   public static void SetMatchScore(int AIScore, int HumanScore) {
