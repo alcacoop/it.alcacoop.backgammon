@@ -270,7 +270,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
           }
         });
 
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
           d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
           d.show();
           d.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
@@ -353,7 +353,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         popupBuilder.setCancelable(false).setView(myMsg).setTitle("Info").setPositiveButton("OK", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
               d.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
               d.show();
               d.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
@@ -364,7 +364,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
           }
         });
         AlertDialog popup = popupBuilder.create();
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
           popup.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
           popup.show();
           popup.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
@@ -437,7 +437,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @SuppressLint({ "InlinedApi", "NewApi" })
   public void enterImmersiveMode() {
-    if (android.os.Build.VERSION.SDK_INT < 11)
+    if (android.os.Build.VERSION.SDK_INT < 19)
       return;
     runOnUiThread(new Runnable() {
       @Override
@@ -691,8 +691,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void loadImageFromIconURI(Object iconURI, final int playerIndex) {
-
-    System.out.println("===> URI: " + iconURI);
 
     Uri uri = (Uri)iconURI;
     imgMgr.loadImage(new ImageManager.OnImageLoadedListener() {
