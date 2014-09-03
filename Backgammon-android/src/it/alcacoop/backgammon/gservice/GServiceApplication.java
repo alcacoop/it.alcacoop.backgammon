@@ -18,7 +18,7 @@
  #  either version 3 of the License, or (at your option)          #
  #  any later version.                                            #
  #                                                                #
- #  FOUR IN A LINE MOBILE is distributed in the hope that it      #
+ #  BACKGAMMON MOBILE is distributed in the hope that it          #
  #  will be useful, but WITHOUT ANY WARRANTY; without even the    #
  #  implied warranty of MERCHANTABILITY or FITNESS FOR A          #
  #  PARTICULAR PURPOSE.  See the GNU General Public License       #
@@ -147,6 +147,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceUpdateState() {
     if (gHelper.isSignedIn()) {
+      System.out.println("===> APPSTATE UPDATE");
       AppStateManager.update(getApiClient(), APP_DATA_KEY, AppDataManager.getInstance().getBytes());
     }
   }
@@ -154,6 +155,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   /*
   private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {
+      System.out.println(" ===> APPSTATE DELETION!");
       AppStateManager.delete(getApiClient(), APP_DATA_KEY).setResultCallback(new ResultCallback<AppStateManager.StateDeletedResult>() {
         @Override
         public void onResult(StateDeletedResult arg0) {

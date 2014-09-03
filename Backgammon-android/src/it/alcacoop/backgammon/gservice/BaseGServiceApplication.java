@@ -18,7 +18,7 @@
  #  either version 3 of the License, or (at your option)          #
  #  any later version.                                            #
  #                                                                #
- #  FOUR IN A LINE MOBILE is distributed in the hope that it      #
+ #  BACKGAMMON MOBILE is distributed in the hope that it          #
  #  will be useful, but WITHOUT ANY WARRANTY; without even the    #
  #  implied warranty of MERCHANTABILITY or FITNESS FOR A          #
  #  PARTICULAR PURPOSE.  See the GNU General Public License       #
@@ -140,6 +140,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     AppStateManager.resolve(getApiClient(), conflictResult.getStateKey(), conflictResult.getResolvedVersion(),
         onStateConflictBehaviour(conflictResult.getLocalData(), conflictResult.getServerData()));
   }
+
   private void onStateLoaded(Status status, int stateKey, byte[] data) {
     if (status.isSuccess()) {
       onStateLoadedBehaviour(data);
@@ -322,6 +323,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
+    System.out.println("===> LOADING APPSTATE");
     AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
         new ResultCallback<AppStateManager.StateResult>() {
           @Override
