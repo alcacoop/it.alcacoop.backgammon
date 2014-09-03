@@ -426,6 +426,9 @@ public class GameFSM extends BaseFSM implements Context {
             gameString = "YOU WON " + game_score + " POINT!";
             StatManager.getInstance().addGame(0);
           }
+
+          GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
+
           score1 = "CPU: " + MatchState.anScore[1];
           score2 = "YOU: " + MatchState.anScore[0];
         } else {
@@ -658,11 +661,15 @@ public class GameFSM extends BaseFSM implements Context {
               } catch (Exception e) {}
               if (response.equals("YES")) {
                 // SAVING AND ABANDONING
+                StatManager.getInstance().addGame(1);
+                GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
                 GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.Instance.fname + "json");
                 GnuBackgammon.Instance.rec.reset();
                 GnuBackgammon.Instance.setFSM("MENU_FSM");
               } else if (response.equals("NO")) {
                 // ABANDONING
+                StatManager.getInstance().addGame(1);
+                GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
                 Gdx.files.absolute(GnuBackgammon.Instance.fname + "json").delete();
                 GnuBackgammon.Instance.rec.reset();
                 GnuBackgammon.Instance.setFSM("MENU_FSM");

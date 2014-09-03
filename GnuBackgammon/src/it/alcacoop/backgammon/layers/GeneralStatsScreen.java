@@ -78,6 +78,7 @@ public class GeneralStatsScreen extends BaseScreen {
           return true;
         if (Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
           GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "BACK");
+          GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
         }
         return super.keyDown(event, keycode);
       }
@@ -87,6 +88,7 @@ public class GeneralStatsScreen extends BaseScreen {
     ClickListener cl = new ClickListener() {
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, ((TextButton)event.getListenerActor()).getText().toString().toUpperCase());
+        GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
       };
     };
 
@@ -95,6 +97,7 @@ public class GeneralStatsScreen extends BaseScreen {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         GnuBackgammon.fsm.processEvent(Events.BUTTON_CLICKED, "RESET");
+        GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
       }
     });
 

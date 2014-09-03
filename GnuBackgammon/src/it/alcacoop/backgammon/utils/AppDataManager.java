@@ -29,7 +29,6 @@ public class AppDataManager {
     app_data.put("fibsboard2", GnuBackgammon.Instance.optionPrefs.getString("FIBSBOARD2", "0"));
     app_data.put("tigaboard", GnuBackgammon.Instance.optionPrefs.getString("TIGABOARD", "0"));
 
-
     app_data.put("sound", GnuBackgammon.Instance.optionPrefs.getString("SOUND", "Yes"));
     app_data.put("speed", GnuBackgammon.Instance.optionPrefs.getString("SPEED", "Fast"));
     app_data.put("amoves", GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap"));
@@ -48,6 +47,11 @@ public class AppDataManager {
     app_data.put("tpassword", GnuBackgammon.Instance.fibsPrefs.getString("tpassword", ""));
 
     app_data.put("opponents", AchievementsManager.getInstance().prefs.getString("OPPONENTS", "{}"));
+
+    for (int i = 0; i < 9; i++) { // STATS
+      app_data.put("stat_" + i, GnuBackgammon.Instance.optionPrefs.getString("STAT_" + i, ""));
+    }
+
     Json json = new Json();
     return json.toJson(app_data).getBytes();
   }
@@ -77,7 +81,6 @@ public class AppDataManager {
     double fibs = Math.max(Double.parseDouble(hLocal.get("fibsboard2")), Double.parseDouble(hRemote.get("fibsboard2")));
     double tiga = Math.max(Double.parseDouble(hLocal.get("tigaboard")), Double.parseDouble(hRemote.get("tigaboard")));
 
-
     app_data.put("singleboard", single + "");
     app_data.put("multiboard", multi + "");
     app_data.put("fibsboard2", fibs + "");
@@ -100,6 +103,14 @@ public class AppDataManager {
     app_data.put("tusername", hRemote.get("tusername"));
     app_data.put("tpassword", hRemote.get("tpassword"));
 
+    for (int i = 0; i < 9; i++) { // STATS
+      System.out.println(" ===> CONFLICT REMOTE STATS: " + hRemote.get("stat_" + i));
+      if (hRemote.get("stat_" + i) != "")
+        app_data.put("stat_" + i, hRemote.get("stat_" + i));
+      else
+        app_data.put("stat_" + i, hLocal.get("stat_" + i));
+    }
+
     ArrayList<String> local_played_list = jLocal.fromJson(ArrayList.class, hLocal.get("opponents"));
     ArrayList<String> remote_played_list = jRemote.fromJson(ArrayList.class, hRemote.get("opponents"));
     if (local_played_list.size() >= remote_played_list.size())
@@ -117,7 +128,6 @@ public class AppDataManager {
     GnuBackgammon.Instance.optionPrefs.putString("MULTIBOARD", app_data.get("multiboard"));
     GnuBackgammon.Instance.optionPrefs.putString("TIGABOARD", app_data.get("tigaboard"));
     GnuBackgammon.Instance.optionPrefs.putString("FIBSBOARD2", app_data.get("fibsboard2"));
-
 
     GnuBackgammon.Instance.optionPrefs.putString("SOUND", app_data.get("sound"));
     GnuBackgammon.Instance.optionPrefs.putString("SPEED", app_data.get("speed"));
@@ -137,6 +147,11 @@ public class AppDataManager {
     GnuBackgammon.Instance.fibsPrefs.putString("tpassword", app_data.get("tpassword"));
 
     AchievementsManager.getInstance().prefs.putString("OPPONENTS", app_data.get("opponents"));
+
+    for (int i = 0; i < 9; i++) { // STATS
+      if (app_data.get("stat_" + i) != "")
+        GnuBackgammon.Instance.optionPrefs.putString("STAT_" + i, app_data.get("stat_" + i));
+    }
 
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.appearancePrefs.flush();

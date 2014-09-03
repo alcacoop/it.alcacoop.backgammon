@@ -449,7 +449,7 @@ public class MenuFSM extends BaseFSM implements Context {
             if (params.toString().equals("BACK")) {
               ctx.state(States.GENERAL_STATISTICS);
             } else if (params.toString().equals("RESET")) {
-              UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset game results statistics?");
+              UIDialog.getYesNoDialog(Events.RESET_STATS, "Really reset dice statistics?");
             }
             break;
 
