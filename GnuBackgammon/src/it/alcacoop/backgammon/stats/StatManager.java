@@ -35,6 +35,11 @@ public class StatManager {
     return instance;
   }
 
+  public static void resetInstance() {
+    System.out.println("===> STATS INSTANCE RESETTED!");
+    instance = new StatManager();
+  }
+
 
   // ADD ROLL TO STATS (CURRENT AI LEVEL AND TOTAL)
   public void addRoll(int player, int[] dices, int[][] board) {

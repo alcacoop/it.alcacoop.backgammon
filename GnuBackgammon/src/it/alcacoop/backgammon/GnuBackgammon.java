@@ -359,4 +359,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     gameScreen.chatBox.appendMessage(username, msg, direction);
   }
 
+  public void reloadStats() {
+    generalStatsScreen.initTable();
+    diceStatsScreen.initTable();
+  }
+
 }

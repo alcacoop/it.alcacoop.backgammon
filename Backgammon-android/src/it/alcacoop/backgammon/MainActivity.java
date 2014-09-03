@@ -44,6 +44,7 @@ import it.alcacoop.backgammon.layers.GameScreen;
 import it.alcacoop.backgammon.layers.SplashScreen;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AppDataManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
@@ -616,8 +617,11 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onStateLoadedBehaviour(byte[] data) {
+    System.out.println("===> APPSTATE LOADED");
     AppDataManager.getInstance().loadState(data);
     ELORatingManager.getInstance().syncLeaderboards();
+    StatManager.resetInstance();
+    GnuBackgammon.Instance.reloadStats();
   }
 
 
