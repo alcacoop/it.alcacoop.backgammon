@@ -54,12 +54,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Gravity;
@@ -79,10 +76,6 @@ import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
@@ -694,29 +687,29 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
 
   @Override
-  public void loadImageFromIconURI(Object iconURI, final int playerIndex) {
-
-    Uri uri = (Uri)iconURI;
-    imgMgr.loadImage(new ImageManager.OnImageLoadedListener() {
+  public void loadIconImages(final Object iconURIme, final Object iconURIopponent) {
+    runOnUiThread(new Runnable() {
       @Override
-      public void onImageLoaded(Uri uri, final Drawable drawable, boolean arg2) {
-        Gdx.app.postRunnable(new Runnable() {
+      public void run() {
+        imgMgr.loadImage(new ImageManager.OnImageLoadedListener() {
           @Override
-          public void run() {
-            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-            Texture tex = new Texture(128, 128, Format.RGBA8888);
-            tex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, tex.getTextureObjectHandle());
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-            if (playerIndex == 0)
-              GnuBackgammon.Instance.iconMe = new Image(tex);
-            else
-              GnuBackgammon.Instance.iconOpponent = new Image(tex);
+          public void onImageLoaded(Uri arg0, Drawable drawable, boolean arg2) {
+            androidHelpers.saveBitmap(((BitmapDrawable)drawable).getBitmap(), "iconMe");
           }
-        });
+        }, (Uri)iconURIme, R.drawable.gplayer);
       }
-    }, uri, R.drawable.gplayer);
+    });
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        imgMgr.loadImage(new ImageManager.OnImageLoadedListener() {
+          @Override
+          public void onImageLoaded(Uri arg0, Drawable drawable, boolean arg2) {
+            androidHelpers.saveBitmap(((BitmapDrawable)drawable).getBitmap(), "iconOpponent");
+          }
+        }, (Uri)iconURIopponent, R.drawable.gplayer);
+      }
+    });
   }
 
 }

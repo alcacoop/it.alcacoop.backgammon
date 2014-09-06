@@ -261,5 +261,5 @@ public class Main implements NativeFunctions {
   public void beginGoogleSignIn() {}
 
   @Override
-  public void loadImageFromIconURI(Object iconURI, int playerIndex) {}
+  public void loadIconImages(Object iconURI1, Object iconURI2) {}
 }
