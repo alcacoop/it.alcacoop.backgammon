@@ -44,136 +44,126 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class FibsNetHandler {
 
-    private ExecutorService dispatchExecutor, boardDispatchExecutor;
-    private static LinkedBlockingQueue<Evt> queue, boardQueue;
-    private int eventRequest, boardRequest;
-    
-    private class Evt {
-      public Events e;
-      public Object o;
-      public Evt(Events e, Object o) {
-        this.e = e;
-        this.o = o;
-      }
+  private ExecutorService dispatchExecutor, boardDispatchExecutor;
+  private static LinkedBlockingQueue<Evt> queue, boardQueue;
+  private int eventRequest, boardRequest;
+
+  private class Evt {
+    public Events e;
+    public Object o;
+
+    public Evt(Events e, Object o) {
+      this.e = e;
+      this.o = o;
     }
-        
-    
-    private class Dispatcher implements Runnable {
-      private Events evt;
-      private boolean found;
-      public Dispatcher(Events _evt) {
-        evt = _evt;
-        found = false;
-        if (_evt==Events.FIBS_BOARD)
-          boardRequest++;
-        else
-          eventRequest++;
-      }
-      @Override
-      public void run() {
-        Evt e = null;
-        while (!found) {
-          try {
-            while (true) {
-              if (evt==Events.FIBS_BOARD)
-                e = boardQueue.take();
-              else
-                e = queue.take();
-              if (e.e!=null) break;
-            }
-          } catch (InterruptedException e1) {}
-          
-          if (evt == Events.CONTINUE) {
-            found = true; //FOR CLEAR PURPOSE
-          } else if ((evt==Events.FIBS_BOARD)&&(e.o==null)) {
-            found = true; //FOR CLEAR PURPOSE
-          } else if (evt == null) { //PASSO IL PRIMO DISPONIBILE
-            GnuBackgammon.fsm.processEvent(e.e, e.o);
-            found = true;
-          } else if (evt==e.e) { //PASSO IL PRIMO RICHIESTO DISPONIBILE
-            GnuBackgammon.fsm.processEvent(e.e, e.o);
-            found = true;
-          }
+  }
+
+
+  private class Dispatcher implements Runnable {
+    private Events evt;
+
+    public Dispatcher(Events _evt) {
+      evt = _evt;
+      if (_evt == Events.FIBS_BOARD)
+        boardRequest++;
+      else
+        eventRequest++;
+    }
+    @Override
+    public void run() {
+      Evt e = null;
+      while (true) {
+        try {
+          if (evt == Events.FIBS_BOARD)
+            e = boardQueue.take();
+          else
+            e = queue.take();
+        } catch (InterruptedException e1) {
+          return;
         }
-        if (evt==Events.FIBS_BOARD)
+
+        if (evt == Events.FIBS_BOARD)
           boardRequest--;
         else
           eventRequest--;
+
+        if (evt == null) { // PASSO IL PRIMO DISPONIBILE
+          GnuBackgammon.fsm.processEvent(e.e, e.o);
+          return;
+        } else if (evt == e.e) { // PASSO IL PRIMO RICHIESTO DISPONIBILE
+          GnuBackgammon.fsm.processEvent(e.e, e.o);
+          return;
+        }
       }
     }
+  }
 
-    
-    
-    public FibsNetHandler() {
-      queue = new LinkedBlockingQueue<Evt>();
-      boardQueue  = new LinkedBlockingQueue<Evt>();
-      dispatchExecutor = Executors.newSingleThreadExecutor();
-      boardDispatchExecutor = Executors.newSingleThreadExecutor();
-      eventRequest=0;
-      boardRequest=0;
-    }
 
-    
-    //VORREI UN EVT DI TIPO evt...
-    public synchronized void pull() {
-      pull(null);
-    }
-    public synchronized void pull(Events evt) {
-      if (evt == Events.FIBS_BOARD)
-        boardDispatchExecutor.submit(new Dispatcher(evt));
+  public FibsNetHandler() {
+    queue = new LinkedBlockingQueue<Evt>();
+    boardQueue = new LinkedBlockingQueue<Evt>();
+    dispatchExecutor = Executors.newSingleThreadExecutor();
+    boardDispatchExecutor = Executors.newSingleThreadExecutor();
+    eventRequest = 0;
+    boardRequest = 0;
+  }
+
+
+  // VORREI UN EVT DI TIPO evt...
+  public synchronized void pull() {
+    pull(null);
+  }
+  public synchronized void pull(Events evt) {
+    if (evt == Events.FIBS_BOARD)
+      boardDispatchExecutor.submit(new Dispatcher(evt));
+    else
+      dispatchExecutor.submit(new Dispatcher(evt));
+  }
+
+  public synchronized void post(Events _e, Object _o) {
+    if (_e == null)
+      return;
+    Evt e = new Evt(_e, _o);
+    try {
+      if (_e == Events.FIBS_BOARD)
+        boardQueue.put(e);
       else
-        dispatchExecutor.submit(new Dispatcher(evt));
+        queue.put(e);
+    } catch (InterruptedException e1) {
+      e1.printStackTrace();
     }
-    
-    public synchronized void post(Events _e, Object _o) {
-      if (_e==null) return;
-      Evt e = new Evt(_e, _o);
-      try {
-        if (_e==Events.FIBS_BOARD)
-          boardQueue.put(e);
-        else
-          queue.put(e);
-      } catch (InterruptedException e1) {
-        e1.printStackTrace();
-      }        
-      //debug();
+    // debug();
+  }
+
+  public synchronized void reset() {
+    queue.clear();
+    boardQueue.clear();
+    dispatchExecutor.shutdownNow();
+    boardDispatchExecutor.shutdownNow();
+  }
+
+  public synchronized void boardReset() {
+    ExecutorService tmp = boardDispatchExecutor;
+    tmp.shutdownNow();
+    boardQueue.clear();
+    boardDispatchExecutor = Executors.newSingleThreadExecutor();
+  }
+
+
+  public synchronized void debug() {
+    System.out.println("CODA EVENTI...");
+    System.out.println("RICHIESTE IN CODA: " + eventRequest);
+    System.out.println("MESSAGGI IN CODA: " + queue.size());
+    Iterator<Evt> itr = queue.iterator();
+    while (itr.hasNext()) {
+      Evt element = itr.next();
+      System.out.print("  " + element.e);
     }
 
-    public synchronized void reset() {
-      queue.clear();
-      boardQueue.clear();
-      dispatchExecutor.shutdownNow();
-      boardDispatchExecutor.shutdownNow();
-      dispatchExecutor = Executors.newSingleThreadExecutor();
-      boardDispatchExecutor = Executors.newSingleThreadExecutor();
-      eventRequest = 0;
-      boardRequest = 0;
-    }
-    
-    public synchronized void boardReset() {
-      boardQueue.clear();
-      int n = boardRequest;
-      for (int i=0;i<n;i++) {
-        post(Events.FIBS_BOARD, null);
-      }
-    }
+    System.out.println("CODA BOARDS");
+    System.out.println("RICHIESTE IN CODA: " + boardRequest);
+    System.out.println("MESSAGGI IN CODA: " + boardQueue.size());
+    System.out.println("");
+  }
 
-    
-    
-    public synchronized void debug() {
-      System.out.println("CODA EVENTI...");
-      System.out.println("RICHIESTE IN CODA: "+eventRequest);
-      System.out.println("MESSAGGI IN CODA: "+queue.size());
-      Iterator<Evt> itr = queue.iterator();
-      while(itr.hasNext()) {
-        Evt element = itr.next();
-        System.out.print("  "+element.e);
-      }
-      
-      System.out.println("CODA BOARDS");
-      System.out.println("RICHIESTE IN CODA: "+boardRequest);
-      System.out.println("MESSAGGI IN CODA: "+boardQueue.size());
-      System.out.println("");
-    }
-    
 }

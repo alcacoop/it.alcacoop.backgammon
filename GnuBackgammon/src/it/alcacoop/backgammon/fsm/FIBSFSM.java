@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
+import it.alcacoop.backgammon.utils.FibsNetHandler;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
@@ -513,6 +514,8 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.fibs.reset();
+        GnuBackgammon.Instance.fibs = new FibsNetHandler();
+
         GnuBackgammon.Instance.FibsOpponent = "";
         GnuBackgammon.Instance.fibsScreen.showWho = true;
         GnuBackgammon.Instance.commandDispatcher.send("who");
