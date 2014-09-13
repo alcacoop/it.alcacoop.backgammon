@@ -36,13 +36,52 @@ package it.alcacoop.backgammon.gservice;
 import it.alcacoop.backgammon.GServiceInterface;
 import it.alcacoop.backgammon.utils.AppDataManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.android.gms.games.multiplayer.Participant;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 
-public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface {
+public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface, RealTimeMultiplayer.ReliableMessageSentCallback {
+
+  private LinkedBlockingQueue<String> sendQueue;
+  private ExecutorService dispatchExecutor;
+
+  private class sendRunnable implements Runnable {
+    @Override
+    public void run() {
+      try {
+        String s = sendQueue.take();
+        // Thread.sleep(150);
+        _gserviceSendReliableRealTimeMessage(s);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  public GServiceApplication() {
+    sendQueue = new LinkedBlockingQueue<String>();
+    dispatchExecutor = Executors.newSingleThreadExecutor();
+  }
+
+
+  @Override
+  public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
+    if (statusCode != GServiceClient.STATUS_OK) {
+      onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+      GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
+    } else {
+      System.out.println("===> SENT!!");
+      dispatchExecutor.execute(new sendRunnable());
+    }
+  }
 
   @Override
   public boolean gserviceIsSignedIn() {
@@ -68,14 +107,28 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     _gserviceAcceptInvitation(invitationId);
   }
 
+
+  @Override
+  public void gserviceSendUnreliableRealTimeMessage(String msg) {
+    _gserviceSendReliableRealTimeMessage(msg);
+  }
+
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    System.out.print("==> SENDING.. " + msg);
+    try {
+      sendQueue.put(msg);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void _gserviceSendReliableRealTimeMessage(String msg) {
+    System.out.print("===> SENDING.. " + msg);
     if ((mRoomId == null) || (mRoomId == "")) {
       System.out.println("KO!");
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
-      System.out.println("OK!");
+      System.out.println(" OK!");
       for (Participant p : mParticipants) {
         System.out.println("==> PROVO A INVIARE A: " + p.getParticipantId());
         if (p.getParticipantId().equals(mMyId))

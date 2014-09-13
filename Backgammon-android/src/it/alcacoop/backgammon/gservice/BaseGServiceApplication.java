@@ -78,7 +78,6 @@ import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
@@ -87,7 +86,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 @SuppressLint({ "InflateParams", "NewApi" })
 public abstract class BaseGServiceApplication extends AndroidApplication
     implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener,
-    RoomUpdateListener, OnInvitationReceivedListener, RealTimeMultiplayer.ReliableMessageSentCallback {
+    RoomUpdateListener, OnInvitationReceivedListener {
 
   protected Preferences prefs;
   protected GServiceGameHelper gHelper;
@@ -147,14 +146,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
 
-
-  @Override
-  public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    if (statusCode != GServiceClient.STATUS_OK) {
-      onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-      GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-    }
-  }
 
   @Override
   public void onInvitationReceived(Invitation invitation) {
@@ -417,9 +408,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
 
   private void updateRoom(Room room) {
-    if (room != null) {
+    try {
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
+    } catch (Exception e) {
+      System.out.println("===> ECCEZIONE SU ROOM!");
     }
   }
 

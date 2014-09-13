@@ -314,10 +314,11 @@ public class MenuFSM extends BaseFSM implements Context {
         MatchState.nMatchTo = 1;
         MatchState.SetCubeUse(1);
         MatchState.UpdateMSCubeInfo(1, -1);
-        GServiceClient.getInstance().connect();
 
-        GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
+        GServiceClient.getInstance().startChannel(); // ACTIVATE RELIABLE SEND QUEUE
+
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_READY);
+        GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
       }
 
       @Override
@@ -326,8 +327,8 @@ public class MenuFSM extends BaseFSM implements Context {
 
 
           case GSERVICE_READY:
-            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             break;
 
           case GSERVICE_INIT_RATING:
@@ -336,8 +337,8 @@ public class MenuFSM extends BaseFSM implements Context {
 
             Random gen = new Random();
             waitTime = gen.nextLong();
-            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_HANDSHAKE + " " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_HANDSHAKE);
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_HANDSHAKE + " " + waitTime + " " + GnuBackgammon.Instance.nativeFunctions.getAppVersionCode());
             break;
 
           case GSERVICE_HANDSHAKE:

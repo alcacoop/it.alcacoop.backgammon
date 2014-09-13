@@ -6,6 +6,7 @@ public interface GServiceInterface {
   public void gserviceStartRoom();
   public void gserviceAcceptInvitation(String invitationId);
   public void gserviceSendReliableRealTimeMessage(String msg);
+  public void gserviceSendUnreliableRealTimeMessage(String msg);
   public void gserviceResetRoom();
   public void gserviceOpenLeaderboards();
   public void gserviceOpenAchievements();

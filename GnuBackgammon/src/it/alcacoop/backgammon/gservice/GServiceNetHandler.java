@@ -34,7 +34,6 @@
 package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
 import java.util.Iterator;
@@ -46,8 +45,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class GServiceNetHandler {
 
   private ExecutorService dispatchExecutor;
-  private static LinkedBlockingQueue<Evt> queue;
-  private int eventRequest;
+  private LinkedBlockingQueue<Evt> queue;
 
   private class Evt {
     public Events e;
@@ -62,44 +60,33 @@ public class GServiceNetHandler {
 
   private class Dispatcher implements Runnable {
     private Events[] evt;
-    private boolean found;
 
     public Dispatcher(Events... _evt) {
       evt = _evt;
-      found = false;
-      eventRequest++;
     }
 
     @Override
     public void run() {
       Evt e = null;
-      while (!found) {
+      while (true) {
         try {
-          while (true) {
-            e = queue.take();
-            if (e.e != null)
-              break;
-          }
-        } catch (InterruptedException e1) {}
+          e = queue.take();
+        } catch (InterruptedException e1) {
+          return;
+        }
 
-        if (evt[0] == Events.CONTINUE) {
-          found = true; // FOR CLEAR PURPOSE
-          continue;
-        } else if (evt == null) { // PASSO IL PRIMO DISPONIBILE
+        if (evt == null) { // PASSO IL PRIMO DISPONIBILE
           GnuBackgammon.fsm.processEvent(e.e, e.o);
-          found = true;
-          continue;
+          return;
         }
 
         for (int i = 0; i < evt.length; i++) {
           if (evt[i] == e.e) { // PASSO IL PRIMO DISPONIBILE TRA QUELLI RICHIESTI
             GnuBackgammon.fsm.processEvent(e.e, e.o);
-            found = true;
-            break;
+            return;
           }
         }
       }
-      eventRequest--;
     }
   }
 
@@ -107,7 +94,6 @@ public class GServiceNetHandler {
   public GServiceNetHandler() {
     queue = new LinkedBlockingQueue<Evt>();
     dispatchExecutor = Executors.newSingleThreadExecutor();
-    eventRequest = 0;
   }
 
 
@@ -115,13 +101,12 @@ public class GServiceNetHandler {
   public synchronized void pull() {
     pull();
   }
-
-  public synchronized void pull(Events... evt) {
+  public synchronized void pull(final Events... evt) {
     System.out.println("---> PULL REQUEST: " + evt);
     dispatchExecutor.submit(new Dispatcher(evt));
   }
 
-  public synchronized void post(Events _e, Object _o) {
+  public synchronized void post(final Events _e, final Object _o) {
     if (_e == null)
       return;
     Evt e = new Evt(_e, _o);
@@ -130,26 +115,31 @@ public class GServiceNetHandler {
     } catch (InterruptedException e1) {
       e1.printStackTrace();
     }
-    // debug();
   }
 
-  public synchronized void reset() {
+
+  public void dispose() {
+    dispatchExecutor.shutdownNow();
     queue.clear();
+  }
+
+  public void reset() {
     dispatchExecutor.shutdownNow();
     dispatchExecutor = Executors.newSingleThreadExecutor();
-    eventRequest = 0;
   }
 
-  public synchronized BaseFSM.Events showNext() {
-    if (queue.size() > 0)
-      return queue.peek().e;
-    else
-      return BaseFSM.Events.NOOP;
+
+  /*
+  public synchronized void reset() {
+    dispatchExecutor.shutdownNow();
+    queue.clear();
+    dispatchExecutor = Executors.newSingleThreadExecutor();
   }
+  */
+
 
   public synchronized void debug() {
     System.out.println("---> CODA EVENTI...");
-    System.out.println("---> RICHIESTE IN CODA: " + eventRequest);
     System.out.println("---> MESSAGGI IN CODA: " + queue.size());
     System.out.print("   ---> ");
     Iterator<Evt> itr = queue.iterator();

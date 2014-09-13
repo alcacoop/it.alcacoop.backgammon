@@ -3,42 +3,18 @@ package it.alcacoop.backgammon.gservice;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 
-import java.util.concurrent.ArrayBlockingQueue;
-
 
 public class GServiceClient implements GServiceMessages {
 
   public static GServiceClient instance;
   public GServiceNetHandler queue;
   public GServiceCookieMonster coockieMonster;
-  public ArrayBlockingQueue<String> sendQueue;
-  private Thread sendThread;
-
   private int pingCount = 0;
 
 
   private GServiceClient() {
     queue = new GServiceNetHandler();
     coockieMonster = new GServiceCookieMonster();
-    sendQueue = new ArrayBlockingQueue<String>(20);
-
-    sendThread = new Thread() {
-      @Override
-      public void run() {
-        while (true) {
-          try {
-            synchronized (sendThread) {
-              wait(230);
-            }
-            String msg = sendQueue.take();
-            GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    };
-    sendThread.start();
   }
 
   public static GServiceClient getInstance() {
@@ -48,17 +24,18 @@ public class GServiceClient implements GServiceMessages {
   }
 
 
-  public void connect() {}
+  public void dispose() {
+    System.out.println("---> GSERVICE DISPOSED");
+    queue.dispose();
+    queue = new GServiceNetHandler();
+  }
 
   public void reset() {
     System.out.println("---> GSERVICE RESETTED");
     queue.reset();
-    sendQueue.clear();
   }
 
   public void debug() {
-    System.out.println("---> GSERVICE DEBUG: " + sendQueue.size());
-    System.out.println("---> NEXT: " + GServiceClient.getInstance().queue.showNext());
     queue.debug();
   }
 
@@ -147,14 +124,13 @@ public class GServiceClient implements GServiceMessages {
   }
 
 
-  public synchronized void sendMessage(String msg) {
-    try {
-      sendQueue.put(msg);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+  public synchronized void sendMessage(final String msg) {
+    GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
   }
 
+  public synchronized void startChannel() {
+    GnuBackgammon.Instance.nativeFunctions.gserviceSendUnreliableRealTimeMessage("READY!!");
+  }
 
   final static int STATUS_OK = 0;
   final static int STATUS_NETWORK_ERROR_OPERATION_FAILED = 6;

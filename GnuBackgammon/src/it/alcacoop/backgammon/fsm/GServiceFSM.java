@@ -526,6 +526,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
 
           case GSERVICE_PLAY_AGAIN:
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).initNewMatch();
             int response = (Integer)params;
             if (response == 0) {
               endLayer.opponentAbandoned();
@@ -533,15 +534,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               if (endLayer.isWaiting()) {
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
                 endLayer.hide();
-              } else
+              } else {
                 endLayer.opponentAvailable();
+              }
             }
-
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).initNewMatch();
-            GServiceClient.getInstance().reset();
             break;
 
           case GSERVICE_RETURN_GAME:
+            ctx.board().waiting(true);
             GServiceClient.getInstance().sendMessage(GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
             break;
@@ -787,8 +787,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_BYE:
             MatchState.resignValue = 0;
             GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+            GServiceClient.instance.dispose();
             GnuBackgammon.Instance.invitationId = "";
-            GServiceClient.getInstance().reset();
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
             GnuBackgammon.Instance.nativeFunctions.showAds(false);
             GnuBackgammon.Instance.nativeFunctions.showInterstitial();
