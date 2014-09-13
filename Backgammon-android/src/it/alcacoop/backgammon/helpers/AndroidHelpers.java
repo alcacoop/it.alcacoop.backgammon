@@ -181,37 +181,40 @@ public class AndroidHelpers {
   }
 
 
-  public void saveBitmap(Bitmap bmp, String filename) {
-    // PREPARE CANVAS
-    Paint paint = new Paint();
-    paint.setColor(Color.rgb(0, 0, 0));
-    paint.setStrokeWidth(4);
+  public void saveBitmap(final Bitmap bmp, final String filename) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // PREPARE CANVAS
+        Paint paint = new Paint();
+        paint.setColor(Color.rgb(0, 0, 0));
+        paint.setStrokeWidth(4);
 
-    Bitmap b = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-    Canvas c = new Canvas(b);
-    Rect src = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
-    Rect dest = new Rect(2, 2, 253, 253);
-    c.drawRect(0, 0, 255, 255, paint);
-    c.drawBitmap(bmp, src, dest, null);
+        Bitmap b = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        Rect src = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
+        Rect dest = new Rect(2, 2, 253, 253);
+        c.drawRect(0, 0, 255, 255, paint);
+        c.drawBitmap(bmp, src, dest, null);
 
-    FileOutputStream out = null;
-    String fname = data_dir + filename + ".png";
-    try {
-      out = new FileOutputStream(fname);
-      b.compress(Bitmap.CompressFormat.PNG, 90, out);
-      bmp.recycle();
-      b.recycle();
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      try {
-        if (out != null) {
-          out.close();
+        FileOutputStream out = null;
+        String fname = data_dir + filename + ".png";
+        try {
+          out = new FileOutputStream(fname);
+          b.compress(Bitmap.CompressFormat.PNG, 90, out);
+        } catch (Exception e) {
+          e.printStackTrace();
+        } finally {
+          try {
+            if (out != null) {
+              out.close();
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         }
-      } catch (IOException e) {
-        e.printStackTrace();
       }
-    }
+    });
   }
 
 }
