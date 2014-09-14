@@ -38,7 +38,7 @@ import it.alcacoop.backgammon.utils.AppDataManager;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
@@ -49,16 +49,20 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface, RealTimeMultiplayer.ReliableMessageSentCallback {
 
-  private LinkedBlockingQueue<String> sendQueue;
   private ExecutorService dispatchExecutor;
+  private Semaphore ss;
 
-  private class sendRunnable implements Runnable {
+  private class SendRunnable implements Runnable {
+    String msg;
+
+    public SendRunnable(String s) {
+      msg = s;
+    }
     @Override
     public void run() {
       try {
-        String s = sendQueue.take();
-        // Thread.sleep(150);
-        _gserviceSendReliableRealTimeMessage(s);
+        ss.acquire();
+        _gserviceSendReliableRealTimeMessage(msg);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -67,8 +71,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
 
   public GServiceApplication() {
-    sendQueue = new LinkedBlockingQueue<String>();
     dispatchExecutor = Executors.newSingleThreadExecutor();
+    ss = new Semaphore(1);
   }
 
 
@@ -79,8 +83,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
       System.out.println("===> SENT!!");
-      dispatchExecutor.execute(new sendRunnable());
     }
+    ss.release();
   }
 
   @Override
@@ -109,17 +113,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
 
   @Override
-  public void gserviceSendUnreliableRealTimeMessage(String msg) {
-    _gserviceSendReliableRealTimeMessage(msg);
-  }
-
-  @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    try {
-      sendQueue.put(msg);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    dispatchExecutor.execute(new SendRunnable(msg));
   }
 
   public void _gserviceSendReliableRealTimeMessage(String msg) {
@@ -130,7 +125,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     } else {
       System.out.println(" OK!");
       for (Participant p : mParticipants) {
-        System.out.println("==> PROVO A INVIARE A: " + p.getParticipantId());
         if (p.getParticipantId().equals(mMyId))
           continue;
         if (p.getStatus() != Participant.STATUS_JOINED) {
@@ -144,6 +138,10 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceResetRoom() {
     _gserviceResetRoom();
+    if (ss.availablePermits() == 0) {
+      ss.release();
+      System.out.println("===> SENDING QUEUE RESETTED!");
+    }
   }
 
   @Override

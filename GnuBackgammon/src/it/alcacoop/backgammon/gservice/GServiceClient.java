@@ -128,9 +128,6 @@ public class GServiceClient implements GServiceMessages {
     GnuBackgammon.Instance.nativeFunctions.gserviceSendReliableRealTimeMessage(msg);
   }
 
-  public synchronized void startChannel() {
-    GnuBackgammon.Instance.nativeFunctions.gserviceSendUnreliableRealTimeMessage("READY!!");
-  }
 
   final static int STATUS_OK = 0;
   final static int STATUS_NETWORK_ERROR_OPERATION_FAILED = 6;

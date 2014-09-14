@@ -315,8 +315,6 @@ public class MenuFSM extends BaseFSM implements Context {
         MatchState.SetCubeUse(1);
         MatchState.UpdateMSCubeInfo(1, -1);
 
-        GServiceClient.getInstance().startChannel(); // ACTIVATE RELIABLE SEND QUEUE
-
         GServiceClient.getInstance().queue.pull(Events.GSERVICE_READY);
         GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
       }

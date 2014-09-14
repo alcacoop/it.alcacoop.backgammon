@@ -262,7 +262,4 @@ public class Main implements NativeFunctions {
 
   @Override
   public void loadIconImages(Object iconURI1, Object iconURI2) {}
-
-  @Override
-  public void gserviceSendUnreliableRealTimeMessage(String msg) {}
 }
