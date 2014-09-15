@@ -17,6 +17,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -174,4 +179,42 @@ public class AndroidHelpers {
       e.printStackTrace();
     }
   }
+
+
+  public void saveBitmap(final Bitmap bmp, final String filename) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // PREPARE CANVAS
+        Paint paint = new Paint();
+        paint.setColor(Color.rgb(0, 0, 0));
+        paint.setStrokeWidth(4);
+
+        Bitmap b = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        Rect src = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
+        Rect dest = new Rect(2, 2, 253, 253);
+        c.drawRect(0, 0, 255, 255, paint);
+        c.drawBitmap(bmp, src, dest, null);
+
+        FileOutputStream out = null;
+        String fname = data_dir + filename + ".png";
+        try {
+          out = new FileOutputStream(fname);
+          b.compress(Bitmap.CompressFormat.PNG, 90, out);
+        } catch (Exception e) {
+          e.printStackTrace();
+        } finally {
+          try {
+            if (out != null) {
+              out.close();
+            }
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    });
+  }
+
 }

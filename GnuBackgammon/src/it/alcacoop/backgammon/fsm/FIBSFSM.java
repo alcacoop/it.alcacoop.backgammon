@@ -42,6 +42,7 @@ import it.alcacoop.backgammon.logic.FibsBoard;
 import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.ELORatingManager;
+import it.alcacoop.backgammon.utils.FibsNetHandler;
 import it.alcacoop.fibs.CommandDispatcher.Command;
 import it.alcacoop.fibs.Player;
 
@@ -123,7 +124,8 @@ public class FIBSFSM extends BaseFSM implements Context {
             int[] dices = (int[])params;
             FIBSFSM.d1 = Math.max(dices[0], dices[1]);
             FIBSFSM.d2 = Math.min(dices[0], dices[1]);
-            AICalls.GenerateMoves(ctx.board(), FIBSFSM.d1, FIBSFSM.d2);
+            int mv[][] = AICalls.Locking.GenerateMoves(ctx.board()._board[1], ctx.board()._board[0], dices[0], dices[1]);
+            GnuBackgammon.fsm.processEvent(Events.GENERATE_MOVES, mv);
             break;
 
           case GENERATE_MOVES:
@@ -174,22 +176,23 @@ public class FIBSFSM extends BaseFSM implements Context {
                 ctx.board().humanMove(m);
               }
             } else { // TAP MODE
-              if (ctx.board().points.get((Integer)params).isTarget) { // MOVE CHECKER
+              int point = (Integer)params;
+              if (ctx.board().points.get(point).isTarget) { // MOVE CHECKER
                 int origin = ctx.board().selected.boardX;
-                int dest = (Integer)params;
-                int m[] = { origin, dest, -1, -1, -1, -1, -1, -1 };
+
+                int m[] = { origin, point, -1, -1, -1, -1, -1, -1 };
 
                 int idx = GnuBackgammon.fsm.hnmove;
                 GnuBackgammon.fsm.hmoves[idx * 2] = origin;
-                GnuBackgammon.fsm.hmoves[idx * 2 + 1] = dest;
+                GnuBackgammon.fsm.hmoves[idx * 2 + 1] = point;
                 GnuBackgammon.fsm.hnmove++;
 
                 ctx.state(HUMAN_CHECKER_MOVING);
                 ctx.board().humanMove(m);
-                ctx.board().availableMoves.dropDice(origin - dest);
+                ctx.board().availableMoves.dropDice(origin - point);
               } else { // SELECT NEW CHECKER
-                if ((Integer)params != -1)
-                  ctx.board().selectChecker((Integer)params);
+                if (point != -1)
+                  ctx.board().selectChecker(point);
               }
             }
             break;
@@ -401,7 +404,6 @@ public class FIBSFSM extends BaseFSM implements Context {
             } else {
               MatchState.SetGameTurn(1, 1);
               ctx.state(REMOTE_TURN);
-              AICalls.GenerateMoves(ctx.board(), b.dices[0], b.dices[1]);
               GnuBackgammon.fsm.processEvent(Events.FIBS_OPPONENT_ROLLS, b.dices);
             }
             break;
@@ -513,6 +515,8 @@ public class FIBSFSM extends BaseFSM implements Context {
       @Override
       public void enterState(Context ctx) {
         GnuBackgammon.Instance.fibs.reset();
+        GnuBackgammon.Instance.fibs = new FibsNetHandler();
+
         GnuBackgammon.Instance.FibsOpponent = "";
         GnuBackgammon.Instance.fibsScreen.showWho = true;
         GnuBackgammon.Instance.commandDispatcher.send("who");
@@ -588,7 +592,6 @@ public class FIBSFSM extends BaseFSM implements Context {
             GnuBackgammon.Instance.gameScreen.pInfo[0].setScore();
             GnuBackgammon.Instance.gameScreen.pInfo[1].setScore();
             rating = GnuBackgammon.Instance.fibsScreen.me.getRating();
-            // System.out.println("---> RATING: " + rating);
             break;
 
           default:

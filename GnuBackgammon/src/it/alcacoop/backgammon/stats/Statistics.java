@@ -64,28 +64,24 @@ public class Statistics implements Serializable {
   public String serialize() {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ObjectOutputStream oos;
+    String ret = "";
     try {
       oos = new ObjectOutputStream(baos);
       oos.writeObject(this);
       oos.close();
+      ret = new String(Base64Coder.encode(baos.toByteArray()));
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return new String(Base64Coder.encode(baos.toByteArray()));
+    return ret;
   }
 
-  public static Statistics deserialize(String s) {
+  public static Statistics deserialize(String s) throws Exception {
     byte[] data = Base64Coder.decode(s);
     ObjectInputStream ois;
-    try {
-      ois = new ObjectInputStream(new ByteArrayInputStream(data));
-      Object o = ois.readObject();
-      ois.close();
-      return (Statistics)o;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return null;
-
+    ois = new ObjectInputStream(new ByteArrayInputStream(data));
+    Object o = ois.readObject();
+    ois.close();
+    return (Statistics)o;
   }
 }

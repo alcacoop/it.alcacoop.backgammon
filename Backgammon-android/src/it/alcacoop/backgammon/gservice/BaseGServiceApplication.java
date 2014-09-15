@@ -78,7 +78,6 @@ import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
@@ -87,7 +86,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 @SuppressLint({ "InflateParams", "NewApi" })
 public abstract class BaseGServiceApplication extends AndroidApplication
     implements GServiceGameHelper.GameHelperListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener,
-    RoomUpdateListener, OnInvitationReceivedListener, RealTimeMultiplayer.ReliableMessageSentCallback {
+    RoomUpdateListener, OnInvitationReceivedListener {
 
   protected Preferences prefs;
   protected GServiceGameHelper gHelper;
@@ -147,14 +146,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
 
-
-  @Override
-  public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
-    if (statusCode != GServiceClient.STATUS_OK) {
-      onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-      GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
-    }
-  }
 
   @Override
   public void onInvitationReceived(Invitation invitation) {
@@ -232,8 +223,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     if (mParticipants.get(0).getParticipantId() == mMyId) {
       me = mParticipants.get(0).getDisplayName();
       opponent = mParticipants.get(1).getDisplayName();
-      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 0);
-      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 1);
+      GnuBackgammon.Instance.nativeFunctions.loadIconImages(
+          room.getParticipants().get(0).getIconImageUri(),
+          room.getParticipants().get(1).getIconImageUri()
+          );
       if (mParticipants.get(1).getPlayer() == null)
         opponent_player_id = sRdm;
       else
@@ -241,8 +234,10 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     } else {
       me = mParticipants.get(1).getDisplayName();
       opponent = mParticipants.get(0).getDisplayName();
-      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(0).getIconImageUri(), 1);
-      GnuBackgammon.Instance.nativeFunctions.loadImageFromIconURI((Object)room.getParticipants().get(1).getIconImageUri(), 0);
+      GnuBackgammon.Instance.nativeFunctions.loadIconImages(
+          room.getParticipants().get(1).getIconImageUri(),
+          room.getParticipants().get(0).getIconImageUri()
+          );
       if (mParticipants.get(0).getPlayer() == null)
         opponent_player_id = sRdm;
       else
@@ -253,7 +248,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     if (meSentInvitation)
       AchievementsManager.getInstance().checkSocialAchievements(opponent_player_id);
   }
-
   @Override
   public void onDisconnectedFromRoom(Room room) {}
 
@@ -414,9 +408,11 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
 
   private void updateRoom(Room room) {
-    if (room != null) {
+    try {
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
+    } catch (Exception e) {
+      System.out.println("===> ECCEZIONE SU ROOM!");
     }
   }
 

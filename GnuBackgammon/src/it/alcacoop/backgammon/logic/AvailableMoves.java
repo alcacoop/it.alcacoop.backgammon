@@ -60,7 +60,7 @@ public class AvailableMoves {
     dices.clear();
 
     if (_moves != null) {
-      for (int i=0;i<_moves.length;i++)
+      for (int i = 0; i < _moves.length; i++)
         moves.add(_moves[i]);
       evaluatePlayableDices(_dices);
     }
@@ -70,29 +70,30 @@ public class AvailableMoves {
   private void evaluatePlayableDices(int d[]) {
     boolean all_presents = false;
     int max_moves = 0;
-    for (int i=0;i<moves.size();i++) {
-      for (int j=0;j<4;j++) {
-        if (moves.get(i)[j*2]!=-1) max_moves=(j+1);
+    for (int i = 0; i < moves.size(); i++) {
+      for (int j = 0; j < 4; j++) {
+        if (moves.get(i)[j * 2] != -1)
+          max_moves = (j + 1);
       }
-      if (((d.length==4)&&(max_moves==4))||((d.length==2)&&(max_moves==2))) {
+      if (((d.length == 4) && (max_moves == 4)) || ((d.length == 2) && (max_moves == 2))) {
         all_presents = true;
         break;
       }
-    }    
+    }
 
-    if (all_presents) { 
-      for (int i=0;i<d.length;i++)
+    if (all_presents) {
+      for (int i = 0; i < d.length; i++)
         dices.add(d[i]);
-    } else { //NOT ALL DICES ARE PLAYABLE
-      if (d.length==4) { //DOUBLING
-        for (int i=0;i<max_moves;i++)
+    } else { // NOT ALL DICES ARE PLAYABLE
+      if (d.length == 4) { // DOUBLING
+        for (int i = 0; i < max_moves; i++)
           dices.add(d[0]);
-        for (int i=0;i<4-max_moves;i++)
+        for (int i = 0; i < 4 - max_moves; i++)
           b.dices.disable(d[0]);
-      } else { //NON DOUBLING ROLL
-        int dice = moves.get(0)[0]-moves.get(0)[1];
-        if ((dice!=d[0])&&(dice!=d[1])) {//BEAR OFF
-          if (d[0]>=dice) {
+      } else { // NON DOUBLING ROLL
+        int dice = moves.get(0)[0] - moves.get(0)[1];
+        if ((dice != d[0]) && (dice != d[1])) {// BEAR OFF
+          if (d[0] >= dice) {
             dices.add(d[0]);
             b.dices.disable(d[1]);
           } else {
@@ -100,7 +101,7 @@ public class AvailableMoves {
             b.dices.disable(d[0]);
           }
         } else {
-          if (d[0]==dice) {
+          if (d[0] == dice) {
             dices.add(d[0]);
             b.dices.disable(d[1]);
           } else {
@@ -108,38 +109,40 @@ public class AvailableMoves {
             b.dices.disable(d[0]);
           }
         }
-      }  
+      }
     }
   }
 
 
   public int[] getPoints(int nPoint) {
-    
+
     ArrayList<Integer> ret = new ArrayList<Integer>();
-    
-    if (moves.size()==0) return null; //NO MOVES AVAILABLE
-    if ((b._board[MatchState.fMove][24]>0)&&(nPoint!=24)) //CHECKERS ON BAR
+
+    if (moves.size() == 0)
+      return null; // NO MOVES AVAILABLE
+    if ((b._board[MatchState.fMove][24] > 0) && (nPoint != 24)) // CHECKERS ON BAR
       return null;
 
-    for (int i=0;i<moves.size();i++) {
-      for (int j=0;j<4;j++) {
-        for (int k=0;k<dices.size();k++) {
-          if (moves.get(i)[2*j]==nPoint) {
+    for (int k = 0; k < dices.size(); k++) {
+      for (int i = 0; i < moves.size(); i++) {
+        for (int j = 0; j < 4; j++) {
+
+          if (moves.get(i)[2 * j] == nPoint) {
             int max_point = b.bearingOff();
-            if (max_point==-1) { //STANDARD MOVE...
-              if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k))&&(moves.get(i)[2*j+1]!=-1)) {
-                ret.add(moves.get(i)[2*j+1]);//TODO
+            if (max_point == -1) { // STANDARD MOVE...
+              if ((moves.get(i)[2 * j] - moves.get(i)[2 * j + 1] == dices.get(k)) && (moves.get(i)[2 * j + 1] != -1)) {
+                ret.add(moves.get(i)[2 * j + 1]);
               }
-            } else { //BOFF
-              if (moves.get(i)[2*j]-moves.get(i)[2*j+1]==dices.get(k)) {
-                //STANDARD BEAROFF
-                ret.add(moves.get(i)[2*j+1]);
+            } else { // BOFF
+              if (moves.get(i)[2 * j] - moves.get(i)[2 * j + 1] == dices.get(k)) {
+                // STANDARD BEAROFF
+                ret.add(moves.get(i)[2 * j + 1]);
               }
-              else if ((moves.get(i)[2*j]-moves.get(i)[2*j+1]<=dices.get(k))&&(nPoint==max_point)&&(moves.get(i)[2*j+1]<0)) {
-                //BEARFOFF WITH BIGGER DICE
-                ret.add(moves.get(i)[2*j+1]); //TODO
+              else if ((moves.get(i)[2 * j] - moves.get(i)[2 * j + 1] <= dices.get(k)) && (nPoint == max_point) && (moves.get(i)[2 * j + 1] < 0)) {
+                // BEARFOFF WITH BIGGER DICE
+                ret.add(moves.get(i)[2 * j + 1]);
               }
-                
+
             }
           }
         }
@@ -147,9 +150,9 @@ public class AvailableMoves {
     }
 
     List<Integer> unique = new ArrayList<Integer>(new HashSet<Integer>(ret));
-    //RETURN unique AS STANDARD ARRAY
+    // RETURN unique AS STANDARD ARRAY
     int[] r = new int[unique.size()];
-    for (int i=0;i<unique.size();i++) {
+    for (int i = 0; i < unique.size(); i++) {
       r[i] = unique.get(i);
     }
     return r;
@@ -158,33 +161,34 @@ public class AvailableMoves {
 
   public void dropDice(int d) {
     int idx = dices.indexOf(d);
-    if (idx==-1) {//BEARING OFF WITH GREATER DICE
+    if (idx == -1) {// BEARING OFF WITH GREATER DICE
       Iterator<Integer> itr = dices.iterator();
       while (itr.hasNext()) {
-        if (itr.next()>d) {
+        if (itr.next() > d) {
           itr.remove();
           break;
         }
       }
-    } else //REMOVE PLAYED DICE
+    } else
+      // REMOVE PLAYED DICE
       dices.remove(idx);
   }
 
 
   public boolean hasMoves() {
-    return (!dices.isEmpty()&&(!b.gameFinished()));
+    return (!dices.isEmpty() && (!b.gameFinished()));
   }
-  
-  
+
+
   public ArrayList<int[]> removeMoves(int orig, int dest) {
     ArrayList<int[]> removed = new ArrayList<int[]>();
     Iterator<int[]> itr = moves.iterator();
-    while (itr.hasNext()) { 
+    while (itr.hasNext()) {
       boolean matched = false;
       int mv[] = itr.next();
-      for (int i=0;i<4;i++) {
-        if ((mv[2*i]==orig)&&(mv[2*i+1]==dest)) {
-          matched=true;
+      for (int i = 0; i < 4; i++) {
+        if ((mv[2 * i] == orig) && (mv[2 * i + 1] == dest)) {
+          matched = true;
           break;
         }
       }
@@ -195,13 +199,13 @@ public class AvailableMoves {
     }
     return removed;
   }
-  
-  
+
+
   public void restoreMoves(ArrayList<int[]> rm) {
-    for (int i=0;i<rm.size();i++)
+    for (int i = 0; i < rm.size(); i++)
       moves.add(rm.get(i));
   }
-  
+
   public int getSize() {
     return moves.size();
   }

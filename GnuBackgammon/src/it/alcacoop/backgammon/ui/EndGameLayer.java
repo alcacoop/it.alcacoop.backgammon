@@ -6,6 +6,9 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.gservice.GServiceMessages;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -159,30 +162,24 @@ public class EndGameLayer extends Table {
     Label _l0 = new Label(s0, GnuBackgammon.skin);
     Label _l1 = new Label(s1, GnuBackgammon.skin);
 
-    pl0.setWidth(stage.getWidth());
-
     float imgDim = stage.getHeight() / 2 - _l0.getHeight() * 3.5f;
 
-
+    pl0.setWidth(stage.getWidth());
     pl0.add(_l0).expandX();
     pl0.row();
-    Table t0 = new Table();
-    t0.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t0.add(GnuBackgammon.Instance.iconMe).height(imgDim).width(imgDim);
-    pl0.add(t0);
+    Texture t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDir() + "iconMe.png"));
+    t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    pl0.add(new Image(t)).height(imgDim).width(imgDim);
     pl0.row();
     l1 = new Label("YOU", GnuBackgammon.skin);
     pl0.add(l1).expandX();
 
-
     pl1.setWidth(stage.getWidth());
-
     pl1.add(_l1).expandX();
     pl1.row();
-    Table t1 = new Table();
-    t1.setBackground(GnuBackgammon.skin.getDrawable("border"));
-    t1.add(GnuBackgammon.Instance.iconOpponent).height(imgDim).width(imgDim);
-    pl1.add(t1);
+    t = new Texture(Gdx.files.absolute(GnuBackgammon.Instance.nativeFunctions.getDataDir() + "iconOpponent.png"));
+    t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    pl1.add(new Image(t)).height(imgDim).width(imgDim);
     pl1.row();
     l2 = new Label("OPPONENT", GnuBackgammon.skin);
     pl1.add(l2).expandX();

@@ -48,8 +48,11 @@ import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.badlogic.gdx.Gdx;
+
 
 public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
 
@@ -62,6 +65,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
   private static boolean isBufferedMoves = false;
   private static int moves[][];
   private static int obPlayAgain;
+  static Timer pingTimer;
 
 
   public enum States implements State {
@@ -476,10 +480,12 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
-        ctx.board().waiting(false);
+        System.out.println("===> ENTERING MATCH OVER");
+
         if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
           return;
 
+        ctx.board().waiting(false);
         GnuBackgammon.Instance.FibsOpponent = "";
 
         if (MatchState.resignValue > 10)
@@ -526,6 +532,7 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
         switch (evt) {
 
           case GSERVICE_PLAY_AGAIN:
+            ((GameScreen)GnuBackgammon.Instance.currentScreen).initNewMatch();
             int response = (Integer)params;
             if (response == 0) {
               endLayer.opponentAbandoned();
@@ -533,15 +540,14 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
               if (endLayer.isWaiting()) {
                 GnuBackgammon.fsm.processEvent(Events.GSERVICE_RETURN_GAME, null);
                 endLayer.hide();
-              } else
+              } else {
                 endLayer.opponentAvailable();
+              }
             }
-
-            ((GameScreen)GnuBackgammon.Instance.currentScreen).initNewMatch();
-            GServiceClient.getInstance().reset();
             break;
 
           case GSERVICE_RETURN_GAME:
+            ctx.board().waiting(true);
             GServiceClient.getInstance().sendMessage(GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
             break;
@@ -662,7 +668,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     STOPPED {
       @Override
       public void enterState(Context ctx) {
-        // TODO Auto-generated method stub
         super.enterState(ctx);
         ctx.board().waiting(false);
       }
@@ -681,14 +686,25 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     board = _board;
   }
 
+
   public void start() {
     super.start();
     MatchState.SetCubeUse(1);
     MatchState.UpdateMSCubeInfo(1, -1);
     GnuBackgammon.Instance.goToScreen(4);
+    pingTimer = new Timer();
+
+    pingTimer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        GServiceClient.getInstance().sendMessage("PING");
+      }
+    }, 0, 2500);
   }
 
+
   public void stop() {
+    pingTimer.cancel();
     state(States.STOPPED);
   }
 
@@ -787,8 +803,8 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
           case GSERVICE_BYE:
             MatchState.resignValue = 0;
             GnuBackgammon.Instance.nativeFunctions.gserviceResetRoom();
+            GServiceClient.instance.dispose();
             GnuBackgammon.Instance.invitationId = "";
-            GServiceClient.getInstance().reset();
             GnuBackgammon.Instance.gameScreen.chatBox.hardHide();
             GnuBackgammon.Instance.nativeFunctions.showAds(false);
             GnuBackgammon.Instance.nativeFunctions.showInterstitial();

@@ -19,11 +19,12 @@ public class StatManager {
 
     for (int i = 0; i < 9; i++) {
       String strStat = prefs.getString("STAT_" + i, "");
-      if (strStat == "") {
+      try {
+        stats[i] = Statistics.deserialize(strStat);
+      } catch (Exception e) {
+        e.printStackTrace();
         stats[i] = new Statistics();
         prefs.putString("STAT_" + i, stats[i].serialize());
-      } else {
-        stats[i] = Statistics.deserialize(strStat);
       }
     }
   }
