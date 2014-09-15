@@ -49,8 +49,8 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
 
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface, RealTimeMultiplayer.ReliableMessageSentCallback {
 
-  private ExecutorService dispatchExecutor;
-  private Semaphore ss;
+  private ExecutorService senderExecutor;
+  private Semaphore senderSemaphore;
 
   private class SendRunnable implements Runnable {
     String msg;
@@ -61,7 +61,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     @Override
     public void run() {
       try {
-        ss.acquire();
+        senderSemaphore.acquire();
         _gserviceSendReliableRealTimeMessage(msg);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -71,8 +71,9 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
 
   public GServiceApplication() {
-    dispatchExecutor = Executors.newSingleThreadExecutor();
-    ss = new Semaphore(1);
+    System.out.println("===> SEN GSERVICE APP ");
+    senderSemaphore = new Semaphore(1, false);
+    senderExecutor = Executors.newSingleThreadExecutor();
   }
 
 
@@ -84,7 +85,8 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     } else {
       System.out.println("===> SENT!!");
     }
-    ss.release();
+    if (senderSemaphore.availablePermits() == 0)
+      senderSemaphore.release();
   }
 
   @Override
@@ -114,7 +116,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
   @Override
   public void gserviceSendReliableRealTimeMessage(String msg) {
-    dispatchExecutor.execute(new SendRunnable(msg));
+    senderExecutor.execute(new SendRunnable(msg));
   }
 
   public void _gserviceSendReliableRealTimeMessage(String msg) {
@@ -138,10 +140,10 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceResetRoom() {
     _gserviceResetRoom();
-    if (ss.availablePermits() == 0) {
-      ss.release();
-      System.out.println("===> SENDING QUEUE RESETTED!");
-    }
+    System.out.println("===> SENDING QUEUE RESETTED! " + senderSemaphore.availablePermits());
+    if (senderSemaphore.availablePermits() == 0)
+      senderSemaphore.release();
+
   }
 
   @Override
