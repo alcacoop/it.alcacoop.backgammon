@@ -138,8 +138,10 @@ public final class UIDialog extends Table {
                   Gdx.app.exit();
                 } else {
                   GnuBackgammon.fsm.processEvent(instance.evt, ret);
-                  if (instance.optionsWindow)
+                  if (instance.optionsWindow) {
                     opts.savePrefs();
+                    GnuBackgammon.Instance.nativeFunctions.showAds(true);
+                  }
                 }
 
                 if ((instance.dicesWindow) && (!ret)) {
@@ -731,8 +733,13 @@ public final class UIDialog extends Table {
 
     instance.opts.initFromPrefs();
 
+
     float width = stage.getWidth() * 0.85f;
     float height = stage.getHeight() * 0.95f;
+    if (GnuBackgammon.Instance.ss == 2) {
+      width = stage.getWidth() * 0.95f;
+      height = stage.getHeight() * 1.05f;
+    }
 
     instance.clear();
     instance.setWidth(width);
@@ -740,11 +747,15 @@ public final class UIDialog extends Table {
     instance.setX((stage.getWidth() - width) / 2);
     instance.setY((stage.getHeight() - height) / 2);
 
-    instance.add(instance.opts).expand().fill();
+    instance.add(instance.opts);
 
     stage.addActor(instance);
     instance.setY(stage.getHeight());
-    instance.addAction(MyActions.sequence(Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f),
+    instance.addAction(MyActions.sequence(Actions.run(new Runnable() {
+      public void run() {
+        GnuBackgammon.Instance.nativeFunctions.showAds(false);
+      }
+    }), Actions.parallel(Actions.color(new Color(1, 1, 1, alpha), 0.2f),
         Actions.moveTo((stage.getWidth() - width) / 2, (stage.getHeight() - height) / 2, 0.2f))));
   }
 
