@@ -80,6 +80,7 @@ import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.leaderboard.ScoreSubmissionData.Result;
+import com.smartclip.helpers.SmartClipHelper;
 
 
 @SuppressLint("InflateParams")
@@ -90,6 +91,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   private AndroidHelpers androidHelpers;
   private ADSHelpers adsHelpers;
+  private SmartClipHelper scHelper;
   private AccelerometerHelpers accelerometerHelpers;
 
   private ImageManager imgMgr;
@@ -119,6 +121,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
     adParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
     layout.addView(gameView);
+
     View adv = adsHelpers.getAdView();
     if (adv != null)
       layout.addView(adv, adParams);
@@ -128,6 +131,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     chatBox.setVisibility(View.GONE);
     layout.addView(chatBox, params);
+
+    scHelper = new SmartClipHelper(this);
 
     setContentView(layout);
 
@@ -488,7 +493,10 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void showInterstitial() {
-    adsHelpers.showInterstitial();
+    if (scHelper.hasClipAvailable())
+      scHelper.playClip();
+    else
+      adsHelpers.showInterstitial();
   }
 
 
