@@ -23,6 +23,7 @@ public class PrivateDataManager {
   public static final String SKU_DONATE = "";
   public static final int INAPP_BILLING_REQUEST = 1000001;
 
+  public static final String SMARTCLIP_URL = "";
   public static final String SMARTCLIP_APPKEY = "";
   public static final String SMARTCLIP_ITEMID = "";
 

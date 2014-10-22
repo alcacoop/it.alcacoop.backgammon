@@ -37,7 +37,7 @@ public class SmartClipActivity extends Activity {
 
   private void initSDK() {
     instreamSDK = new OIS(this).instreamController(rLayout);
-    instreamSDK.config().addPreroll("http://ae.amgdgt.com/ads?t=de&p=9372&pl=teststandard&cat=ms_vast2_nofc&sz=400x320&rnd=[random]");
+    instreamSDK.config().addPreroll(PrivateDataManager.SMARTCLIP_URL);
     instreamSDK.config().setCountdownEnabled(true);
     instreamSDK.config().setCountdownText("Remaining time: [remaining]");
     instreamSDK.config().setCountdownBarPosition("bottom");
