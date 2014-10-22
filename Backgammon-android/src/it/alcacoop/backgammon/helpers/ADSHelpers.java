@@ -25,6 +25,7 @@ public class ADSHelpers {
   private Timer adsTimer;
   private TimerTask adsTask;
 
+  private static ADSHelpers Instance;
 
   public ADSHelpers(Activity activity, boolean isTablet) {
     this.activity = activity;
@@ -55,6 +56,8 @@ public class ADSHelpers {
         super.onAdClosed();
       }
     });
+
+    Instance = this;
   }
 
 
@@ -119,6 +122,22 @@ public class ADSHelpers {
   }
 
 
+  public void showImmediateInterstitial() {
+    if (((NativeFunctions)activity).isProVersion())
+      return;
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        if (interstitial.isLoaded()) {
+          GnuBackgammon.Instance.currentScreen.pause();
+          GnuBackgammon.Instance.interstitialVisible = true;
+          interstitial.show();
+        }
+      }
+    });
+  }
+
+
   public void showInterstitial() {
     if (((NativeFunctions)activity).isProVersion())
       return;
@@ -149,5 +168,9 @@ public class ADSHelpers {
         PrivateDataManager.destroyBillingData(); // Memory Optimization!
       }
     }
+  }
+
+  public static ADSHelpers getInstance() {
+    return Instance;
   }
 }

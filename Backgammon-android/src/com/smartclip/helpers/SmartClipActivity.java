@@ -1,6 +1,8 @@
 package com.smartclip.helpers;
 
+import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.PrivateDataManager;
+import it.alcacoop.backgammon.helpers.ADSHelpers;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
@@ -37,7 +39,7 @@ public class SmartClipActivity extends Activity {
 
   private void initSDK() {
     instreamSDK = new OIS(this).instreamController(rLayout);
-    instreamSDK.config().addPreroll("http://ae.amgdgt.com/ads?t=de&p=9372&pl=teststandard&cat=ms_vast2_nofc&sz=400x320&rnd=[random]");
+    instreamSDK.config().addPreroll(PrivateDataManager.SMARTCLIP_URL);
     instreamSDK.config().setCountdownEnabled(true);
     instreamSDK.config().setCountdownText("Remaining time: [remaining]");
     instreamSDK.config().setCountdownBarPosition("bottom");
@@ -47,6 +49,8 @@ public class SmartClipActivity extends Activity {
     instreamSDK.setResponseListener(new OISinstreamController.ResponseListener() {
 
       public void didFailLoad() {
+        System.out.println("smartclip failed");
+        ADSHelpers.getInstance().showImmediateInterstitial();
         finish();
       }
 
@@ -56,6 +60,7 @@ public class SmartClipActivity extends Activity {
 
       public void proceedStart() {
         FrequencyCapManager.getInstance().setDisplayConsumedForItemWithId(PrivateDataManager.SMARTCLIP_ITEMID);
+        GnuBackgammon.Instance.interstitialVisible = false;
         finish();
       }
 
@@ -73,7 +78,6 @@ public class SmartClipActivity extends Activity {
       public void willShowAd() {}
     });
   }
-
 
   @Override
   protected void onResume() {

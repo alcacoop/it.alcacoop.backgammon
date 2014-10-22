@@ -493,6 +493,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   public void showInterstitial() {
+    if (!isNetworkUp())
+      return;
     if (scHelper.hasClipAvailable())
       scHelper.playClip();
     else
