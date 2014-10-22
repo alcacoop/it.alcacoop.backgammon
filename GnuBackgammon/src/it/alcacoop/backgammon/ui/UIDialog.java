@@ -735,7 +735,7 @@ public final class UIDialog extends Table {
 
 
     float width = stage.getWidth() * 0.85f;
-    float height = stage.getHeight() * 0.95f;
+    float height = stage.getHeight() * 0.98f;
     if (GnuBackgammon.Instance.ss == 2) {
       width = stage.getWidth() * 0.95f;
       height = stage.getHeight() * 1.05f;
@@ -747,7 +747,7 @@ public final class UIDialog extends Table {
     instance.setX((stage.getWidth() - width) / 2);
     instance.setY((stage.getHeight() - height) / 2);
 
-    instance.add(instance.opts);
+    instance.add(instance.opts).fillY().expand();
 
     stage.addActor(instance);
     instance.setY(stage.getHeight());
