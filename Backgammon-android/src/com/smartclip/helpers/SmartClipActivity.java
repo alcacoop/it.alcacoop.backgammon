@@ -1,6 +1,8 @@
 package com.smartclip.helpers;
 
+import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.PrivateDataManager;
+import it.alcacoop.backgammon.helpers.ADSHelpers;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
@@ -47,6 +49,8 @@ public class SmartClipActivity extends Activity {
     instreamSDK.setResponseListener(new OISinstreamController.ResponseListener() {
 
       public void didFailLoad() {
+        System.out.println("smartclip failed");
+        ADSHelpers.getInstance().showImmediateInterstitial();
         finish();
       }
 
@@ -56,6 +60,7 @@ public class SmartClipActivity extends Activity {
 
       public void proceedStart() {
         FrequencyCapManager.getInstance().setDisplayConsumedForItemWithId(PrivateDataManager.SMARTCLIP_ITEMID);
+        GnuBackgammon.Instance.interstitialVisible = false;
         finish();
       }
 
@@ -73,7 +78,6 @@ public class SmartClipActivity extends Activity {
       public void willShowAd() {}
     });
   }
-
 
   @Override
   protected void onResume() {
