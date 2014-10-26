@@ -210,7 +210,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
       gServiceGameCanceled = false;
       Games.RealTimeMultiplayer.leave(getApiClient(), this, room.getRoomId());
     }
-    GServiceClient.getInstance().reset();
 
     mParticipants = room.getParticipants();
     room.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
@@ -285,7 +284,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public void onPeersDisconnected(Room room, List<String> arg1) {
     GServiceClient.getInstance().leaveRoom(0);
     onLeftRoomBehaviour();
-    updateRoom(room);
     hideProgressDialog();
   }
 
@@ -339,7 +337,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
   void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
-
+    GnuBackgammon.Instance.nativeFunctions.gserviceReset();
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
     GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);

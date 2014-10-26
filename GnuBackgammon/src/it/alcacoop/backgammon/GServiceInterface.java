@@ -14,4 +14,5 @@ public interface GServiceInterface {
   public void gserviceUnlockAchievement(String achiev_id);
   public void gserviceUpdateState();
   public void gserviceGetSigninDialog(int from);
+  public void gserviceReset();
 }

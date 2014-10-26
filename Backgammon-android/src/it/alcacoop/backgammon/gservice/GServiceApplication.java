@@ -71,11 +71,18 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
 
   public GServiceApplication() {
-    System.out.println("===> SEN GSERVICE APP ");
     senderSemaphore = new Semaphore(1, false);
     senderExecutor = Executors.newSingleThreadExecutor();
   }
 
+  @Override
+  public void gserviceReset() {
+    GServiceClient.getInstance().reset();
+    if (senderSemaphore.availablePermits() == 0)
+      senderSemaphore.release();
+    senderExecutor.shutdownNow();
+    senderExecutor = Executors.newSingleThreadExecutor();
+  }
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
