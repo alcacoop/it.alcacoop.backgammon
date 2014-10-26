@@ -582,8 +582,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             String msg = "";
             TextView v = (TextView)d.findViewById(R.id.login_text);
             msg = "Please sign in on Google Play Games to enable this feature";
-            // msg = "Please sign in, Google will ask you to accept requested permissions and configure " +
-            // "sharing settings up to two times. This may take few minutes..";
             v.setText(msg);
             com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton)d.findViewById(R.id.sign_in_button);
             b.setOnClickListener(new View.OnClickListener() {
