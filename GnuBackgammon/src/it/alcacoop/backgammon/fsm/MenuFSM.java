@@ -326,6 +326,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
           case GSERVICE_READY:
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
             GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             break;
 
