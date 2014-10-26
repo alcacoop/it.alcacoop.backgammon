@@ -82,7 +82,6 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
             if ((mv == null) || (mv.length == 0)) {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
             } else {
-              ctx.board().availableMoves.setMoves(mv);
               GServiceClient.getInstance().queue.pull(Events.GSERVICE_MOVES);
             }
             break;
@@ -159,6 +158,8 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
 
 
           case POINT_TOUCHED:
+            if (!ctx.board().availableMoves.hasMoves())
+              break;
             if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
               int orig = (Integer)params;
               if ((orig == -1) || (ctx.board()._board[MatchState.fMove][orig] == 0))

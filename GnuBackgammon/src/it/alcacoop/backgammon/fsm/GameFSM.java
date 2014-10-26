@@ -244,6 +244,8 @@ public class GameFSM extends BaseFSM implements Context {
 
 
           case POINT_TOUCHED:
+            if (!ctx.board().availableMoves.hasMoves())
+              break;
             if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
               int orig = (Integer)params;
               if ((orig == -1) || (ctx.board()._board[MatchState.fMove][orig] == 0))
