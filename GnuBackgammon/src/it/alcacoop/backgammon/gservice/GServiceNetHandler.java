@@ -102,12 +102,12 @@ public class GServiceNetHandler {
     pull();
   }
   public synchronized void pull(final Events... evt) {
-    System.out.println("===> PULL REQUEST: " + evt[0]);
+    GnuBackgammon.out.println("===> PULL REQUEST: " + evt[0]);
     dispatchExecutor.submit(new Dispatcher(evt));
   }
 
   public synchronized void post(final Events _e, final Object _o) {
-    System.out.println("===> POSTED EVENT: " + _e);
+    GnuBackgammon.out.println("===> POSTED EVENT: " + _e);
     if (_e == null)
       return;
     Evt e = new Evt(_e, _o);
@@ -120,26 +120,26 @@ public class GServiceNetHandler {
 
 
   public synchronized void dispose() {
-    System.out.println("===> QUEUE DISPOSED");
+    GnuBackgammon.out.println("===> QUEUE DISPOSED");
     dispatchExecutor.shutdownNow();
     queue.clear();
   }
 
   public synchronized void reset() {
-    System.out.println("===> QUEUE RESETTED");
+    GnuBackgammon.out.println("===> QUEUE RESETTED");
     dispatchExecutor.shutdownNow();
     dispatchExecutor = Executors.newSingleThreadExecutor();
   }
 
 
   public synchronized void debug() {
-    System.out.println("===> EVENTI IN CODA: " + queue.size());
-    System.out.print("   ===> ");
+    GnuBackgammon.out.println("===> EVENTI IN CODA: " + queue.size());
+    GnuBackgammon.out.print("   ===> ");
     Iterator<Evt> itr = queue.iterator();
     while (itr.hasNext()) {
       Evt element = itr.next();
-      System.out.print("  " + element.e);
+      GnuBackgammon.out.print("  " + element.e);
     }
-    System.out.println(" ");
+    GnuBackgammon.out.println(" ");
   }
 }

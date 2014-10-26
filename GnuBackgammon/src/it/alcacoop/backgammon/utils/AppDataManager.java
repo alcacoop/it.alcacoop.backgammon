@@ -104,7 +104,7 @@ public class AppDataManager {
     app_data.put("tpassword", hRemote.get("tpassword"));
 
     for (int i = 0; i < 9; i++) { // STATS
-      System.out.println(" ===> CONFLICT REMOTE STATS: " + hRemote.get("stat_" + i));
+      GnuBackgammon.out.println(" ===> CONFLICT REMOTE STATS: " + hRemote.get("stat_" + i));
       if (hRemote.get("stat_" + i) != "")
         app_data.put("stat_" + i, hRemote.get("stat_" + i));
       else

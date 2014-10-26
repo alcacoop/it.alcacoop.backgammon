@@ -25,13 +25,13 @@ public class GServiceClient implements GServiceMessages {
 
 
   public void dispose() {
-    System.out.println("===> GSERVICE DISPOSED");
+    GnuBackgammon.out.println("===> GSERVICE DISPOSED");
     queue.dispose();
     queue = new GServiceNetHandler();
   }
 
   public void reset() {
-    System.out.println("===> GSERVICE RESETTED");
+    GnuBackgammon.out.println("===> GSERVICE RESETTED");
     queue.reset();
   }
 
@@ -41,7 +41,7 @@ public class GServiceClient implements GServiceMessages {
 
 
   public void processReceivedMessage(String s) {
-    System.out.println("===> RECEIVED MESSAGE: " + s);
+    GnuBackgammon.out.println("===> RECEIVED MESSAGE: " + s);
     int coockie = coockieMonster.fIBSCookie(s);
     switch (coockie) {
       case GSERVICE_CONNECTED: // OB

@@ -36,12 +36,12 @@ public class SmartClipHelper {
         (Arrays.binarySearch(activeCountries, getUserCountry()) >= 0);
 
     int remainingClips = FrequencyCapManager.getInstance().getNumberOfDisplaysStillAvailableForItemWithId(PrivateDataManager.SMARTCLIP_ITEMID);
-    System.out.println("smartclip can display: " + FrequencyCapManager.getInstance().canDisplayAdForItemWithId(PrivateDataManager.SMARTCLIP_ITEMID));
-    System.out.println("smartclip left: " + remainingClips);
-    System.out.println("smartclip left max: " + (remainingClips != Integer.MAX_VALUE) + " -> " + Integer.MAX_VALUE);
-    System.out.println("smartclip country: " + getUserCountry());
-    System.out.println("smartclip active country: " + (Arrays.binarySearch(activeCountries, getUserCountry()) >= 0));
-    System.out.println("smartclip hasclip: " + hasClip);
+    GnuBackgammon.out.println("smartclip can display: " + FrequencyCapManager.getInstance().canDisplayAdForItemWithId(PrivateDataManager.SMARTCLIP_ITEMID));
+    GnuBackgammon.out.println("smartclip left: " + remainingClips);
+    GnuBackgammon.out.println("smartclip left max: " + (remainingClips != Integer.MAX_VALUE) + " -> " + Integer.MAX_VALUE);
+    GnuBackgammon.out.println("smartclip country: " + getUserCountry());
+    GnuBackgammon.out.println("smartclip active country: " + (Arrays.binarySearch(activeCountries, getUserCountry()) >= 0));
+    GnuBackgammon.out.println("smartclip hasclip: " + hasClip);
 
     return hasClip;
   }
@@ -82,8 +82,6 @@ public class SmartClipHelper {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    System.out.println("smartclip: no!!!");
-    // FALLBACK: system locales!!
     return activity.getResources().getConfiguration().locale.getCountry().toLowerCase(Locale.US);
   }
 

@@ -59,4 +59,6 @@ public interface NativeFunctions extends GServiceInterface {
   public void beginGoogleSignIn();
 
   public void loadIconImages(Object iconURIme, Object iconURIopponent);
+
+  public boolean isDebuggable();
 }

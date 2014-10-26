@@ -49,7 +49,7 @@ public class SmartClipActivity extends Activity {
     instreamSDK.setResponseListener(new OISinstreamController.ResponseListener() {
 
       public void didFailLoad() {
-        System.out.println("smartclip failed");
+        GnuBackgammon.out.println("smartclip failed");
         ADSHelpers.getInstance().showImmediateInterstitial();
         finish();
       }

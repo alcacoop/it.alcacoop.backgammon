@@ -481,8 +481,6 @@ public class GServiceFSM extends BaseFSM implements Context, GServiceMessages {
     MATCH_OVER {
       @Override
       public void enterState(Context ctx) {
-        System.out.println("===> ENTERING MATCH OVER");
-
         if (GnuBackgammon.fsm.previousState == MATCH_OVER) // TODO: WORKAROUND.. PROBABLY NEED FIX
           return;
 

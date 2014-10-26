@@ -315,7 +315,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
-    System.out.println("===> LOADING APPSTATE");
+    GnuBackgammon.out.println("===> LOADING APPSTATE");
     AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
         new ResultCallback<AppStateManager.StateResult>() {
           @Override
@@ -410,7 +410,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
     } catch (Exception e) {
-      System.out.println("===> ECCEZIONE SU ROOM!");
+      GnuBackgammon.out.println("===> ECCEZIONE SU ROOM!");
     }
   }
 

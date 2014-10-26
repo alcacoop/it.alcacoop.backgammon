@@ -37,7 +37,7 @@ public class StatManager {
   }
 
   public static void resetInstance() {
-    System.out.println("===> STATS INSTANCE RESETTED!");
+    GnuBackgammon.out.println("===> STATS INSTANCE RESETTED!");
     instance = new StatManager();
   }
 

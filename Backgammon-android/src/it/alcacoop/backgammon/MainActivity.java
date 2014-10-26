@@ -54,6 +54,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -95,7 +96,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
   private AccelerometerHelpers accelerometerHelpers;
 
   private ImageManager imgMgr;
-
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -620,7 +620,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onStateLoadedBehaviour(byte[] data) {
-    System.out.println("===> APPSTATE LOADED");
+    GnuBackgammon.out.println("===> APPSTATE LOADED");
     AppDataManager.getInstance().loadState(data);
     ELORatingManager.getInstance().syncLeaderboards();
     StatManager.resetInstance();
@@ -663,8 +663,8 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
       board = "FIBSBOARD2";
     local_score = (long)(Double.parseDouble(GnuBackgammon.Instance.optionPrefs.getString(board, "0")) * 100);
 
-    System.out.println("===> " + board + ": " + GnuBackgammon.Instance.optionPrefs.getString(board) + " " + local_score + " " + score);
-    System.out.println("===> " + (double)(score / 100.00));
+    GnuBackgammon.out.println("===> " + board + ": " + GnuBackgammon.Instance.optionPrefs.getString(board) + " " + local_score + " " + score);
+    GnuBackgammon.out.println("===> " + (double)(score / 100.00));
 
     if (local_score < score) {
       GnuBackgammon.Instance.optionPrefs.putString(board, ((double)(score / 100.00)) + "");
@@ -720,6 +720,12 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
         }, (Uri)iconURIopponent, R.drawable.gplayer);
       }
     });
+  }
+
+
+  @Override
+  public boolean isDebuggable() {
+    return (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
   }
 
 }
