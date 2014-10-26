@@ -42,7 +42,7 @@ public class GServiceClient implements GServiceMessages {
 
   public void processReceivedMessage(String s) {
     GnuBackgammon.out.println("===> RECEIVED MESSAGE: " + s);
-    int coockie = coockieMonster.fIBSCookie(s);
+    int coockie = coockieMonster.gserviceCookie(s);
     switch (coockie) {
       case GSERVICE_CONNECTED: // OB
         GnuBackgammon.fsm.processEvent(Events.GSERVICE_CONNECTED, null);
