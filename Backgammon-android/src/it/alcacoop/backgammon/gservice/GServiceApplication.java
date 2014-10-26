@@ -34,6 +34,7 @@
 package it.alcacoop.backgammon.gservice;
 
 import it.alcacoop.backgammon.GServiceInterface;
+import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.utils.AppDataManager;
 
 import java.util.concurrent.ExecutorService;
@@ -71,11 +72,18 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
 
 
   public GServiceApplication() {
-    System.out.println("===> SEN GSERVICE APP ");
     senderSemaphore = new Semaphore(1, false);
     senderExecutor = Executors.newSingleThreadExecutor();
   }
 
+  @Override
+  public void gserviceReset() {
+    GServiceClient.getInstance().reset();
+    if (senderSemaphore.availablePermits() == 0)
+      senderSemaphore.release();
+    senderExecutor.shutdownNow();
+    senderExecutor = Executors.newSingleThreadExecutor();
+  }
 
   @Override
   public void onRealTimeMessageSent(int statusCode, int token, String recipientParticipantId) {
@@ -83,7 +91,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
       onLeaveRoomBehaviour(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
-      System.out.println("===> SENT!!");
+      GnuBackgammon.out.println("===> SENT!!");
     }
     if (senderSemaphore.availablePermits() == 0)
       senderSemaphore.release();
@@ -120,12 +128,12 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   }
 
   public void _gserviceSendReliableRealTimeMessage(String msg) {
-    System.out.print("===> SENDING.. " + msg);
+    GnuBackgammon.out.print("===> SENDING.. " + msg);
     if ((mRoomId == null) || (mRoomId == "")) {
-      System.out.println("KO!");
+      GnuBackgammon.out.println("KO!");
       GServiceClient.getInstance().leaveRoom(GServiceClient.STATUS_NETWORK_ERROR_OPERATION_FAILED);
     } else {
-      System.out.println(" OK!");
+      GnuBackgammon.out.println(" OK!");
       for (Participant p : mParticipants) {
         if (p.getParticipantId().equals(mMyId))
           continue;
@@ -140,7 +148,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceResetRoom() {
     _gserviceResetRoom();
-    System.out.println("===> SENDING QUEUE RESETTED! " + senderSemaphore.availablePermits());
+    GnuBackgammon.out.println("===> SENDING QUEUE RESETTED! " + senderSemaphore.availablePermits());
     if (senderSemaphore.availablePermits() == 0)
       senderSemaphore.release();
 
@@ -200,7 +208,7 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceUpdateState() {
     if (gHelper.isSignedIn()) {
-      System.out.println("===> APPSTATE UPDATE");
+      GnuBackgammon.out.println("===> APPSTATE UPDATE");
       AppStateManager.update(getApiClient(), APP_DATA_KEY, AppDataManager.getInstance().getBytes());
     }
   }
@@ -208,11 +216,11 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   /*
   private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {
-      System.out.println(" ===> APPSTATE DELETION!");
+      GnuBackgammon.out.println(" ===> APPSTATE DELETION!");
       AppStateManager.delete(getApiClient(), APP_DATA_KEY).setResultCallback(new ResultCallback<AppStateManager.StateDeletedResult>() {
         @Override
         public void onResult(StateDeletedResult arg0) {
-          System.out.println("GSERVICE STATE DELETED");
+          GnuBackgammon.out.println("GSERVICE STATE DELETED");
         }
       });
     }

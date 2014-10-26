@@ -192,7 +192,7 @@ public class BaseFSM implements Context {
 
   public void processEvent(final Events evt, final Object params) {
     final BaseFSM ctx = this;
-    // System.out.println("PROCESS "+evt+" ON "+state());
+    // GnuBackgammon.out.println("PROCESS " + evt + " ON " + state());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
@@ -211,13 +211,13 @@ public class BaseFSM implements Context {
   }
 
   public void state(final State state) {
-    // System.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
+    // GnuBackgammon.out.println("---> +++ ENQUEUE ST " + state + ": " + Thread.currentThread().getName());
     final Context _ctx = this;
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        // System.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
-        // System.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
+        // GnuBackgammon.out.println("---> +++ EXECUTE ST " + state + ": " + Thread.currentThread().getName());
+        // GnuBackgammon.out.println(" FSM ---> MOVE FROM " + currentState + " TO " + state);
         if (currentState != null)
           currentState.exitState(_ctx);
         previousState = currentState;

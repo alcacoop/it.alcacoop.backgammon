@@ -82,7 +82,6 @@ public class FIBSFSM extends BaseFSM implements Context {
             if ((mv == null) || (mv.length == 0)) {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
             } else {
-              ctx.board().availableMoves.setMoves(mv);
               GnuBackgammon.Instance.fibs.pull(Events.FIBS_MOVES);
             }
             break;
@@ -158,6 +157,8 @@ public class FIBSFSM extends BaseFSM implements Context {
 
 
           case POINT_TOUCHED:
+            if (!ctx.board().availableMoves.hasMoves())
+              break;
             if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
               int orig = (Integer)params;
               if ((orig == -1) || (ctx.board()._board[MatchState.fMove][orig] == 0))

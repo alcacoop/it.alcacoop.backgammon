@@ -253,7 +253,6 @@ public class Main implements NativeFunctions {
     return 0;
   }
 
-
   @Override
   public void openURL(String... url) {}
 
@@ -262,4 +261,13 @@ public class Main implements NativeFunctions {
 
   @Override
   public void loadIconImages(Object iconURI1, Object iconURI2) {}
+
+  @Override
+  public void gserviceReset() {}
+
+  @Override
+  public boolean isDebuggable() {
+    return true;
+  }
+
 }

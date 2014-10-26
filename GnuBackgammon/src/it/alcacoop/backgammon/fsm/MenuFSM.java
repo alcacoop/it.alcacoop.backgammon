@@ -293,6 +293,7 @@ public class MenuFSM extends BaseFSM implements Context {
           if (params.toString().equals("PLAY3")) {
             if (GnuBackgammon.Instance.nativeFunctions.isNetworkUp()) {
               MatchState.matchType = 3;
+              GnuBackgammon.Instance.nativeFunctions.gserviceReset();
               GnuBackgammon.Instance.nativeFunctions.gserviceStartRoom();
             } else {
               UIDialog.getFlashDialog(Events.NOOP, "Network is down - Multiplayer not available");
@@ -326,6 +327,7 @@ public class MenuFSM extends BaseFSM implements Context {
 
           case GSERVICE_READY:
             GServiceClient.getInstance().queue.pull(Events.GSERVICE_INIT_RATING);
+            GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_READY + "");
             GServiceClient.getInstance().sendMessage(GServiceMessages.GSERVICE_INIT_RATING + " " + GnuBackgammon.Instance.optionPrefs.getString("multiboard", "0"));
             break;
 

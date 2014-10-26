@@ -146,10 +146,28 @@ public class GnuBackgammon extends Game implements ApplicationListener {
   }
 
   public void isCR() {
-    System.out.println("CR: " + Gdx.graphics.isContinuousRendering());
+    GnuBackgammon.out.println("CR: " + Gdx.graphics.isContinuousRendering());
   }
 
   private Timer transitionTimer;
+
+
+  public static class out {
+    private static boolean isDebuggable;
+    static {
+      isDebuggable = GnuBackgammon.Instance.nativeFunctions.isDebuggable();
+      System.out.println("===> DEBUGGABLE: " + isDebuggable);
+    }
+
+    public static void print(String msg) {
+      if (isDebuggable)
+        System.out.print(msg);
+    }
+    public static void println(String msg) {
+      if (isDebuggable)
+        System.out.println(msg);
+    }
+  }
 
 
   @Override

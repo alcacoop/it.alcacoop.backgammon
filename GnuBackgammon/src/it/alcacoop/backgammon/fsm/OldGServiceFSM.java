@@ -82,7 +82,6 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
             if ((mv == null) || (mv.length == 0)) {
               UIDialog.getFlashDialog(Events.NO_MORE_MOVES, "Your opponent has no legal moves", 0.8f);
             } else {
-              ctx.board().availableMoves.setMoves(mv);
               GServiceClient.getInstance().queue.pull(Events.GSERVICE_MOVES);
             }
             break;
@@ -159,6 +158,8 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
 
 
           case POINT_TOUCHED:
+            if (!ctx.board().availableMoves.hasMoves())
+              break;
             if (GnuBackgammon.Instance.optionPrefs.getString("AMOVES", "Tap").equals("Auto")) {
               int orig = (Integer)params;
               if ((orig == -1) || (ctx.board()._board[MatchState.fMove][orig] == 0))
@@ -451,7 +452,7 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
       public boolean processEvent(Context ctx, Events evt, Object params) {
         if (evt == Events.STOPPED) {
           MatchState.resignValue = 0;
-          // System.out.println("---> FSM STOPPED");
+          // GnuBackgammon.out.println("---> FSM STOPPED");
           GServiceClient.getInstance().reset();
           GnuBackgammon.Instance.nativeFunctions.showInterstitial();
           GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
@@ -555,12 +556,12 @@ public class OldGServiceFSM extends BaseFSM implements Context, GServiceMessages
 
   @Override
   public void processEvent(final Events evt, final Object params) {
-    // System.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
+    // GnuBackgammon.out.println("---> +++ ENQUEUE PE " + evt + ": " + Thread.currentThread().getName());
     Gdx.app.postRunnable(new Runnable() {
       @Override
       public void run() {
-        // System.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
-        // System.out.println("---> GSFSM: " + evt + " ON " + state());
+        // GnuBackgammon.out.println("---> +++ EXECUTE PE " + evt + ": " + Thread.currentThread().getName());
+        // GnuBackgammon.out.println("---> GSFSM: " + evt + " ON " + state());
         switch (evt) {
           case GSERVICE_CHATMSG:
             GnuBackgammon.Instance.snd.playMessage();

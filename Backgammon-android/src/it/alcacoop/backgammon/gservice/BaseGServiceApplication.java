@@ -210,7 +210,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
       gServiceGameCanceled = false;
       Games.RealTimeMultiplayer.leave(getApiClient(), this, room.getRoomId());
     }
-    GServiceClient.getInstance().reset();
 
     mParticipants = room.getParticipants();
     room.getParticipantId(Games.Players.getCurrentPlayerId(getApiClient()));
@@ -285,7 +284,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   public void onPeersDisconnected(Room room, List<String> arg1) {
     GServiceClient.getInstance().leaveRoom(0);
     onLeftRoomBehaviour();
-    updateRoom(room);
     hideProgressDialog();
   }
 
@@ -317,7 +315,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
-    System.out.println("===> LOADING APPSTATE");
+    GnuBackgammon.out.println("===> LOADING APPSTATE");
     AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
         new ResultCallback<AppStateManager.StateResult>() {
           @Override
@@ -339,7 +337,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
   void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
-
+    GnuBackgammon.Instance.nativeFunctions.gserviceReset();
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
     final LayoutInflater inflater = this.getLayoutInflater();
     GnuBackgammon.fsm.state(MenuFSM.States.TWO_PLAYERS);
@@ -412,7 +410,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
       mRoomId = room.getRoomId();
       mParticipants = room.getParticipants();
     } catch (Exception e) {
-      System.out.println("===> ECCEZIONE SU ROOM!");
+      GnuBackgammon.out.println("===> ECCEZIONE SU ROOM!");
     }
   }
 
@@ -582,8 +580,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             String msg = "";
             TextView v = (TextView)d.findViewById(R.id.login_text);
             msg = "Please sign in on Google Play Games to enable this feature";
-            // msg = "Please sign in, Google will ask you to accept requested permissions and configure " +
-            // "sharing settings up to two times. This may take few minutes..";
             v.setText(msg);
             com.google.android.gms.common.SignInButton b = (com.google.android.gms.common.SignInButton)d.findViewById(R.id.sign_in_button);
             b.setOnClickListener(new View.OnClickListener() {

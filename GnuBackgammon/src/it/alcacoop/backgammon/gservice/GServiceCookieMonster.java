@@ -1,5 +1,7 @@
 package it.alcacoop.backgammon.gservice;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
@@ -19,7 +21,7 @@ public class GServiceCookieMonster implements GServiceMessages {
     prepareBatches();
   }
 
-  public int fIBSCookie(String message) {
+  public int gserviceCookie(String message) {
     int result = 0;
     Iterator<GServiceCookieMonster.CookieDough> iter;
     CookieDough ptr = null;
@@ -39,9 +41,9 @@ public class GServiceCookieMonster implements GServiceMessages {
     String[] ss = ptr.regex.split(message, 2);
     if (ss.length > 1 && ss[1].length() > 0) {
       if (DEBUG) {
-        System.out.println("cookie = " + result);
-        System.out.println("message = '" + message + "'");
-        System.out.println("Leftover = '" + ss[1] + "'");
+        GnuBackgammon.out.println("cookie = " + result);
+        GnuBackgammon.out.println("message = '" + message + "'");
+        GnuBackgammon.out.println("Leftover = '" + ss[1] + "'");
       }
     }
     return (result);

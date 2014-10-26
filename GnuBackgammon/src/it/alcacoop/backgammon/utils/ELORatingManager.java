@@ -70,7 +70,7 @@ public class ELORatingManager {
     GnuBackgammon.Instance.optionPrefs.flush();
     GnuBackgammon.Instance.nativeFunctions.gserviceSubmitRating(score, kboard);
     GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
-    System.out.println("---> SUBMIT SCORE TO " + sboard + " START: " + start + " INCREMENT: " + increment + " SUBMITTING: " + score);
+    GnuBackgammon.out.println("---> SUBMIT SCORE TO " + sboard + " START: " + start + " INCREMENT: " + increment + " SUBMITTING: " + score);
   }
 
   public void updateRating(boolean youWin) {

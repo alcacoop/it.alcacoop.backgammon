@@ -8,17 +8,22 @@
 
 package it.alcacoop.fibs;
 
+import it.alcacoop.backgammon.GnuBackgammon;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 
-/** Implementation of the CookieMonster API from fibs
+/**
+ * Implementation of the CookieMonster API from fibs
+ * 
  * @author cppc
  * @author Dick Balaska
  * @author Original author of C version says not to use his name
  * @since 2008/04/08
- * @version $Revision: 1.5 $ <br> $Date: 2010/12/30 20:56:30 $
+ * @version $Revision: 1.5 $ <br>
+ *          $Date: 2010/12/30 20:56:30 $
  * @see <a href="http://www.fibs.com/fcm/">http://www.fibs.com/fcm/</a> <br>
  * @see <a href="http://cvs.buckosoft.com/Projects/BuckoFIBS/BuckoFIBS/src/main/java/com/buckosoft/fibs/net/CookieMonster.java">cvs CookieMonster.java</a>
  */
@@ -51,8 +56,11 @@ public class CookieMonster implements FIBSMessages {
     this.clientConnection = clientConnection;
   }
 
-  /** Parse this message into a fibs cookie
-   * @param message A single line from fibs 
+  /**
+   * Parse this message into a fibs cookie
+   * 
+   * @param message
+   *          A single line from fibs
    * @return The cookie that matches this string
    */
   public int fIBSCookie(String message) {
@@ -64,14 +72,46 @@ public class CookieMonster implements FIBSMessages {
     CookieDough ptr = null;
 
     switch (messageState) {
-    case FIBS_UNINITIALIZED:
-      return(FIBS_BAD_COOKIE);
-    case FIBS_RUN:
-      if (message.length() == 0)
-        return(FIBS_Empty);
-      char ch = message.charAt(0);
-      if (ch >= '0' && ch <= '9') {
-        iter = numericBatch.iterator();
+      case FIBS_UNINITIALIZED:
+        return (FIBS_BAD_COOKIE);
+      case FIBS_RUN:
+        if (message.length() == 0)
+          return (FIBS_Empty);
+        char ch = message.charAt(0);
+        if (ch >= '0' && ch <= '9') {
+          iter = numericBatch.iterator();
+          while (iter.hasNext()) {
+            ptr = iter.next();
+            if (ptr.regex.matcher(message).find()) {
+              result = ptr.message;
+              break;
+            }
+          }
+        } else if (ch == '*') {
+          iter = starsBatch.iterator();
+          while (iter.hasNext()) {
+            ptr = iter.next();
+            if (ptr.regex.matcher(message).find()) {
+              result = ptr.message;
+              break;
+            }
+          }
+        } else {
+          iter = alphaBatch.iterator();
+          while (iter.hasNext()) {
+            ptr = iter.next();
+            if (ptr.regex.matcher(message).find()) {
+              result = ptr.message;
+              break;
+            }
+          }
+        }
+        if (result == FIBS_Goodbye)
+          messageState = FIBS_LOGOUT;
+        break;
+      case FIBS_LOGIN:
+        result = FIBS_PreLogin;
+        iter = loginBatch.iterator();
         while (iter.hasNext()) {
           ptr = iter.next();
           if (ptr.regex.matcher(message).find()) {
@@ -79,8 +119,14 @@ public class CookieMonster implements FIBSMessages {
             break;
           }
         }
-      } else if (ch == '*') {
-        iter = starsBatch.iterator();
+        if (result == CLIP_MOTD_BEGIN)
+          messageState = FIBS_MOTD;
+        if (result == FIBS_WelcomeToFibs)
+          messageState = FIBS_REGISTER;
+        break;
+      case FIBS_MOTD:
+        result = FIBS_MOTD;
+        iter = motdBatch.iterator();
         while (iter.hasNext()) {
           ptr = iter.next();
           if (ptr.regex.matcher(message).find()) {
@@ -88,8 +134,12 @@ public class CookieMonster implements FIBSMessages {
             break;
           }
         }
-      } else {
-        iter = alphaBatch.iterator();
+        if (result == CLIP_MOTD_END)
+          messageState = FIBS_RUN;
+        break;
+      case FIBS_REGISTER:
+        result = FIBS_MOTD;
+        iter = registerBatch.iterator();
         while (iter.hasNext()) {
           ptr = iter.next();
           if (ptr.regex.matcher(message).find()) {
@@ -97,73 +147,33 @@ public class CookieMonster implements FIBSMessages {
             break;
           }
         }
-      }
-      if (result == FIBS_Goodbye)
-        messageState = FIBS_LOGOUT;
-      break;
-    case FIBS_LOGIN:
-      result = FIBS_PreLogin;
-      iter = loginBatch.iterator();
-      while (iter.hasNext()) {
-        ptr = iter.next();
-        if (ptr.regex.matcher(message).find()) {
-          result = ptr.message;
-          break;
-        }
-      }
-      if (result == CLIP_MOTD_BEGIN)
-        messageState = FIBS_MOTD;
-      if (result == FIBS_WelcomeToFibs)
-        messageState = FIBS_REGISTER;
-      break;
-    case FIBS_MOTD:
-      result = FIBS_MOTD;
-      iter = motdBatch.iterator();
-      while (iter.hasNext()) {
-        ptr = iter.next();
-        if (ptr.regex.matcher(message).find()) {
-          result = ptr.message;
-          break;
-        }
-      }
-      if (result == CLIP_MOTD_END)
-        messageState = FIBS_RUN;
-      break;
-    case FIBS_REGISTER:
-      result = FIBS_MOTD;
-      iter = registerBatch.iterator();
-      while (iter.hasNext()) {
-        ptr = iter.next();
-        if (ptr.regex.matcher(message).find()){
-          result = ptr.message;
-          break;
-        }
-      }
-      break;
-    case FIBS_LOGOUT:
-      return(FIBS_PostGoodbye);
+        break;
+      case FIBS_LOGOUT:
+        return (FIBS_PostGoodbye);
     }
     if (result == FIBS_Unknown)
-      return(FIBS_Unknown);
+      return (FIBS_Unknown);
     String[] ss = ptr.regex.split(message, 2);
     if (ss.length > 1 && ss[1].length() > 0) {
       if (DEBUG) {
-        System.out.println("cookie = " + result);
-        System.out.println("message = '" + message + "'");
-        System.out.println("Leftover = '" + ss[1] + "'");
+        GnuBackgammon.out.println("cookie = " + result);
+        GnuBackgammon.out.println("message = '" + message + "'");
+        GnuBackgammon.out.println("Leftover = '" + ss[1] + "'");
       }
       clientConnection.pushBack(ss[1]);
     }
-    return(result);
+    return (result);
   }
 
-  /** big reset, Not really needed.
+  /**
+   * big reset, Not really needed.
    */
   public void reset() {
     messageState = FIBS_UNINITIALIZED;
   }
 
-  /** Call this function to reset before reconnecting to FIBS.
+  /**
+   * Call this function to reset before reconnecting to FIBS.
    * If the batches have already been initialized, just reset the<br>
    * message state, else do the initialization.<br>
    * <br>
@@ -189,7 +199,7 @@ public class CookieMonster implements FIBSMessages {
     newDough.regex = Pattern.compile(re);
     newDough.message = msg;
     currentBatchBuild.add(newDough);
-    //return newDough;
+    // return newDough;
   }
 
   private static String PL = "[a-zA-Z0-9_<>]+";
@@ -212,7 +222,7 @@ public class CookieMonster implements FIBSMessages {
     // addDough(FIBS_PlayerMoves, "^" + PL + " moves .*-off ");
     addDough(FIBS_PlayerMoves, "^" + PL + " moves .*\\. ?");
     addDough(FIBS_PlayerMoves, "^" + PL + " moves .*$"); // XXX: run to the end of line, doesn't handle runons.
-    addDough(FIBS_BearingOff, "^Bearing off: [0-9]+ o .*$"); // XXX: run to the end of line, doesn't handle runons. 
+    addDough(FIBS_BearingOff, "^Bearing off: [0-9]+ o .*$"); // XXX: run to the end of line, doesn't handle runons.
     addDough(FIBS_BearingOff, "^Bearing off: [0-9]+ o [0-9]+ o ");
     addDough(FIBS_YouReject, "^You reject\\. The game continues\\.");
     addDough(FIBS_YouStopWatching, "You're not watching anymore\\."); // overloaded //PLAYER logs out.. You're not watching anymore.
@@ -248,10 +258,10 @@ public class CookieMonster implements FIBSMessages {
     addDough(FIBS_StartingNewGame, "^Starting a new game with " + PL + "\\.");
     addDough(FIBS_YouGiveUp, "^You give up\\. " + PL + " wins [0-9]+ points?\\.");
     addDough(FIBS_YouWinMatch, "^You win the [0-9]+ point match [0-9]+-[0-9]+ \\.");
-    addDough(FIBS_PlayerWinsMatch, "^" + PL + " wins the [0-9]+ point match [0-9]+-[0-9]+ \\."); //PLAYER wins the 3 point match 3-0 .
-    addDough(FIBS_ResumingUnlimitedMatch,"^" + PL + " and " + PL + " are resuming their unlimited match\\.");
+    addDough(FIBS_PlayerWinsMatch, "^" + PL + " wins the [0-9]+ point match [0-9]+-[0-9]+ \\."); // PLAYER wins the 3 point match 3-0 .
+    addDough(FIBS_ResumingUnlimitedMatch, "^" + PL + " and " + PL + " are resuming their unlimited match\\.");
     addDough(FIBS_ResumingLimitedMatch, "^" + PL + " and " + PL + " are resuming their [0-9]+-point match\\.");
-    addDough(FIBS_MatchResult, "^" + PL + " wins a [0-9]+ point match against " + PL + " [0-9]+-[0-9]+ \\."); //PLAYER wins a 9 point match against PLAYER 11-6 .
+    addDough(FIBS_MatchResult, "^" + PL + " wins a [0-9]+ point match against " + PL + " [0-9]+-[0-9]+ \\."); // PLAYER wins a 9 point match against PLAYER 11-6 .
     addDough(FIBS_PlayerWantsToResign, "wants to resign\\."); // Same as a longline in an actual game This is just for watching.
 
     // addDough(FIBS_BAD_AcceptDouble, "^" + PL + " accepts? the double\\. The cube shows [0-9]+\\..+");
@@ -302,7 +312,7 @@ public class CookieMonster implements FIBSMessages {
     addDough(FIBS_SavedMatch, "^ " + PL + " +[0-9]+ +[0-9]+ +- +[0-9]+");
     addDough(FIBS_SavedMatchPlaying, "^ \\*" + PL + " +[0-9]+ +[0-9]+ +- +[0-9]+");
     // NOTE: for FIBS_SavedMatchReady, see the Stars message, because it will appear to be one of those (has asterisk at index 0).
-    addDough(FIBS_PlayerIsWaitingForYou,"^" + PL + " is waiting for you to log in\\.");
+    addDough(FIBS_PlayerIsWaitingForYou, "^" + PL + " is waiting for you to log in\\.");
     addDough(FIBS_IsAway, "^" + PL + " is away: ");
     addDough(FIBS_AllowpipTrue, "^allowpip +YES");
     addDough(FIBS_AllowpipFalse, "^allowpip +NO");
@@ -381,7 +391,7 @@ public class CookieMonster implements FIBSMessages {
 
     this.alphaBatch = this.currentBatchBuild;
 
-    //--- Numeric messages ---------------------------------------------------
+    // --- Numeric messages ---------------------------------------------------
     currentBatchBuild = new LinkedList<CookieDough>();
     addDough(CLIP_WHO_INFO, "^5 [^ ]+ - - [01].*");
     addDough(CLIP_WHO_INFO, "^5 [^ ]+ [^ ]+ - [01].*");
@@ -415,7 +425,7 @@ public class CookieMonster implements FIBSMessages {
     addDough(CLIP_MESSAGE_SAVED, "^11 " + PL + "$");
     this.numericBatch = this.currentBatchBuild;
 
-    //--- '**' messages ------------------------------------------------------
+    // --- '**' messages ------------------------------------------------------
     currentBatchBuild = new LinkedList<CookieDough>();
     addDough(FIBS_Username, "^\\*\\* User");
     addDough(FIBS_Junk, "^\\*\\* You tell "); // "** You tell PLAYER: xxxxx"
@@ -511,7 +521,7 @@ public class CookieMonster implements FIBSMessages {
     addDough(FIBS_Rebooting, "^\\*\\* It will be back when the computer is rebooted.");
     addDough(FIBS_GamesWillBeSaved, "^\\*\\* All running games will be saved\\.");
     addDough(FIBS_DoesntWantYouToWatch, "^\\*\\* " + PL + " doesn't want you to watch\\.");
-    addDough(FIBS_WaitForLastInvitation,"^\\*\\* Wait until " + PL + " accepted or rejected your resign\\.");
+    addDough(FIBS_WaitForLastInvitation, "^\\*\\* Wait until " + PL + " accepted or rejected your resign\\.");
     addDough(FIBS_WaitForAcceptResign, "^\\*\\* Please wait for your last invitation to be accepted\\.");
 
 
@@ -536,7 +546,7 @@ public class CookieMonster implements FIBSMessages {
     addDough(FIBS_GiveUsername, "^> ");
     this.registerBatch = this.currentBatchBuild;
 
-    
+
     // Only interested in one message here, but we still use a message list for simplicity and consistency.
     currentBatchBuild = new LinkedList<CookieDough>();
     addDough(CLIP_MOTD_END, "^4$");

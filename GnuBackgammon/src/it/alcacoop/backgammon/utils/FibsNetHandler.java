@@ -151,19 +151,19 @@ public class FibsNetHandler {
 
 
   public synchronized void debug() {
-    System.out.println("CODA EVENTI...");
-    System.out.println("RICHIESTE IN CODA: " + eventRequest);
-    System.out.println("MESSAGGI IN CODA: " + queue.size());
+    GnuBackgammon.out.println("CODA EVENTI...");
+    GnuBackgammon.out.println("RICHIESTE IN CODA: " + eventRequest);
+    GnuBackgammon.out.println("MESSAGGI IN CODA: " + queue.size());
     Iterator<Evt> itr = queue.iterator();
     while (itr.hasNext()) {
       Evt element = itr.next();
-      System.out.print("  " + element.e);
+      GnuBackgammon.out.print("  " + element.e);
     }
 
-    System.out.println("CODA BOARDS");
-    System.out.println("RICHIESTE IN CODA: " + boardRequest);
-    System.out.println("MESSAGGI IN CODA: " + boardQueue.size());
-    System.out.println("");
+    GnuBackgammon.out.println("CODA BOARDS...");
+    GnuBackgammon.out.println("RICHIESTE IN CODA: " + boardRequest);
+    GnuBackgammon.out.println("MESSAGGI IN CODA: " + boardQueue.size());
+    GnuBackgammon.out.println("");
   }
 
 }
