@@ -199,6 +199,8 @@ public class AndroidHelpers {
 
         FileOutputStream out = null;
         String fname = data_dir + filename + ".png";
+        File old = new File(fname);
+        old.delete();
         try {
           out = new FileOutputStream(fname);
           b.compress(Bitmap.CompressFormat.PNG, 90, out);
