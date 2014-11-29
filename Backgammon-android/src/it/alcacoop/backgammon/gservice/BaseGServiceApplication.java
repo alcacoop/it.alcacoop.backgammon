@@ -420,6 +420,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   public void showProgressDialog(final boolean cancel_button) {
     runOnUiThread(new Runnable() {
+      @SuppressWarnings("unused")
       @Override
       public void run() {
         if (mProgressDialog == null) {
