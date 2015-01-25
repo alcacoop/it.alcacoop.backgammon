@@ -42,7 +42,7 @@ import it.alcacoop.backgammon.ui.UIDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -63,7 +63,7 @@ public class DiceStatsScreen extends BaseScreen {
   private Table table;
   private TextButton backBtn;
   private Image resetBtn;
-  private SelectBox sb;
+  private SelectBox<String> sb;
   private int statLevel;
 
   private String[] levels = {
@@ -119,11 +119,12 @@ public class DiceStatsScreen extends BaseScreen {
       };
     };
 
-    sb = new SelectBox(levels, GnuBackgammon.skin);
+    sb = new SelectBox<String>(GnuBackgammon.skin);
+    sb.setItems(levels);
     sb.addListener(new ChangeListener() {
       @Override
       public void changed(ChangeEvent event, Actor actor) {
-        statLevel = sb.getSelectionIndex();
+        statLevel = sb.getSelectedIndex();
         initTable();
       }
     });
@@ -147,7 +148,7 @@ public class DiceStatsScreen extends BaseScreen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0.1f, 0.45f, 0.08f, 1);
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }
@@ -156,7 +157,7 @@ public class DiceStatsScreen extends BaseScreen {
   @Override
   public void initialize() {
     statLevel = 8;
-    sb.setSelection(statLevel);
+    sb.setSelectedIndex(statLevel);
     initTable();
     table.setColor(1, 1, 1, 0);
     table.setX(-stage.getWidth());

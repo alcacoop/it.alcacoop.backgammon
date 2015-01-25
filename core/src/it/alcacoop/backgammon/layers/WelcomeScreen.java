@@ -37,7 +37,7 @@ import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -98,7 +98,7 @@ public class WelcomeScreen extends BaseScreen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0.1f, 0.45f, 0.08f, 1);
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
   }

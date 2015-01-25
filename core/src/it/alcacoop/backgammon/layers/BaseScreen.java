@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BaseScreen implements Screen {
 
@@ -24,10 +25,12 @@ public class BaseScreen implements Screen {
   private TextButton alcaBtn;
 
   public BaseScreen() {
-    // STAGE DIM = SCREEN RES
-    stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-    // VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
-    stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
+    // // STAGE DIM = SCREEN RES
+    // stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+    // // VIEWPORT DIM = VIRTUAL RES (ON SELECTED TEXTURE BASIS)
+    // stage.setViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1], false);
+
+    stage = new Stage(new StretchViewport(GnuBackgammon.Instance.resolution[0], GnuBackgammon.Instance.resolution[1]));
     width = stage.getWidth() * 1.2f;
 
     TextureRegion bgRegion = GnuBackgammon.atlas.findRegion("bg");

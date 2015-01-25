@@ -50,7 +50,7 @@ import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -161,12 +161,12 @@ public class FibsScreen extends BaseScreen {
     ScrollPaneStyle sps = GnuBackgammon.skin.get("lists", ScrollPaneStyle.class);
     onlineList = new ScrollPane(new Table(), sps);
     onlineList.setFadeScrollBars(false);
-    onlineList.setForceOverscroll(false, false);
+    onlineList.setForceScroll(false, false);
     onlineList.setOverscroll(false, false);
     
     invitationList = new ScrollPane(new Table(), sps);
     invitationList.setFadeScrollBars(false);
-    invitationList.setForceOverscroll(false, false);
+    invitationList.setForceScroll(false, false);
     invitationList.setOverscroll(false, false);
         
     Table table = new Table();
@@ -256,7 +256,7 @@ public class FibsScreen extends BaseScreen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(0.1f, 0.45f, 0.08f, 1);
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     stage.draw();
     if ((onlineList.getVelocityY()!=0)||(invitationList.getVelocityY()!=0)) Gdx.graphics.requestRendering();

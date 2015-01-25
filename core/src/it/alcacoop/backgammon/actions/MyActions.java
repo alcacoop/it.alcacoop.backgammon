@@ -18,6 +18,7 @@ package it.alcacoop.backgammon.actions;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
@@ -85,17 +86,12 @@ public class MyActions {
 	}
 
 
-	static public MyDelayAction delay (float duration) {
-		MyDelayAction action = action(MyDelayAction.class);
-		action.setDuration(duration);
-		return action;
-	}
 
 	static public MySequenceAction sequence (Action... actions) {
 		MySequenceAction action = action(MySequenceAction.class);
 		Gdx.graphics.setContinuousRendering(true);
 		Gdx.graphics.requestRendering();
-		action.addAction(delay(0.04f));
+    action.addAction(Actions.delay(0.04f));
 		for (int i = 0, n = actions.length; i < n; i++)
 			action.addAction(actions[i]);
 		action.addAction(stopCR());

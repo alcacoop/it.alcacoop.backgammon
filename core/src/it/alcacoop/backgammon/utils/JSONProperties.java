@@ -33,19 +33,20 @@
 
 package it.alcacoop.backgammon.utils;
 
+import it.alcacoop.backgammon.utils.legacy.Json;
+import it.alcacoop.backgammon.utils.legacy.JsonReader;
+import it.alcacoop.backgammon.utils.legacy.JsonWriter.OutputType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.OrderedMap;
 
 public class JSONProperties {
-	public OrderedMap<String,Object> data;
+  public OrderedMap<String, Object> data;
 	
 	public static JSONProperties newFromFile(FileHandle fh) {
         InputStream inStream = fh.read();
@@ -88,20 +89,20 @@ public class JSONProperties {
         }
 	}
 	
-	public String[] getKeys() {
-		if (data == null) {
-			return null;
-		}
-		Array<String> keys = data.orderedKeys();
-		String[] keys_string = new String[keys.size];
-		
-		for (int i=0; i<keys.size; i++) {
-			keys_string[i] = keys.get(i);
-		}
-		
-		return keys_string;
-	}
-	
+  public String[] getKeys() {
+    if (data == null) {
+      return null;
+    }
+    Array<String> keys = data.orderedKeys();
+    String[] keys_string = new String[keys.size];
+
+    for (int i = 0; i < keys.size; i++) {
+      keys_string[i] = keys.get(i);
+    }
+
+    return keys_string;
+  }
+
 	private Object getProperty(String name) {
 		if (!data.containsKey(name))
 			return null;
@@ -139,13 +140,14 @@ public class JSONProperties {
 		if (v == null) return fallback;
 		return (Array<Object>)v;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public JSONProperties asJSONProperties(String name, JSONProperties fallback) {
-		Object v = getProperty(name);
-		if (v == null) return fallback;
-		return (new JSONProperties((OrderedMap<String,Object>)v));
-	}
+
+  @SuppressWarnings("unchecked")
+  public JSONProperties asJSONProperties(String name, JSONProperties fallback) {
+    Object v = getProperty(name);
+    if (v == null)
+      return fallback;
+    return (new JSONProperties((OrderedMap<String, Object>)v));
+  }
 
 	public void set(String key, Object value) {
 		data.put(key, value);
@@ -160,13 +162,14 @@ public class JSONProperties {
 		writer.close();
 	}
 
-	public Object asObject(String name, Object fallback) {
-		Object v = getProperty(name);
-		if (v == null) return fallback;
-		return v;
-	}
+  public Object asObject(String name, Object fallback) {
+    Object v = getProperty(name);
+    if (v == null)
+      return fallback;
+    return v;
+  }
 
-	public Object getData() {
-		return data;
-	}
+  public Object getData() {
+    return data;
+  }
 }
