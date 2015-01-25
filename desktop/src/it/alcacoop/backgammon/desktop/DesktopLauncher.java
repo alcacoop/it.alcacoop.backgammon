@@ -31,8 +31,11 @@
  ##################################################################
 */
 
-package it.alcacoop.backgammon;
+package it.alcacoop.backgammon.desktop;
 
+import it.alcacoop.backgammon.BeanShellEditor;
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.NativeFunctions;
 import it.alcacoop.backgammon.gservice.GServiceClient;
 import it.alcacoop.backgammon.logic.AICalls;
 import it.alcacoop.backgammon.ui.UIDialog;
@@ -56,8 +59,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 
-public class Main implements NativeFunctions {
-  private static Main instance;
+public class DesktopLauncher implements NativeFunctions {
+  private static DesktopLauncher instance;
   private static String data_dir;
   private static Interpreter bsh;
   private static JConsole mScriptConsole;
@@ -69,7 +72,7 @@ public class Main implements NativeFunctions {
     cfg.title = "GnuBackgammon";
     cfg.width = 800;
     cfg.height = 480;
-    instance = new Main();
+    instance = new DesktopLauncher();
     new LwjglApplication(new GnuBackgammon(instance), cfg);
 
     new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
@@ -89,9 +92,11 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void showAds(boolean show) {}
+  public void showAds(boolean show) {
+  }
 
-  protected Object handler = new Object() {};
+  protected Object handler = new Object() {
+  };
 
 
   @Override
@@ -113,7 +118,8 @@ public class Main implements NativeFunctions {
       writer.write(rec.saveSGF());
       writer.flush();
       writer.close();
-    } catch (IOException e) {}
+    } catch (IOException e) {
+    }
   }
 
 
@@ -121,25 +127,29 @@ public class Main implements NativeFunctions {
   public static void evalBsh(String cmds) {
     try {
       bsh.eval(cmds);
-    } catch (bsh.EvalError e) {}
+    } catch (bsh.EvalError e) {
+    }
   }
 
   public static void runBsh(String filename) {
     String bsh_text = "";
     try {
       bsh_text = getContent(filename);
-    } catch (IOException e1) {}
+    } catch (IOException e1) {
+    }
 
 
     try {
       bsh.eval(bsh_text);
-    } catch (bsh.EvalError e) {}
+    } catch (bsh.EvalError e) {
+    }
   }
 
   public static void setBsh(String where, Object what) {
     try {
       bsh.set(where, what);
-    } catch (bsh.EvalError e) {}
+    } catch (bsh.EvalError e) {
+    }
   }
 
 
@@ -157,7 +167,8 @@ public class Main implements NativeFunctions {
       }
       text = sb.toString();
 
-    } catch (Exception e) {} finally {
+    } catch (Exception e) {
+    } finally {
       br.close();
     }
     return text;
@@ -177,7 +188,8 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void fibsRegistration() {}
+  public void fibsRegistration() {
+  }
 
   @Override
   public boolean isNetworkUp() {
@@ -185,16 +197,20 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void hideChatBox() {}
+  public void hideChatBox() {
+  }
 
   @Override
-  public void showInterstitial() {}
+  public void showInterstitial() {
+  }
 
   @Override
-  public void initEngine() {}
+  public void initEngine() {
+  }
 
   @Override
-  public void showChatBox() {}
+  public void showChatBox() {
+  }
 
   @Override
   public boolean isProVersion() {
@@ -202,10 +218,12 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void inAppBilling() {}
+  public void inAppBilling() {
+  }
 
   @Override
-  public void gserviceSignIn() {}
+  public void gserviceSignIn() {
+  }
 
   @Override
   public boolean gserviceIsSignedIn() {
@@ -213,40 +231,52 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void gserviceStartRoom() {}
+  public void gserviceStartRoom() {
+  }
 
   @Override
-  public void gserviceAcceptInvitation(String invitationId) {}
+  public void gserviceAcceptInvitation(String invitationId) {
+  }
 
   @Override
-  public void gserviceSendReliableRealTimeMessage(String msg) {}
+  public void gserviceSendReliableRealTimeMessage(String msg) {
+  }
 
   @Override
-  public void gserviceResetRoom() {}
+  public void gserviceResetRoom() {
+  }
 
   @Override
-  public void gserviceOpenLeaderboards() {}
+  public void gserviceOpenLeaderboards() {
+  }
 
   @Override
-  public void gserviceOpenAchievements() {}
+  public void gserviceOpenAchievements() {
+  }
 
   @Override
-  public void hideProgressDialog() {}
+  public void hideProgressDialog() {
+  }
 
   @Override
-  public void gserviceUpdateAchievement(String achievement_id, int increment) {}
+  public void gserviceUpdateAchievement(String achievement_id, int increment) {
+  }
 
   @Override
-  public void gserviceUnlockAchievement(String achiev_id) {}
+  public void gserviceUnlockAchievement(String achiev_id) {
+  }
 
   @Override
-  public void gserviceUpdateState() {}
+  public void gserviceUpdateState() {
+  }
 
   @Override
-  public void gserviceGetSigninDialog(int from) {}
+  public void gserviceGetSigninDialog(int from) {
+  }
 
   @Override
-  public void gserviceSubmitRating(long score, String board_id) {}
+  public void gserviceSubmitRating(long score, String board_id) {
+  }
 
   @Override
   public int getAppVersionCode() {
@@ -254,16 +284,20 @@ public class Main implements NativeFunctions {
   }
 
   @Override
-  public void openURL(String... url) {}
+  public void openURL(String... url) {
+  }
 
   @Override
-  public void beginGoogleSignIn() {}
+  public void beginGoogleSignIn() {
+  }
 
   @Override
-  public void loadIconImages(Object iconURI1, Object iconURI2) {}
+  public void loadIconImages(Object iconURI1, Object iconURI2) {
+  }
 
   @Override
-  public void gserviceReset() {}
+  public void gserviceReset() {
+  }
 
   @Override
   public boolean isDebuggable() {
