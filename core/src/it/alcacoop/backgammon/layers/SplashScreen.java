@@ -96,14 +96,6 @@ public class SplashScreen implements Screen {
 
   @Override
   public void show() {
-
-    if (GnuBackgammon.Instance.invitationId != "") {
-      GnuBackgammon.Instance.setFSM("MENU_FSM");
-    } else {
-      GnuBackgammon.Instance.goToScreen(6);
-    }
-
-
     Action r2 = Actions.run(new Runnable() {
       @Override
       public void run() {
