@@ -44,3 +44,15 @@ task afterEclipseImport(description: "Post processing after project generation",
     printer.print(classpath)
   }
 }
+
+task generateAtlas(dependsOn: classes, type: JavaExec, group: 'Asset Generation') {
+    main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['../assets/data-src/mdpi', '../android/assets/data/mdpi', 'pack']
+}
+
+task generateSkin(dependsOn: classes, type: JavaExec, group: 'Asset Generation') {
+    main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['../assets/data-src/skin', '../android/assets/data/mdpi', 'myskin']
+}
