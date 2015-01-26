@@ -1,0 +1,15 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.6
+
+task generateAtlas(type: JavaExec, group: 'Asset Generation') {
+    main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['data-src/mdpi', 'assets/data/mdpi', 'pack']
+}
+
+task generateSkin(type: JavaExec, group: 'Asset Generation') {
+    main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['data-src/skin', 'data/mdpi', 'myskin']
+}

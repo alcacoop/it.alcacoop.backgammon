@@ -65,6 +65,14 @@ project(":core") {
     }
 }
 
+project(":assets") {
+    apply plugin: "java"
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
 tasks.eclipse.doLast {
     delete ".project"
 }
