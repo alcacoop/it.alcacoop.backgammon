@@ -275,8 +275,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
         }
       };
       transitionTimer.schedule(task, (long)(currentScreen.animationTime * 1000));
-    } else
+    } else {
       super.setScreen(screen);
+    }
   }
 
 
