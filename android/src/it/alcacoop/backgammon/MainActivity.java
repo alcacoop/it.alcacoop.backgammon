@@ -102,7 +102,6 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
     requestWindowFeature(Window.FEATURE_NO_TITLE);
 
     AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-    cfg.useGL20 = false;
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
