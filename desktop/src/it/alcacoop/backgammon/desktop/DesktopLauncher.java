@@ -75,10 +75,11 @@ public class DesktopLauncher implements NativeFunctions {
     instance = new DesktopLauncher();
     new LwjglApplication(new GnuBackgammon(instance), cfg);
 
-    new SharedLibraryLoader("libs/gnubg.jar").load("gnubg");
+    new SharedLibraryLoader("gnubg/gnubg.jar").load("gnubg");
     String s = System.getProperty("user.dir");
     data_dir = s;
-    s += "/libs/";
+    s += "/gnubg/";
+    System.out.println(s);
     AICalls.Locking.InitializeEnvironment(s);
 
     mScriptConsole = new JConsole();
@@ -88,7 +89,7 @@ public class DesktopLauncher implements NativeFunctions {
     setBsh("devconsole", mScriptConsole);
     setBsh("deveditor", mScriptEditor);
     setBsh("bsh", bsh);
-    runBsh(Gdx.files.internal("libs/devtools.bsh").path());
+    runBsh(Gdx.files.internal("gnubg/devtools.bsh").path());
   }
 
   @Override
