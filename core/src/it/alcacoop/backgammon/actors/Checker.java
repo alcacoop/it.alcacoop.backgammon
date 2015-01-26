@@ -118,7 +118,7 @@ public class Checker extends Group {
     boardY = _boardY;
     
     if (t==0) {
-      setX(_p.x);
+      setX(_p.x+this.getWidth()/2);
       setY(_p.y);
     }
     else {

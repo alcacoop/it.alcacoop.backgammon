@@ -218,6 +218,8 @@ public class Board extends Group {
 
 
   public Vector2 getBoardCoord(int color, int x, int y) {
+    float offset = checkers[1][1].getWidth()/2;
+
     if ((y > 4) && (x != -1))
       y = 4;
     float cdim = checkers[0][0].getHeight() - checkers[0][0].getHeight() / 18;
@@ -275,6 +277,7 @@ public class Board extends Group {
             ret.y = board.getY() + pos[23 - x].y + cdim * y;
         }
     }
+    ret.x -= offset;
     return ret;
   }
 
@@ -680,7 +683,7 @@ public class Board extends Group {
     Gdx.graphics.requestRendering();
     if (v)
       Gdx.graphics.setContinuousRendering(true);
-    else if (v)
+    else
       Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
   }
@@ -690,7 +693,7 @@ public class Board extends Group {
     Gdx.graphics.requestRendering();
     if (v)
       Gdx.graphics.setContinuousRendering(true);
-    else if (v)
+    else
       Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
   }
