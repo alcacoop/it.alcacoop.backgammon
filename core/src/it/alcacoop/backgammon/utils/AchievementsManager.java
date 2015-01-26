@@ -3,6 +3,7 @@ package it.alcacoop.backgammon.utils;
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.logic.AILevels;
 import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.utils.legacy.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.utils.Json;
 
 public class AchievementsManager {
 

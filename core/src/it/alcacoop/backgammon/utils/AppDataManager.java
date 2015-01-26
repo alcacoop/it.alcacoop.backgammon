@@ -1,11 +1,10 @@
 package it.alcacoop.backgammon.utils;
 
 import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.utils.legacy.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.badlogic.gdx.utils.Json;
 
 public class AppDataManager {
 
