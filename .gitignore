@@ -75,6 +75,9 @@ build/
 ## Other
 hs_err_pid*
 
+## Desktop app
+assets/data/match.json
+
 ## Deps
 google-play-services_lib/bin
 google-play-services_lib/gen
