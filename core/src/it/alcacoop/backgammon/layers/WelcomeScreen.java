@@ -69,12 +69,13 @@ public class WelcomeScreen extends BaseScreen {
     table.setHeight(stage.getHeight()*0.85f);
     table.setX((stage.getWidth()-table.getWidth())/2);
     table.setY((stage.getHeight()-table.getHeight())/2);
-    
+
     table.add(i).colspan(5);
     
     table.row();
     table.add().expand().fill();
-    table.add(GnuBackgammon.Instance.board).expand().width(stage.getWidth()*0.65f).height(stage.getHeight()*0.6f).colspan(3);
+    GnuBackgammon.Instance.board.setScale(0.72f);
+    table.add(GnuBackgammon.Instance.board).width(stage.getWidth()*0.65f).height(stage.getHeight()*0.6f).colspan(3).expand();
     table.add().expand().fill();
     
     table.row();
@@ -82,7 +83,7 @@ public class WelcomeScreen extends BaseScreen {
     
     table.row();
     table.add().fill().expand().colspan(2);
-    table.add(tap).center();
+    table.add(tap).center().expand();
     table.add().fill().expand().colspan(2);
     
     stage.addActor(table);
@@ -112,6 +113,7 @@ public class WelcomeScreen extends BaseScreen {
 
   @Override
   public void hide() {
+    GnuBackgammon.Instance.board.setScale(1f);
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
   }
