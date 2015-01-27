@@ -57,6 +57,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -174,8 +175,16 @@ public class GameScreen extends BaseScreen {
     table.add(t).fillX().padTop(3 + 3 * (2 - GnuBackgammon.Instance.ss)).right().padRight((2 + 3 * (2 - GnuBackgammon.Instance.ss)) * 2.5f);
     table.add(menu).fillY().width(stage.getWidth() / 10).padRight(6 + 6 * (2 - GnuBackgammon.Instance.ss)).padTop(3 + 3 * (2 - GnuBackgammon.Instance.ss));
 
-    table.row();
-    table.add(board).colspan(4).expand().fill();
+    float gain = GnuBackgammon.Instance.ss==2?1.2f:1.05f;
+    float th = i.getHeight()*gain;
+    System.out.println(th);
+
+    table.row().expand().fill();
+    float w = stage.getWidth();
+    float h = stage.getHeight()-th;
+    board.setWidth(w);
+    board.setHeight(h);
+    table.add(board).colspan(4).expand().fill().bottom().left().width(w);
   }
 
   public void updatePInfo(String me, String opponent) {
