@@ -25,13 +25,38 @@ task generateSkin(type: JavaExec, group: 'Asset Generation') {
     args = ['data-src/skin', '../tmp/skin', 'myskin']
 }
 
-// Copy assets into respective resolutions
-task copyStaticAssets (group: 'Asset Generation') {
-    dependsOn generateSkin
+task cleanGenerated () {
+    dependsOn cleanAtlashdpi, cleanAtlasldpi, cleanAtlasmdpi
+}
+
+
+
+
+
+
+
+
+task cleanAll (type: Delete, group: 'Asset Generation') {
+    delete "data/hdpi", "data/ldpi", "data/mdpi", "data/sounds"
+}
+
+// Copy static assets
+task copyStatics (group: 'Asset Generation') {
+    // sounds
+    copy {
+        from "data-src/statics/sounds"
+        into "data/sounds"
+    }
+
     ['hdpi', 'ldpi', 'mdpi'].each { res ->
-        // SKIN
+        // fonts
         copy {
-            from '../tmp/skin'
+            from "data-src/statics/fonts/$res"
+            into "data/$res"
+        }
+        // images
+        copy {
+            from "data-src/statics/images/$res"
             into "data/$res"
         }
         // myskin.json
@@ -47,12 +72,16 @@ task copyStaticAssets (group: 'Asset Generation') {
     }
 }
 
-task cleanAssets () {
-    dependsOn cleanAtlashdpi, cleanAtlasldpi, cleanAtlasmdpi
+task copySkins (dependsOn: generateSkin, group: 'Asset Generation') {
+    ['hdpi', 'ldpi', 'mdpi'].each { res ->
+        copy {
+            from '../tmp/skin'
+            into "data/$res"
+        }
+    }
 }
 
-task regenerate (group: 'Asset Generation') {
-    dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copyStaticAssets
+task generate (group: 'Asset Generation') {
+    dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copySkins, copyStatics
 }
 
-//jar.dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copyStaticAssets
