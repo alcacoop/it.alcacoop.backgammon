@@ -63,7 +63,7 @@ public class DiceStatsScreen extends BaseScreen {
   private Table table;
   private TextButton backBtn;
   private Image resetBtn;
-  //private SelectBox<String> sb;
+  private SelectBox<String> sb;
   private int statLevel;
 
   private String[] levels = {
@@ -119,7 +119,7 @@ public class DiceStatsScreen extends BaseScreen {
       };
     };
 
-    /*
+
     sb = new SelectBox<String>(GnuBackgammon.skin);
     sb.setItems(levels);
     sb.addListener(new ChangeListener() {
@@ -129,7 +129,7 @@ public class DiceStatsScreen extends BaseScreen {
         initTable();
       }
     });
-    */
+
 
     resetBtn = new Image(GnuBackgammon.atlas.findRegion("reset"));
     resetBtn.addListener(new ClickListener() {
@@ -208,7 +208,7 @@ public class DiceStatsScreen extends BaseScreen {
       controls.setBackground(GnuBackgammon.skin.getDrawable("list"));
     controls.row();
     controls.add(new Label("SELECT LEVEL:", GnuBackgammon.skin)).fill();
-    //controls.add(sb).fill().padLeft(stage.getWidth() / 85);
+    controls.add(sb).fill().padLeft(stage.getWidth() / 85);
     if (GnuBackgammon.Instance.ss != 2) {
       Label note = new Label("For less than 2000 rolls data have\n large variation from expected values", GnuBackgammon.skin);
       note.setAlignment(Align.right, Align.right);

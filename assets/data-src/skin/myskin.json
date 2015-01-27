@@ -14,8 +14,8 @@ com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		font: default-font, 
     fontColor: white, 
     background: selectbox
-    //listBackground: selectbox-show,
-    //listSelection: even
+    scrollStyle: { background: selectbox-show },
+    listStyle: { font: default-font, selection: even }
 	}
 
 },
