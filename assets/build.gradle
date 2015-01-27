@@ -4,6 +4,13 @@ sourceCompatibility = 1.6
 
 // Generate atlas
 ["hdpi", "ldpi", "mdpi"].each {res ->
+    task "cleanAtlas$res" (type: Delete) {
+        delete fileTree("data/$res", {
+            include "pack*"
+            include "myskin*"
+        })
+    }
+
     task "generateAtlas$res" (type: JavaExec, group: 'Asset Generation') {
         main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
         classpath = sourceSets.main.runtimeClasspath
@@ -18,22 +25,21 @@ task generateSkin(type: JavaExec, group: 'Asset Generation') {
     args = ['data-src/skin', '../tmp/skin', 'myskin']
 }
 
-// Copy skins into respective resolutions
-task copyStaticAssets {
+// Copy assets into respective resolutions
+task copyStaticAssets (group: 'Asset Generation') {
     dependsOn generateSkin
     ['hdpi', 'ldpi', 'mdpi'].each { res ->
+        // SKIN
         copy {
             from '../tmp/skin'
             into "data/$res"
         }
+        // myskin.json
         copy {
             from 'data-src/skin/myskin.json'
             into "data/$res"
         }
-        copy {
-            from "data-src/$res/pos.json"
-            into "data/$res"
-        }
+        // pos.json
         copy {
             from "data-src/$res/pos.json"
             into "data/$res"
@@ -41,4 +47,12 @@ task copyStaticAssets {
     }
 }
 
-jar.dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copySkins
+task cleanAssets () {
+    dependsOn cleanAtlashdpi, cleanAtlasldpi, cleanAtlasmdpi
+}
+
+task regenerate (group: 'Asset Generation') {
+    dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copyStaticAssets
+}
+
+//jar.dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copyStaticAssets

@@ -13,6 +13,9 @@ android {
 
         instrumentTest.setRoot('tests')
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI
@@ -63,7 +66,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'it.alcacoop.backgammon.android/it.alcacoop.backgammon.android.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'it.alcacoop.backgammon/it.alcacoop.backgammon.MainActivity'
 }
 
 // sets up the Android Eclipse project, using the old Ant based build.
