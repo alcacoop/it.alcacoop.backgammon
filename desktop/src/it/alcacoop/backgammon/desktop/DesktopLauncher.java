@@ -82,6 +82,9 @@ public class DesktopLauncher implements NativeFunctions {
     System.out.println(s);
     AICalls.Locking.InitializeEnvironment(s);
 
+    System.setProperty("awt.useSystemAAFontSettings","on");
+    System.setProperty("swing.aatext", "true");
+
     mScriptConsole = new JConsole();
     bsh = new Interpreter(mScriptConsole);
     mScriptEditor = new BeanShellEditor();
