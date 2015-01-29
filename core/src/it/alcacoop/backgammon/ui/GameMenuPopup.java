@@ -33,16 +33,6 @@
 
 package it.alcacoop.backgammon.ui;
 
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.actions.MyActions;
-import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.FIBSFSM;
-import it.alcacoop.backgammon.fsm.GServiceFSM;
-import it.alcacoop.backgammon.fsm.GameFSM;
-import it.alcacoop.backgammon.fsm.OldGServiceFSM;
-import it.alcacoop.backgammon.logic.AICalls;
-import it.alcacoop.backgammon.logic.MatchState;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -53,6 +43,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.actions.MyActions;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.FIBSFSM;
+import it.alcacoop.backgammon.fsm.GServiceFSM;
+import it.alcacoop.backgammon.fsm.GameFSM;
+import it.alcacoop.backgammon.fsm.OldGServiceFSM;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.MatchState;
 
 
 public final class GameMenuPopup extends Table {
@@ -180,12 +180,17 @@ public final class GameMenuPopup extends Table {
     });
 
     float pad = getHeight() / 15;
-    float w = getWidth() / 3.3f - pad;
+    float w = stage.getWidth()/4-pad;
 
-    add(undo).fill().expand().pad(pad).width(w);
-    add(resign).fill().expand().pad(pad).width(w);
-    add(abandon).fill().expand().pad(pad).width(w);
-    add(options).fill().expand().pad(pad).width(w);
+    add().width(pad).expand();
+    add(undo).fill().expand().width(w);
+    add().width(pad).expand();
+    add(resign).fill().expand().width(w);
+    add().width(pad).expand();
+    add(abandon).fill().expand().width(w);
+    add().width(pad).expand();
+    add(options).fill().expand().width(w);
+    add().width(pad).expand();
 
     visible = false;
     addActor(t1);

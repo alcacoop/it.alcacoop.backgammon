@@ -81,3 +81,6 @@ assets/data/match.json
 ## Deps
 google-play-services_lib/bin
 google-play-services_lib/gen
+
+## Generated assets
+assets/data/*

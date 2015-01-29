@@ -97,10 +97,6 @@ public class GServiceNetHandler {
   }
 
 
-  // VORREI UN EVT DI TIPO evt...
-  public synchronized void pull() {
-    pull();
-  }
   public synchronized void pull(final Events... evt) {
     GnuBackgammon.out.println("===> PULL REQUEST: " + evt[0]);
     dispatchExecutor.submit(new Dispatcher(evt));

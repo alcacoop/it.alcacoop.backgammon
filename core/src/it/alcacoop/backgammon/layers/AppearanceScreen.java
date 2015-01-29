@@ -245,13 +245,13 @@ public class AppearanceScreen extends BaseScreen {
     String sBoard = prefs.getString("BOARD", "B1");
     Array<Button> b = board.getButtons();
     for (int i=0; i<b.size;i++) {
-      if (b.get(i).getName().toString().equals(sBoard)) b.get(i).setChecked(true);
+      if (b.get(i).getName().equals(sBoard)) b.get(i).setChecked(true);
     }
     
     String sCheckers = prefs.getString("CHECKERS", "CS1");
     b = checkers.getButtons();
     for (int i=0; i<b.size;i++) {
-      if (b.get(i).getName().toString().equals(sCheckers)) b.get(i).setChecked(true);
+      if (b.get(i).getName().equals(sCheckers)) b.get(i).setChecked(true);
     }
     
     String sDirection = prefs.getString("DIRECTION", "AntiClockwise");

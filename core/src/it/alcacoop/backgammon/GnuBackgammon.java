@@ -188,7 +188,6 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     resolution = resolutions[ss];
     transitionTimer = new Timer();
 
-    skipSplashScreen = true;
     if (!skipSplashScreen) {
       setScreen(new SplashScreen("data/" + resname[ss] + "/alca.png"));
     } else {

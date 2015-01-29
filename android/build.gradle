@@ -1,6 +1,15 @@
 android {
     buildToolsVersion "21.1.2"
     compileSdkVersion 21
+
+    defaultConfig {
+        applicationId "it.alcacoop.backgammon"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 285
+        versionName "2.8.5"
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -13,9 +22,24 @@ android {
 
         instrumentTest.setRoot('tests')
     }
+    signingConfigs {
+        release
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
     lintOptions {
         abortOnError false
     }
+}
+
+if ((System.getenv("ANDROID_KEYSTORE") != null) && file(System.getenv("ANDROID_KEYSTORE")).exists()) {
+    android.signingConfigs.release.storeFile file(System.getenv("ANDROID_KEYSTORE"))
+    android.signingConfigs.release.storePassword System.getenv("ANDROID_STORE_PASSWORD")
+    android.signingConfigs.release.keyAlias System.getenv("ANDROID_KEYALIAS")
+    android.signingConfigs.release.keyPassword System.getenv("ANDROID_KEY_PASSWORD")
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI

@@ -109,10 +109,6 @@ public class FibsNetHandler {
   }
 
 
-  // VORREI UN EVT DI TIPO evt...
-  public synchronized void pull() {
-    pull(null);
-  }
   public synchronized void pull(Events evt) {
     if (evt == Events.FIBS_BOARD)
       boardDispatchExecutor.submit(new Dispatcher(evt));

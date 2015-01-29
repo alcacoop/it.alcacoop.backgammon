@@ -51,13 +51,13 @@ public class IconButton extends Button {
 		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a TextButtonStyle.");
 		super.setStyle(style);
 		this.style = (TextButtonStyle)style;
-		if (label != null) {
-			TextButtonStyle textButtonStyle = (TextButtonStyle)style;
-			LabelStyle labelStyle = label.getStyle();
-			labelStyle.font = textButtonStyle.font;
-			labelStyle.fontColor = textButtonStyle.fontColor;
-			label.setStyle(labelStyle);
-		}
+        if (label != null) {
+            TextButtonStyle textButtonStyle = (TextButtonStyle) style;
+            LabelStyle labelStyle = label.getStyle();
+            labelStyle.font = textButtonStyle.font;
+            labelStyle.fontColor = textButtonStyle.fontColor;
+            label.setStyle(labelStyle);
+        }
 	}
 
 	public TextButtonStyle getStyle () {
