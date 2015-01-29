@@ -30,13 +30,7 @@ task cleanGenerated () {
 }
 
 
-
-
-
-
-
-
-task cleanAll (type: Delete, group: 'Asset Generation') {
+task clean (overwrite: true, type: Delete, group: 'Asset Generation') {
     delete "data/hdpi", "data/ldpi", "data/mdpi", "data/sounds"
 }
 
