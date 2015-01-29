@@ -41,7 +41,7 @@ public class ClientConnection extends Thread {
   private CookieMonster cookieMonster;
   private boolean shuttingDown = false;
   private LinkedList<String> outMessages = new LinkedList<String>();
-  private Boolean listLock = new Boolean(false);
+  private Boolean listLock = Boolean.valueOf(false);
   private String leftover = null;
   private String pushbackString = null;
   

@@ -1,6 +1,15 @@
 android {
     buildToolsVersion "21.1.2"
     compileSdkVersion 21
+
+    defaultConfig {
+        applicationId "it.alcacoop.backgammon"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 285
+        versionName "2.8.5"
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

@@ -473,7 +473,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
   }
 
   private void parseDoublesOnOff(boolean onoff) {
-    this.commandDispatcher.dispatch(CommandDispatcher.Command.TOGGLE_DOUBLE, new Boolean(onoff));
+    this.commandDispatcher.dispatch(CommandDispatcher.Command.TOGGLE_DOUBLE, Boolean.valueOf(onoff));
 
   }
 
@@ -481,7 +481,7 @@ public class ClientReceiveParser implements FIBSMessages, ClientAdapter {
     boolean b = false;
     if (cookie == FIBS_ReadyTrue)
       b = true;
-    this.commandDispatcher.dispatch(CommandDispatcher.Command.READY_TO_PLAY, new Boolean(b));
+    this.commandDispatcher.dispatch(CommandDispatcher.Command.READY_TO_PLAY, Boolean.valueOf(b));
   }
 
   private void parseChatMessage(String s, int cookie) {

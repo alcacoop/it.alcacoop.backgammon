@@ -36,6 +36,7 @@ package it.alcacoop.backgammon.logic;
 import it.alcacoop.backgammon.actors.Board;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -60,8 +61,7 @@ public class AvailableMoves {
     dices.clear();
 
     if (_moves != null) {
-      for (int i = 0; i < _moves.length; i++)
-        moves.add(_moves[i]);
+        Collections.addAll(moves, _moves);
       evaluatePlayableDices(_dices);
     }
   }
