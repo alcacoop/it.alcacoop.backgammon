@@ -182,6 +182,7 @@ public final class GameMenuPopup extends Table {
     float pad = getHeight() / 15;
     float w = stage.getWidth()/4-pad;
 
+    add().width(pad).expand();
     add(undo).fill().expand().width(w);
     add().width(pad).expand();
     add(resign).fill().expand().width(w);
@@ -189,6 +190,7 @@ public final class GameMenuPopup extends Table {
     add(abandon).fill().expand().width(w);
     add().width(pad).expand();
     add(options).fill().expand().width(w);
+    add().width(pad).expand();
 
     visible = false;
     addActor(t1);
