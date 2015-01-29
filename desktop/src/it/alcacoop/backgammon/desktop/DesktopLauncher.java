@@ -33,13 +33,11 @@
 
 package it.alcacoop.backgammon.desktop;
 
-import it.alcacoop.backgammon.BeanShellEditor;
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.NativeFunctions;
-import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.logic.AICalls;
-import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.utils.MatchRecorder;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -51,12 +49,14 @@ import java.util.Date;
 
 import bsh.Interpreter;
 import bsh.util.JConsole;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.SharedLibraryLoader;
+import it.alcacoop.backgammon.BeanShellEditor;
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.NativeFunctions;
+import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.JarResourcesLoader;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 
 
 public class DesktopLauncher implements NativeFunctions {
@@ -75,12 +75,19 @@ public class DesktopLauncher implements NativeFunctions {
     instance = new DesktopLauncher();
     new LwjglApplication(new GnuBackgammon(instance), cfg);
 
-    new SharedLibraryLoader("gnubg/gnubg.jar").load("gnubg");
-    String s = System.getProperty("user.dir");
-    data_dir = s;
-    s += "/gnubg/";
-    System.out.println(s);
-    AICalls.Locking.InitializeEnvironment(s);
+
+
+    new SharedLibraryLoader().load("gnubg");
+
+    JarResourcesLoader resourcesLoader = new JarResourcesLoader();
+    String tmpPath = resourcesLoader.extract("devtools.bsh");
+    resourcesLoader.extract("g11.xml");
+    resourcesLoader.extract("gnubg.wd");
+    resourcesLoader.extract("gnubg.weights");
+    resourcesLoader.extract("gnubg_os0.bd");
+    resourcesLoader.extract("gnubg_ts0.bd");
+
+    AICalls.Locking.InitializeEnvironment(tmpPath);
 
     System.setProperty("awt.useSystemAAFontSettings","on");
     System.setProperty("swing.aatext", "true");
@@ -92,7 +99,8 @@ public class DesktopLauncher implements NativeFunctions {
     setBsh("devconsole", mScriptConsole);
     setBsh("deveditor", mScriptEditor);
     setBsh("bsh", bsh);
-    runBsh(Gdx.files.internal("gnubg/devtools.bsh").path());
+    System.out.println(Gdx.files.internal("gnubg/devtools.bsh").path());
+    runBsh(Gdx.files.internal(tmpPath + "devtools.bsh").path());
   }
 
   @Override

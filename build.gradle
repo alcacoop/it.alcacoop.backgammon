@@ -36,6 +36,7 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "org.beanshell:bsh:2.0b5"
+        compile files("libs/gnubg.jar")
     }
 }
 
