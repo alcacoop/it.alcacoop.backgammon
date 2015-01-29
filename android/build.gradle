@@ -23,12 +23,7 @@ android {
         instrumentTest.setRoot('tests')
     }
     signingConfigs {
-        release {
-            storeFile file(System.getenv("ANDROID_KEYSTORE"))
-            storePassword System.getenv("ANDROID_STORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_KEYALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
-        }
+        release
     }
     buildTypes {
         release {
@@ -37,6 +32,15 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+}
+
+if ((System.getenv("ANDROID_KEYSTORE") != null) && file(System.getenv("ANDROID_KEYSTORE")).exists()) {
+    android.signingConfigs.release = {
+        storeFile file(System.getenv("ANDROID_KEYSTORE"))
+        storePassword System.getenv("ANDROID_STORE_PASSWORD")
+        keyAlias System.getenv("ANDROID_KEYALIAS")
+        keyPassword System.getenv("ANDROID_KEY_PASSWORD")
     }
 }
 
