@@ -33,6 +33,21 @@
 
 package it.alcacoop.backgammon;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Pool;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.fsm.BaseFSM;
 import it.alcacoop.backgammon.fsm.FIBSFSM;
@@ -60,21 +75,6 @@ import it.alcacoop.backgammon.utils.JSONProperties;
 import it.alcacoop.backgammon.utils.MatchRecorder;
 import it.alcacoop.fibs.CommandDispatcherImpl;
 import it.alcacoop.fibs.Player;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Pool;
 
 
 public class GnuBackgammon extends Game implements ApplicationListener {
@@ -189,7 +189,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     transitionTimer = new Timer();
 
     if (!skipSplashScreen) {
-      setScreen(new SplashScreen("data/" + resname[ss] + "/alca.png"));
+      setScreen(new SplashScreen(resname[ss] + "/alca.png"));
     } else {
       GnuBackgammon.Instance.nativeFunctions.initEngine();
       GnuBackgammon.Instance.initAssets();
@@ -202,7 +202,7 @@ public class GnuBackgammon extends Game implements ApplicationListener {
     Gdx.graphics.setContinuousRendering(false);
     Gdx.graphics.requestRendering();
 
-    atlas = new TextureAtlas(Gdx.files.internal("data/" + resname[ss] + "/pack.atlas"));
+    atlas = new TextureAtlas(Gdx.files.internal(resname[ss] + "/pack.atlas"));
 
     fibsPlayersPool = new Pool<Player>(50) {
       @Override
@@ -221,9 +221,9 @@ public class GnuBackgammon extends Game implements ApplicationListener {
 
     fname = nativeFunctions.getDataDir() + "/data/match.";
 
-    GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal("data/" + GnuBackgammon.Instance.getResName() + "/pos.json"));
-    skin = new Skin(Gdx.files.internal("data/" + resname[ss] + "/myskin.json"));
-    font = new BitmapFont(Gdx.files.internal("data/" + resname[ss] + "/checker.fnt"), false);
+    GnuBackgammon.Instance.jp = new JSONProperties(Gdx.files.internal(GnuBackgammon.Instance.getResName() + "/pos.json"));
+    skin = new Skin(Gdx.files.internal(resname[ss] + "/myskin.json"));
+    font = new BitmapFont(Gdx.files.internal(resname[ss] + "/checker.fnt"), false);
     TextureRegion r = font.getRegion();
     r.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 

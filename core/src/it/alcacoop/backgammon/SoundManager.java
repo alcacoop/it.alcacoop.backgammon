@@ -48,11 +48,11 @@ public class SoundManager {
   Sound newmessage;
 
   public SoundManager() {
-    roll = Gdx.audio.newSound(Gdx.files.internal("data/sounds/roll.wav"));
-    moving_start = Gdx.audio.newSound(Gdx.files.internal("data/sounds/move1.wav"));
-    moving_stop = Gdx.audio.newSound(Gdx.files.internal("data/sounds/move2.wav"));
-    invite = Gdx.audio.newSound(Gdx.files.internal("data/sounds/invite.wav"));
-    newmessage = Gdx.audio.newSound(Gdx.files.internal("data/sounds/newmessage.wav"));
+    roll = Gdx.audio.newSound(Gdx.files.internal("sounds/roll.wav"));
+    moving_start = Gdx.audio.newSound(Gdx.files.internal("sounds/move1.wav"));
+    moving_stop = Gdx.audio.newSound(Gdx.files.internal("sounds/move2.wav"));
+    invite = Gdx.audio.newSound(Gdx.files.internal("sounds/invite.wav"));
+    newmessage = Gdx.audio.newSound(Gdx.files.internal("sounds/newmessage.wav"));
   }
 
   public void playRoll() {

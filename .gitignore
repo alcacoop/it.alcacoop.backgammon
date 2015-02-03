@@ -84,3 +84,4 @@ google-play-services_lib/gen
 
 ## Generated assets
 assets/data/*
+!assets/data/gnubg
