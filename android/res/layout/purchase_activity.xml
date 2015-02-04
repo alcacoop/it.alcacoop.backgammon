@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dip"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="250dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onUpgradeClicked"
+        android:text="Remove Ads" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:text="Click above to completely remove ads from Backgammon Mobile" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dip"
+        />
+    
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="250dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onDonateClicked"
+        android:text="Remove Ads and Donate" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:maxWidth="500dip"
+        android:text="Click above to remove ads and donate. 
+Backgammon Mobile is free software, so why donate? To thank, to support or to help. You choose.
+The authors have spent a large amount of time and effort in its development and improvement. The best way to support and encourage them, so that this project can be moved forward always, is to donate!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>

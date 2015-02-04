@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="1dp"
+        android:id="@+id/space1" />
+
+    <LinearLayout
+        android:layout_width="10dp"
+        android:layout_height="48dp"
+        android:background="#eeffffff"
+        android:id="@+id/chat_content"   
+        android:weightSum="8">
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@null"
+            android:textColor="#ff000000"
+            android:inputType="textAutoCorrect"
+            android:textColorHint="#77000000"
+            android:hint="@string/chat_message"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:minLines="1" />
+
+        <Button
+            android:id="@+id/clear"
+            style="@android:style/Theme.Light"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:onClick="clearMessage"
+            android:hint="@string/clear" />
+
+        <Button
+            android:id="@+id/send"
+            style="@android:style/Theme.Light"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:fontFamily="sans-serif"
+            android:onClick="sendMessage"
+            android:hint="@string/send" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="1dp"
+        android:id="@+id/space2" />
+
+</LinearLayout>

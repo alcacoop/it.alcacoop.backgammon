@@ -1,0 +1,81 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.6
+
+// Generate atlas
+["hdpi", "ldpi", "mdpi"].each {res ->
+    task "cleanAtlas$res" (type: Delete) {
+        delete fileTree("data/$res", {
+            include "pack*"
+            include "myskin*"
+        })
+    }
+
+    task "generateAtlas$res" (type: JavaExec, group: 'Asset Generation') {
+        main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+        classpath = sourceSets.main.runtimeClasspath
+        args = ["data-src/$res", "data/$res", "pack"]
+    }
+}
+
+// Generate skins in the tmp directory
+task generateSkin(type: JavaExec, group: 'Asset Generation') {
+    main = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['data-src/skin', '../tmp/skin', 'myskin']
+}
+
+task cleanGenerated () {
+    dependsOn cleanAtlashdpi, cleanAtlasldpi, cleanAtlasmdpi
+}
+
+
+task clean (overwrite: true, type: Delete, group: 'Asset Generation') {
+    delete "data/hdpi", "data/ldpi", "data/mdpi", "data/sounds"
+}
+
+// Copy static assets
+task copyStatics (group: 'Asset Generation') {
+    // sounds
+    copy {
+        from "data-src/statics/sounds"
+        into "data/sounds"
+    }
+
+    ['hdpi', 'ldpi', 'mdpi'].each { res ->
+        // fonts
+        copy {
+            from "data-src/statics/fonts/$res"
+            into "data/$res"
+        }
+        // images
+        copy {
+            from "data-src/statics/images/$res"
+            into "data/$res"
+        }
+        // myskin.json
+        copy {
+            from 'data-src/skin/myskin.json'
+            into "data/$res"
+        }
+        // pos.json
+        copy {
+            from "data-src/$res/pos.json"
+            into "data/$res"
+        }
+    }
+}
+
+task copySkins (dependsOn: generateSkin, group: 'Asset Generation') {
+    ['hdpi', 'ldpi', 'mdpi'].each { res ->
+        copy {
+            from '../tmp/skin'
+            into "data/$res"
+        }
+    }
+}
+
+task generate (group: 'Asset Generation') {
+    dependsOn generateAtlashdpi, generateAtlasldpi, generateAtlasmdpi, copySkins, copyStatics
+}
+

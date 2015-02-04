@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Backgammon Mobile</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="passwordconfirmation">password confirmation</string>
+    <string name="send">SEND</string>
+    <string name="clear">X</string>
+    <string name="chat_message">Chat message...</string>
+    <string name="APP_ID">131831581429</string>
+</resources>

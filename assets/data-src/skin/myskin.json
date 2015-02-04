@@ -1,0 +1,59 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: niew.fnt } , alternate-font: { file: arial.fnt }},
+com.badlogic.gdx.graphics.Color: {
+	green: { a: 1, b: 0, g: 1, r: 0 },
+	white: { a: 1, b: 1, g: 1, r: 1 },
+	red: { a: 1, b: 0, g: 0, r: 1 },
+	black: { a: 1, b: 0, g: 0, r: 0 },
+	gray: { a: 1, b: 0.5, g: 0.5, r: 0.5 },
+	brown: { a: 1, b: 0.24, g: 0.42, r: 0.54 },
+},
+
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: default-font, 
+    fontColor: white, 
+    background: selectbox
+    scrollStyle: { background: selectbox-show },
+    listStyle: { font: default-font, selection: even }
+	}
+
+},
+
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	mainmenu: { down: check-selected, up: check, font: default-font, fontColor: white, downFontColor: white},
+	button: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	button-B1: { down: button-down, up: button, font: default-font, fontColor: white, downFontColor: white},
+	button-B2: { down: button2-down, up: button2, font: default-font, fontColor: white, downFontColor: white},
+	button-B3: { down: button3-down, up: button3, font: default-font, fontColor: white, downFontColor: white},
+  toggle: { down: check-down, up: check, checked: check-selected, font: default-font, fontColor: white },
+  toggle-B1: { down: check1-down, up: check1, checked: check1-selected, font: default-font, fontColor: white },
+  toggle-B2: { down: check2-down, up: check2, checked: check2-selected, font: default-font, fontColor: white },
+  toggle-B3: { down: check3-down, up: check3, checked: check3-selected, font: default-font, fontColor: white },
+},
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
+	lists: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
+	info: { background: list, vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider},
+	chat: { vScroll: scroll, hScroll: scroll, hScrollKnob: slider, vScrollKnob: slider}
+},
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: { font: default-font, fontColor: white },
+	black: { font: default-font, fontColor: black },
+	gray: { font: default-font, fontColor: gray },
+	odd: { font: default-font, fontColor: white, background: odd},
+	even: { font: default-font, fontColor: white, background: even}
+},
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: { titleFont: default-font, background: default-window, titleFontColor: white }
+},
+
+com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+  default: { selection: slider, font: default-font, fontColor: white, background: textfield, cursor: cursor}
+},
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+  default: { fontColorUnselected: white, fontColorSelected: white, font: default-font }
+}
+
+}
