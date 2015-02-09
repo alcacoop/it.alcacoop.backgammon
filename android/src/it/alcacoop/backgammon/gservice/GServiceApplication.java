@@ -33,20 +33,21 @@
 
 package it.alcacoop.backgammon.gservice;
 
-import it.alcacoop.backgammon.GServiceInterface;
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.utils.AppDataManager;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-
-import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.games.snapshot.Snapshots;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+import it.alcacoop.backgammon.GServiceInterface;
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.utils.AppDataManager;
 
 public abstract class GServiceApplication extends BaseGServiceApplication implements GServiceInterface, RealTimeMultiplayer.ReliableMessageSentCallback {
 
@@ -208,11 +209,36 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
   @Override
   public void gserviceUpdateState() {
     if (gHelper.isSignedIn()) {
-      GnuBackgammon.out.println("===> APPSTATE UPDATE");
-      AppStateManager.update(getApiClient(), APP_DATA_KEY, AppDataManager.getInstance().getBytes());
+      GnuBackgammon.out.println("===> SAVEDGAME UPDATE");
+
+      Games.Snapshots.open(getApiClient(), snapshotName, true).setResultCallback(
+          new ResultCallback<Snapshots.OpenSnapshotResult>() {
+            @Override
+            public void onResult(Snapshots.OpenSnapshotResult result) {
+              if (result.getStatus().isSuccess()) {
+                // Write data
+                result.getSnapshot().getSnapshotContents().writeBytes(AppDataManager.getInstance().getBytes());
+                // Commit and close
+                Games.Snapshots.commitAndClose(getApiClient(), result.getSnapshot(), SnapshotMetadataChange.EMPTY_CHANGE);
+              }
+            }
+          }
+      );
     }
   }
 
+  private void gserviceDeleteSnapshot() {
+    Games.Snapshots.open(getApiClient(), snapshotName, true).setResultCallback(
+        new ResultCallback<Snapshots.OpenSnapshotResult>() {
+          @Override
+          public void onResult(Snapshots.OpenSnapshotResult res) {
+            if (res.getStatus().isSuccess()) {
+              Games.Snapshots.delete(getApiClient(), res.getSnapshot().getMetadata()) ;
+            }
+          }
+        }
+    );
+  }
   /*
   private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {

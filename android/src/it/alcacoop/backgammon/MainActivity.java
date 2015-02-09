@@ -33,22 +33,6 @@
 
 package it.alcacoop.backgammon;
 
-import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.MenuFSM;
-import it.alcacoop.backgammon.gservice.GServiceApplication;
-import it.alcacoop.backgammon.gservice.GServiceClient;
-import it.alcacoop.backgammon.helpers.ADSHelpers;
-import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
-import it.alcacoop.backgammon.helpers.AndroidHelpers;
-import it.alcacoop.backgammon.layers.GameScreen;
-import it.alcacoop.backgammon.layers.SplashScreen;
-import it.alcacoop.backgammon.logic.AICalls;
-import it.alcacoop.backgammon.logic.MatchState;
-import it.alcacoop.backgammon.stats.StatManager;
-import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.utils.AppDataManager;
-import it.alcacoop.backgammon.utils.ELORatingManager;
-import it.alcacoop.backgammon.utils.MatchRecorder;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -82,6 +66,23 @@ import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.leaderboard.ScoreSubmissionData.Result;
 import com.smartclip.helpers.SmartClipHelper;
+
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.MenuFSM;
+import it.alcacoop.backgammon.gservice.GServiceApplication;
+import it.alcacoop.backgammon.gservice.GServiceClient;
+import it.alcacoop.backgammon.helpers.ADSHelpers;
+import it.alcacoop.backgammon.helpers.AccelerometerHelpers;
+import it.alcacoop.backgammon.helpers.AndroidHelpers;
+import it.alcacoop.backgammon.layers.GameScreen;
+import it.alcacoop.backgammon.layers.SplashScreen;
+import it.alcacoop.backgammon.logic.AICalls;
+import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.stats.StatManager;
+import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.AppDataManager;
+import it.alcacoop.backgammon.utils.ELORatingManager;
+import it.alcacoop.backgammon.utils.MatchRecorder;
 
 
 @SuppressLint("InflateParams")
@@ -619,7 +620,7 @@ public class MainActivity extends GServiceApplication implements NativeFunctions
 
   @Override
   protected void onStateLoadedBehaviour(byte[] data) {
-    GnuBackgammon.out.println("===> APPSTATE LOADED");
+    GnuBackgammon.out.println("===> SAVEDGAME LOADED");
     AppDataManager.getInstance().loadState(data);
     ELORatingManager.getInstance().syncLeaderboards();
     StatManager.resetInstance();
