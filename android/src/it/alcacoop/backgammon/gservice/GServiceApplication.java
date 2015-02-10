@@ -227,18 +227,6 @@ public abstract class GServiceApplication extends BaseGServiceApplication implem
     }
   }
 
-  private void gserviceDeleteSnapshot() {
-    Games.Snapshots.open(getApiClient(), snapshotName, true).setResultCallback(
-        new ResultCallback<Snapshots.OpenSnapshotResult>() {
-          @Override
-          public void onResult(Snapshots.OpenSnapshotResult res) {
-            if (res.getStatus().isSuccess()) {
-              Games.Snapshots.delete(getApiClient(), res.getSnapshot().getMetadata()) ;
-            }
-          }
-        }
-    );
-  }
   /*
   private void gserviceDeleteAppState() {
     if (gHelper.isSignedIn()) {

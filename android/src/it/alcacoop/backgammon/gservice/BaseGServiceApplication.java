@@ -40,6 +40,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +52,9 @@ import android.widget.TextView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.common.images.ImageManager.OnImageLoadedListener;
 import com.google.android.gms.games.Games;
@@ -86,6 +87,7 @@ import it.alcacoop.backgammon.fsm.BaseFSM.Events;
 import it.alcacoop.backgammon.fsm.MenuFSM;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
+import it.alcacoop.backgammon.utils.AppDataManager;
 
 @SuppressLint({ "InflateParams", "NewApi" })
 public abstract class BaseGServiceApplication extends AndroidApplication
@@ -139,6 +141,57 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
 
+  private void migrateFromAppState() {
+    AsyncTask<Void, Void, Boolean> migrateTask = new AsyncTask<Void, Void, Boolean>() {
+      @Override
+      protected void onPreExecute() {
+        showProgressDialog(false);
+      }
+
+      @Override
+      protected Boolean doInBackground(Void... params) {
+        // Load AppState data
+        AppStateManager.StateResult load = AppStateManager
+            .load(getApiClient(), APP_DATA_KEY)
+            .await();
+        if (!load.getStatus().isSuccess()) {
+          GnuBackgammon.out.println("GSERVICE: Could not load App State for migration.");
+          return false;
+        }
+
+        // Save locally with AppDataManager
+        byte[] data = load.getLoadedResult().getLocalData();
+        AppDataManager.getInstance().loadState(data);
+
+        // Create snapshot
+        Snapshots.OpenSnapshotResult open = Games.Snapshots
+            .open(getApiClient(), snapshotName, true)
+            .await();
+
+        // Write data and commit
+        Snapshot snapshot = open.getSnapshot();
+        snapshot.getSnapshotContents().writeBytes(data);
+        Snapshots.CommitSnapshotResult commit = Games.Snapshots
+            .commitAndClose(getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE)
+            .await();
+        if (!commit.getStatus().isSuccess()) {
+          GnuBackgammon.out.println("GSERVICE: COMMIT Could not open Snapshot for migration.");
+          return false;
+        }
+
+        // No failures
+        GnuBackgammon.out.println("GSERVICE: migration ok!");
+        return true;
+      }
+
+      @Override
+      protected void onPostExecute(Boolean aBoolean) {
+        hideProgressDialog();
+      }
+    };
+
+    migrateTask.execute();
+  }
 
   private void onStateConflict(Snapshots.OpenSnapshotResult result) {
     final Snapshot remoteSnapshot = result.getSnapshot();
@@ -156,7 +209,8 @@ public abstract class BaseGServiceApplication extends AndroidApplication
             byte[] data = new byte[0];
             if (status == GamesStatusCodes.STATUS_OK) {
               try {
-                data = onStateConflictBehaviour(localSnapshot.getSnapshotContents().readFully(), res.getSnapshot().getSnapshotContents().readFully());
+                data = onStateConflictBehaviour(localSnapshot.getSnapshotContents().readFully(),
+                    res.getSnapshot().getSnapshotContents().readFully());
               } catch (IOException e) {
                 e.printStackTrace();
               }
@@ -169,12 +223,6 @@ public abstract class BaseGServiceApplication extends AndroidApplication
           }
         }
     );
-  }
-
-  private void onStateLoaded(Status status, int stateKey, byte[] data) {
-    if (status.isSuccess()) {
-      onStateLoadedBehaviour(data);
-    }
   }
 
   private void onStateLoaded(Snapshots.OpenSnapshotResult result) {
@@ -350,21 +398,28 @@ public abstract class BaseGServiceApplication extends AndroidApplication
 
   @Override
   public void onSignInSucceeded() {
+    //gserviceDeleteSnapshot();
     prefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
     prefs.flush();
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
     GnuBackgammon.out.println("===> LOADING SAVEDGAME");
-    Games.Snapshots.open(getApiClient(), snapshotName, true).setResultCallback(
+    Games.Snapshots.open(getApiClient(), snapshotName, false).setResultCallback(
         new ResultCallback<Snapshots.OpenSnapshotResult>() {
           @Override
           public void onResult(Snapshots.OpenSnapshotResult result) {
             int status = result.getStatus().getStatusCode();
-            if (status == GamesStatusCodes.STATUS_OK) {
-              onStateLoaded(result);
-            } else if (status == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT) {
-              onStateConflict(result);
+            switch (status) {
+              case GamesStatusCodes.STATUS_SNAPSHOT_NOT_FOUND:
+                migrateFromAppState();
+                break;
+              case GamesStatusCodes.STATUS_OK:
+                onStateLoaded(result);
+                break;
+              case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
+                onStateConflict(result);
+                break;
             }
           }
         }
@@ -677,5 +732,20 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
   public GoogleApiClient getApiClient() {
     return gHelper.getApiClient();
+  }
+
+  public void gserviceDeleteSnapshot() {
+    GnuBackgammon.out.println("GSERVICE: Going to delete savedgames");
+    Games.Snapshots.open(getApiClient(), snapshotName, false).setResultCallback(
+        new ResultCallback<Snapshots.OpenSnapshotResult>() {
+          @Override
+          public void onResult(Snapshots.OpenSnapshotResult res) {
+            if (res.getStatus().getStatusCode() != GamesStatusCodes.STATUS_SNAPSHOT_NOT_FOUND) {
+              Games.Snapshots.delete(getApiClient(), res.getSnapshot().getMetadata());
+              GnuBackgammon.out.println("GSERVICE: SavedGames DELETED!");
+            }
+          }
+        }
+    );
   }
 }
