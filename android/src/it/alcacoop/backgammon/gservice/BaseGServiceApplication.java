@@ -33,19 +33,6 @@
 
 package it.alcacoop.backgammon.gservice;
 
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.R;
-import it.alcacoop.backgammon.fsm.BaseFSM.Events;
-import it.alcacoop.backgammon.fsm.MenuFSM;
-import it.alcacoop.backgammon.ui.UIDialog;
-import it.alcacoop.backgammon.utils.AchievementsManager;
-
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -53,6 +40,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,10 +55,10 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.common.images.ImageManager.OnImageLoadedListener;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
@@ -82,6 +70,24 @@ import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.games.snapshot.Snapshots;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.R;
+import it.alcacoop.backgammon.fsm.BaseFSM.Events;
+import it.alcacoop.backgammon.fsm.MenuFSM;
+import it.alcacoop.backgammon.ui.UIDialog;
+import it.alcacoop.backgammon.utils.AchievementsManager;
+import it.alcacoop.backgammon.utils.AppDataManager;
 
 @SuppressLint({ "InflateParams", "NewApi" })
 public abstract class BaseGServiceApplication extends AndroidApplication
@@ -100,6 +106,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   protected String mMyId = null;
   protected ArrayList<Participant> mParticipants = null;
   protected boolean meSentInvitation;
+  protected String snapshotName = "snapshotPrefs";
 
   ProgressDialog mProgressDialog = null;
   protected final static int RC_SELECT_PLAYERS = 6000;
@@ -134,15 +141,97 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     }
   }
 
+  private void migrateFromAppState() {
+    AsyncTask<Void, Void, Boolean> migrateTask = new AsyncTask<Void, Void, Boolean>() {
+      @Override
+      protected void onPreExecute() {
+        showProgressDialog(false);
+      }
 
-  private void onStateConflict(AppStateManager.StateConflictResult conflictResult) {
-    AppStateManager.resolve(getApiClient(), conflictResult.getStateKey(), conflictResult.getResolvedVersion(),
-        onStateConflictBehaviour(conflictResult.getLocalData(), conflictResult.getServerData()));
+      @Override
+      protected Boolean doInBackground(Void... params) {
+        // Load AppState data
+        AppStateManager.StateResult load = AppStateManager
+            .load(getApiClient(), APP_DATA_KEY)
+            .await();
+        if (!load.getStatus().isSuccess()) {
+          GnuBackgammon.out.println("GSERVICE: Could not load App State for migration.");
+          return false;
+        }
+
+        // Save locally with AppDataManager
+        byte[] data = load.getLoadedResult().getLocalData();
+        AppDataManager.getInstance().loadState(data);
+
+        // Create snapshot
+        Snapshots.OpenSnapshotResult open = Games.Snapshots
+            .open(getApiClient(), snapshotName, true)
+            .await();
+
+        // Write data and commit
+        Snapshot snapshot = open.getSnapshot();
+        snapshot.getSnapshotContents().writeBytes(data);
+        Snapshots.CommitSnapshotResult commit = Games.Snapshots
+            .commitAndClose(getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE)
+            .await();
+        if (!commit.getStatus().isSuccess()) {
+          GnuBackgammon.out.println("GSERVICE: COMMIT Could not open Snapshot for migration.");
+          return false;
+        }
+
+        // No failures
+        GnuBackgammon.out.println("GSERVICE: migration ok!");
+        return true;
+      }
+
+      @Override
+      protected void onPostExecute(Boolean aBoolean) {
+        hideProgressDialog();
+      }
+    };
+
+    migrateTask.execute();
   }
 
-  private void onStateLoaded(Status status, int stateKey, byte[] data) {
-    if (status.isSuccess()) {
-      onStateLoadedBehaviour(data);
+  private void onStateConflict(Snapshots.OpenSnapshotResult result) {
+    final Snapshot remoteSnapshot = result.getSnapshot();
+    final Snapshot localSnapshot = result.getConflictingSnapshot();
+
+    // Resolve with one of the snapshot (temporarily)
+    Games.Snapshots.resolveConflict(getApiClient(), result.getConflictId(), remoteSnapshot);
+
+    // Reopen the snapsot and write bytes on the result snapshot
+    Games.Snapshots.open(getApiClient(), snapshotName, true).setResultCallback(
+        new ResultCallback<Snapshots.OpenSnapshotResult>() {
+          @Override
+          public void onResult(Snapshots.OpenSnapshotResult res) {
+            int status = res.getStatus().getStatusCode();
+            byte[] data = new byte[0];
+            if (status == GamesStatusCodes.STATUS_OK) {
+              try {
+                data = onStateConflictBehaviour(localSnapshot.getSnapshotContents().readFully(),
+                    res.getSnapshot().getSnapshotContents().readFully());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+              // Write data
+              res.getSnapshot().getSnapshotContents().writeBytes(data);
+
+              // Commit and close
+              Games.Snapshots.commitAndClose(getApiClient(), res.getSnapshot(), SnapshotMetadataChange.EMPTY_CHANGE);
+            }
+          }
+        }
+    );
+  }
+
+  private void onStateLoaded(Snapshots.OpenSnapshotResult result) {
+    if (result.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) {
+      try {
+        onStateLoadedBehaviour(result.getSnapshot().getSnapshotContents().readFully());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -304,38 +393,44 @@ public abstract class BaseGServiceApplication extends AndroidApplication
     onRTMessageReceivedBehaviour(s);
   }
 
-
   @Override
   public void onSignInFailed() {}
 
   @Override
   public void onSignInSucceeded() {
+    //gserviceDeleteSnapshot();
     prefs.putBoolean("WANTS_GOOGLE_SIGNIN", true);
     prefs.flush();
 
     Games.Invitations.registerInvitationListener(getApiClient(), this);
 
-    GnuBackgammon.out.println("===> LOADING APPSTATE");
-    AppStateManager.load(getApiClient(), APP_DATA_KEY).setResultCallback(
-        new ResultCallback<AppStateManager.StateResult>() {
+    GnuBackgammon.out.println("===> LOADING SAVEDGAME");
+    Games.Snapshots.open(getApiClient(), snapshotName, false).setResultCallback(
+        new ResultCallback<Snapshots.OpenSnapshotResult>() {
           @Override
-          public void onResult(AppStateManager.StateResult result) {
-            AppStateManager.StateConflictResult conflictResult = result.getConflictResult();
-            AppStateManager.StateLoadedResult loadedResult = result.getLoadedResult();
-            if (loadedResult != null) {
-              onStateLoaded(loadedResult.getStatus(), loadedResult.getStateKey(), loadedResult.getLocalData());
-            } else if (conflictResult != null) {
-              onStateConflict(conflictResult);
+          public void onResult(Snapshots.OpenSnapshotResult result) {
+            int status = result.getStatus().getStatusCode();
+            switch (status) {
+              case GamesStatusCodes.STATUS_SNAPSHOT_NOT_FOUND:
+                migrateFromAppState();
+                break;
+              case GamesStatusCodes.STATUS_OK:
+                onStateLoaded(result);
+                break;
+              case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
+                onStateConflict(result);
+                break;
             }
           }
-        });
-
+        }
+    );
     if (gHelper.hasInvitation()) {
       GnuBackgammon.Instance.invitationId = gHelper.getInvitationId();
       gHelper.clearInvitation();
       GnuBackgammon.Instance.setFSM("MENU_FSM");
     }
   }
+
   void gserviceInvitationReceived(final Uri imagesrc, final String username, final String invitationId) {
     GnuBackgammon.Instance.nativeFunctions.gserviceReset();
     final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -478,7 +573,7 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   protected void onCreate(Bundle b) {
     super.onCreate(b);
     prefs = Gdx.app.getPreferences("GameOptions");
-    gHelper = new GServiceGameHelper(this, GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
+    gHelper = new GServiceGameHelper(this, GServiceGameHelper.CLIENT_SNAPSHOT | GServiceGameHelper.CLIENT_APPSTATE | GServiceGameHelper.CLIENT_GAMES);
     gHelper.setup(this);
   }
 
@@ -637,5 +732,20 @@ public abstract class BaseGServiceApplication extends AndroidApplication
   }
   public GoogleApiClient getApiClient() {
     return gHelper.getApiClient();
+  }
+
+  public void gserviceDeleteSnapshot() {
+    GnuBackgammon.out.println("GSERVICE: Going to delete savedgames");
+    Games.Snapshots.open(getApiClient(), snapshotName, false).setResultCallback(
+        new ResultCallback<Snapshots.OpenSnapshotResult>() {
+          @Override
+          public void onResult(Snapshots.OpenSnapshotResult res) {
+            if (res.getStatus().getStatusCode() != GamesStatusCodes.STATUS_SNAPSHOT_NOT_FOUND) {
+              Games.Snapshots.delete(getApiClient(), res.getSnapshot().getMetadata());
+              GnuBackgammon.out.println("GSERVICE: SavedGames DELETED!");
+            }
+          }
+        }
+    );
   }
 }
