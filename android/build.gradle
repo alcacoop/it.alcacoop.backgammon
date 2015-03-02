@@ -6,8 +6,8 @@ android {
         applicationId "it.alcacoop.backgammon"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 3001
-        versionName "3.0.01"
+        versionCode 3002
+        versionName "3.0.02"
     }
 
     sourceSets {
