@@ -53,7 +53,11 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         compile fileTree(dir: 'libs', include: '*.jar')
         compile 'com.android.support:appcompat-v7:22+'
-        compile 'com.google.android.gms:play-services:7.5.0'
+        compile 'com.google.android.gms:play-services-base:7.5+'
+        compile 'com.google.android.gms:play-services-games:7.5+'
+        compile 'com.google.android.gms:play-services-appstate:7.5+'
+        compile 'com.google.android.gms:play-services-plus:7.5+'
+        compile 'com.google.android.gms:play-services-ads:7.5+'
     }
 }
 
