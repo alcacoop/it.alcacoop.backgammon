@@ -33,6 +33,8 @@
 
 package it.alcacoop.backgammon.fsm;
 
+import com.badlogic.gdx.Gdx;
+
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actors.Board;
 import it.alcacoop.backgammon.logic.AICalls;
@@ -41,8 +43,6 @@ import it.alcacoop.backgammon.stats.StatManager;
 import it.alcacoop.backgammon.ui.UIDialog;
 import it.alcacoop.backgammon.utils.AchievementsManager;
 import it.alcacoop.backgammon.utils.ELORatingManager;
-
-import com.badlogic.gdx.Gdx;
 
 
 public class GameFSM extends BaseFSM implements Context {
@@ -371,6 +371,8 @@ public class GameFSM extends BaseFSM implements Context {
           GnuBackgammon.fsm.hmoves[i] = -1;
         GnuBackgammon.fsm.hnmove = 0;
         GnuBackgammon.Instance.rec.updateBoard();
+        if (MatchState.matchType == 0)
+          GnuBackgammon.Instance.rec.saveJson(GnuBackgammon.Instance.fname + "json");
 
         if (ctx.board().gameFinished()) {
           ctx.state(CHECK_END_MATCH);

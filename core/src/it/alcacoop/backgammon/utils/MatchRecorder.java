@@ -33,10 +33,10 @@
 
 package it.alcacoop.backgammon.utils;
 
-import it.alcacoop.backgammon.GnuBackgammon;
-import it.alcacoop.backgammon.logic.MatchState;
-import it.alcacoop.backgammon.utils.legacy.Json;
-import it.alcacoop.backgammon.utils.legacy.JsonWriter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedMap;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -45,10 +45,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.OrderedMap;
+import it.alcacoop.backgammon.GnuBackgammon;
+import it.alcacoop.backgammon.logic.MatchState;
+import it.alcacoop.backgammon.utils.legacy.Json;
+import it.alcacoop.backgammon.utils.legacy.JsonWriter;
 
 
 public class MatchRecorder {
@@ -253,8 +253,9 @@ public class MatchRecorder {
   
   public String saveSGF() {
     String sgf = "";
+    Game g;
     for (int i=0;i<matchInfo.size;i++) {
-      Game g = matchInfo.get(i);
+      g = matchInfo.get(i);
       
       sgf += "(\n";
       sgf += ";FF[4]GM[6]CA[UTF-8]AP[BackgammonMobile:0.1]MI[length:";

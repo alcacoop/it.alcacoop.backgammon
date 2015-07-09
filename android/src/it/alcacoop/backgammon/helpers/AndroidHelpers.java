@@ -1,14 +1,5 @@
 package it.alcacoop.backgammon.helpers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +18,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class AndroidHelpers {
@@ -164,6 +164,7 @@ public class AndroidHelpers {
 
       FileOutputStream out = new FileOutputStream(file);
       out.write(data);
+      out.flush();
       out.close();
 
       Uri uri = Uri.fromFile(file);
