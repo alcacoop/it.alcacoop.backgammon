@@ -309,7 +309,7 @@ public class MatchRecorder {
       }
       sgf += ")\n";//END GAME
     }
-    
+
     return sgf;
   }
   
@@ -329,6 +329,7 @@ public class MatchRecorder {
       
       gi.put("ff", ((Float)gi.get("ff")).intValue());
       gi.put("gm", ((Float)gi.get("gm")).intValue());
+      gi.put("re", (gi.get("re")));
       gi.put("mi_length", ((Float)gi.get("mi_length")).intValue());
       gi.put("mi_game", ((Float)gi.get("mi_game")).intValue());
       gi.put("mi_ws", ((Float)gi.get("mi_ws")).intValue());
