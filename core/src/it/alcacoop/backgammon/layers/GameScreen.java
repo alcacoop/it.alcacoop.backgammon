@@ -33,6 +33,22 @@
 
 package it.alcacoop.backgammon.layers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.OrderedMap;
+
 import it.alcacoop.backgammon.GnuBackgammon;
 import it.alcacoop.backgammon.actions.MyActions;
 import it.alcacoop.backgammon.actors.Board;
@@ -49,23 +65,6 @@ import it.alcacoop.backgammon.logic.MatchState;
 import it.alcacoop.backgammon.ui.EndGameLayer;
 import it.alcacoop.backgammon.ui.GameMenuPopup;
 import it.alcacoop.backgammon.ui.UIDialog;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.OrderedMap;
 
 
 public class GameScreen extends BaseScreen {
@@ -297,6 +296,15 @@ public class GameScreen extends BaseScreen {
     pInfo[0].update();
     pInfo[1].update();
 
+    // FIX bug #6 on github: correctly end game on resume from background or from saved.
+    if (gi.get("re") != null) { // RESIGNED, FINISHED OR DOUBLE DROPPED
+      String[] prevResult = gi.get("re").toString().split("\\+");
+      MatchState.fMove = (prevResult[0].contains("W")) ? 1 : 0;
+      GameFSM.skip_stats = true;
+      GnuBackgammon.fsm.state(GameFSM.States.CHECK_END_MATCH);
+      return;
+    }
+
     // TODO: WORKAROUND!
     MatchState.fMove = 1;
     MatchState.SwitchTurn(false);
@@ -321,7 +329,6 @@ public class GameScreen extends BaseScreen {
       d[0] = ((Float)gi.get("_d1")).intValue();
       d[1] = ((Float)gi.get("_d2")).intValue();
 
-      board.rollDices(d[0], d[1]);
       board.rollDices(d[0], d[1]);
 
       if (MatchState.matchType < 2)

@@ -49,6 +49,7 @@ public class GameFSM extends BaseFSM implements Context {
 
   private Board board;
   public State currentState;
+  public static boolean skip_stats = false;
 
 
   public enum States implements State {
@@ -425,13 +426,13 @@ public class GameFSM extends BaseFSM implements Context {
         if (MatchState.matchType == 0) {
           if (MatchState.fMove == 1) {
             gameString = "CPU WON " + game_score + " POINT!";
-            StatManager.getInstance().addGame(1);
+            if (!skip_stats) StatManager.getInstance().addGame(1);
           } else {
             gameString = "YOU WON " + game_score + " POINT!";
-            StatManager.getInstance().addGame(0);
+            if (!skip_stats) StatManager.getInstance().addGame(0);
           }
 
-          GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
+          if (!skip_stats) GnuBackgammon.Instance.nativeFunctions.gserviceUpdateState();
 
           score1 = "CPU: " + MatchState.anScore[1];
           score2 = "YOU: " + MatchState.anScore[0];
@@ -439,17 +440,22 @@ public class GameFSM extends BaseFSM implements Context {
           score1 = "Player1: " + MatchState.anScore[1];
           score2 = "Player2: " + MatchState.anScore[0];
         }
+
         if (MatchState.anScore[MatchState.fMove] >= MatchState.nMatchTo) // MATCH FINISHED
           GnuBackgammon.Instance.nativeFunctions.showAds(false);
-        if ((ctx.board().getPIPS(0) <= 0) || (((MatchState.resignValue == 1) ||
+        if (!skip_stats) {
+          if ((ctx.board().getPIPS(0) <= 0) || (((MatchState.resignValue == 1) ||
             (MatchState.resignValue == 2) || (MatchState.resignValue == 3)) && (MatchState.fMove == 0))) {
-          AchievementsManager.getInstance().checkAchievements(true);
-          if (MatchState.anScore[MatchState.fMove] >= MatchState.nMatchTo) {
-            ELORatingManager.getInstance().updateRating(true);
+            AchievementsManager.getInstance().checkAchievements(true);
+            if (MatchState.anScore[MatchState.fMove] >= MatchState.nMatchTo) {
+              ELORatingManager.getInstance().updateRating(true);
+            }
+          } else {
+            AchievementsManager.getInstance().checkAchievements(false);
           }
-        } else {
-          AchievementsManager.getInstance().checkAchievements(false);
         }
+
+        skip_stats = false;
         UIDialog.getEndGameDialog(Events.CONTINUE, matchProgress, gameString, score1, score2);
       }
 
